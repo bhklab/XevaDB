@@ -1,0 +1,38 @@
+{
+  "name": "nodekb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "start": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "concurrently": "^4.1.0",
+    "cors": "^2.8.5",
+    "csv-parser": "^2.1.0",
+    "csvjson": "^5.1.0",
+    "csvtojson": "^2.0.8",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "fast-csv": "^2.4.1",
+    "knex": "^0.16.3",
+    "knex-csv-seeder": "^0.4.1",
+    "knex-csv-transformer": "^1.0.4",
+    "knex-seed-file": "^0.5.1",
+    "mongoose": "^5.3.14",
+    "multistream": "^2.1.1",
+    "mysql": "^2.16.0",
+    "request": "^2.88.0",
+    "swagger-ui-express": "^4.0.2"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "nodemon": "^1.18.7"
+  }
+}
