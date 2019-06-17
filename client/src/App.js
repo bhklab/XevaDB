@@ -1,8 +1,5 @@
 import React from 'react';
-import './App.css';
-import HeatMap from './Components/HeatMap';
-import Oncoprint from './Components/Oncoprint';
-import 'bootstrap/dist/css/bootstrap.min.css'
+import { HeatMap, Oncoprint } from './Components/index';
 
 class App extends React.Component {
   render() {
