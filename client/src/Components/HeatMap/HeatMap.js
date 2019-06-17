@@ -187,6 +187,10 @@ class HeatMap extends Component {
                                         return Object.values(d);
                                    })
                                   .enter()
+                                  .append("a")
+                                  .attr("xlink:href", function(d){
+                                      console.log(d);
+                                  })
                                   .filter(function(d) {
                                         if (d.length > 2 ) { return 0;}
                                         else if (d.length === 0) {return "empty"}
@@ -199,7 +203,7 @@ class HeatMap extends Component {
                                     return i * rect_width ;  
                                   })
                                   .attr("y", rect_height)
-
+                                 
     // this will fill the rectangles with different color based on the data. 
             drawrectangle.attr("fill", function(d) {
                                     if (d === "CR") {
@@ -213,7 +217,8 @@ class HeatMap extends Component {
                                     } else {
                                         return target_color[4]
                                     }
-                                })
+                                }) 
+                          
 
                                     
                                     /** X-AXIS AND Y-AXIS FOR THE SKELETON **/
