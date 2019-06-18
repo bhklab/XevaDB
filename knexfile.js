@@ -6,7 +6,7 @@ module.exports = {
     connection: {
       host : '127.0.0.1',
       user : 'root',
-      password : 'beri@2493',
+      password : '',
       database : 'XevaDB'
     },
     migrations: {
