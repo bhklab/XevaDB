@@ -10,10 +10,45 @@ const getDrug = function(req,res) {
           }))
           .catch(error => res.status(500).json({
             status: 'an error has occured',
-            data: error,
+            data: error
           }));      
 }
 
+const getDrugScreening = function(req,res) {
+    let drug = req.query.drug;
+    let patient = req.query.patient;
+
+    knex.select().from('drug_screening').where(function() {
+        this.where('drug', drug).orWhere('drug', 'untreated')
+    }).andWhere({ patient_id: patient})
+    .then(function(treatment) {
+        res.send(treatment);
+    })
+    .catch(error => res.status(500).json({
+        status: "an error has occured",
+        data: error
+    }))
+}
+
+const getUntreated = (req,res) => {
+    let patient = req.query.patient;
+
+    knex.select().from('drug_screening').where({
+        patient_id: patient,
+        drug: "untreated"
+    })
+    .then((untreated) => {
+        res.send(untreated);
+    })
+    .catch(error => res.status(500).json({
+        status: "an error has occured",
+        data: error
+    }))
+}
+
+
 module.exports = {
-    getDrug
+    getDrug,
+    getDrugScreening,
+    getUntreated
 }
