@@ -56,7 +56,7 @@ class HeatMap extends Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, node) {
-       // console.log(patient)
+       //console.log(patient)
        // console.log(drug)
        // console.log(node)
 
@@ -86,8 +86,11 @@ class HeatMap extends Component {
     ]
     let target_color = ["#0033CC", "#1a9850", "#fed976", "#e41a1c", "lightgray"]
 
-    // drug evaluations
+    //setting the query strings
+    let drug_use = "" 
+    let patient_use = patient
 
+    // drug evaluations
     var max_drug = 0;
     var drug_evaluations = {}
     for(var i=0; i<drug.length; i++) {
@@ -120,6 +123,15 @@ class HeatMap extends Component {
                 }
             }
             if (current_max_drug > max_drug) { max_drug = current_max_drug }
+    }
+
+    /* This code is used to produce the query strings */
+    function querystring_value(d) {
+        if(d.length > 2) {
+            i = 0;
+            drug_use = d.replace(/\s/g,"");
+        }
+        else { return `/curve?patient=${patient_use[i++]}&drug_id=${drug_use}` }
     }
     
 
@@ -181,20 +193,20 @@ class HeatMap extends Component {
     // this will append rect equivalent to number of patient ids.
     let drawrectangle = gskeleton.selectAll("rect")
                                   .data(function(d) {  
-                                      //calling the function and passing the data d as parameter.
-                                        calculate_evaluations(d);
-                                      //this returns the object values to next chaining method.
-                                        return Object.values(d);
+                                    //calling the function and passing the data d as parameter.
+                                    calculate_evaluations(d);
+                                    //this returns the object values to next chaining method.
+                                    return Object.values(d);
                                    })
                                   .enter()
                                   .append("a")
-                                  .attr("xlink:href", function(d){
-                                      console.log(d);
+                                  .attr("xlink:href", function(d) {
+                                    return querystring_value(d);
                                   })
                                   .filter(function(d) {
-                                        if (d.length > 2 ) { return 0;}
-                                        else if (d.length === 0) {return "empty"}
-                                        else { return d; }
+                                    if (d.length > 2 ) { return 0;}
+                                    else if (d.length === 0) {return "empty"}
+                                    else { return d; }
                                   })
                                   .append("rect")
                                   .attr("width", rect_width - 2)
