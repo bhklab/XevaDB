@@ -1,6 +1,6 @@
 import React from 'react';
 import { HeatMap, Oncoprint, TumorGrowthCurve } from './Components/index';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 class App extends React.Component {
   render() {
