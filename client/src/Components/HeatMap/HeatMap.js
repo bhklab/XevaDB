@@ -38,8 +38,6 @@ class HeatMap extends React.Component {
              .then(response => {
                  this.updateResults(response.data);
              })
-        const params = new URLSearchParams(this.props.location.search)
-        console.log(params.get('patient') + params.get('drug_id'))
         this.HeatMap()
     }
 
