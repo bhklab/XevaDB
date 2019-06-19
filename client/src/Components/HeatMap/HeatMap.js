@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
 
 
-class HeatMap extends Component {
+class HeatMap extends React.Component {
 
     constructor(props) {
         super(props)
@@ -38,6 +38,8 @@ class HeatMap extends Component {
              .then(response => {
                  this.updateResults(response.data);
              })
+        const params = new URLSearchParams(this.props.location.search)
+        console.log(params.get('patient') + params.get('drug_id'))
         this.HeatMap()
     }
 
