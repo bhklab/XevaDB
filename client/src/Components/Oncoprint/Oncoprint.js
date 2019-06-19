@@ -24,7 +24,7 @@ class Oncoprint extends Component {
         patient.shift();
 
         dataset.map((data) => {
-            gene_id.push(data["gene_id"]);
+            return gene_id.push(data["gene_id"]);
         })
         
         this.setState({
