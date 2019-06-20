@@ -130,6 +130,45 @@ class TumorGrowthCurve extends React.Component {
             return this.replace(new RegExp(s, 'g'), r);
         }
 
+        // unique function
+        // usage: var a = [1,2,3,4]; unique = a.filter(unique);
+        function unique(value, index, self) { 
+            return self.indexOf(value) === index;
+        }
+
+        // get the union set of all timepoints for the means
+        // until the last timepoint of the shortest graph
+        // returns [ [control] , [treatment] ]
+        function getUnionOfTimepoints(data) {
+            var control = []
+            var treatment = []
+            var minControl = data[0].pdx_points[0].times[data[0].pdx_points[0].times.length - 1]; 
+            var minTreatment = data[0].pdx_points[0].times[data[0].pdx_points[0].times.length - 1]; 
+
+            // merging time point arrays, and then unique
+            for (var i = 0; i < data.length; i++) {
+                var temp = data[i].pdx_points[0].times;
+                if (data[i].exp_type == "control") {
+                    control = control.concat(temp)
+                    minControl = temp[temp.length - 1] < minControl ? temp[temp.length - 1] : minControl
+                } else {
+                    treatment = treatment.concat(data[i].pdx_points[0].times)
+                    minTreatment = temp[temp.length - 1] < minTreatment ? temp[temp.length - 1] : minTreatment
+                }
+            }
+
+            // unique, sort, and cut off at the last timepoint of shortest graph
+            control = control.filter(unique).sort(function (a, b) {  return a - b;  });
+            var index = control.indexOf(minControl)
+            control = control.slice(0, index + 1)
+
+            treatment = treatment.filter(unique).sort(function (a, b) {  return a - b;  });
+            index = treatment.indexOf(minTreatment)
+            treatment = treatment.slice(0, index + 1)
+
+            return [control, treatment] 
+        }
+
     }
 
     render() {
