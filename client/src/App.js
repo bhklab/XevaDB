@@ -6,9 +6,9 @@ class App extends React.Component {
   render() {
     return (
       <Router>
+        <Route path="/" exact component={HeatMap}></Route>
+        <Route path="/" exact component={Oncoprint}></Route>
         <Switch>
-          <Route path="/" exact component={HeatMap}></Route>
-          <Route path="/" exact component={Oncoprint}></Route>
           <Route path="/curve" exact component={TumorGrowthCurve}></Route>
           <Route path="/donut" exact component={DonutChart}></Route>
         </Switch>

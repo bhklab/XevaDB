@@ -166,7 +166,7 @@ class TumorGrowthCurve extends React.Component {
             // merging time point arrays, and then unique
             for (var i = 0; i < data.length; i++) {
                 var temp = data[i].pdx_points[0].times;
-                if (data[i].exp_type == "control") {
+                if (data[i].exp_type === "control") {
                     control = control.concat(temp)
                     minControl = temp[temp.length - 1] < minControl ? temp[temp.length - 1] : minControl
                 } else {
@@ -387,7 +387,7 @@ class TumorGrowthCurve extends React.Component {
                 })
                 .attr("r", 3)
                 .attr("fill", function(d,i) {
-                    if (d.exp_type == "control") {
+                    if (d.exp_type === "control") {
                         return "#3b9dd6"; 
                     } else {
                         return "#e0913c";
@@ -425,7 +425,7 @@ class TumorGrowthCurve extends React.Component {
                 .attr("fill", "none")
                 .style("opacity", 0.7)
                 .attr("stroke", function (d) {
-                    if (d.exp_type == "control") {
+                    if (d.exp_type === "control") {
                         return "#3b9dd6";
                     } else {
                         return "#e0913c";
@@ -702,7 +702,7 @@ class TumorGrowthCurve extends React.Component {
                     .append('line')
                     .attr('class', 'error')
                     .attr("stroke", function() {
-                        if (exp == "control") {
+                        if (exp === "control") {
                             return "#3b9dd6"; 
                         } else {
                             return "#e0913c";
@@ -721,7 +721,7 @@ class TumorGrowthCurve extends React.Component {
                     .append('line')
                     .attr('class', 'errorTop')
                     .attr("stroke", function() {
-                        if (exp == "control") {
+                        if (exp === "control") {
                             return "#3b9dd6"; 
                         } else {
                             return "#e0913c";
@@ -740,7 +740,7 @@ class TumorGrowthCurve extends React.Component {
                     .append('line')
                     .attr('class', 'errorBot')
                     .attr("stroke", function() {
-                        if (exp == "control") {
+                        if (exp === "control") {
                             return "#3b9dd6"; 
                         } else {
                             return "#e0913c";
