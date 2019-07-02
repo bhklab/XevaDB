@@ -25,6 +25,7 @@ class DonutChart extends React.Component {
     render() {
         return (
             <svg ref = {node => this.node = node} width={1500} height={1200}>
+            
             </svg>
         )
     }
