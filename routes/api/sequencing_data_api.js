@@ -10,7 +10,7 @@ const isValidId = function (req, res, next) {
 
 const getMutationId = function(req,res) {
     res.json({
-        message: "Hello!"
+        message: 'Hello!'
     })
 }
 
@@ -18,21 +18,23 @@ const getMutation = function(req,res) {
     console.log(req.query.page)
     var tissue_name = req.query.tissue;
     console.log(tissue_name);
-    knex.select('gene_id', 'patient_id', 'mutation').from('sequencing_data').where((builder) =>
-        builder.whereIn('patient_id',(knex.select('patient_id').from('model_information').where('tissue', "Breast Cancer")))
-    ).limit(840)
-    .then(function(sequencing_data) {
+    knex.select('gene_id', 'patient_id', 'mutation')
+        .from('sequencing_data')
+        .where((builder) =>
+        builder.whereIn('patient_id',(knex.select('patient_id').from('model_information').where('tissue', 'Breast Cancer')))
+        ).limit(840)
+        .then((sequencing_data) => {
         let data = [];
         let value = 0;
-        let patient = ""
-        let gene = "";
+        let patient = ''
+        let gene = '';
         usersRows = JSON.parse(JSON.stringify(sequencing_data));
         usersRows.forEach(element => {
-            if(patient === "" || element.patient_id === patient || element.gene_id !== gene) {
+            if(patient === '' || element.patient_id === patient || element.gene_id !== gene) {
                 patient = element.patient_id;
                 gene = element.gene_id;
                 data[value] = {};
-                data[value]["gene_id"] = element.gene_id;
+                data[value]['gene_id'] = element.gene_id;
                 data[value][element.patient_id] = element.mutation;
                 value += 1;
             } else {
