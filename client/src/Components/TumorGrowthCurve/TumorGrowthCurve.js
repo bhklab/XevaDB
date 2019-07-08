@@ -36,7 +36,7 @@ class TumorGrowthCurve extends React.Component {
     // call this command to create a curve!!!
     dataParse(data) {
         let data_formatted = []
-        let batch_select = data[1]["patient_id"]
+        let batch_select = data[1]['patient_id']
         let batches = []
 
         String.prototype.replaceAll = String.prototype.replaceAll || function(s, r) {
@@ -45,44 +45,44 @@ class TumorGrowthCurve extends React.Component {
 
         // loop throuth the data and set the values in the variable.
         for (let i = 0; i < data.length; i++) {
-            batches.push(data[i]["patient_id"])
-            if (data[i]["patient_id"] === batch_select) {
-                let exp_type = ""
+            batches.push(data[i]['patient_id'])
+            if (data[i]['patient_id'] === batch_select) {
+                let exp_type = ''
                 //this is used to set the value of exp_type to control or treatment.
-                if(data[i]["drug"] === "untreated") { exp_type = "control" } 
-                else { exp_type = "treatment" }
+                if(data[i]['drug'] === 'untreated') { exp_type = 'control' } 
+                else { exp_type = 'treatment' }
 
-                if (data[i]["time"] === 0) {
+                if (data[i]['time'] === 0) {
                     var new_datapt = {
                         exp_type: exp_type,
-                        batch: data[i]["patient_id"],
-                        model: data[i]["model_id"],
-                        drug: data[i]["drug"],
+                        batch: data[i]['patient_id'],
+                        model: data[i]['model_id'],
+                        drug: data[i]['drug'],
                         pdx_points: [{
-                            times: [parseInt(data[i]["time"])],
-                            volumes: [parseInt(data[i]["volume"])]
+                            times: [parseInt(data[i]['time'])],
+                            volumes: [parseInt(data[i]['volume'])]
                         }],
                         pdx_json: [{
-                            model: data[i]["model_id"].replace(/\./g,' ').replaceAll(" ", "-"),
-                            batch: data[i]["patient_id"],
+                            model: data[i]['model_id'].replace(/\./g,' ').replaceAll(' ', '-'),
+                            batch: data[i]['patient_id'],
                             exp_type: exp_type,
-                            time: parseInt(data[i]["time"]),
-                            volume: parseInt(data[i]["volume"])
+                            time: parseInt(data[i]['time']),
+                            volume: parseInt(data[i]['volume'])
                         }]
                         
                     }
                     data_formatted.push(new_datapt)
                 } else {
-                    if (data[i]["time"] <= 200) {
-                        data_formatted[data_formatted.length - 1].pdx_points[0].times.push(parseInt(data[i]["time"]))
-                        data_formatted[data_formatted.length - 1].pdx_points[0].volumes.push(parseInt(data[i]["volume"]))
+                    if (data[i]['time'] <= 200) {
+                        data_formatted[data_formatted.length - 1].pdx_points[0].times.push(parseInt(data[i]['time']))
+                        data_formatted[data_formatted.length - 1].pdx_points[0].volumes.push(parseInt(data[i]['volume']))
                         data_formatted[data_formatted.length - 1].pdx_json.push(
                             {
-                                model: data[i]["model_id"],
-                                batch: data[i]["patient_id"],
+                                model: data[i]['model_id'],
+                                batch: data[i]['patient_id'],
                                 exp_type: exp_type,
-                                time: parseInt(data[i]["time"]),
-                                volume: parseInt(data[i]["volume"])
+                                time: parseInt(data[i]['time']),
+                                volume: parseInt(data[i]['volume'])
                             }
                         )
                     }
@@ -105,7 +105,7 @@ class TumorGrowthCurve extends React.Component {
     // toggle if batches present
     // currently no batch in the data, so took patient id as the batch.
     /* batchToggle(plotId, batches) {
-        var select = d3.select('#' + "root")
+        var select = d3.select('#' + 'root')
                         .append('select')
                         .attr('class','select')
                         .on('change',onchange)
@@ -118,7 +118,7 @@ class TumorGrowthCurve extends React.Component {
                     
         function onchange() {
             d3.select('select').property('value')
-            select("#pdxplot").remove()
+            select('#pdxplot').remove()
         };
     } */
 
@@ -127,14 +127,14 @@ class TumorGrowthCurve extends React.Component {
         let drugid_param = this.getParams().patient_param
         axios.get(`http://localhost:5000/api/v1/treatment?drug=${patient_param}&patient=${drugid_param}`)
              .then(response => {
-                //this.batchToggle("plot", patient_param);
+                //this.batchToggle('plot', patient_param);
                 this.dataParse(response.data);
              })
     }
 
     componentDidUpdate() {
         const node = this.node;
-        let plotId = "plot"
+        let plotId = 'plot'
         this.makeTumorGrowthCurve(this.state.data, plotId, node)
     }
 
@@ -166,7 +166,7 @@ class TumorGrowthCurve extends React.Component {
             // merging time point arrays, and then unique
             for (var i = 0; i < data.length; i++) {
                 var temp = data[i].pdx_points[0].times;
-                if (data[i].exp_type === "control") {
+                if (data[i].exp_type === 'control') {
                     control = control.concat(temp)
                     minControl = temp[temp.length - 1] < minControl ? temp[temp.length - 1] : minControl
                 } else {
@@ -192,7 +192,7 @@ class TumorGrowthCurve extends React.Component {
             console.log(data)
             console.log(plotId)
 
-            let drug = data[0]["drug"]
+            let drug = data[0]['drug']
 
             //calculating max time, min/max volumes of all data
             var maxTimeArray = [];
@@ -208,7 +208,7 @@ class TumorGrowthCurve extends React.Component {
             var minVolume = Math.min.apply(null, minVolArray);
             var maxVolume = Math.max.apply(null, maxVolArray);
 
-            var exp_types = ["control", "treatment"]
+            var exp_types = ['control', 'treatment']
 
             // positioning variables
             var width = 600;
@@ -221,53 +221,53 @@ class TumorGrowthCurve extends React.Component {
             }
             // make the svg element
             var svg = d3.select(node)
-                        .append("svg")
-                        .attr("id", "pdx" + plotId)
-                        .attr("xmlns", "http://www.w3.org/2000/svg")
-                        .attr("xmlns:xlink", "http://www.w3.org/1999/xlink") // for downloading
-                        .attr("width", width + margin.left + margin.right)
-                        .attr("height", height + margin.top + margin.bottom)
-                        .append("g")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                        .append('svg')
+                        .attr('id', 'pdx' + plotId)
+                        .attr('xmlns', 'http://www.w3.org/2000/svg')
+                        .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink') // for downloading
+                        .attr('width', width + margin.left + margin.right)
+                        .attr('height', height + margin.top + margin.bottom)
+                        .append('g')
+                        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
             // plot title
-            svg.append("text")
-                .attr("text-anchor", "middle")
-                .attr("id", "pdxTitle")
-                .style("font-size", "20px")
-                .attr("transform", "translate("+ (width/2) +","+ -40 +")")
-                .style("fill","black")
+            svg.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('id', 'pdxTitle')
+                .style('font-size', '20px')
+                .attr('transform', 'translate('+ (width/2) +','+ -40 +')')
+                .style('fill','black')
                 .text(drug)
 
             // legend
-            var legend = svg.selectAll(".legend")
+            var legend = svg.selectAll('.legend')
                             .data(exp_types)
                             .enter()
 
-            legend.append("circle")
-                    .attr("id", function(d,i) {
-                        return "legend-dot-" + exp_types[i]
+            legend.append('circle')
+                    .attr('id', function(d,i) {
+                        return 'legend-dot-' + exp_types[i]
                     })
-                    .attr("class", ".legend")
-                    .attr("r", 4)
-                    .attr("fill",function(d,i) {
-                        if (exp_types[i] === "control") {
-                            return "#3b9dd6"; 
+                    .attr('class', '.legend')
+                    .attr('r', 4)
+                    .attr('fill',function(d,i) {
+                        if (exp_types[i] === 'control') {
+                            return '#3b9dd6'; 
                         } else {
-                            return "#e0913c";
+                            return '#e0913c';
                         }
                     })
-                    .attr("cx", width + 30)
-                    .attr("cy", function(d,i) {return height/2 - 50 + (i*50);})
+                    .attr('cx', width + 30)
+                    .attr('cy', function(d,i) {return height/2 - 50 + (i*50);})
 
-            legend.append("text")
-                    .attr("id", function(d,i) {
-                        return "legend-text-" + exp_types[i]
+            legend.append('text')
+                    .attr('id', function(d,i) {
+                        return 'legend-text-' + exp_types[i]
                     })
-                    .attr("class", ".legend")
-                    .attr("fill","black")
-                    .attr("dx", width + 40)
-                    .attr("dy", function(d,i) {return height/2 - 46 + (i*50);})
+                    .attr('class', '.legend')
+                    .attr('fill','black')
+                    .attr('dx', width + 40)
+                    .attr('dy', function(d,i) {return height/2 - 46 + (i*50);})
                     .text(function(d,i) {return exp_types[i]})
 
 
@@ -292,118 +292,118 @@ class TumorGrowthCurve extends React.Component {
                             .tickPadding(2);
 
             // Add the X Axis
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + yrange(0) + ")")
-                .attr("fill", "none")
-                .attr("stroke", "black")
-                .attr("stroke-width", 1)
+            svg.append('g')
+                .attr('class', 'x axis')
+                .attr('transform', 'translate(0,' + yrange(0) + ')')
+                .attr('fill', 'none')
+                .attr('stroke', 'black')
+                .attr('stroke-width', 1)
                 .call(xAxis);
 
             // X axis label
-            svg.append("text")
-                .attr("text-anchor", "middle")
-                .attr("fill","black")
-                .attr("transform", "translate("+ (width/2) +","+(height+40)+")")
-                .text("Time (days)");
+            svg.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('fill','black')
+                .attr('transform', 'translate('+ (width/2) +','+(height+40)+')')
+                .text('Time (days)');
 
             // Add the Y Axis
-            var yAxisAdd = svg.append("g")
-                .attr("class", "y axis")
-                .attr("fill", "none")
-                .attr("stroke", "black")
-                .attr("stroke-width", 1)
+            var yAxisAdd = svg.append('g')
+                .attr('class', 'y axis')
+                .attr('fill', 'none')
+                .attr('stroke', 'black')
+                .attr('stroke-width', 1)
                 .call(yAxis);
 
             // Y axis label
-            svg.append("text")
-                .attr("text-anchor", "middle")
-                .attr("fill","black")
-                .attr("transform", "translate(" + -60 +","+(height/2)+")rotate(-90)")
-                .text("Volume (mm³)");
+            svg.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('fill','black')
+                .attr('transform', 'translate(' + -60 +','+(height/2)+')rotate(-90)')
+                .text('Volume (mm³)');
 
             // remove strokes for all ticks
-            svg.selectAll(".tick").select("text").attr("fill", "black").attr("stroke", "none")
+            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none')
             
             // plot each model
             plotBatch(data, svg, xrange, yrange, width, height)
         }
 
         function plotBatch(data, svg, xrange, yrange, width, height) {
-            //when using d.model, use d.model.replace(/\./g,' ').replaceAll(" ", "-")
+            //when using d.model, use d.model.replace(/\./g,' ').replaceAll(' ', '-')
             //to replace all the periods with dashes because dots interfere with classes
         
-            var models = svg.selectAll("g.model")
+            var models = svg.selectAll('g.model')
                 .data(data)
                 .enter()
-                    .append("g")
-                        .attr("class", "model")
+                    .append('g')
+                        .attr('class', 'model')
         
             // plotting the dots
-            var dots = models.selectAll(".model-dot")
+            var dots = models.selectAll('.model-dot')
                 .data(function(d) {return d.pdx_json})
                 .enter();
         
-            var paths = svg.selectAll(".model-path")
+            var paths = svg.selectAll('.model-path')
                 .data(function(d) {return data})
                 .enter();
         
             // making tooltips
-            var tooltips = models.selectAll(".tooltip-dot")
+            var tooltips = models.selectAll('.tooltip-dot')
                 .data(function(d) {return d.pdx_json})
                 .enter();
         
                 // timepoint
-                tooltips.append("text")
-                    .attr("id", function(d,i) { return "tooltip-t-" + d.model.replace(/\./g,' ').replaceAll(" ", "-") + "-" + d.exp_type + i})
-                    .attr("class", "tooltip-dot")
-                    .attr("dx", width+20)
-                    .attr("dy", height/2 + 30)
-                    .attr("font-size", "14px")
-                    .style("opacity", 0)
-                    .attr("fill", "black")
-                    .html(function(d) {return "Time: " + d.time + " days"})
+                tooltips.append('text')
+                    .attr('id', function(d,i) { return 'tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i})
+                    .attr('class', 'tooltip-dot')
+                    .attr('dx', width+20)
+                    .attr('dy', height/2 + 30)
+                    .attr('font-size', '14px')
+                    .style('opacity', 0)
+                    .attr('fill', 'black')
+                    .html(function(d) {return 'Time: ' + d.time + ' days'})
                 
                 // volume
-                tooltips.append("text")
-                    .attr("id", function(d,i) { return "tooltip-v-" + d.model.replace(/\./g,' ').replaceAll(" ", "-") + "-" + d.exp_type + i})
-                    .attr("class", "tooltip-dot")
-                    .attr("dx", width+20)
-                    .attr("dy", height/2 + 45)
-                    .attr("font-size", "14px")
-                    .style("opacity", 0)
-                    .attr("fill", "black")
-                    .html(function(d) {return "Volume: " + d3.format(".2f")(d.volume) + " mm³"})
+                tooltips.append('text')
+                    .attr('id', function(d,i) { return 'tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i})
+                    .attr('class', 'tooltip-dot')
+                    .attr('dx', width+20)
+                    .attr('dy', height/2 + 45)
+                    .attr('font-size', '14px')
+                    .style('opacity', 0)
+                    .attr('fill', 'black')
+                    .html(function(d) {return 'Volume: ' + d3.format('.2f')(d.volume) + ' mm³'})
                 
-            dots.append("circle")
-                .attr("id", function(d,i) {
-                    return "dot-" + d.model.replace(/\./g,' ').replaceAll(" ", "-") + "-" + 
+            dots.append('circle')
+                .attr('id', function(d,i) {
+                    return 'dot-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + 
                             d.exp_type + i
                 })
-                .attr("class", function(d) {
-                    return "model-dot " + 
-                            d.model.replace(/\./g,' ').replaceAll(" ", "-") + " " + 
+                .attr('class', function(d) {
+                    return 'model-dot ' + 
+                            d.model.replace(/\./g,' ').replaceAll(' ', '-') + ' ' + 
                             d.batch
                 })
-                .attr("r", 3)
-                .attr("fill", function(d,i) {
-                    if (d.exp_type === "control") {
-                        return "#3b9dd6"; 
+                .attr('r', 3)
+                .attr('fill', function(d,i) {
+                    if (d.exp_type === 'control') {
+                        return '#3b9dd6'; 
                     } else {
-                        return "#e0913c";
+                        return '#e0913c';
                     }
                 })
-                .style("opacity", 0.5)
-                .attr("cx", function(d) {return xrange(d.time);})
-                .attr("cy", function(d) {return yrange(d.volume);})
+                .style('opacity', 0.5)
+                .attr('cx', function(d) {return xrange(d.time);})
+                .attr('cy', function(d) {return yrange(d.volume);})
                 .on({
-                    "mouseover": function(d,i) {
-                        d3.select("#tooltip-t-" + d.model.replace(/\./g,' ').replaceAll(" ", "-") + "-" + d.exp_type + i).transition().duration(300).style("opacity", 1);
-                        d3.select("#tooltip-v-" + d.model.replace(/\./g,' ').replaceAll(" ", "-") + "-" + d.exp_type + i).transition().duration(300).style("opacity", 1);
+                    'mouseover': function(d,i) {
+                        d3.select('#tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 1);
+                        d3.select('#tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 1);
                     },
-                    "mouseout": function(d,i) {
-                        d3.select("#tooltip-t-" + d.model.replace(/\./g,' ').replaceAll(" ", "-") + "-" + d.exp_type + i).transition().duration(300).style("opacity", 0);
-                        d3.select("#tooltip-v-" + d.model.replace(/\./g,' ').replaceAll(" ", "-") + "-" + d.exp_type + i).transition().duration(300).style("opacity", 0);
+                    'mouseout': function(d,i) {
+                        d3.select('#tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 0);
+                        d3.select('#tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 0);
                     },
                   })
         
@@ -414,25 +414,25 @@ class TumorGrowthCurve extends React.Component {
                 
         
             // add line
-            paths.append("path")
-                .attr("id", function(d) { return "path-" + d.model.replace(/\./g,' ').replaceAll(" ", "-")})
-                .attr("class", function(d) { 
-                    return "model-path " + d.exp_type + " " +
-                            d.model.replace(/\./g,' ').replaceAll(" ", "-") + " " + 
+            paths.append('path')
+                .attr('id', function(d) { return 'path-' + d.model.replace(/\./g,' ').replaceAll(' ', '-')})
+                .attr('class', function(d) { 
+                    return 'model-path ' + d.exp_type + ' ' +
+                            d.model.replace(/\./g,' ').replaceAll(' ', '-') + ' ' + 
                             d.batch
                 })
-                .attr("d", function(d) {return linepath(d.pdx_json)})
-                .attr("fill", "none")
-                .style("opacity", 0.7)
-                .attr("stroke", function (d) {
-                    if (d.exp_type === "control") {
-                        return "#3b9dd6";
+                .attr('d', function(d) {return linepath(d.pdx_json)})
+                .attr('fill', 'none')
+                .style('opacity', 0.7)
+                .attr('stroke', function (d) {
+                    if (d.exp_type === 'control') {
+                        return '#3b9dd6';
                     } else {
-                        return "#e0913c";
+                        return '#e0913c';
                     }
                 })
-                .attr("stroke-width", 1)
-                .attr("stroke-dasharray", ("3", "3"))
+                .attr('stroke-width', 1)
+                .attr('stroke-dasharray', ('3', '3'))
         
             //plotMeans(data, svg, xrange, yrange, width, height)
             //modelToggle(svg, width, height)
@@ -449,7 +449,7 @@ class TumorGrowthCurve extends React.Component {
        /* // plot the mean of each experiment type (control, treatment)
         function plotMeans(data, svg, xrange, yrange, width, height) {
             var timeUnion = getUnionOfTimepoints(data)
-            var exp_types = ["control", "treatment"]
+            var exp_types = ['control', 'treatment']
             
             var ypoint_arr = [] // un-yranged
             var all_ypoint = [] // for std devs
@@ -462,7 +462,7 @@ class TumorGrowthCurve extends React.Component {
                 var exp = exp_types[n]
                 var times = timeUnion[n]
                 console.log()
-                var selection = d3.selectAll(".model-path." + exp_types[n])[0]
+                var selection = d3.selectAll('.model-path.' + exp_types[n])[0]
                 
 
                 // for each timepoint
@@ -486,67 +486,67 @@ class TumorGrowthCurve extends React.Component {
                 plotErrorBars(data, exp, times, all_ypoint, ypoint_arr, svg, xrange, yrange)
 
                 // mean svg
-                var mean_svg = svg.append("g")
-                    .attr("id", "mean_" + exp_types[n])
+                var mean_svg = svg.append('g')
+                    .attr('id', 'mean_' + exp_types[n])
 
                 //tooltips
-                var tooltips = svg.selectAll(".tooltip-mean-dot" + exp)
+                var tooltips = svg.selectAll('.tooltip-mean-dot' + exp)
                     .data(ypoint_arr)
                     .enter();
 
                 // timepoint
-                tooltips.append("text")
-                    .attr("id", function(d,i) { return "tooltip-mean-t-" + batch + "-" + exp + i})
-                    .attr("class", "tooltip-mean-dot" + exp)
-                    .attr("dx", width+20)
-                    .attr("dy", height/2 + 30)
-                    .attr("font-size", "14px")
-                    .style("opacity", 0)
-                    .attr("fill", "black")
-                    .html(function(d,i) {return "Time: " + times[i] + " days"})
+                tooltips.append('text')
+                    .attr('id', function(d,i) { return 'tooltip-mean-t-' + batch + '-' + exp + i})
+                    .attr('class', 'tooltip-mean-dot' + exp)
+                    .attr('dx', width+20)
+                    .attr('dy', height/2 + 30)
+                    .attr('font-size', '14px')
+                    .style('opacity', 0)
+                    .attr('fill', 'black')
+                    .html(function(d,i) {return 'Time: ' + times[i] + ' days'})
 
                 // volume
-                tooltips.append("text")
-                    .attr("id", function(d,i) { return "tooltip-mean-v-" + batch + "-" + exp + i})
-                    .attr("class", "tooltip-mean-dot")
-                    .attr("dx", width+20)
-                    .attr("dy", height/2 + 45)
-                    .attr("font-size", "14px")
-                    .style("opacity", 0)
-                    .attr("fill", "black")
-                    .html(function(d,i) {return "Volume: " + d3.format(".2f")(ypoint_arr[i]) + " mm³"})
+                tooltips.append('text')
+                    .attr('id', function(d,i) { return 'tooltip-mean-v-' + batch + '-' + exp + i})
+                    .attr('class', 'tooltip-mean-dot')
+                    .attr('dx', width+20)
+                    .attr('dy', height/2 + 45)
+                    .attr('font-size', '14px')
+                    .style('opacity', 0)
+                    .attr('fill', 'black')
+                    .html(function(d,i) {return 'Volume: ' + d3.format('.2f')(ypoint_arr[i]) + ' mm³'})
                 
-                var mean_dots = mean_svg.selectAll(".mean-dot")
+                var mean_dots = mean_svg.selectAll('.mean-dot')
                     .data(ypoint_arr)
                     .enter()
 
-                mean_dots.append("circle")
-                    .attr("id", function(d,i) {
-                        return "mean-dot-" + exp_types[n] + "-" + batch
+                mean_dots.append('circle')
+                    .attr('id', function(d,i) {
+                        return 'mean-dot-' + exp_types[n] + '-' + batch
                     })
-                    .attr("class", "mean-dot " + batch)
-                    .attr("r", 4)
-                    .attr("fill",function() {
-                        if (exp_types[n] == "control") {
-                            return "#3b9dd6"; 
+                    .attr('class', 'mean-dot ' + batch)
+                    .attr('r', 4)
+                    .attr('fill',function() {
+                        if (exp_types[n] == 'control') {
+                            return '#3b9dd6'; 
                         } else {
-                            return "#e0913c";
+                            return '#e0913c';
                         }
                     })
-                    .attr("cx", function(d,i) {return xrange(timeUnion[n][i]);})
-                    .attr("cy", function(d,i) {return yrange(ypoint_arr[i]);})
+                    .attr('cx', function(d,i) {return xrange(timeUnion[n][i]);})
+                    .attr('cy', function(d,i) {return yrange(ypoint_arr[i]);})
                     .on({
-                        "mouseover": function(d,i) {
-                            d3.select("#tooltip-mean-t-" + batch + "-" + exp + i).transition().duration(300).style("opacity", 1);
-                            d3.select("#tooltip-mean-v-" + batch + "-" + exp + i).transition().duration(300).style("opacity", 1);
+                        'mouseover': function(d,i) {
+                            d3.select('#tooltip-mean-t-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 1);
+                            d3.select('#tooltip-mean-v-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 1);
                         },
-                        "mouseout": function(d,i) {
-                            d3.select("#tooltip-mean-t-" + batch + "-" + exp + i).transition().duration(300).style("opacity", 0);
-                            d3.select("#tooltip-mean-v-" + batch + "-" + exp + i).transition().duration(300).style("opacity", 0);
+                        'mouseout': function(d,i) {
+                            d3.select('#tooltip-mean-t-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 0);
+                            d3.select('#tooltip-mean-v-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 0);
                         },
                     })
 
-                var mean_path = mean_svg.selectAll(".mean-path")
+                var mean_path = mean_svg.selectAll('.mean-path')
                     .data(ypoint_arr)
                     .enter();
 
@@ -555,20 +555,20 @@ class TumorGrowthCurve extends React.Component {
                     .x(function(d,i) {return xrange(timeUnion[n][i]);})
                     .y(function(d,i) {return yrange(ypoint_arr[i]);})
 
-                mean_path.append("path")
-                    .attr("id", "mean-path-" + exp_types[n] + "-" + batch)
-                    .attr("class",  "mean-path " + batch)
-                    .attr("d", function(d) {return linepath(ypoint_arr)})
-                    .attr("fill", "none")
-                    .style("opacity", 1)
-                    .attr("stroke", function() {
-                        if (exp_types[n] == "control") {
-                            return "#3b9dd6"; 
+                mean_path.append('path')
+                    .attr('id', 'mean-path-' + exp_types[n] + '-' + batch)
+                    .attr('class',  'mean-path ' + batch)
+                    .attr('d', function(d) {return linepath(ypoint_arr)})
+                    .attr('fill', 'none')
+                    .style('opacity', 1)
+                    .attr('stroke', function() {
+                        if (exp_types[n] == 'control') {
+                            return '#3b9dd6'; 
                         } else {
-                            return "#e0913c";
+                            return '#e0913c';
                         }
                     })
-                    .attr("stroke-width", 2)
+                    .attr('stroke-width', 2)
 
                 
 
@@ -582,64 +582,64 @@ class TumorGrowthCurve extends React.Component {
         function modelToggle(svg, width, height) {
             var nest = d3.nest()
                 .key(function(d) {return d;})
-                .entries([""])
+                .entries([''])
             
             nest.forEach(function(d,i) {
-                var modelToggle = svg.append("rect")
-                .attr("x", width + 21)
-                .attr("y", height/2 + 40)
-                .attr("id", "modelToggle")
-                .attr("width", 10)
-                .attr("height", 10)
-                .attr("fill", "black")
-                .attr("stroke", "black")
-                .attr("stroke-width", 1)
-                .on("click", function () {
+                var modelToggle = svg.append('rect')
+                .attr('x', width + 21)
+                .attr('y', height/2 + 40)
+                .attr('id', 'modelToggle')
+                .attr('width', 10)
+                .attr('height', 10)
+                .attr('fill', 'black')
+                .attr('stroke', 'black')
+                .attr('stroke-width', 1)
+                .on('click', function () {
                     var active = d.active ? false : true ,
                     newOpacity = active ? 0 : 1,
-                    newFill = active? "white" : "black";
+                    newFill = active? 'white' : 'black';
 
                     // Hide or show the elements
-                    d3.selectAll(".model-dot").style("opacity", newOpacity);
-                    d3.selectAll(".model-path").style("opacity", newOpacity);
-                    d3.select("#modelToggle").attr("fill", newFill)
+                    d3.selectAll('.model-dot').style('opacity', newOpacity);
+                    d3.selectAll('.model-path').style('opacity', newOpacity);
+                    d3.select('#modelToggle').attr('fill', newFill)
 
                     // Update whether or not the elements are active
                     d.active = active;
                 })
                 .on({
-                    "mouseover": function() {
-                        d3.select(this).style("cursor", "pointer");
+                    'mouseover': function() {
+                        d3.select(this).style('cursor', 'pointer');
                     },
-                    "mouseout": function() {
-                        d3.select(this).style("cursor", "default");
+                    'mouseout': function() {
+                        d3.select(this).style('cursor', 'default');
                     }
                 })
 
-                var modelToggleText = svg.append("text")
-                    .attr("dx", width + 35)
-                    .attr("dy", height/2 + 50)
-                    .attr("fill", "black")
-                    .text("Show all curves")
-                    .on("click", function () {
+                var modelToggleText = svg.append('text')
+                    .attr('dx', width + 35)
+                    .attr('dy', height/2 + 50)
+                    .attr('fill', 'black')
+                    .text('Show all curves')
+                    .on('click', function () {
                         var active = d.active ? false : true ,
                         newOpacity = active ? 0 : 1,
-                        newFill = active? "white" : "black";
+                        newFill = active? 'white' : 'black';
             
                         // Hide or show the elements
-                        d3.selectAll(".model-dot").style("opacity", newOpacity);
-                        d3.selectAll(".model-path").style("opacity", newOpacity);
-                        d3.select("#modelToggle").attr("fill", newFill)
+                        d3.selectAll('.model-dot').style('opacity', newOpacity);
+                        d3.selectAll('.model-path').style('opacity', newOpacity);
+                        d3.select('#modelToggle').attr('fill', newFill)
             
                         // Update whether or not the elements are active
                         d.active = active;
                     })
                     .on({
-                        "mouseover": function() {
-                            d3.select(this).style("cursor", "pointer");
+                        'mouseover': function() {
+                            d3.select(this).style('cursor', 'pointer');
                         },
-                        "mouseout": function() {
-                            d3.select(this).style("cursor", "default");
+                        'mouseout': function() {
+                            d3.select(this).style('cursor', 'default');
                         }
                     })
             })
@@ -692,8 +692,8 @@ class TumorGrowthCurve extends React.Component {
         function plotErrorBars(data, exp, times, all_ypoint, ypoint_arr, svg, xrange, yrange) {
             var stdDevs = stdDev(all_ypoint, ypoint_arr)
 
-            var errorBars = svg.append("g")
-                .attr("id", "errorBars")
+            var errorBars = svg.append('g')
+                .attr('id', 'errorBars')
 
             var errorMidBar = errorBars.selectAll('line.error')
                 .data(stdDevs);
@@ -701,52 +701,52 @@ class TumorGrowthCurve extends React.Component {
                 errorMidBar.enter()
                     .append('line')
                     .attr('class', 'error')
-                    .attr("stroke", function() {
-                        if (exp === "control") {
-                            return "#3b9dd6"; 
+                    .attr('stroke', function() {
+                        if (exp === 'control') {
+                            return '#3b9dd6'; 
                         } else {
-                            return "#e0913c";
+                            return '#e0913c';
                         }
                     })
-                    .attr("stroke-width", 2)
+                    .attr('stroke-width', 2)
                     .attr('x1', function(d,i) { return xrange(times[i]); })
                     .attr('x2', function(d,i) { return xrange(times[i]); })
                     .attr('y1', function(d,i) { return yrange(ypoint_arr[i] + stdDevs[i]); })
                     .attr('y2', function(d,i) { return yrange(ypoint_arr[i] - stdDevs[i]); });
 
-            var errorTopBar = errorBars.selectAll("line.errorTop")
+            var errorTopBar = errorBars.selectAll('line.errorTop')
                 .data(stdDevs);
 
                 errorTopBar.enter()
                     .append('line')
                     .attr('class', 'errorTop')
-                    .attr("stroke", function() {
-                        if (exp === "control") {
-                            return "#3b9dd6"; 
+                    .attr('stroke', function() {
+                        if (exp === 'control') {
+                            return '#3b9dd6'; 
                         } else {
-                            return "#e0913c";
+                            return '#e0913c';
                         }
                     })
-                    .attr("stroke-width", 2)
+                    .attr('stroke-width', 2)
                     .attr('x1', function(d,i) { return xrange(times[i]) - 3; })
                     .attr('x2', function(d,i) { return xrange(times[i]) + 3; })
                     .attr('y1', function(d,i) { return yrange(ypoint_arr[i] + stdDevs[i]);})
                     .attr('y2', function(d,i) { return yrange(ypoint_arr[i] + stdDevs[i]);});
 
-            var errorBotBar = errorBars.selectAll("line.errorBot")
+            var errorBotBar = errorBars.selectAll('line.errorBot')
                 .data(stdDevs);
 
                 errorBotBar.enter()
                     .append('line')
                     .attr('class', 'errorBot')
-                    .attr("stroke", function() {
-                        if (exp === "control") {
-                            return "#3b9dd6"; 
+                    .attr('stroke', function() {
+                        if (exp === 'control') {
+                            return '#3b9dd6'; 
                         } else {
-                            return "#e0913c";
+                            return '#e0913c';
                         }
                     })
-                    .attr("stroke-width", 2)
+                    .attr('stroke-width', 2)
                     .attr('x1', function(d,i) { return xrange(times[i]) - 3; })
                     .attr('x2', function(d,i) { return xrange(times[i]) + 3; })
                     .attr('y1', function(d,i) { return yrange(ypoint_arr[i] - stdDevs[i]);})
