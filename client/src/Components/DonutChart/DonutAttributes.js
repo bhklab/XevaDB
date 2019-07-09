@@ -21,8 +21,8 @@ class AttributesDonut extends React.Component {
     }
 
     dimensions = {
-        width: 1000,
-        height: 1500
+        width: 500,
+        height: 500
     }
 
     margin = {
