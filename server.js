@@ -20,5 +20,5 @@ app.use('/api', router);
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
-    console.log("Server Started");
+    console.log('Server Started');
 })
