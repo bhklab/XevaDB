@@ -7,7 +7,7 @@ exports.up = function(knex, Promise) {
         table.string('patient_id')
              .notNullable()
              .references('patient_id')
-             .inTable("patient_information")
+             .inTable('patient_information')
              .index();
         table.string('drug').notNullable();
     });
