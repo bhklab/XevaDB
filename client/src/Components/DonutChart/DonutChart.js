@@ -25,8 +25,7 @@ class DonutChart extends React.Component {
     }
 
     makeDonutChart(node, data) {
-        console.log(data)
-        //this.node = node
+        //console.log(data)
 
                                                 /** SETTING SVG ATTRIBUTES **/
 
@@ -48,11 +47,30 @@ class DonutChart extends React.Component {
 
                                                         /* Donut Chart */
 
-        // color scheme for the pie/donut chart using the ordinal scale.                                              
-        var color = d3.scaleOrdinal()
-                    .domain(data)
-                    .range(['#98abc5', '#8a89a6', '#7b6888', '#efedf5', '#bcbddc', '#756bb1']);
+        // color scheme for the pie/donut chart using the ordinal scale.     
+        
+        let colors = ['#5254a3', '#7b6888', '#843c39', '#d6616b', '#a55194', '#393b79']
 
+        let color = d3.scaleOrdinal()
+                      .domain(data)
+                      .range(colors);
+
+
+                                                        /* div element for the tooltip */
+        // create a tooltip
+        let tooltip = d3.select(node)
+                            .append('div')
+                            .style('position', 'absolute')
+                            .style('visibility', 'hidden')
+                            .style('border', 'solid')
+                            .style('border-width', '2px')
+                            .style('border-radius', '5px')
+                            .style('padding', '5px')
+                            .attr('top', 10)
+                            .attr('left', 20);
+
+
+                                                        /* Arc for the main pie chart and label arc */
 
         // arc generator
         let arc = d3.arc()
@@ -64,17 +82,18 @@ class DonutChart extends React.Component {
                          .outerRadius(180)
                          .innerRadius(110)
 
+                                                             /* Pie/Donut chart layout */
+
         // pie generator/layout
         let pie = d3.pie()
                     .sort(null)
                     .value((d) => {
-                        console.log(d)
                         return d.total;
                     })
         
         // this will send the data to the pie generator and appending the class arc.
         let arcs = skeleton.selectAll('.arc')
-                      .data(()=> {
+                      .data(() => {
                           return pie(data);
                       })
                       .enter()
@@ -87,57 +106,74 @@ class DonutChart extends React.Component {
         let piearc = arcs.append('path')
                          .attr('d', arc)
                          .attr('fill', (d) => {
-                             console.log(d)
-                                 return color(d.data.total);
+                            return color(d.data.total);
                          })
-                         .attr("stroke", "black")
-                         .style("stroke-width", ".5px")
+                         .attr('stroke', 'black')
+                         .style('stroke-width', '.5px')
+        
+        // this is a very basic tooltip.
+                /*
+                piearc.append('title')
+                    .text((d) => {
+                        return 'Total is ' + d.data.total
+                    })
+                */    
+                                                                        /* event listeners */
 
         // transition while mouseover and mouseout on each slice.
-                  piearc.on('mouseover', (d) => {
-                           let selection = (d.data.tissue).replace(/\s/g, '_')
-                            d3.select('.' + selection + '_Arc')
-                              .transition()
-                              .duration(300)
-                              .style("opacity", 0.4)
-                              .style("cursor", "pointer")
-                       })
-                       .on('mousemove', (d) => {
-                            let selection = (d.data.tissue).replace(/\s/g, '_')
-                            d3.select('.' + selection + '_Arc')
+                piearc.on('mouseover', (d) => {
+                        let selection = (d.data.tissue).replace(/\s/g, '_')
+                        d3.select('.' + selection + '_Arc')
                             .transition()
                             .duration(300)
-                            .style("opacity", 0.4)
-                            .style("cursor", "pointer");
-                       })
-                       .on('mouseout', (d) => {
-                            let selection = (d.data.tissue).replace(/\s/g, '_')
-                            d3.select('.' + selection + '_Arc')
-                              .transition()
-                              .duration(300)
-                              .style("opacity", 1)
-                              .style("cursor", "pointer");
-                       })
-                
+                            .style('opacity', 0.4)
+                            .style('cursor', 'pointer')
+                        // tooltip on mousever setting the div to visible.
+                        tooltip
+                            .style('visibility', 'visible');
+                    })
+                    .on('mousemove', (d,i) => {
+                        let selection = (d.data.tissue).replace(/\s/g, '_')
+                        d3.select('.' + selection + '_Arc')
+                            .transition()
+                            .duration(300)
+                            .style('opacity', 0.4)
+                            .style('cursor', 'pointer')
+                        // tooltip grabbing event.pageX and event.pageY and set color according to the ordinal scale.
+                        tooltip
+                            .text([d.data.tissue, "(", d.data.total, ")"])
+                            .style('left', d3.event.pageX + 10 + 'px')
+                            .style('top', d3.event.pageY + 10 + 'px')
+                            .style('color', 'white')
+                            .style('background-color', color(d.data.total))
+                    })
+                    .on('mouseout', (d) => {
+                        let selection = (d.data.tissue).replace(/\s/g, '_')
+                        d3.select('.' + selection + '_Arc')
+                            .transition()
+                            .duration(300)
+                            .style('opacity', 1)
+                            .style('cursor', 'pointer');
+                        // tooltip on mouseout.
+                        tooltip
+                            .style('visibility', 'hidden')
+                            .style('background-color', 'black')
+                    })
+    
         // append the text labels.
-                    arcs.append('text')
-                        .attr('transform', (d) => {
-                            return 'translate(' + labelArc.centroid(d) + ')'
-                        })
-                        .attr("dy", "0.35em")
-                        .text(d => {
-                            return d.data.tissue
-                        })
-                        .attr("font-weight", "bold")
-                        .style("text-anchor", "middle")
-                        .style("font-size", 7)
-
-        // tooltip
-        let Tooltip = d3.select('#donutchart-donut')
-                        .append('div')
-                        .attr('class', 'tooltip')
-                        .style('opacity', 0)
-                        
+                arcs.append('text')
+                    .attr('transform', (d) => {
+                        return 'translate(' + labelArc.centroid(d) + ')'
+                    })
+                    .attr('dy', '0.35em')
+                    .text(d => {
+                        return d.data.tissue
+                    })
+                    .attr('font-weight', 'bold')
+                    .style('text-anchor', 'middle')
+                    .style('font-size', 7)
+                    .attr('fill', 'white')
+                            
     }
 
     render() {
