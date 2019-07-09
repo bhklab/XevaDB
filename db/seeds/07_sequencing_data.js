@@ -19,7 +19,7 @@ exports.seed = function(knex, Promise) {
                 }, next);
             } })).on('error', reject)
             .on('finish', function() {
-              console.log("Done");
+              console.log('Done');
             });
       });
 };
