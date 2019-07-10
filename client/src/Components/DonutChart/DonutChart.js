@@ -110,7 +110,7 @@ class DonutChart extends React.Component {
                          })
                          .attr('stroke', 'black')
                          .style('stroke-width', '.5px')
-        
+                       
         // this is a very basic tooltip.
                 /*
                 piearc.append('title')
@@ -121,7 +121,7 @@ class DonutChart extends React.Component {
                                                                         /* event listeners */
 
         // transition while mouseover and mouseout on each slice.
-                piearc.on('mouseover', (d) => {
+                    piearc.on('mouseover', (d) => {
                         let selection = (d.data.tissue).replace(/\s/g, '_')
                         d3.select('.' + selection + '_Arc')
                             .transition()
@@ -140,8 +140,9 @@ class DonutChart extends React.Component {
                             .style('opacity', 0.4)
                             .style('cursor', 'pointer')
                         // tooltip grabbing event.pageX and event.pageY and set color according to the ordinal scale.
+                        let total = ' (' + d.data.total + ')'
                         tooltip
-                            .text([d.data.tissue, "(", d.data.total, ")"])
+                            .text([d.data.tissue + total])
                             .style('left', d3.event.pageX + 10 + 'px')
                             .style('top', d3.event.pageY + 10 + 'px')
                             .style('color', 'white')
