@@ -2,7 +2,7 @@ import React from 'react';
 import DonutChart from './DonutChart';
 import axios from 'axios';
 
-class AttributesDonut extends React.Component {
+class DonutTissue extends React.Component {
 
     constructor(props) {
         super(props)
@@ -36,7 +36,7 @@ class AttributesDonut extends React.Component {
 
     render() {
         return (
-            <div className='AttributesDonut'>
+            <div className='DonutTissue'>
                 <DonutChart 
                     dimensions={this.dimensions} margin={this.margin} 
                     chartId={this.chartId} data={this.state.data}
@@ -46,4 +46,4 @@ class AttributesDonut extends React.Component {
     }
 }
 
-export default AttributesDonut
+export default DonutTissue
