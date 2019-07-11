@@ -4,8 +4,11 @@ const knex = require('../../db/knex1');
 
 
 const getDistinctDrugs = function(req,res) {
-    knex.distinct('drug').select()
+    knex.select('drug')
+        .count('patient_id as total')
+        .groupBy('drug')
         .from('model_information')
+        .limit(3)
         .then((drug) => res.status(200).json({
             status: 'success',
             data: drug
