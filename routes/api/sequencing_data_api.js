@@ -1,4 +1,3 @@
-const express = require('express');
 const knex = require('../../db/knex1');
 
 const isValidId = function (req, res, next) {
