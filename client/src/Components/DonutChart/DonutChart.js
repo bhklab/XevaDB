@@ -1,6 +1,5 @@
 import React from 'react';
 import * as d3 from 'd3';
-import axios from 'axios';
 
 class DonutChart extends React.Component {
 
@@ -25,7 +24,7 @@ class DonutChart extends React.Component {
     }
 
     makeDonutChart(node, data) {
-        //console.log(data)
+        console.log(data)
 
                                                 /** SETTING SVG ATTRIBUTES **/
 
@@ -110,6 +109,20 @@ class DonutChart extends React.Component {
                          })
                          .attr('stroke', 'black')
                          .style('stroke-width', '.5px')
+              
+        // transition of the arcs for the pie chart itself.
+        piearc.transition()
+                .ease(d3.easeLinear)
+                .duration(500)
+                .attrTween('d', pieTween);
+
+        function pieTween(b) {
+            b.innerRadius = 0;
+            let i = d3.interpolate({startAngle: 0, endAngle:0}, b);
+            return function(t) {
+                return arc(i(t))
+            }
+        }
                        
         // this is a very basic tooltip.
                 /*
@@ -120,60 +133,86 @@ class DonutChart extends React.Component {
                 */    
                                                                         /* event listeners */
 
+        let mouseover = function(d) {
+            let selection = (d.data.tissue).replace(/\s/g, '_')
+            d3.select('.' + selection + '_Arc')
+                .transition()
+                .duration(300)
+                .style('opacity', 0.4)
+                .style('cursor', 'pointer')
+            // tooltip on mousever setting the div to visible.
+            tooltip
+                .style('visibility', 'visible')
+        }
+
+        let mousemove = function(d) {
+            let selection = (d.data.tissue).replace(/\s/g, '_')
+            d3.select('.' + selection + '_Arc')
+                .transition()
+                .duration(300)
+                .style('opacity', 0.4)
+                .style('cursor', 'pointer')
+            // tooltip grabbing event.pageX and event.pageY and set color according to the ordinal scale.
+            let total = ' (' + d.data.total + ')'
+            tooltip
+                .text([d.data.tissue + total])
+                .style('left', d3.event.pageX + 10 + 'px')
+                .style('top', d3.event.pageY + 10 + 'px')
+                .style('color', 'white')
+                .style('background-color', color(d.data.total))
+        }
+
+        let mouseout = function(d) {
+            let selection = (d.data.tissue).replace(/\s/g, '_')
+            d3.select('.' + selection + '_Arc')
+                .transition()
+                .duration(300)
+                .style('opacity', 1)
+                .style('cursor', 'pointer')
+            // tooltip on mouseout.
+            tooltip
+                .style('visibility', 'hidden')
+                .style('background-color', 'black')
+        }
+
         // transition while mouseover and mouseout on each slice.
-                    piearc.on('mouseover', (d) => {
-                        let selection = (d.data.tissue).replace(/\s/g, '_')
-                        d3.select('.' + selection + '_Arc')
-                            .transition()
-                            .duration(300)
-                            .style('opacity', 0.4)
-                            .style('cursor', 'pointer')
-                        // tooltip on mousever setting the div to visible.
-                        tooltip
-                            .style('visibility', 'visible');
+          piearc.on('mouseover', (d) => {
+                       mouseover(d)
                     })
                     .on('mousemove', (d,i) => {
-                        let selection = (d.data.tissue).replace(/\s/g, '_')
-                        d3.select('.' + selection + '_Arc')
-                            .transition()
-                            .duration(300)
-                            .style('opacity', 0.4)
-                            .style('cursor', 'pointer')
-                        // tooltip grabbing event.pageX and event.pageY and set color according to the ordinal scale.
-                        let total = ' (' + d.data.total + ')'
-                        tooltip
-                            .text([d.data.tissue + total])
-                            .style('left', d3.event.pageX + 10 + 'px')
-                            .style('top', d3.event.pageY + 10 + 'px')
-                            .style('color', 'white')
-                            .style('background-color', color(d.data.total))
+                        mousemove(d)
                     })
                     .on('mouseout', (d) => {
-                        let selection = (d.data.tissue).replace(/\s/g, '_')
-                        d3.select('.' + selection + '_Arc')
-                            .transition()
-                            .duration(300)
-                            .style('opacity', 1)
-                            .style('cursor', 'pointer');
-                        // tooltip on mouseout.
-                        tooltip
-                            .style('visibility', 'hidden')
-                            .style('background-color', 'black')
+                       mouseout(d)
                     })
     
+                                                                    /* Label with event listeners */
+
         // append the text labels.
-                arcs.append('text')
+            arcs.append('text')
                     .attr('transform', (d) => {
                         return 'translate(' + labelArc.centroid(d) + ')'
                     })
                     .attr('dy', '0.35em')
                     .text(d => {
-                        return d.data.tissue
+                        if (d.data.tissue === "Non-small Cell Lung Carcinoma") {
+                            return "NSCLC"
+                        }
+                        else { return d.data.tissue }
                     })
-                    .attr('font-weight', 'bold')
+                    //.attr('font-weight', 'bold')
                     .style('text-anchor', 'middle')
-                    .style('font-size', 7)
+                    .style('font-size', 10)
                     .attr('fill', 'white')
+                    .on('mouseover', (d) => {
+                        mouseover(d)
+                    })
+                    .on('mousemove', (d) => {
+                        mousemove(d)
+                    })
+                    .on('mouseout', (d) => {
+                        mouseout(d)
+                    })
                             
     }
 
