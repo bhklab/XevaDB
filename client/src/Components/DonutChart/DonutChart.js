@@ -19,10 +19,11 @@ class DonutChart extends React.Component {
 
     DonutChart() {
         const node = this.node
-        const data = this.props.data.data
+        const data = this.props.data
         this.makeDonutChart(node, data)
     }
 
+    // data should be like => {id: "Gastric Cancer", value: 1007}
     makeDonutChart(node, data) {
         console.log(data)
 
@@ -87,7 +88,7 @@ class DonutChart extends React.Component {
         let pie = d3.pie()
                     .sort(null)
                     .value((d) => {
-                        return d.total;
+                        return d.value;
                     })
         
         // this will send the data to the pie generator and appending the class arc.
@@ -98,14 +99,14 @@ class DonutChart extends React.Component {
                       .enter()
                       .append('g')
                       .attr('class', (d) => {
-                          return (d.data.tissue).replace(/\s/g,'_') + '_Arc'
+                          return (d.data.id).replace(/\s/g,'_') + '_Arc'
                       })
         
         // here we are appending path and use of d element to create the path.
         let piearc = arcs.append('path')
                          .attr('d', arc)
                          .attr('fill', (d) => {
-                            return color(d.data.total);
+                            return color(d.data.value);
                          })
                          .attr('stroke', 'black')
                          .style('stroke-width', '.5px')
@@ -128,13 +129,13 @@ class DonutChart extends React.Component {
                 /*
                 piearc.append('title')
                     .text((d) => {
-                        return 'Total is ' + d.data.total
+                        return 'value is ' + d.data.value
                     })
                 */    
                                                                         /* event listeners */
 
         let mouseover = function(d) {
-            let selection = (d.data.tissue).replace(/\s/g, '_')
+            let selection = (d.data.id).replace(/\s/g, '_')
             d3.select('.' + selection + '_Arc')
                 .transition()
                 .duration(300)
@@ -146,24 +147,24 @@ class DonutChart extends React.Component {
         }
 
         let mousemove = function(d) {
-            let selection = (d.data.tissue).replace(/\s/g, '_')
+            let selection = (d.data.id).replace(/\s/g, '_')
             d3.select('.' + selection + '_Arc')
                 .transition()
                 .duration(300)
                 .style('opacity', 0.4)
                 .style('cursor', 'pointer')
             // tooltip grabbing event.pageX and event.pageY and set color according to the ordinal scale.
-            let total = ' (' + d.data.total + ')'
+            let value = ' (' + d.data.value + ')'
             tooltip
-                .text([d.data.tissue + total])
+                .text([d.data.id + value])
                 .style('left', d3.event.pageX + 10 + 'px')
                 .style('top', d3.event.pageY + 10 + 'px')
                 .style('color', 'white')
-                .style('background-color', color(d.data.total))
+                .style('background-color', color(d.data.value))
         }
 
         let mouseout = function(d) {
-            let selection = (d.data.tissue).replace(/\s/g, '_')
+            let selection = (d.data.id).replace(/\s/g, '_')
             d3.select('.' + selection + '_Arc')
                 .transition()
                 .duration(300)
@@ -195,10 +196,10 @@ class DonutChart extends React.Component {
                     })
                     .attr('dy', '0.35em')
                     .text(d => {
-                        if (d.data.tissue === "Non-small Cell Lung Carcinoma") {
+                        if (d.data.id === "Non-small Cell Lung Carcinoma") {
                             return "NSCLC"
                         }
-                        else { return d.data.tissue }
+                        else { return d.data.id }
                     })
                     //.attr('font-weight', 'bold')
                     .style('text-anchor', 'middle')
