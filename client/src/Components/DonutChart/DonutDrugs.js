@@ -1,6 +1,6 @@
-import React from 'react';
-import DonutChart from './DonutChart';
-import axios from 'axios';
+import React from 'react'
+import DonutChart from './DonutChart'
+import axios from 'axios'
 
 class DonutTissue extends React.Component {
 
