@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeatMap, Oncoprint, TumorGrowthCurve, DonutTissue, DonutDrug, Header } from './Components/index';
+import { HeatMap, Oncoprint, TumorGrowthCurve, DonutTissue, DonutDrug, Home} from './Components/index';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 class App extends React.Component {
@@ -12,7 +12,7 @@ class App extends React.Component {
           <Route path="/curve" exact component={TumorGrowthCurve}></Route>
           <Route path='/donut_tissue' exact component={DonutTissue}></Route>
           <Route path='/donut_drug' exact component={DonutDrug}></Route>
-          <Route path='/' exact component={Header}></Route>
+          <Route path='/' exact component={Home}></Route>
         </Switch>
       </Router>
     )
