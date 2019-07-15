@@ -28,15 +28,15 @@ class DonutTissue extends React.Component {
     }
 
     dimensions = {
-        width: 500,
-        height: 500
+        width: 130,
+        height: 130
     }
 
     margin = {
         top: 300,
-        right: 200,
+        right: 100,
         bottom: 100,
-        left: 350
+        left: 250
     }
 
     chartId = 'donut'

@@ -74,13 +74,13 @@ class DonutChart extends React.Component {
 
         // arc generator
         let arc = d3.arc()
-                    .outerRadius(200)
-                    .innerRadius(100)
+                    .outerRadius(180)
+                    .innerRadius(80)
 
         // this is used to set the labels
         let labelArc = d3.arc()
-                         .outerRadius(180)
-                         .innerRadius(110)
+                         .outerRadius(160)
+                         .innerRadius(90)
 
                                                              /* Pie/Donut chart layout */
 
@@ -226,4 +226,4 @@ class DonutChart extends React.Component {
     }
 }
 
-export default DonutChart;
+export default DonutChart
