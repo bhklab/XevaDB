@@ -2,7 +2,7 @@ import React from 'react'
 import DonutChart from './DonutChart'
 import axios from 'axios'
 
-class DonutTissue extends React.Component {
+class DonutDrug extends React.Component {
 
     constructor(props) {
         super(props)
@@ -28,15 +28,15 @@ class DonutTissue extends React.Component {
     }
 
     dimensions = {
-        width: 500,
-        height: 500
+        width: 150,
+        height: 150
     }
 
     margin = {
         top: 300,
-        right: 200,
+        right: 100,
         bottom: 100,
-        left: 350
+        left: 250
     }
 
     chartId = 'donut'
@@ -53,4 +53,4 @@ class DonutTissue extends React.Component {
     }
 }
 
-export default DonutTissue
+export default DonutDrug
