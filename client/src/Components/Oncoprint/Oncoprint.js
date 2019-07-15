@@ -403,4 +403,4 @@ class Oncoprint extends Component {
 }
 
 
-export default Oncoprint;
+export default Oncoprint
