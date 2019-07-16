@@ -20,7 +20,11 @@ const getMutation = function(req,res) {
     knex.select('gene_id', 'patient_id', 'mutation')
         .from('sequencing_data')
         .where((builder) =>
-        builder.whereIn('patient_id',(knex.select('patient_id').from('model_information').where('tissue', 'Breast Cancer')))
+            builder.whereIn('patient_id',
+                                        (knex.select('patient_id')
+                                        .from('model_information')
+                                        .where('tissue', 'Breast Cancer'))
+                            )
         ).limit(840)
         .then((sequencing_data) => {
         let data = [];
@@ -44,8 +48,44 @@ const getMutation = function(req,res) {
     })
 }
 
+
+// This will get the list of the patient id's which are not 
+// available in the sequencing_data table ie don't have sequencing data.
+const getNotTestedPatient = function(req,res) {
+    knex('model_information')
+        .distinct('model_information.patient_id')
+        .leftJoin(
+            knex('sequencing_data')
+            .distinct('patient_id').as('sequencing_data')
+            , 'model_information.patient_id'
+            , 'sequencing_data.patient_id'
+        )
+        .where('sequencing_data.patient_id', null)
+        .then((patient) => {
+            res.send(patient)
+        })
+}
+
+
+
+// This will give a list of the patients those are 
+// not availabe in the drug_screening table ie they only have sequencing_data screening data.
+const getOnlySequenceData = function(req,res) {
+       knex('sequencing_data')
+            .distinct('patient_id')
+            .whereNotIn('patient_id', knex('drug_screening')
+                            .distinct('patient_id')
+                        )
+            .then((patient) => {
+                res.send(patient)
+            })
+}
+
+
 module.exports = {
     getMutationId,
     getMutation,
-    isValidId
+    isValidId,
+    getNotTestedPatient,
+    getOnlySequenceData
 }
