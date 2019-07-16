@@ -28,8 +28,8 @@ class DonutDrug extends React.Component {
     }
 
     dimensions = {
-        width: 150,
-        height: 150
+        width: 130,
+        height: 80
     }
 
     margin = {

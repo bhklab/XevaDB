@@ -29,7 +29,7 @@ class DonutTissue extends React.Component {
 
     dimensions = {
         width: 130,
-        height: 130
+        height: 80
     }
 
     margin = {
