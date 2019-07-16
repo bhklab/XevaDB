@@ -8,10 +8,10 @@ class TopNav extends React.Component {
             <div>
             <HeaderStyle>
                     <LogoStyle>
-                        <Link to='/'> XevaDB </Link> 
+                        <Link to='/'> <h3> XevaDB</h3> </Link> 
                     </LogoStyle>
                     <LinkStyle>
-                        <Link to='/'> Home </Link>
+                        <Link to='/home'> Home </Link>
                         <Link to='/maps'> HeatMap </Link>
                         <Link to='/curve'> Growth </Link>
                         <Link to='/donut_tissue'> TissueDonut </Link>
