@@ -34,6 +34,19 @@ const getDistinctTissues = function(req,res) {
 }
 
 
+const getDistinctPatients = function(req,res) {
+    knex('model_information')
+        .distinct('patient_id')
+        .then((patient_id) => res.status(200).json({
+            status: 'success',
+            data: patient_id
+          }))
+        .catch((error) => res.status(500).json({
+            status: 'could not find tissue',
+            data: error
+        }))
+}
+
 const getModelInformation = function(req,res) {
     knex.select()
         .from('model_information')
@@ -43,16 +56,9 @@ const getModelInformation = function(req,res) {
 }
 
 
-const getNotTestedPatient = function(req,res) {
-    knex.distinct('patient_id').select()
-        .from('model_information')
-}
-
-
-
 module.exports = {
     getModelInformation,
-    getNotTestedPatient,
     getDistinctDrugs,
-    getDistinctTissues
+    getDistinctTissues,
+    getDistinctPatients
 }
