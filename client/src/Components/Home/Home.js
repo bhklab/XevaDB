@@ -2,6 +2,7 @@ import React from 'react'
 import TopNav from '../TopNav/TopNav'
 import DonutDrug from '../DonutChart/DonutDrugs'
 import DonutTissue from '../DonutChart/DonutTissues'
+import DonutPatient from '../DonutChart/DonutPatient'
 import Search from '../Search/Search'
 import styled from 'styled-components'
 
@@ -18,8 +19,9 @@ class Home extends React.Component {
                 <TopNav/>
                 <Search/>
                 <DonutNav>
-                    <div><DonutDrug/></div> 
                     <div><DonutTissue/></div>
+                    <div><DonutDrug/></div> 
+                    <div><DonutPatient/></div>
                 </DonutNav>
             </div>
         )
