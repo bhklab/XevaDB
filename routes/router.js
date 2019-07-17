@@ -31,6 +31,10 @@ router.get('/v1/getonlysequencing', mutation.getOnlySequenceData);
 router.get('/v1/drugs', modelInformation.getDistinctDrugs);
 router.get('/v1/tissues', modelInformation.getDistinctTissues);
 router.get('/v1/patients', modelInformation.getDistinctPatients);
+router.get('/v1/models', modelInformation.getTotalModels);
+router.get('/v1/alldrugs', modelInformation.getTotalDrugs);
+router.get('/v1/alltissues', modelInformation.getTotalTissues);
+router.get('/v1/counter', modelInformation.getCounter);
 
 
 
