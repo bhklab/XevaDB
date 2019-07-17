@@ -4,7 +4,9 @@ import DonutDrug from '../DonutChart/DonutDrugs'
 import DonutTissue from '../DonutChart/DonutTissues'
 import DonutPatient from '../DonutChart/DonutPatient'
 import Search from '../Search/Search'
+import CounterNav from '../CounterNav/CounterNav'
 import styled from 'styled-components'
+
 
 
 const DonutNav = styled.div`
@@ -23,6 +25,7 @@ class Home extends React.Component {
                     <div><DonutDrug/></div> 
                     <div><DonutPatient/></div>
                 </DonutNav>
+                <CounterNav/>
             </div>
         )
     }

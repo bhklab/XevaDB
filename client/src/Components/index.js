@@ -7,6 +7,7 @@ import DonutTissue from './DonutChart/DonutTissues'
 import TopNav from './TopNav/TopNav'
 import Home from './Home/Home'
 import DonutPatient from './DonutChart/DonutPatient'
+import CounterNav from './CounterNav/CounterNav'
 
 export {
     HeatMap,
@@ -17,5 +18,6 @@ export {
     DonutTissue,
     TopNav,
     Home,
-    DonutPatient
+    DonutPatient,
+    CounterNav
 }
