@@ -12,6 +12,7 @@
     "papaparse": "^4.6.3",
     "react": "^16.6.3",
     "react-bootstrap": "^0.32.4",
+    "react-countup": "^4.2.0",
     "react-dom": "^16.6.3",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.0.1",
