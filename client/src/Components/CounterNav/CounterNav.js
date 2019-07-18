@@ -1,26 +1,8 @@
 import React from 'react'
 import CountUp from 'react-countup'
-import styled from 'styled-components'
+import DonutNav from './CounterStyle'
 import axios from 'axios'
 
-const DonutNav = styled.div`
-    display: flex;
-    justify-content: space-around;
-    background-color: #f6eeee;
-    font-family: 'Raleway', sans-serif;
-    div {
-        padding: 10px;
-        color: #bd0808;
-        letter-spacing: 2px;
-        font-weight: bold;
-        font-size: 18px;
-    }
-    h4 {
-        margin-top: 2px;
-        margin-bottom: 0px;
-        margin-left: -25px;
-    }
-`;
 
 class CounterNav extends React.Component {
 
