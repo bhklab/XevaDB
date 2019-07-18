@@ -12,11 +12,11 @@ const StyleBar = styled.div`
 
    input {
       width: 50%;
-      padding: 14px;
+      padding: 24px;
       margin: 8px 0;
       box-sizing: border-box;
-      border: 2px solid #bd0808;
-      border-radius: 4px;
+      border: 1.5px solid #bd0808;
+      border-radius: 16px;
       outline: none;
 
         :focus {
@@ -50,8 +50,7 @@ class Search extends React.Component {
         return (
             <StyleBar>
             <div>
-                <h2> XevaDB </h2>
-                <h2> A database for PDX pharmacogenomic data </h2>
+                <h2> XevaDB: A Database For PDX Pharmacogenomic Data </h2>
                 <form>
                     <input type="text" onChange={this.handleChange} placeholder="Search..."></input>
                 </form>

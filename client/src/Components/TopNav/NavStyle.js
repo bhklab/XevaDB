@@ -13,6 +13,10 @@ const HeaderStyle = styled.header`
     min-height: 10vh;
     font-family: 'Raleway', sans-serif;
     background-color: #f6eeee;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
 `;
 
 const LinkStyle = styled.a`
