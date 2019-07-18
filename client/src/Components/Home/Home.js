@@ -11,6 +11,7 @@ import styled from 'styled-components'
 
 const DonutNav = styled.div`
     display: flex;
+    width: 100%;
 `;
 
 
