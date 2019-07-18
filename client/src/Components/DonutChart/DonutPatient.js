@@ -47,7 +47,7 @@ class DonutPatient extends React.Component {
     }
 
     margin = {
-        top: 300,
+        top: 280,
         right: 100,
         bottom: 100,
         left: 250
