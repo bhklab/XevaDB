@@ -40,6 +40,7 @@ class CounterNav extends React.Component {
                         start = {0}
                         end = {this.state.drugs}
                         duration = {3}
+                        useEasing={true}
                     /> 
                     <h4> DRUGS </h4>
                 </div>
@@ -49,6 +50,7 @@ class CounterNav extends React.Component {
                         start = {0}
                         end = {this.state.patients} 
                         duration = {3}
+                        useEasing={true}
                     />
                     <h4> PATIENTS </h4> 
                 </div>
@@ -58,6 +60,7 @@ class CounterNav extends React.Component {
                         start = {0}
                         end = {this.state.tissues} 
                         duration = {3}
+                        useEasing={true}
                     />
                     <h4> TISSUES </h4>
                 </div>
@@ -67,6 +70,7 @@ class CounterNav extends React.Component {
                         start = {0}
                         end = {this.state.models} 
                         duration = {3}
+                        useEasing={true}
                     />
                     <h4> MODELS </h4>
                 </div>
