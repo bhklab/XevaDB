@@ -6,6 +6,7 @@ const DonutNav = styled.div`
     justify-content: space-around;
     background-color: #f6eeee;
     font-family: 'Raleway', sans-serif;
+    min-height: 80px;
     position: fixed;
     bottom:0;
     left:0;
@@ -16,6 +17,7 @@ const DonutNav = styled.div`
         letter-spacing: 2px;
         font-weight: bold;
         font-size: 18px;
+        margin-top: 6px;
     }
     h4 {
         margin-top: 2px;
