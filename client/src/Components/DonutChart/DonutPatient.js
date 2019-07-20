@@ -20,7 +20,7 @@ class DonutPatient extends React.Component {
         Promise.all([promise1, promise2, promise3])
              .then((response) => {
                 let i = 1;
-                response.map((data) => {
+                response.forEach((data) => {
                     if(data.data.length !== 0) {
                         let value = {}
                         if (i===1) {

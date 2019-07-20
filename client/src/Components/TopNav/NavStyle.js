@@ -10,13 +10,14 @@ const HeaderStyle = styled.header`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    min-height: 10vh;
+    min-height: 80px;
     font-family: 'Raleway', sans-serif;
     background-color: #f6eeee;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    
 `;
 
 const LinkStyle = styled.a`
@@ -29,7 +30,7 @@ const LinkStyle = styled.a`
         text-decoration: none;
         letter-spacing: 2px;
         font-weight: bold;
-        font-size: 18px;
+        font-size: 20px;
         :hover {
             color: #393b79;
         }
@@ -37,6 +38,32 @@ const LinkStyle = styled.a`
 
     a:nth-child(1) {
         margin-left : 200px;
+    }
+
+    @media screen and (max-width: 1300px) {
+        a:nth-child(1) {
+            margin-left : 10px;
+        }
+    }
+
+    @media screen and (max-width: 1000px) {
+        a {
+           font-size: 14px;
+        }
+
+        a:nth-child(1) {
+            margin-left : 0px;
+        }
+    }
+
+    @media screen and (max-width: 700px) {
+        a {
+           font-size: 10px;
+        }
+
+        a:nth-child(1) {
+            margin-left : 0px;
+        }
     }
 `
 

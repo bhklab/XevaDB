@@ -10,10 +10,8 @@ import styled from 'styled-components'
 
 
 const DonutNav = styled.div`
-    .donutnav {
         display: flex;
         width: 100%;
-    }
 `;
 
 
@@ -24,11 +22,9 @@ class Home extends React.Component {
                 <TopNav/>
                 <Search/>
                 <DonutNav>
-                    <div className='donutnav'>
-                        <div><DonutTissue/></div>
-                        <div><DonutDrug/></div> 
-                        <div><DonutPatient/></div>
-                    </div>
+                    <div><DonutTissue/></div>
+                    <div><DonutDrug/></div> 
+                    <div><DonutPatient/></div>
                 </DonutNav>
                 <CounterNav/>
             </div>
