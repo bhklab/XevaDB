@@ -15,7 +15,7 @@ class DonutTissue extends React.Component {
         let new_values = []
         axios.get(`http://localhost:5000/api/v1/tissues`)
              .then((response) => {
-                 response.data.data.map((data) => {
+                 response.data.data.forEach((data) => {
                      let value = {}
                      value['id'] = data.tissue
                      value['value'] = data.total
