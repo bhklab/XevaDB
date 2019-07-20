@@ -53,6 +53,11 @@ class DonutPatient extends React.Component {
         left: 250
     }
 
+    arc = {
+        outerRadius: 160,
+        innerRadius: 70
+    }
+
     chartId = 'donut'
 
     render() {
@@ -61,6 +66,7 @@ class DonutPatient extends React.Component {
                 <DonutChart 
                     dimensions={this.dimensions} margin={this.margin} 
                     chartId={this.chartId} data={this.state.data}
+                    arc={this.arc}
                 />
             </div>
         )
