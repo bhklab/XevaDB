@@ -33,7 +33,7 @@ class DonutTissue extends React.Component {
     }
 
     margin = {
-        top: 280,
+        top: 220,
         right: 100,
         bottom: 100,
         left: 250
