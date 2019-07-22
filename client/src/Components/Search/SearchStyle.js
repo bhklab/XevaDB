@@ -5,7 +5,6 @@ const StyleBar = styled.div`
         color: #bd0808;
         text-align: center;
         line-height: 0.4;
-        margin-top: 30vh;
    } 
 
    input {
@@ -27,15 +26,19 @@ const StyleBar = styled.div`
         }   
    }
 
-   @media screen and (max-width: 850px) {
+   @media screen and (max-width: 1500px) {
+       input {
+           width: 50%;
+           padding: 26px;
+       }
        h1 {
-           font-size: 26px;
+           font-size: 24px;
        }
    }
 
    @media screen and (max-width: 650px) {
        h1 {
-           font-size: 20px;
+           font-size: 18px;
        }
    }
 

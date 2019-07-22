@@ -17,7 +17,6 @@ const HeaderStyle = styled.header`
     top: 0;
     left: 0;
     width: 100%;
-    
 `;
 
 const LinkStyle = styled.a`

@@ -10,9 +10,15 @@ import styled from 'styled-components'
 
 
 const DonutNav = styled.div`
-        display: flex;
-        justify-content: space-around;
-        margin-top: 15vh;
+    display: flex;
+    margin-top: 15vh;
+    justify-content: space-around;
+`;
+
+
+const Content = styled.div`
+    margin-top: 30vh;
+    margin-bottom: 10vh;
 `;
 
 
@@ -21,12 +27,14 @@ class Home extends React.Component {
         return (
             <div>
                 <TopNav/>
-                <Search/>
-                <DonutNav>
-                    <div><DonutTissue/></div>
-                    <div><DonutDrug/></div> 
-                    <div><DonutPatient/></div>
-                </DonutNav>
+                <Content>
+                    <Search/>
+                    <DonutNav>
+                        <div><DonutTissue/></div>
+                        <div><DonutDrug/></div> 
+                        <div><DonutPatient/></div>
+                    </DonutNav>
+                </Content>
                 <CounterNav/>
             </div>
         )
