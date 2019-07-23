@@ -9,34 +9,39 @@ import styled from 'styled-components'
 
 
 
-const DonutNav = styled.div`
+const Container = styled.div`
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  .chart {
     display: flex;
-    margin-top: 15vh;
+    flex: 1;
     justify-content: space-around;
-`;
+    margin-top: 20vh;
+  }
 
-
-const Content = styled.div`
-    margin-top: 30vh;
-    margin-bottom: 10vh;
-`;
-
+  @media screen and (max-width: 1300px) {
+        .chart {
+            justify-content: space-between;
+        }
+    }
+`
 
 class Home extends React.Component {
     render() {
         return (
-            <div>
+            <Container>
                 <TopNav/>
-                <Content>
-                    <Search/>
-                    <DonutNav>
-                        <div><DonutTissue/></div>
-                        <div><DonutDrug/></div> 
-                        <div><DonutPatient/></div>
-                    </DonutNav>
-                </Content>
+                <Search/>
+                <div className='chart'>
+                    <div><DonutTissue/></div>
+                    <div><DonutDrug/></div> 
+                    <div><DonutPatient/></div>
+                </div>
                 <CounterNav/>
-            </div>
+            </Container>
+               
+
         )
     }
 }
