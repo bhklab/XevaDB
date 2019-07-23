@@ -1,7 +1,6 @@
 import React from 'react';
 import { HeatMapData, OncoprintData, TumorGrowthCurve, DonutTissue, 
-          DonutDrug, Home, CounterNav,
-          Documentation} from './Components/index';
+          DonutDrug, Home, CounterNav, Documentation} from './Components/index';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 class App extends React.Component {
