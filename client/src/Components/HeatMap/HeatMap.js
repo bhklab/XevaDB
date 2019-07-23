@@ -1,6 +1,5 @@
 import React from 'react'
 import * as d3 from 'd3'
-import axios from 'axios'
 
 
 class HeatMap extends React.Component {
@@ -31,7 +30,7 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, node) {
-       //console.log(patient)
+       // console.log(patient)
        // console.log(drug)
        // console.log(node)
 
