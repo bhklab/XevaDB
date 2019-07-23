@@ -44,11 +44,11 @@ class DonutDrug extends React.Component {
         innerRadius: 70
     }
 
-    chartId = 'donut'
+    chartId = 'donut_drug'
 
     render() {
         return (
-            <div className='DonutTissue'>
+            <div className='DonutDrug'>
                 <DonutChart 
                     dimensions={this.dimensions} margin={this.margin} 
                     chartId={this.chartId} data={this.state.data}
