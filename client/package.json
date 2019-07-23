@@ -10,6 +10,7 @@
     "d3": "^5.9.1",
     "d3-request": "^1.0.6",
     "papaparse": "^4.6.3",
+    "prop-types": "^15.7.2",
     "react": "^16.6.3",
     "react-bootstrap": "^0.32.4",
     "react-countup": "^4.2.0",

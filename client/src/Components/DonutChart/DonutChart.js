@@ -1,5 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
+import PropTypes from 'prop-types';
+
 
 class DonutChart extends React.Component {
 
@@ -224,6 +226,15 @@ class DonutChart extends React.Component {
             </div>
         )
     }
+}
+
+
+DonutChart.propTypes = {
+    dimensions: PropTypes.object.isRequired,
+    margin: PropTypes.object.isRequired,
+    chartId: PropTypes.string.isRequired,
+    data: PropTypes.array.isRequired,
+    arc: PropTypes.object.isRequired
 }
 
 export default DonutChart
