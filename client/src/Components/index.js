@@ -8,6 +8,7 @@ import TopNav from './TopNav/TopNav'
 import Home from './Home/Home'
 import DonutPatient from './DonutChart/DonutPatient'
 import CounterNav from './CounterNav/CounterNav'
+import Documentation from './Documentation/Documentation'
 
 export {
     HeatMapData,
@@ -19,5 +20,6 @@ export {
     TopNav,
     Home,
     DonutPatient,
-    CounterNav
+    CounterNav,
+    Documentation
 }
