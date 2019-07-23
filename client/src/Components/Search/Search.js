@@ -20,12 +20,10 @@ class Search extends React.Component {
     render() {
         return (
             <StyleBar>
-            <div>
                 <h1> XevaDB: A Database For PDX Pharmacogenomic Data </h1>
                 <form>
                     <input type="text" onChange={this.handleChange} placeholder="Search..."></input>
                 </form>
-            </div>
             </StyleBar>
         )
     }
