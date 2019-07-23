@@ -45,16 +45,9 @@ const StyleBar = styled.div`
 
    @media screen and (max-height: 950px) {
        div {
-           margin-top: 25vh;
-       }
-   }
-
-   @media screen and (max-height: 650px) {
-       div {
            margin-top: 20vh;
        }
    }
-
 `
 
 
