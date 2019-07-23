@@ -7,38 +7,13 @@ class HeatMap extends React.Component {
 
     constructor(props) {
         super(props)
-        //setting the states for the data.
-        this.state = {
-            data : [],
-            patient_id : [],
-            drug_id : []
-        };
-        //binding the functions declared.
+        console.log(this.props.data)
         this.HeatMap = this.HeatMap.bind(this);
-        this.updateResults = this.updateResults.bind(this);
-    }
-
-    // this function takes the parsed result and set the states.
-    updateResults(result) {
-        const dataset = result;
-        let patient = Object.keys(dataset[0]);
-        patient.shift();
-        let drug = dataset.map((data) => {
-            return data.Drug;
-        })
-        this.setState({
-            drug_id : drug,
-            patient_id : patient,
-            data: dataset
-        })
+        this.makeHeatmap = this.makeHeatmap.bind(this);
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:5000/api/v1/respeval`)
-             .then(response => {
-                 this.updateResults(response.data);
-             })
-        this.HeatMap()
+        //this.HeatMap()
     }
 
     componentDidUpdate() {
@@ -47,9 +22,9 @@ class HeatMap extends React.Component {
 
     HeatMap() {
         const node = this.node;
-        let data = this.state.data;
-        let drug = this.state.drug_id;
-        let patient_id = this.state.patient_id;
+        let data = this.props.data;
+        let drug = this.props.drug_id;
+        let patient_id = this.props.patient_id;
         let plotId = 'plots';
         this.makeHeatmap(data, patient_id, drug, plotId, node)
     }
