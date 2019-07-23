@@ -1,5 +1,5 @@
 import HeatMapData from './HeatMap/HeatMapData'
-import Oncoprint from './Oncoprint/Oncoprint'
+import OncoprintData from './Oncoprint/OncoprintData'
 import TumorGrowthCurve from './TumorGrowthCurve/TumorGrowthCurve'
 import DonutChart from './DonutChart/DonutChart'
 import DonutDrug from './DonutChart/DonutDrugs'
@@ -12,7 +12,7 @@ import Documentation from './Documentation/Documentation'
 
 export {
     HeatMapData,
-    Oncoprint,
+    OncoprintData,
     TumorGrowthCurve,
     DonutChart,
     DonutDrug,

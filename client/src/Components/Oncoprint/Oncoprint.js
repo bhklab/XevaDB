@@ -1,45 +1,15 @@
-import React, {Component} from 'react'
+import React from 'react'
 import * as d3 from 'd3'
-import axios from 'axios'
 
 
-class Oncoprint extends Component {
+class Oncoprint extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            data : [],
-            genes : [],
-            patient_id : []
-        };
         this.Oncoprint = this.Oncoprint.bind(this);
-        this.updateResults = this.updateResults.bind(this);
-    }
-
-    updateResults(result) {
-        const dataset = result;
-        let gene_id = [];
-        let patient = [];
-        
-        patient = Object.keys(dataset[0]);
-        patient.shift();
-
-        dataset.map((data) => {
-            return gene_id.push(data['gene_id']);
-        })
-        
-        this.setState({
-            data : dataset,
-            genes : gene_id,
-            patient_id : patient
-        })
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:5000/api/v1/mutation`)
-             .then(response => {
-                 this.updateResults(response.data);
-             })
-        this.Oncoprint()
+        //this.Oncoprint()
     }
 
     componentDidUpdate() {
@@ -48,10 +18,10 @@ class Oncoprint extends Component {
 
     Oncoprint() {
         const node = this.node;
-        let data = this.state.data;
-        let genes = this.state.genes;
+        let data = this.props.data;
+        let genes = this.props.genes;
         let plotId = 'plots';
-        let patient_id = this.state.patient_id;
+        let patient_id = this.props.patient_id;
         this.makeOncoprint(data, genes, plotId, node, patient_id)
     }
 

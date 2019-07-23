@@ -1,6 +1,6 @@
 import React from 'react';
-import { HeatMapData, Oncoprint, TumorGrowthCurve, DonutTissue, 
-          DonutDrug, Home, DonutPatient, CounterNav,
+import { HeatMapData, OncoprintData, TumorGrowthCurve, DonutTissue, 
+          DonutDrug, Home, CounterNav,
           Documentation} from './Components/index';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ class App extends React.Component {
 
       <Router>
         <Route path="/maps" exact component={HeatMapData}></Route>
-        <Route path="/maps" exact component={Oncoprint}></Route>
+        <Route path="/maps" exact component={OncoprintData}></Route>
         <Switch>
           <Route path="/curve" exact component={TumorGrowthCurve}></Route>
           <Route path="/documentation" exact component={Documentation}></Route>
