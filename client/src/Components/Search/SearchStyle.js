@@ -1,12 +1,11 @@
 import styled from 'styled-components'
 
 const StyleBar = styled.div`
-   div {
+
         color: #bd0808;
         text-align: center;
         line-height: 0.4;
         margin-top: 30vh;
-   } 
 
    input {
       width: 40%;
@@ -44,9 +43,7 @@ const StyleBar = styled.div`
    }
 
    @media screen and (max-height: 950px) {
-       div {
            margin-top: 20vh;
-       }
    }
 `
 
