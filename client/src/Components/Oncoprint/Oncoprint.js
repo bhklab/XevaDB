@@ -41,6 +41,13 @@ class Oncoprint extends React.Component {
             left: 250
         }
 
+        // adding this for rectangles on right side of oncoprint.
+        let rect_alterations = [
+            { value : 'Deep Deletion', color: '#0033CC' },
+            { value: 'Amplification', color: '#1a9850' },
+            { value: 'Mutation', color: '#e41a1c'}
+        ]
+
                                                     /** SETTING SVG ATTRIBUTES **/
     
         // make the svg element
@@ -359,8 +366,43 @@ class Oncoprint extends React.Component {
                     this.remove();
                 }
         });
-                                        
-                    
+
+
+                                                                                         /** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint **/
+
+                    // This will create four rectangles on right side for alterations.
+                    let target_rect = skeleton.append('g')
+                                              .attr('id', 'small_rectangle')
+
+                                    target_rect.selectAll('rect')
+                                        .data(rect_alterations)
+                                        .enter()
+                                        .append('rect')
+                                        .attr('x', 1040)
+                                        .attr('y', function(d, i) {
+                                            return 200 + i * 25;
+                                        })
+                                        .attr('height', '15')
+                                        .attr('width', '15')
+                                        .attr('fill', function(d) {
+                                            return d.color;
+                                        })
+
+                                    target_rect.selectAll('text')
+                                        .data(rect_alterations)
+                                        .enter()
+                                        .append('text')
+                                        .attr('x', 1070)
+                                        .attr('y', function(d,i) {
+                                            return 212 + i * 25;
+                                        })
+                                        .text(function(d) {
+                                            return d.value;
+                                        })
+                                        .attr('font-size', '14px')
+
+                                                
+                            
     }
 
     render() {
