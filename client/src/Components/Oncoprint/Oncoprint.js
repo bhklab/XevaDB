@@ -408,7 +408,7 @@ class Oncoprint extends React.Component {
 
     render() {
         return (
-            <svg ref = {node => this.node = node} width={1500} height={1500}>
+            <svg ref = {node => this.node = node} width={1500} height={1300}>
                 
             </svg>
         )
