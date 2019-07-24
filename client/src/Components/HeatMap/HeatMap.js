@@ -12,7 +12,7 @@ class HeatMap extends React.Component {
     }
 
     componentDidMount() {
-        //this.HeatMap()
+        this.HeatMap()
     }
 
     componentDidUpdate() {

@@ -22,7 +22,7 @@ const Container = styled.div`
 
     @media screen and (max-height: 950px) {
         .chart {
-            margin-top: 5vh;
+            margin-top: 2.5vh;
         }
     }
 `
