@@ -1,7 +1,17 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import { HeatMapData, OncoprintData, TumorGrowthCurve, DonutTissue, 
-          DonutDrug, Home, CounterNav, Documentation, Merge} from './Components/index'
+          DonutDrug, Home, CounterNav, Documentation} from './Components/index'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+
+
+const Merge = () => {
+    return (
+      <Fragment>
+        <HeatMapData/>
+        <OncoprintData/>
+      </Fragment>
+    )
+}
 
 
 class App extends React.Component {
