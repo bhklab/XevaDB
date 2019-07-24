@@ -42,10 +42,13 @@ class OncoprintData extends React.Component {
 
     render() {
         return (
-           <Oncoprint
-                data={this.state.data} patient_id={this.state.patient_id}
-                genes={this.state.genes}
-           />
+            <div>
+                <Oncoprint
+                    data={this.state.data} patient_id={this.state.patient_id}
+                    genes={this.state.genes}
+                />       
+            </div>
+           
         )
     }
 }

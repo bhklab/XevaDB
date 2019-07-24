@@ -9,7 +9,7 @@ class Oncoprint extends React.Component {
     }
 
     componentDidMount() {
-        //this.Oncoprint()
+        this.Oncoprint()
     }
 
     componentDidUpdate() {
@@ -27,6 +27,7 @@ class Oncoprint extends React.Component {
 
 
     makeOncoprint(data, genes, plotId, node, patient_id) {
+        this.node = node
         // height and width for the SVG based on the number of drugs and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
         let rect_height = 40;
@@ -407,7 +408,7 @@ class Oncoprint extends React.Component {
 
     render() {
         return (
-            <svg ref = {node => this.node = node} width={3500} height={1500}>
+            <svg ref = {node => this.node = node} width={1500} height={1500}>
                 
             </svg>
         )

@@ -39,7 +39,21 @@ const LinkStyle = styled.a`
         margin-left : 200px;
     }
 
+    @media screen and (max-width: 1500px) {
+        a {
+            font-size: 18px;
+        }
+
+        a:nth-child(1) {
+            margin-left : 100px;
+        }
+    }
+
     @media screen and (max-width: 1300px) {
+        a {
+            font-size: 18px;
+        }
+        
         a:nth-child(1) {
             margin-left : 10px;
         }

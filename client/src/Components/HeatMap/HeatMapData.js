@@ -2,6 +2,7 @@ import React from 'react'
 import HeatMap from './HeatMap'
 import axios from 'axios'
 
+
 class HeatMapData extends React.Component {
 
     constructor(props) {
