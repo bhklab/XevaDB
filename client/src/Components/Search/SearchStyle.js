@@ -4,16 +4,16 @@ const StyleBar = styled.div`
     margin-top: 30vh;
 
     h1 {
-        color: #bd0808;
-        text-align: center;
-        line-height: 0.4;
+      color: #bd0808;
+      text-align: center;
+      line-height: 0.4;
     }    
 
    .select-component {
-        width: 55%;
-        margin: auto;
-        min-width: 500px;
-        margin-top: 35px;
+      width: 55%;
+      margin: auto;
+      min-width: 500px;
+      margin-top: 35px;
    }
 
    @media screen and (max-width: 1500px) {
@@ -29,7 +29,7 @@ const StyleBar = styled.div`
    }
 
    @media screen and (max-height: 950px) {
-           margin-top: 18vh;
+        margin-top: 18vh;
    }
 `;
 
