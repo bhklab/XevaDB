@@ -1,6 +1,6 @@
 import React from 'react'
 import * as d3 from 'd3'
-
+import PropTypes from 'prop-types'
 
 class HeatMap extends React.Component {
 
@@ -455,6 +455,13 @@ class HeatMap extends React.Component {
             </svg>
         )
     }
+}
+
+
+HeatMap.propTypes = {
+    drug_id: PropTypes.array.isRequired,
+    patient_id: PropTypes.array.isRequired,
+    data: PropTypes.array.isRequired
 }
 
 export default HeatMap

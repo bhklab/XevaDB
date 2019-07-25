@@ -1,6 +1,6 @@
 import React from 'react'
 import * as d3 from 'd3'
-
+import PropTypes from 'prop-types'
 
 class Oncoprint extends React.Component {
     constructor(props) {
@@ -413,6 +413,13 @@ class Oncoprint extends React.Component {
             </svg>
         )
     }
+}
+
+
+Oncoprint.propTypes = {
+    genes: PropTypes.array.isRequired,
+    patient_id: PropTypes.array.isRequired,
+    data: PropTypes.array.isRequired
 }
 
 
