@@ -27,7 +27,7 @@ class DonutChart extends React.Component {
 
     // data should be like => {id: "Gastric Cancer", value: 1007}
     makeDonutChart(node, data) {
-        console.log(data)
+        //console.log(data)
 
                                                 /** SETTING SVG ATTRIBUTES **/
 

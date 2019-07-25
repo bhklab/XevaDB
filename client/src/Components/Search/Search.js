@@ -1,30 +1,47 @@
 import React from 'react'
 import StyleBar from './SearchStyle'
+import Select from 'react-select'
+import axios from 'axios'
 
 
 class Search extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            value: 0
+            data : []
         }
-        this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(event) {
-        console.log(event.target.value)
-        this.setState({value: event.target.value});
+    componentDidMount() {
+        let values = [];
+        let initial = 1;
+        axios.get(`http://localhost:5000/api/v1/alldrugs`)
+             .then((response) => {
+                 console.log(response)
+                 response.data.data.forEach(item => {
+                     values.push(
+                         {  
+                            value: initial++,
+                            label: item.drug
+                         }
+                     )
+                 })
+                 this.setState ({
+                    data: values
+                })
+             })
+          
+           console.log(values)
     }
-
 
     render() {
+       
         return (
             <StyleBar>
                 <h1> XevaDB: A Database For PDX Pharmacogenomic Data </h1>
-                <form>
-                    <input type="text" onChange={this.handleChange} placeholder="Search..."></input>
-                </form>
+                <Select options={this.state.data} />
             </StyleBar>
+           
         )
     }
 }

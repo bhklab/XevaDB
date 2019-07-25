@@ -19,7 +19,7 @@ const HeaderStyle = styled.header`
     width: 100%;
 `;
 
-const LinkStyle = styled.a`
+const LinkStyle = styled.div`
     display: flex;
     justify-content: space-around;
     width: 60%;
