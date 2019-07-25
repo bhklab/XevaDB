@@ -189,8 +189,8 @@ class TumorGrowthCurve extends React.Component {
 
 
         function tumorCurve(data, plotId, node) {
-            console.log(data)
-            console.log(plotId)
+            //console.log(data)
+            //console.log(plotId)
 
             let drug = data[0]['drug']
 
@@ -461,7 +461,6 @@ class TumorGrowthCurve extends React.Component {
             for (var n = 0; n < exp_types.length; n++) {
                 var exp = exp_types[n]
                 var times = timeUnion[n]
-                console.log()
                 var selection = d3.selectAll('.model-path.' + exp_types[n])[0]
                 
 

@@ -17,6 +17,7 @@
     "react-dom": "^16.6.3",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.0.1",
+    "react-select": "^3.0.4",
     "react-transition-group": "^2.5.0",
     "reactstrap": "^6.5.0",
     "styled-components": "^4.3.2",
