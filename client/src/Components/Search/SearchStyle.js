@@ -74,11 +74,26 @@ const customStyles = {
       '&:hover': {
         background: '#fee8c8'
       },
+      fontSize: '18px'
     }),
 
-    singleValue: provided => ({
+    singleValue: (provided) => ({
       ...provided,
       color: '#bd0808',
+      fontSize: '20px'
+    }),
+
+    input: (provided) => ({
+      ...provided,
+      color: '#bd0808',
+    }),
+
+    clearIndicator: (provided) => ({
+      ...provided,
+      color: '#bd0808',
+      '&:hover': {
+        color: '#fee8c8',
+      }
     })
 }
 

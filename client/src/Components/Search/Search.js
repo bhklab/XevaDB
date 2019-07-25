@@ -41,6 +41,7 @@ class Search extends React.Component {
                         options={this.state.data} 
                         styles={customStyles}
                         placeholder={'Search for Drug (eg. CLR457)'}
+                        isClearable
                     />
                 </div>
             </StyleBar>
