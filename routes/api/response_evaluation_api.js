@@ -31,6 +31,30 @@ const getResponseEvaluation = function(req,res) {
         }));  
 }
 
+
+
+
+const getResponseEvaluationDrug = function(req,res) {
+        let drug = req.params.id
+            knex.select('patient_id', 'drug', 'response')
+                .from('response_evaluation')
+                .limit(43)
+                .where('drug', drug)
+                .then((row) => {
+                    let data = {};
+                    let patient = '';
+                    data['Drug'] = drug
+                    usersRows = JSON.parse(JSON.stringify(row));
+                    usersRows.forEach( element => {
+                        data[element.patient_id] = element.response;
+                    })
+                    res.send(data)
+                })
+}
+
+
+
 module.exports = {
-    getResponseEvaluation
+    getResponseEvaluation,
+    getResponseEvaluationDrug
 }
