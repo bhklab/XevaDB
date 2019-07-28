@@ -6,7 +6,7 @@ class HeatMap extends React.Component {
 
     constructor(props) {
         super(props)
-        console.log(this.props.data)
+        console.log(this.props)
         this.HeatMap = this.HeatMap.bind(this);
         this.makeHeatmap = this.makeHeatmap.bind(this);
     }
@@ -30,9 +30,10 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, node) {
-       // console.log(patient)
-       // console.log(drug)
-       // console.log(node)
+       //console.log(patient)
+       //console.log(drug)
+       //console.log(data)
+       //console.log(node)
 
     this.node = node
     // height and width for the SVG based on the number of drugs and patient/sample ids.
