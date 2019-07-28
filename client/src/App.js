@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import { HeatMapData, OncoprintData, TumorGrowthCurve, DonutTissue, 
-          DonutDrug, Home, CounterNav, Documentation} from './Components/index'
+          DonutDrug, Home, CounterNav, Documentation, Drug} from './Components/index'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 
@@ -19,13 +19,14 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
+          <Route path='/' exact component={Home}></Route>
           <Route path="/maps" exact component={Merge}></Route>
           <Route path="/curve" exact component={TumorGrowthCurve}></Route>
-          <Route path="/documentation" exact component={Documentation}></Route>
+          <Route path="/drug/:id" exact component={Drug}></Route>
           <Route path='/donut_tissue' exact component={DonutTissue}></Route>
           <Route path='/donut_drug' exact component={DonutDrug}></Route>
-          <Route path='/' exact component={Home}></Route>
           <Route path='/home' exact component={CounterNav}></Route>
+          <Route render = { () => <h1> 404 Error </h1> } />
         </Switch>
       </Router>
     )
