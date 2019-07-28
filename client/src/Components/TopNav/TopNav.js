@@ -14,7 +14,7 @@ class TopNav extends React.Component {
                     <Link to='/maps'> HeatMap </Link>
                     <Link to='/donut_tissue'> TissueDonut </Link>
                     <Link to='/donut_drug'> DrugDonut </Link>
-                    <Link to='/documentation'> Documentation </Link>
+                    <Link to='/drug/BGJ398'> Documentation </Link>
                 </LinkStyle>         
             </HeaderStyle>
         )
