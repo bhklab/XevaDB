@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom';
 import {StyleBar, customStyles} from './SearchStyle'
 import Select from 'react-select'
 import axios from 'axios'
@@ -7,9 +8,13 @@ import axios from 'axios'
 class Search extends React.Component {
     constructor(props) {
         super(props)
+        console.log(this.props)
         this.state = {
-            data : []
+            data : [],
+            selectedDrug : 'Search for Drug'
         }
+        this.handleDrugChange = this.handleDrugChange.bind(this)
+        this.handleKeyPress = this.handleKeyPress.bind(this)
     }
 
     componentDidMount() {
@@ -31,17 +36,35 @@ class Search extends React.Component {
              })
     }
 
+    handleDrugChange = selectedOption => {
+        const label = selectedOption.label
+        this.setState ({
+            selectedDrug : label
+        })
+    }
+
+    handleKeyPress = (event) => {
+        if(event.key === 'Enter'){
+           this.redirectUser()
+        }
+    }
+
+    redirectUser = () => {
+        const { history } = this.props
+        history.push(`/drug/${this.state.selectedDrug}`)
+    }
+
+
     render() {
-       
         return (
             <StyleBar>
                 <h1> XevaDB: A Database For PDX Pharmacogenomic Data </h1>
-                <div className='select-component'>
+                <div className='select-component' onKeyPress={this.handleKeyPress}>
                     <Select 
                         options={this.state.data} 
                         styles={customStyles}
                         placeholder={'Search for Drug (eg. CLR457)'}
-                        isClearable
+                        onChange={this.handleDrugChange}
                     />
                 </div>
             </StyleBar>
@@ -50,4 +73,5 @@ class Search extends React.Component {
     }
 }
 
-export default Search
+
+export default withRouter(Search)
