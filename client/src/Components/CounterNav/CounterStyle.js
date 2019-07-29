@@ -20,9 +20,9 @@ const DonutNav = styled.div`
         margin-top: 6px;
     }
     h4 {
-        margin-top: 2px;
+        margin-top: 3px;
         margin-bottom: 0px;
-        margin-left: -25px;
+        margin-left: -30px;
     }
 `;
 

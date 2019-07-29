@@ -13,7 +13,7 @@ class CounterNav extends React.Component {
             drugs: 0,
             patients: 0,
             models: 0,
-            datasets: 0,
+            datasets: 1,
             tissues: 0
         }
     }
@@ -38,22 +38,13 @@ class CounterNav extends React.Component {
                 <div>
                     <CountUp 
                         start = {0}
-                        end = {this.state.drugs}
-                        duration = {3}
-                        useEasing={true}
-                    /> 
-                    <h4> DRUGS </h4>
-                </div>
-
-                <div>
-                    <CountUp 
-                        start = {0}
-                        end = {this.state.patients} 
+                        end = {this.state.datasets} 
                         duration = {3}
                         useEasing={true}
                     />
-                    <h4> PATIENTS </h4> 
+                    <h4> Datasets </h4>
                 </div>
+
 
                 <div>
                     <CountUp 
@@ -65,14 +56,26 @@ class CounterNav extends React.Component {
                     <h4> TISSUES </h4>
                 </div>
 
-                <div>
+
+                 <div>
                     <CountUp 
                         start = {0}
-                        end = {this.state.models} 
+                        end = {this.state.patients} 
                         duration = {3}
                         useEasing={true}
                     />
-                    <h4> MODELS </h4>
+                    <h4> PATIENTS </h4> 
+                </div>
+
+
+                <div>
+                    <CountUp 
+                        start = {0}
+                        end = {this.state.drugs}
+                        duration = {3}
+                        useEasing={true}
+                    /> 
+                    <h4> DRUGS </h4>
                 </div>
 
             </DonutNav>
