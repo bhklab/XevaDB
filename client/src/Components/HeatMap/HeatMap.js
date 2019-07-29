@@ -12,7 +12,7 @@ class HeatMap extends React.Component {
     }
 
     componentDidMount() {
-        this.HeatMap()
+        //this.HeatMap()
     }
 
     componentDidUpdate() {
@@ -24,31 +24,23 @@ class HeatMap extends React.Component {
         let data = this.props.data;
         let drug = this.props.drug_id;
         let patient_id = this.props.patient_id;
+        let dimensions = this.props.dimensions;
+        let margin = this.props.margin;
         let plotId = 'plots';
-        this.makeHeatmap(data, patient_id, drug, plotId, node)
+        this.makeHeatmap(data, patient_id, drug, plotId, dimensions, margin, node)
     }
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
-   makeHeatmap(data, patient, drug, plotId, node) {
-       //console.log(patient)
-       //console.log(drug)
-       //console.log(data)
-       //console.log(node)
+   makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
 
     this.node = node
     // height and width for the SVG based on the number of drugs and patient/sample ids.
     // height and width of the rectangles in the main skeleton.
-    let rect_height = 40;
-    let rect_width = 20;
+    let rect_height = dimensions.height;
+    let rect_width = dimensions.width;
     // this height and width is used for setting the body.
     let height = drug.length * rect_height + 200;
-    let width = patient.length * rect_width + 200;
-    let margin = {
-        top: 200,
-        right: 200,
-        bottom: 100,
-        left: 250
-    }
+    let width = patient.length * rect_width + 500;
 
     //'#1f77b4', '#2ca02c', '#ffbb78', '#d62728'
     //'#0033CC', '#1a9850', '#fed976', '#e41a1c'
@@ -139,10 +131,11 @@ class HeatMap extends React.Component {
                 .attr('id', 'heatmap-' + plotId)
                 .attr('xmlns', 'http://wwww.w3.org/2000/svg')
                 .attr('xmlns:xlink', 'http://wwww.w3.org/1999/xlink')
-                .attr('height',height + margin.top + margin.bottom)
+                .attr('height',height + margin.bottom + margin.top) 
                 .attr('width', width + margin.left + margin.right)
                 .append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                
     
 
                                     /** HEATMAP SKELETON **/
@@ -244,7 +237,7 @@ class HeatMap extends React.Component {
                                  .append('rect')
                                  .attr('x', 1040)
                                  .attr('y', function(d, i) {
-                                    return 200 + i * 25;
+                                    return 100 + i * 25;
                                  })
                                  .attr('height', '15')
                                  .attr('width', '15')
@@ -258,7 +251,7 @@ class HeatMap extends React.Component {
                                  .append('text')
                                  .attr('x', 1070)
                                  .attr('y', function(d,i) {
-                                     return 212 + i * 25;
+                                     return 112 + i * 25;
                                  })
                                  .text(function(d) {
                                      return d.value;
@@ -276,7 +269,7 @@ class HeatMap extends React.Component {
 
     let drug_Scale = d3.scaleLinear()
                        .domain([0,max_drug])
-                       .range([0,60])
+                       .range([0,80])
 
     // This will set an x-axis for the vertical graph.
     let x_axis = d3.axisTop()
@@ -286,7 +279,7 @@ class HeatMap extends React.Component {
                     .tickFormat(d3.format('.0f'));
 
                 svg.append('g')
-                    .attr('transform', 'translate(880,35)')
+                    .attr('transform', 'translate(' + (patient.length * rect_width + 20) + ',' + 35 + ')')
                     .call(x_axis)
                     .selectAll('text')
                     .attr('fill', 'black')
@@ -300,7 +293,7 @@ class HeatMap extends React.Component {
 
                             drug_eval.append('rect')
                                .attr('class', 'drug_eval_rect')
-                               .attr('x', 880)
+                               .attr('x', patient.length * rect_width + 20)
                                .attr('y', 35)
                                .attr('height', 40 * drug.length )
                                .attr('width', drug_Scale(max_drug))
@@ -313,7 +306,7 @@ class HeatMap extends React.Component {
                  .attr('class', 'drug_eval_cr')
                  .attr('height', 26)
                  .attr('width', drug_Scale(drug_evaluations[drug[i]]['CR']))
-                 .attr('x',880)
+                 .attr('x',patient.length * rect_width + 20)
                  .attr('y',  drug_height_Scale(42 + i * 40))
                  .attr('fill', target_color[0])
                  .style('stroke', 'black')
@@ -323,7 +316,7 @@ class HeatMap extends React.Component {
                  .attr('class', 'drug_eval_pr')
                  .attr('height', 26)
                  .attr('width', drug_Scale(drug_evaluations[drug[i]]['PR']))
-                 .attr('x',880 + drug_Scale(drug_evaluations[drug[i]]['CR']))
+                 .attr('x',patient.length * rect_width + 20 + drug_Scale(drug_evaluations[drug[i]]['CR']))
                  .attr('y',  drug_height_Scale(42 + i * 40))
                  .attr('fill', target_color[1])
                  .style('stroke', 'black')
@@ -333,7 +326,7 @@ class HeatMap extends React.Component {
                  .attr('class', 'drug_eval_sd')
                  .attr('height', 26)
                  .attr('width', drug_Scale(drug_evaluations[drug[i]]['SD']))
-                 .attr('x',880 + drug_Scale(drug_evaluations[drug[i]]['CR']) + drug_Scale(drug_evaluations[drug[i]]['PR']))
+                 .attr('x',patient.length * rect_width + 20 + drug_Scale(drug_evaluations[drug[i]]['CR']) + drug_Scale(drug_evaluations[drug[i]]['PR']))
                  .attr('y',  drug_height_Scale(42 + i * 40))
                  .attr('fill', target_color[2])
                  .style('stroke', 'black')
@@ -343,7 +336,7 @@ class HeatMap extends React.Component {
                  .attr('class', 'drug_eval_pd')
                  .attr('height', 26)
                  .attr('width', drug_Scale(drug_evaluations[drug[i]]['PD']))
-                 .attr('x',880 + drug_Scale(drug_evaluations[drug[i]]['CR']) + drug_Scale(drug_evaluations[drug[i]]['PR']) + drug_Scale(drug_evaluations[drug[i]]['SD'])) 
+                 .attr('x',patient.length * rect_width + 20 + drug_Scale(drug_evaluations[drug[i]]['CR']) + drug_Scale(drug_evaluations[drug[i]]['PR']) + drug_Scale(drug_evaluations[drug[i]]['SD'])) 
                  .attr('y', drug_height_Scale(42 + i * 40))
                  .attr('fill', target_color[3])  
                  .style('stroke', 'black')
@@ -451,9 +444,10 @@ class HeatMap extends React.Component {
 
     render() {
         return (
-            <svg ref = {node => this.node = node} width={1500} height={1200}>
-                
-            </svg>
+            <div 
+                ref = {node => this.node = node} 
+            >
+            </div>
         )
     }
 }
@@ -462,7 +456,9 @@ class HeatMap extends React.Component {
 HeatMap.propTypes = {
     drug_id: PropTypes.array.isRequired,
     patient_id: PropTypes.array.isRequired,
-    data: PropTypes.array.isRequired
+    data: PropTypes.array.isRequired,
+    dimensions: PropTypes.object.isRequired,
+    margin: PropTypes.object.isRequired
 }
 
 export default HeatMap

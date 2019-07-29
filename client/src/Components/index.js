@@ -10,6 +10,7 @@ import DonutPatient from './DonutChart/DonutPatient'
 import CounterNav from './CounterNav/CounterNav'
 import Documentation from './Documentation/Documentation'
 import Drug from './Drug/Drug'
+import Footer from './Footer/Footer'
 
 export {
     HeatMapData,
@@ -23,5 +24,6 @@ export {
     DonutPatient,
     CounterNav,
     Documentation,
-    Drug
+    Drug,
+    Footer
 }
