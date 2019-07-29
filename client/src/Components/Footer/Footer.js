@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-var styles = {
+const styles = {
 	color: '#bd0808',
 	fontSize: 18, 
 	textAlign: 'center',
@@ -11,17 +11,17 @@ var styles = {
     fontFamily: 'Raleway',
 };
 
+
 class Footer extends React.Component {
-    render(){
+    render() {
         return (
-            <div className="home-component">
-
-                <div className="home-footer">
-                <div style={styles}> ©Copyright 2019 BHKLab </div>
-                </div>
-
+            <div style={styles}>
+                ©Copyright 2019 BHKLab 
             </div>
         )
     }
 }
+
+
+
 export default Footer

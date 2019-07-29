@@ -28,6 +28,7 @@ class App extends React.Component {
             <Route path='/donut_tissue' exact component={DonutTissue}></Route>
             <Route path='/donut_drug' exact component={DonutDrug}></Route>
             <Route path='/home' exact component={CounterNav}></Route>
+            <Route path='/doc' exact component={Documentation}></Route>
             <Route render = { () => <h1> 404 Error </h1> } />
           </Switch>
         </Router>

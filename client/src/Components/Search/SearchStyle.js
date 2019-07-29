@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 const StyleBar = styled.div`
-    margin-top: 30vh;
+    margin-top: 35vh;
 
     h1 {
       color: #bd0808;
@@ -10,10 +10,10 @@ const StyleBar = styled.div`
     }    
 
    .select-component {
-      width: 55%;
+      width: 45%;
       margin: auto;
       min-width: 500px;
-      margin-top: 35px;
+      margin-top: 40px;
    }
 
    @media screen and (max-width: 1500px) {
@@ -26,10 +26,6 @@ const StyleBar = styled.div`
        h1 {
            font-size: 18px;
        }
-   }
-
-   @media screen and (max-height: 950px) {
-        margin-top: 35vh;
    }
 `;
 
@@ -46,7 +42,7 @@ const customStyles = {
         '&:hover': { borderColor: '#bd0808' },
         border: '1.5px solid #bd0808',
         boxShadow: 'none',
-        padding: '15px',
+        padding: '20px',
         borderRadius: '18px'
     }),
 
@@ -96,7 +92,6 @@ const customStyles = {
         }
     })
 }
-
 
 
 
