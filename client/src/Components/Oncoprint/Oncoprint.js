@@ -9,7 +9,7 @@ class Oncoprint extends React.Component {
     }
 
     componentDidMount() {
-        this.Oncoprint()
+        //this.Oncoprint()
     }
 
     componentDidUpdate() {
@@ -209,7 +209,7 @@ class Oncoprint extends React.Component {
 
         let xrange_gene = d3.scaleLinear()
             .domain([0, d3.max([maxGAmp, maxGMut, maxGHomdel])])
-            .range([0,50]);
+            .range([0,80]);
 
         
         let gene_alter = svg.append('g')
@@ -224,7 +224,7 @@ class Oncoprint extends React.Component {
                     .attr('x', 0)
                     .attr('y', 0)
                     .attr('height', (genes.length) * 50 - 15)
-                    .attr('width', 50 + stroke_width)
+                    .attr('width', 80 + stroke_width)
                     .attr('fill', 'white')
                     .style('stroke', 'black')
                     .style('stroke-width', stroke_width)
