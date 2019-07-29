@@ -1,14 +1,16 @@
 import React, {Fragment} from 'react'
 import { HeatMapData, OncoprintData, TumorGrowthCurve, DonutTissue, 
-          DonutDrug, Home, CounterNav, Documentation, Drug} from './Components/index'
+          DonutDrug, Home, CounterNav, Documentation, Drug, TopNav, Footer} from './Components/index'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 
 const Merge = () => {
     return (
       <Fragment>
+        <TopNav/>
         <HeatMapData/>
         <OncoprintData/>
+        <Footer/>
       </Fragment>
     )
 }
