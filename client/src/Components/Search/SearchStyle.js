@@ -29,7 +29,7 @@ const StyleBar = styled.div`
    }
 
    @media screen and (max-height: 950px) {
-        margin-top: 18vh;
+        margin-top: 35vh;
    }
 `;
 
