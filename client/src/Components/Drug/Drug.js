@@ -1,7 +1,9 @@
 import React from 'react'
 import HeatMap from '../HeatMap/HeatMap'
 import axios from 'axios'
-
+import TopNav from '../TopNav/TopNav'
+import OncoprintData from '../Oncoprint/OncoprintData'
+import Footer from '../Footer/Footer'
 
 class Drug extends React.Component {
 
@@ -49,13 +51,29 @@ class Drug extends React.Component {
              })
     }
 
+    dimensions = {
+        height: 40,
+        width: 20
+    }
+
+    margin = {
+        top: 400,
+        right: 200,
+        bottom: 1,
+        left: 250
+    }
+
     render() {
         return (
             <div>
+                <TopNav/>
                 <HeatMap
                     data={this.state.data} drug_id={this.state.drug_id} 
-                    patient_id={this.state.patient_id}
+                    patient_id={this.state.patient_id} dimensions={this.dimensions}
+                    margin={this.margin}
                 />
+                <OncoprintData/>
+                <Footer/>
             </div>
         )
     }
