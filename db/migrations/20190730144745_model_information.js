@@ -1,4 +1,3 @@
-
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('model_information', (table) => {
         table.string('model_id').primary();
@@ -9,7 +8,11 @@ exports.up = function(knex, Promise) {
              .references('patient_id')
              .inTable('patient_information')
              .index();
-        table.string('drug').notNullable();
+        table.string('drug')
+             .notNullable()
+             .references('drug_id')
+             .inTable('drug')
+             .index();
     });
 };
 

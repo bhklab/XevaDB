@@ -7,7 +7,11 @@ exports.up = function(knex, Promise) {
              .references('patient_id')
              .inTable('patient_information')
              .index();
-        table.string('drug').notNullable();
+        table.string('drug')
+             .notNullable()
+             .references('drug_id')
+             .inTable('drug')
+             .index();
         table.string('response').notNullable();
     });
 };
