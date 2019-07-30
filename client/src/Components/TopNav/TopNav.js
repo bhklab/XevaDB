@@ -12,8 +12,8 @@ class TopNav extends React.Component {
                 <LinkStyle>
                     <Link to='/'> Home </Link>
                     <Link to='/maps'> HeatMap </Link>
-                    <Link to='/donut_tissue'> TissueDonut </Link>
-                    <Link to='/donut_drug'> DrugDonut </Link>
+                    <Link to='/drug'> Drug </Link>
+                    <Link to='/donut_tissue'> Tissue </Link>
                     <Link to='/doc'> Documentation </Link>
                 </LinkStyle>         
             </HeaderStyle>

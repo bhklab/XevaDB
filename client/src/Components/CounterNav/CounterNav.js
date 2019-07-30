@@ -42,7 +42,7 @@ class CounterNav extends React.Component {
                         duration = {3}
                         useEasing={true}
                     />
-                    <h4> Datasets </h4>
+                    <h4> DATASETS </h4>
                 </div>
 
 

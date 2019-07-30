@@ -1,82 +1,62 @@
 import React from 'react'
-import HeatMap from '../HeatMap/HeatMap'
+import DonutChart from '../DonutChart/DonutChart'
 import axios from 'axios'
-import TopNav from '../TopNav/TopNav'
-import OncoprintData from '../Oncoprint/OncoprintData'
-import Footer from '../Footer/Footer'
 
-class Drug extends React.Component {
+class DonutDrug extends React.Component {
 
     constructor(props) {
         super(props)
-        
-        //setting the states for the data.
         this.state = {
-            data : [],
-            patient_id : [],
-            drug_id : [],
-        };
-
-        //binding the functions declared.
-        this.parseData= this.parseData.bind(this);
-    }
-
-    // this function takes the parsed result and set the states.
-    parseData(result) {
-
-        let patient = Object.keys(result);
-        patient.shift();
-        let drug = [];
-        const entries = Object.entries(result)
-        entries.forEach(element => {
-            if(element[0] === 'Drug') {
-                drug.push(element[1]);
-            }
-        });
-        let dataset = [];
-        dataset.push(result)
-        this.setState({
-            drug_id : drug,
-            patient_id : patient,
-            data: dataset
-        })
-        
+            data : []
+        }
     }
 
     componentDidMount() {
-        let id = this.props.match.params.id
-        axios.get(`http://localhost:5000/api/v1/respevaldrug/${id}`)
-             .then(response => {
-                 this.parseData(response.data);
+        let new_values = []
+        axios.get(`http://localhost:5000/api/v1/drugs`)
+             .then((response) => {
+                 response.data.data.forEach((data) => {
+                     let value = {}
+                     value['id'] = (data.drug).replace(/\s/g, '').replace('+', '_')
+                     value['value'] = data.total
+                     new_values.push(value)
+                 })
+                 this.setState({
+                     data : new_values
+                 })
              })
     }
 
     dimensions = {
-        height: 40,
-        width: 20
+        width: 130,
+        height: 80
     }
 
     margin = {
-        top: 400,
-        right: 200,
-        bottom: 1,
+        top: 220,
+        right: 100,
+        bottom: 100,
         left: 250
     }
 
+    arc = {
+        outerRadius: 160,
+        innerRadius: 70
+    }
+
+    chartId = 'donut_drug'
+
     render() {
         return (
-            <div>
-                <TopNav/>
-                <HeatMap
-                    data={this.state.data} drug_id={this.state.drug_id} 
-                    patient_id={this.state.patient_id} dimensions={this.dimensions}
-                    margin={this.margin}
+            <div className='DonutDrug'>
+                <DonutChart 
+                    dimensions={this.dimensions} margin={this.margin} 
+                    chartId={this.chartId} data={this.state.data}
+                    arc={this.arc}
                 />
-                <OncoprintData/>
-                <Footer/>
             </div>
         )
     }
 }
 
-export default Drug
+export default DonutDrug
