@@ -1,6 +1,15 @@
 import React from 'react'
 import DonutChart from '../DonutChart/DonutChart'
 import axios from 'axios'
+import styled from 'styled-components'
+
+
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 100px;
+`
 
 class DonutDrug extends React.Component {
 
@@ -28,33 +37,34 @@ class DonutDrug extends React.Component {
     }
 
     dimensions = {
-        width: 130,
-        height: 80
+        width: 350,
+        height: 250
     }
 
     margin = {
-        top: 220,
+        top: 320,
         right: 100,
         bottom: 100,
-        left: 250
+        left: 380
     }
 
     arc = {
-        outerRadius: 160,
-        innerRadius: 70
+        outerRadius: 260,
+        innerRadius: 150
     }
 
     chartId = 'donut_drug'
 
     render() {
         return (
-            <div className='DonutDrug'>
+            <Wrapper>
                 <DonutChart 
                     dimensions={this.dimensions} margin={this.margin} 
                     chartId={this.chartId} data={this.state.data}
                     arc={this.arc}
                 />
-            </div>
+            </Wrapper>
+        
         )
     }
 }

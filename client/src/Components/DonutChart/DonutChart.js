@@ -25,7 +25,7 @@ class DonutChart extends React.Component {
         this.makeDonutChart(node, data)
     }
 
-    // data should be like => {id: "Gastric Cancer", value: 1007}
+    // data should be like => {id: 'Gastric Cancer', value: 1007}
     makeDonutChart(node, data) {
         //console.log(data)
 
@@ -198,8 +198,8 @@ class DonutChart extends React.Component {
                     })
                     .attr('dy', '0.35em')
                     .text(d => {
-                        if (d.data.id === "Non-small Cell Lung Carcinoma") {
-                            return "NSCLC"
+                        if (d.data.id === 'Non-small Cell Lung Carcinoma') {
+                            return 'NSCLC'
                         }
                         else { return d.data.id }
                     })
@@ -221,8 +221,10 @@ class DonutChart extends React.Component {
 
     render() {
         return (
-            <div ref = {node => this.node = node} className='donut-chart'>
-            
+            <div 
+                ref = {node => this.node = node} 
+                className='donut-chart'
+            >
             </div>
         )
     }
