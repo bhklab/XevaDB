@@ -48,7 +48,7 @@ class HeatMapData extends React.Component {
     margin = {
         top: 300,
         right: 200,
-        bottom: 30,
+        bottom: 0,
         left: 250
     }
 
