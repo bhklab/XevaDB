@@ -6,7 +6,6 @@ class HeatMap extends React.Component {
 
     constructor(props) {
         super(props)
-        console.log(this.props)
         this.HeatMap = this.HeatMap.bind(this);
         this.makeHeatmap = this.makeHeatmap.bind(this);
     }
@@ -32,14 +31,13 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
-
     this.node = node
     // height and width for the SVG based on the number of drugs and patient/sample ids.
     // height and width of the rectangles in the main skeleton.
     let rect_height = dimensions.height;
     let rect_width = dimensions.width;
     // this height and width is used for setting the body.
-    let height = drug.length * rect_height + 200;
+    let height = drug.length * rect_height + 100;
     let width = patient.length * rect_width + 500;
 
     //'#1f77b4', '#2ca02c', '#ffbb78', '#d62728'
@@ -91,6 +89,7 @@ class HeatMap extends React.Component {
             }
             if (current_max_drug > max_drug) { max_drug = current_max_drug }
     }
+
 
     /* This code is used to produce the query strings */
     function querystring_value(d) {
@@ -149,6 +148,8 @@ class HeatMap extends React.Component {
     let drug_response = skeleton.append('g')
                                 .attr('id', 'targ_rect')
 
+    
+
     let gskeleton =  drug_response.selectAll('g')
                                   .data(data)
                                   .enter()
@@ -157,13 +158,26 @@ class HeatMap extends React.Component {
                                     return `translate(0,${i * rect_height})`
                                   })
 
+    // let hmap_highlight = drug_response.selectAll("g#highlight")
+    //                             .data(data)
+    //                             .enter()
+    //                             .append('g')
+    //                             .attr("id", "highlight")
+    //                             .attr('transform', function(d,i) {
+    //                             return `translate(0,${i * rect_height})`
+    //                             })
+
+
+    let rectKeys, rectValues;
     // this will append rect equivalent to number of patient ids.
-    let drawrectangle = gskeleton.selectAll('rect')
+    let drawrectangle = gskeleton.selectAll('rect.hmap-rect')
                                   .data(function(d) {  
                                     //calling the function and passing the data d as parameter.
                                     calculate_evaluations(d);
                                     //this returns the object values to next chaining method.
-                                    return Object.values(d);
+                                    rectKeys = Object.keys(d);
+                                    rectValues = Object.values(d);
+                                    return rectValues;
                                    })
                                   .enter()
                                   .append('a')
@@ -176,12 +190,17 @@ class HeatMap extends React.Component {
                                     else { return d; }
                                   })
                                   .append('rect')
+                                  .attr("class", function(d, i) {
+                                    // i+1 because drug is included in there
+                                    return "hmap-rect heatmap-" + rectKeys[i+1]
+                                  })
                                   .attr('width', rect_width - 2)
                                   .attr('height', rect_height - 2)
                                   .attr('x', function(d,i) {
                                     return i * rect_width ;  
                                   })
                                   .attr('y', rect_height)
+
                                  
     // this will fill the rectangles with different color based on the data. 
             drawrectangle.attr('fill', function(d) {
@@ -196,11 +215,123 @@ class HeatMap extends React.Component {
                                     } else {
                                         return target_color[4]
                                     }
-                                }) 
-                          
+                                })                   
+    // let highlight = hmap_highlight.selectAll("rect.highlight")
+    //                             .data(function() {  
+    //                                 let rect_keys = Object.keys(data[0])
+    //                                 rect_keys.shift(); // remove Drug
+    //                                 return rect_keys; 
+    //                             })
+    //                             .enter()
+    //                             .append('rect')
+    //                             .attr("class", function(d) {
+    //                             // i+1 because drug is included in there
+    //                             return "highlight heatmap-highlight-" + d
+    //                             })
+    //                             .attr('width', rect_width - 2)
+    //                             .attr('height', rect_height*data.length)
+    //                             .attr('x', function(d,i) {
+    //                             return i * rect_width ;  
+    //                             })
+    //                             .attr('y', rect_height)
+    //                             .attr("fill", "#000")
+    //                             .style("opacity", 0)
+    //                             .style("visibility", "hidden")
+    //                             .on("mouseover", function(d,i) {
+    //                                 d3.select(".heatmap-highlight-" + rectData[i+1])
+    //                                     .style("opacity", 0.4)
+    //                                     .style("visibility", "visible")
+    //                               })
+    //                               .on("mouseout", function(d,i) {
+    //                                 d3.select(".heatmap-highlight-" + rectData[i+1])
+    //                                     .style("opacity", 0)
+    //                                     .style("visibility", "hidden")
+    //                               });
 
-                                    
-                                    /** X-AXIS AND Y-AXIS FOR THE SKELETON **/
+    let highlight = gskeleton.selectAll('rect.hmap-hlight')
+                        .data(rectValues)
+                        .enter()
+                        .append('a')
+                        .attr('xlink:href', function(d) {
+                        return querystring_value(d);
+                        })
+                        .filter(function(d) {
+                            if (d.length > 2 ) { return 0;}
+                            else if (d.length === 0) {return 'empty'}
+                            else { return d; }
+                        })
+                        .append('rect')
+                        .attr("class", function(d, i) {
+                            // i+1 because drug is included in there
+                            return "hmap-hlight-" + rectKeys[i+1]
+                        })
+                        .attr('width', rect_width - 2)
+                        .attr('height', rect_height - 2)
+                        .attr('x', function(d,i) {
+                            return i * rect_width ;  
+                        })
+                        .attr("fill", "rgb(0,0,0)")
+                        .attr('y', rect_height)
+                        .style("opacity", 0)
+                        .on("mouseover", function(d,i) {
+                            d3.selectAll(".hmap-hlight-" + rectKeys[i+1])
+                                .style("opacity", 0.4)
+                            d3.selectAll(".oprint-hlight-" + rectKeys[i+1])
+                                .style("opacity", 0.4)
+                            d3.selectAll(".hlight-space-" + rectKeys[i+1])
+                                .style("opacity", 0.4)
+                        
+                        })
+                        .on("mouseout", function(d,i) {
+                            d3.selectAll(".hmap-hlight-" + rectKeys[i+1])
+                                .style("opacity", 0)
+                            d3.selectAll(".oprint-hlight-" + rectKeys[i+1])
+                                .style("opacity", 0)
+                            d3.selectAll(".hlight-space-" + rectKeys[i+1])
+                                .style("opacity", 0)
+                        })
+
+    let lines = svg.append("g")
+                                .attr("id", "lines")
+                                .attr('transform', function(d,i) {
+                                    return `translate(2,${height-62})`
+                                })
+    const temp = patient.slice(0)
+    temp.push("")
+    lines.selectAll("line.dashed-line")
+            .data(temp)
+            .enter()
+                .append("line")
+                .attr("class", "dashed-line")
+                .attr("x1", function(d,i) {
+                    return i * (rect_width) - 3;  
+                })
+                .attr("x2", function(d,i) {
+                    return i * (rect_width) - 3;  
+                })
+                .attr("y1", 2)
+                .attr("y2", 200)
+                .attr("stroke", "black")
+                .attr("stroke-width", 1)
+                .style("stroke-dasharray", "3 2")
+                .style("opacity", 0.4)
+
+    lines.selectAll("rect.hlight-space")
+                .data(patient)
+                .enter()
+                .append('rect')
+                .attr("class", function(d) {
+                    return "hlight-space-" + d
+                })
+                .attr('width', rect_width - 2)
+                .attr('height', 200)
+                .attr('x', function(d,i) {
+                    return i * rect_width - 2;  
+                })
+                .attr("fill", "rgb(0,0,0)")
+                .attr('y', 0)
+                .style("opacity", 0)            
+                            /** X-AXIS AND Y-AXIS FOR THE SKELETON **/
                                                                         
     // calling the y-axis and removing the stroke.
     let drug_name = skeleton.append('g')

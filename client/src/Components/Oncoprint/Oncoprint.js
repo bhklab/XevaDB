@@ -31,12 +31,12 @@ class Oncoprint extends React.Component {
         // height and width for the SVG based on the number of drugs and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
         let rect_height = 40;
-        let rect_width = 15;
+        let rect_width = 20;
         // this height and width is used for setting the body.
         let height = genes.length * (rect_height + 10)+ 200;
         let width = patient_id.length * (rect_width + 5) + 200;
         let margin = {
-            top: 80,
+            top: 90,
             right: 200,
             bottom: 100,
             left: 250
@@ -61,7 +61,7 @@ class Oncoprint extends React.Component {
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
             .attr('transform',
-                    'translate(' + margin.left + ',' + margin.top + ')')
+                    'translate(' + margin.left + ',' + (margin.top+20) + ')')
 
 
                                                     /** Oncoprint SKELETOON **/
@@ -73,12 +73,12 @@ class Oncoprint extends React.Component {
         for (let i = 0; i < genes.length; i++) {
             for (let j = 0; j < patient_id.length; j++) {
                 skeleton.append('rect')
-                    .attr('class', 'bg-rect')
+                    .attr('class', 'bg-rect') 
                     .attr('width', rect_width - 2)
-                    .attr('height', rect_height - 5)
+                    .attr('height', rect_height - 2)
                     .attr('fill', 'lightgrey')
-                    .attr('x', j * (rect_width + 5))
-                    .attr('y', i * (rect_height + 10))
+                    .attr('x', j * (rect_width))
+                    .attr('y', i * (rect_height ))
             }
         }
     
@@ -92,7 +92,7 @@ class Oncoprint extends React.Component {
                 .attr('dx', -20)
                 .style('text-anchor', 'end')
                 .style('font-size', '13px')
-                .attr('dy', i * (rect_height + 10) + 23)
+                .attr('dy', i * (rect_height) + 23)
                 .attr('font-weight', '500')
                 .text(genes[i])
         }
@@ -102,6 +102,9 @@ class Oncoprint extends React.Component {
         // alterations: mutations are green and a third, AMP/del are red/blue and full respectively
         let alterations = svg.append('g')
             .attr('id', 'alterations')
+
+        let highlight = svg.append("g")
+            .attr("id", "highlight")
     
         // collect info about alterations per gene/patient for plotting later
         let gene_alterations = {}
@@ -113,7 +116,6 @@ class Oncoprint extends React.Component {
         for (let i = 0; i < patient_id.length; i++) {
             patient_alterations.push({'mut':0,'amp':0,'del':0})
         }
-        
         for (let i = 0; i < genes.length; i++) {
             for (let j = 0; j < patient_id.length; j++) {
 
@@ -126,10 +128,10 @@ class Oncoprint extends React.Component {
                         alterations.append('rect')
                             .attr('class', 'alter-rect del')
                             .attr('width', rect_width - 2)
-                            .attr('height', rect_height - 5)
+                            .attr('height', rect_height - 2)
                             .attr('fill', 'blue')
-                            .attr('x', j * (rect_width + 5)) 
-                            .attr('y', i * (rect_height + 10))
+                            .attr('x', j * (rect_width)) 
+                            .attr('y', i * (rect_height))
                     }
                     if (data[i][patient_id[j]].includes('Amp')) {
                         gene_alterations[genes[i]]['amp']++;
@@ -137,10 +139,10 @@ class Oncoprint extends React.Component {
                         alterations.append('rect')
                             .attr('class', 'alter-rect amp')
                             .attr('width', rect_width - 2)
-                            .attr('height', rect_height - 5)
+                            .attr('height', rect_height - 2)
                             .attr('fill', 'red')
-                            .attr('x', j * (rect_width + 5)) 
-                            .attr('y', i * (rect_height + 10))
+                            .attr('x', j * (rect_width)) 
+                            .attr('y', i * (rect_height))
                     }
                     if (data[i][patient_id[j]].includes('MutNovel')) {
                         gene_alterations[genes[i]]['mut']++;
@@ -150,8 +152,8 @@ class Oncoprint extends React.Component {
                             .attr('width', rect_width - 2)
                             .attr('height', rect_height - 25)
                             .attr('fill', 'green')
-                            .attr('x', j * (rect_width + 5)) 
-                            .attr('y', i * (rect_height + 10) + 10)
+                            .attr('x', j * (rect_width)) 
+                            .attr('y', i * (rect_height) + 12)
                     }
                     if (data[i][patient_id[j]].includes('NA')) {
                         alterations.append('rect')
@@ -161,12 +163,14 @@ class Oncoprint extends React.Component {
                             .attr('fill', 'white')
                             .style('stroke', 'black')
                             .style('stroke-width', .5)
-                            .attr('x', j * (rect_width + 5)) 
-                            .attr('y', i * (rect_height + 10))
+                            .attr('x', j * (rect_width)) 
+                            .attr('y', i * (rect_height))
                     }
                 }
             }
         }   
+
+        
 
                                                     /** Setting Maxes for the alterations **/
     
@@ -223,7 +227,7 @@ class Oncoprint extends React.Component {
                     .attr('class', 'patient_eval_rect')
                     .attr('x', 0)
                     .attr('y', 0)
-                    .attr('height', (genes.length) * 50 - 15)
+                    .attr('height', (rect_height) *(genes.length))
                     .attr('width', 80 + stroke_width)
                     .attr('fill', 'white')
                     .style('stroke', 'black')
@@ -232,27 +236,27 @@ class Oncoprint extends React.Component {
             for (let i = 0; i < genes.length; i++) {
                 gene_alter.append('rect')
                     .attr('class', 'gene-rect mut')
-                    .attr('height', rect_height - 5)
+                    .attr('height', rect_height - 2)
                     .attr('width', xrange_gene(gene_alterations[genes[i]]['mut']))
                     .attr('fill', 'green')
-                    .attr('y', (i * (rect_height + 10)))
+                    .attr('y', (i * (rect_height)))
                     .attr('x', stroke_width/2)
     
                 gene_alter.append('rect')
                     .attr('class', 'gene-rect amp')
-                    .attr('height', rect_height - 5)
+                    .attr('height', rect_height - 2)
                     .attr('width', xrange_gene(gene_alterations[genes[i]]['amp']))
                     .attr('fill', 'red')
-                    .attr('y', i * (rect_height + 10)) 
+                    .attr('y', i * (rect_height) ) 
                     .attr('x', xrange_gene(gene_alterations[genes[i]]['mut']) + stroke_width/2)
                      
                 
                 gene_alter.append('rect')
                     .attr('class', 'gene-rect del')
-                    .attr('height', rect_height - 5)
+                    .attr('height', rect_height - 2)
                     .attr('width', xrange_gene(gene_alterations[genes[i]]['del']))
                     .attr('fill', 'blue')
-                    .attr('y', i * (rect_height + 10)) 
+                    .attr('y', i * (rect_height)) 
                     .attr('x', xrange_gene(gene_alterations[genes[i]]['amp']) + xrange_gene(gene_alterations[genes[i]]['mut']) + stroke_width/2)
                 
             }
@@ -368,41 +372,110 @@ class Oncoprint extends React.Component {
                 }
         });
 
+        let lines = svg.append("g")
+                                .attr("id", "lines")
+                                .attr('transform', function(d,i) {
+                                    return `translate(2,-200)`
+                                })
+        const temp = patient_id.slice(0)
+        temp.push("")
+        lines.selectAll("line.dashed-line")
+                .data(temp)
+                .enter()
+                    .append("line")
+                    .attr("class", "dashed-line")
+                    .attr("x1", function(d,i) {
+                        return i * (rect_width) - 3;  
+                    })
+                    .attr("x2", function(d,i) {
+                        return i * (rect_width) - 3;  
+                    })
+                    .attr("y1", 0)
+                    .attr("y2", 200)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 1)
+                    .style("stroke-dasharray", "3 2")
+                    .style("opacity", 0.4)
+
+        lines.selectAll("rect.hlight-space")
+                    .data(patient_id)
+                    .enter()
+                    .append('rect')
+                    .attr("class", function(d) {
+                        return "hlight-space-" + d
+                    })
+                    .attr('width', rect_width - 2)
+                    .attr('height', 200)
+                    .attr('x', function(d,i) {
+                        return i * rect_width - 2;  
+                    })
+                    .attr("fill", "rgb(0,0,0)")
+                    .attr('y', 0)
+                    .style("opacity", 0)  
 
                                                                                          /** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint **/
 
-                    // This will create four rectangles on right side for alterations.
-                    let target_rect = skeleton.append('g')
-                                              .attr('id', 'small_rectangle')
+        // This will create four rectangles on right side for alterations.
+        let target_rect = skeleton.append('g')
+                                    .attr('id', 'small_rectangle')
 
-                                    target_rect.selectAll('rect')
-                                        .data(rect_alterations)
-                                        .enter()
-                                        .append('rect')
-                                        .attr('x', 1040)
-                                        .attr('y', function(d, i) {
-                                            return 200 + i * 25;
-                                        })
-                                        .attr('height', '15')
-                                        .attr('width', '15')
-                                        .attr('fill', function(d) {
-                                            return d.color;
-                                        })
+                        target_rect.selectAll('rect')
+                            .data(rect_alterations)
+                            .enter()
+                            .append('rect')
+                            .attr('x', 1040)
+                            .attr('y', function(d, i) {
+                                return 200 + i * 25;
+                            })
+                            .attr('height', '15')
+                            .attr('width', '15')
+                            .attr('fill', function(d) {
+                                return d.color;
+                            })
 
-                                    target_rect.selectAll('text')
-                                        .data(rect_alterations)
-                                        .enter()
-                                        .append('text')
-                                        .attr('x', 1070)
-                                        .attr('y', function(d,i) {
-                                            return 212 + i * 25;
-                                        })
-                                        .text(function(d) {
-                                            return d.value;
-                                        })
-                                        .attr('font-size', '14px')
+                        target_rect.selectAll('text')
+                            .data(rect_alterations)
+                            .enter()
+                            .append('text')
+                            .attr('x', 1070)
+                            .attr('y', function(d,i) {
+                                return 212 + i * 25;
+                            })
+                            .text(function(d) {
+                                return d.value;
+                            })
+                            .attr('font-size', '14px')
 
-                                                
+        // highlight
+        for (let i = 0; i < genes.length; i++) {
+            for (let j = 0; j < patient_id.length; j++) {
+                highlight.append('rect')
+                    .attr('class', 'oprint-hlight-' + patient_id[j])
+                    .attr('width', rect_width - 2)
+                    .attr('height', rect_height - 2)
+                    .attr('fill', 'black')
+                    .attr('x', j * (rect_width))
+                    .attr('y', i * (rect_height ))
+                    .style("opacity", 0)
+                        .on("mouseover", function(d,i) {
+                            d3.selectAll(".hmap-hlight-" + patient_id[j])
+                                .style("opacity", 0.4)
+                            d3.selectAll(".oprint-hlight-" + patient_id[j])
+                                .style("opacity", 0.4)
+                            d3.selectAll(".hlight-space-" + patient_id[j])
+                                .style("opacity", 0.4)
+                        
+                        })
+                        .on("mouseout", function(d,i) {
+                            d3.selectAll(".hmap-hlight-" + patient_id[j])
+                                .style("opacity", 0)
+                            d3.selectAll(".oprint-hlight-" + patient_id[j])
+                                .style("opacity", 0)
+                            d3.selectAll(".hlight-space-" + patient_id[j])
+                                .style("opacity", 0)
+                        })
+            }
+        }                           
                             
     }
 
