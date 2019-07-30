@@ -36,7 +36,7 @@ class Oncoprint extends React.Component {
         let height = genes.length * (rect_height + 10)+ 200;
         let width = patient_id.length * (rect_width + 5) + 200;
         let margin = {
-            top: 90,
+            top: 30,
             right: 200,
             bottom: 100,
             left: 250
