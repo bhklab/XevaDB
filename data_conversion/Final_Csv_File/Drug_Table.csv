@@ -31,7 +31,7 @@ CGM097,CGM097,MDM2,single,,MDM2 Inhibitor,MDM2 Inhibitor,PubChem
 CKX620,CKX620,MAPK,single,,MAPK - kinase inhibitor,Kinase inhibitors,
 encorafenib,encorafenib,BRAF,single,,Raf kinase inhibitor,Kinase inhibitors,PubChem
 LFW527 + binimetinib,LFW527 + binimetinib,"IGF1R,MAP2K1,MAP2K2",combo,,combination,combination,
-LJC049,LJC049,TNKS,single,,Wnt signaling,Wnt signaling inhibitors,"Tankyrase 1 and Tankyrase 2 are involved, in telomere maintenance, the control of mitosis and the regulation of Wnt signaling. https://www.nature.com/articles/s41598-018-36447-4"
+LJC049,LJC049,TNKS,single,,Wnt signaling,Wnt signaling inhibitors,https://www.nature.com/articles/s41598-018-36447-4
 LKA136,LKA136,"NTRK1,NTRK2,NTRK3",single,,Neurotrophic Receptor Tyrosine Kinase inhibitor,Kinase inhibitors,
 abraxane,abraxane,Tubulin,single,,Microtubule Inhibitor,Chemotherapeutic agents,PubChem
 binimetinib-3.5mpk,binimetinib-3.5mpk,MAPK,single,,combination,combination,
