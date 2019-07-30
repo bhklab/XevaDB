@@ -7,7 +7,11 @@ exports.up = function(knex, Promise) {
              .references('model_id')
              .inTable('model_information')
              .index();
-        table.string('drug').notNullable();
+        table.string('drug')
+             .notNullable()
+             .references('drug_id')
+             .inTable('drug')
+             .index();
         table.decimal('time').notNullable();
         table.decimal('volume').notNullable();
         table.decimal('volume_normal',64,16).notNullable();
