@@ -1,12 +1,13 @@
 import styled from 'styled-components'
 
 const StyleBar = styled.div`
-    margin-top: 35vh;
+    margin-top: 30vh;
 
     h1 {
       color: #bd0808;
       text-align: center;
       line-height: 0.4;
+      font-size: 30px;
     }    
 
    .select-component {
@@ -18,8 +19,11 @@ const StyleBar = styled.div`
 
    @media screen and (max-width: 1500px) {
        h1 {
-           font-size: 24px;
+           font-size: 28px;
        }
+       .select-component {
+          width: 55%
+      }
    }
 
    @media screen and (max-width: 650px) {
