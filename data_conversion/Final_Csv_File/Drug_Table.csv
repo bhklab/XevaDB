@@ -1,0 +1,63 @@
+drug_id,standard_name,targets,treatment_type,pubchemId,class,class_name,source
+BGJ398,BGJ398,FGFR,single,,pan FGFR inhibitor,Growth factor receptor inhibitors,PubChem
+binimetinib,binimetinib,"MAP2K1,MAP2K2,MAPK",single,,(MEK 1/2) inhibitor,Kinase inhibitors,PubChem
+BKM120,BKM120,"PIK3CA,PIK3CB,PIK3CG,PIK3CD,panPI3K",single,,pan-class I (PI3K) inhibitor,Kinase inhibitors,PubChem
+BYL719,BYL719,PIK3CA,single,,(PI3K) inhibitor,Kinase inhibitors,PubChem
+BYL719 + HSP990,BYL719 + HSP990,"PIK3CA,HSP90",combo,,combination,combination,
+BYL719 + LJM716,BYL719 + LJM716,"PIK3CA,ERBB3,ERBB3,PIK3CA",combo,,combination,combination,
+CLR457,CLR457,"PIK3CA,PIK3CB,PIK3CG,PIK3CD,panPI3K",single,,pan-PI3K inhibitor,Kinase inhibitors,NCI
+everolimus,everolimus,MTOR,single,,mTOR inhibitor,Kinase inhibitors,PubChem
+figitumumab,figitumumab,IGF1R,single,,IGF-1R monoclonal antibody,Growth factor receptor inhibitors,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2875253/
+HDM201,HDM201,MDM2,single,,MDM2 inhibitor,MDM2 inhibitor,NCI
+HSP990,HSP990,HSP90,single,,HSP90 inhibitor,HSP90 inhibitor,https://www.nature.com/articles/bjc2014653
+INC280,INC280,MET,single,,c-Met (HGFR) inhibitor,Growth factor receptor inhibitors,PubChem
+INC280 + trastuzumab,INC280 + trastuzumab,"ERBB2,MET",combo,,combination,combination,
+LEE011,LEE011,"CDK4,CDK6,CDK4/6",single,,cyclin-dependent kinase (CDK) inhibitor,Kinase inhibitors,PubChem
+LEE011 + everolimus,LEE011 + everolimus,"CDK4,CDK6,MTOR,CDK4/6",combo,,combination,combination,
+LJM716,LJM716,ERBB3,single,,anti-ERBB3 (HER3) investigational monoclonal antibody,Growth factor receptor inhibitors,PubChem
+LJM716 + trastuzumab,LJM716 + trastuzumab,"ERBB3,ERBB2",combo,,combination,combination,
+LLM871,LLM871,FGFR2/4,single,,FGFR2/4 antibody-drug conjugate,Growth factor receptor inhibitors,https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5741091/
+trastuzumab,trastuzumab,ERBB2,single,,ERBB2 inihibitor,Growth factor receptor inhibitors,PubChem
+untreated,untreated,"UNKNOWN,Untreated",single,,single/unknown,single/unknown,
+5FU,5FU,chemotherapy,single,,Nucleoside Metabolic Inhibitor,Chemotherapy,PubChem
+BKM120 + LJC049,BKM120 + LJC049,"panPI3K,TNKS",combo,,combination,combination,
+BYL719 + binimetinib,BYL719 + binimetinib,"PIK3CA,MAPK",combo,,combination,combination,
+BYL719 + cetuximab,BYL719 + cetuximab,"PIK3CA,EGFR",combo,,combination,combination,
+BYL719 + cetuximab + encorafenib,BYL719 + cetuximab + encorafenib,"PIK3CA,EGFR,BRAF",combo,,combination,combination,
+BYL719 + encorafenib,BYL719 + encorafenib,"PIK3CA,BRAF",combo,,combination,combination,
+cetuximab,cetuximab,EGFR,single,,EGFR inihibitor,Growth factor receptor inhibitors,PubChem
+cetuximab + encorafenib,cetuximab + encorafenib,"EGFR,BRAF",combo,,combination,combination,
+CGM097,CGM097,MDM2,single,,MDM2 Inhibitor,MDM2 Inhibitor,PubChem
+CKX620,CKX620,MAPK,single,,MAPK - kinase inhibitor,Kinase inhibitors,
+encorafenib,encorafenib,BRAF,single,,Raf kinase inhibitor,Kinase inhibitors,PubChem
+LFW527 + binimetinib,LFW527 + binimetinib,"IGF1R,MAP2K1,MAP2K2",combo,,combination,combination,
+LJC049,LJC049,TNKS,single,,Wnt signaling,Wnt signaling inhibitors,"Tankyrase 1 and Tankyrase 2 are involved, in telomere maintenance, the control of mitosis and the regulation of Wnt signaling. https://www.nature.com/articles/s41598-018-36447-4"
+LKA136,LKA136,"NTRK1,NTRK2,NTRK3",single,,Neurotrophic Receptor Tyrosine Kinase inhibitor,Kinase inhibitors,
+abraxane,abraxane,Tubulin,single,,Microtubule Inhibitor,Chemotherapeutic agents,PubChem
+binimetinib-3.5mpk,binimetinib-3.5mpk,MAPK,single,,combination,combination,
+BKM120 + binimetinib,BKM120 + binimetinib,"panPI3K,MAPK,MAP2K1,MAP2K2,PIK3CA,PIK3CB,PIK3CG,PIK3CD",combo,,combination,combination,
+BKM120 + LDE225,BKM120 + LDE225,"panPI3K,SMO",combo,,combination,combination,
+figitumumab + binimetinib,figitumumab + binimetinib,"IGF1R,MAPK",combo,,combination,combination,
+gemcitabine-50mpk,gemcitabine-50mpk,chemotherapy,single,,combination,combination,
+INC424,INC424,JAK,single,,JAK inhibitor,Kinase inhibitors,PubChem
+INC424 + binimetinib,INC424 + binimetinib,"JAK,MAPK",combo,,combination,combination,
+trametinib,trametinib,MAPK,single,,(MEK 1/2) inhibitor,Kinase inhibitors,PubChem
+BYL719 + LEE011,BYL719 + LEE011,"PIK3CA,CDK4/6",combo,,combination,combination,
+LFA102,LFA102,PRLR,single,,prolactin receptor (PRLR),Growth factor receptor inhibitors,NCI
+LFW527 + everolimus,LFW527 + everolimus,"IGF1R,MTOR",combo,,combination,combination,
+paclitaxel,paclitaxel,Tubulin,single,,Microtubule Inhibitor,Chemotherapeutic agents,PubChem
+tamoxifen,tamoxifen,ESR1,single,,selective estrogen receptor modulator (SERM),Growth factor receptor inhibitors,PubChem
+BYL719 + LGH447,BYL719 + LGH447,"PIK3CA,PIM",combo,,combination,combination,
+erlotinib,erlotinib,EGFR,single,,EGFR inhibitor,Growth factor receptor inhibitors,PubChem
+LCL161 + paclitaxel,LCL161 + paclitaxel,"BIRC2,TUBB,Tubulin",combo,,combination,combination,
+LGH447,LGH447,PIM,single,,pan-PIM protein kinase inhibitor,Kinase inhibitors,PubChem
+WNT974,WNT974,PORCN,single,,porcupine (PORCN) inhibitor,Wnt signaling inhibitors,PubChem
+BKM120 + encorafenib,BKM120 + encorafenib,"panPI3K,BRAF,BRAF,PIK3CA,PIK3CB,PIK3CG,PIK3CD",combo,,combination,combination,
+dacarbazine,dacarbazine,chemotherapy,single,,Alkylating Drug,Chemotherapeutic agents,PubChem
+encorafenib + binimetinib,encorafenib + binimetinib,"BRAF,MAP2K1,MAP2K2,MAPK",combo,,combination,combination,
+LDE225,LDE225,SMO,single,,Smo antagonist,Smo antagonist,PubChem
+LDK378,LDK378,ALK,single,,tyrosine kinase receptor inhibitor (TKI),Kinase inhibitors,PubChem
+LEE011 + binimetinib,LEE011 + binimetinib,"CDK4,CDK6,MAP2K1,MAP2K2,CDK4/6,MAPK",combo,,combination,combination,
+LEE011 + encorafenib,LEE011 + encorafenib,"CDK4/6,BRAF,BRAF,CDK4,CDK6",combo,,combination,combination,
+LGW813,LGW813,IAP,single,,Inhibitor Of Apoptosis inhibitors,Inhibitor Of Apoptosis inhibitors,
+TAS266,TAS266,DR5,single,,DR5 receptor agonist,Growth factor receptor inhibitors,PubChem
