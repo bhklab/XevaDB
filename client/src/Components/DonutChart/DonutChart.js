@@ -205,7 +205,7 @@ class DonutChart extends React.Component {
                     })
                     //.attr('font-weight', 'bold')
                     .style('text-anchor', 'middle')
-                    .style('font-size', 9)
+                    .style('font-size', 14)
                     .attr('fill', 'white')
                     .on('mouseover', (d) => {
                         mouseover(d)
