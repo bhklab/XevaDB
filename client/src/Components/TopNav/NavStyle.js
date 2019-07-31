@@ -30,8 +30,8 @@ const LinkStyle = styled.div`
         letter-spacing: 2px;
         font-weight: bold;
         font-size: 20px;
-        :hover {
-            color: #393b79;
+        &:hover {
+            color: #fdbb84;
         }
     }
 

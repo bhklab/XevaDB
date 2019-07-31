@@ -11,13 +11,17 @@ const DonutNav = styled.div`
     bottom:0;
     left:0;
     width: 100%;
-    div {
+    a{
         padding: 10px;
         color: #bd0808;
         letter-spacing: 2px;
         font-weight: bold;
         font-size: 18px;
         margin-top: 6px;
+        text-decoration: none;
+        &:hover {
+            color: #fdbb84;
+        }
     }
     h4 {
         margin-top: 3px;
