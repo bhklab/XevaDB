@@ -496,48 +496,50 @@ class HeatMap extends React.Component {
             max_patientid_total = curent_max;
         }
     }
-    
-    // appending 'g' element to the SVG.
-    let patient_eval = svg.append('g')
-                          .attr('id', 'patient_eval')
+
+    // This will only run if the length of the drug array is greater than 1 (it has more than one drug)
+    if(drug.length > 1) {
+        // appending 'g' element to the SVG.
+        let patient_eval = svg.append('g')
+                                .attr('id', 'patient_eval')
 
 
-    // setting the outer rectangle.
-                      patient_eval.append('rect')
-                                  .attr('class', 'patient_eval_rect')
-                                  .attr('x', 0)
-                                  .attr('y', -120)
-                                  .attr('height', box_height)
-                                  .attr('width', patient.length * 20)
-                                  .attr('fill', 'white')
-                                  .style('stroke', 'black')
-                                  .style('stroke-width', 1)
+        // setting the outer rectangle.
+        patient_eval.append('rect')
+                    .attr('class', 'patient_eval_rect')
+                    .attr('x', 0)
+                    .attr('y', -120)
+                    .attr('height', box_height)
+                    .attr('width', patient.length * 20)
+                    .attr('fill', 'white')
+                    .style('stroke', 'black')
+                    .style('stroke-width', 1)
 
-    // setting scale to map max patient_id value to range (height of the box.)
-    let patient_Scale = d3.scaleLinear()
-                       .domain([0,max_patientid_total])
-                       .range([0,box_height])
-
-    // This code will set y-axis of the graph at top
-    if(max_patientid_total !== 0) {
-
-        let patient_scales = d3.scaleLinear()
+        // setting scale to map max patient_id value to range (height of the box.)
+        let patient_Scale = d3.scaleLinear()
                                 .domain([0,max_patientid_total])
-                                .range([box_height,0]);
-                        
-        let y_axis = d3.axisLeft()
-                        .scale(patient_scales)
-                        .ticks(2)
-                        .tickSize(0)
-                        .tickFormat(d3.format('.0f'));
+                                .range([0,box_height])
 
-                      svg.append('g')
-                        .attr('transform', 'translate(0,-120.5)')
-                        .call(y_axis)
-    }
-                           
+        // This code will set y-axis of the graph at top
+        if(max_patientid_total !== 0) {
 
-    for(let i=0; i<patient.length; i++) {
+            let patient_scales = d3.scaleLinear()
+                                    .domain([0,max_patientid_total])
+                                    .range([box_height,0]);
+                
+            let y_axis = d3.axisLeft()
+                            .scale(patient_scales)
+                            .ticks(2)
+                            .tickSize(0)
+                            .tickFormat(d3.format('.0f'));
+
+            svg.append('g')
+                .attr('transform', 'translate(0,-120.5)')
+                .call(y_axis)
+        }
+
+                    
+        for(let i=0; i<patient.length; i++) {
             patient_eval.append('rect')
                     .attr('class', 'patient_eval_cr')
                     .attr('height', patient_Scale(patient_evaluations[patient[i]]['CR']))
@@ -577,7 +579,10 @@ class HeatMap extends React.Component {
                     .attr('fill', target_color[3])
                     .style('stroke', 'black')
                     .style('stroke-width', stroke_width)
+        }
     }
+
+    
 
 }
 
