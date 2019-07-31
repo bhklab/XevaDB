@@ -342,7 +342,7 @@ class HeatMap extends React.Component {
                     let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')
                     d3.selectAll(".hmap-hlight-" + drug_class)
                                 .style("opacity", 0.2)
-                    d3.select(this).attr("cursor", "default")
+
                   })
                   .on("mouseout", function() {
                     let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')

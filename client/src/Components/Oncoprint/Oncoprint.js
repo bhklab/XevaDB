@@ -98,7 +98,7 @@ class Oncoprint extends React.Component {
                 .on("mouseover", function() {
                     d3.selectAll(".oprint-hlight-" + genes[i])
                                 .style("opacity", 0.2)
-                    d3.select(this).attr("cursor", "default")
+
                   })
                   .on("mouseout", function() {
                     d3.selectAll(".oprint-hlight-" + genes[i])
