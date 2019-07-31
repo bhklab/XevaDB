@@ -40,7 +40,7 @@ class DonutDrug extends React.Component {
     }
 
     dimensions = {
-        width: 350,
+        width: 600,
         height: 250
     }
 

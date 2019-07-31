@@ -42,7 +42,7 @@ class DonutTissue extends React.Component {
 
    
     dimensions = {
-        width: 350,
+        width: 600,
         height: 300
     }
 
@@ -65,7 +65,7 @@ class DonutTissue extends React.Component {
             <Fragment>
                 
                 <Wrapper>
-                    <h1> Number of Model IDs Per Tissue Type in XevaDB </h1>
+                    <h1> Number of Model IDs Per Tissue Type </h1>
                     <DonutChart 
                         dimensions={this.dimensions} margin={this.margin} 
                         chartId={this.chartId} data={this.state.data}
