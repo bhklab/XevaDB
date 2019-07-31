@@ -9,21 +9,18 @@ class Drug extends React.Component {
 
     constructor(props) {
         super(props)
-        
         //setting the states for the data.
         this.state = {
             data : [],
             patient_id : [],
             drug_id : [],
         };
-
         //binding the functions declared.
         this.parseData= this.parseData.bind(this);
     }
 
     // this function takes the parsed result and set the states.
     parseData(result) {
-
         let patient = Object.keys(result);
         patient.shift();
         let drug = [];
@@ -39,8 +36,7 @@ class Drug extends React.Component {
             drug_id : drug,
             patient_id : patient,
             data: dataset
-        })
-        
+        })  
     }
 
     componentDidMount() {

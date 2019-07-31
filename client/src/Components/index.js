@@ -4,6 +4,7 @@ import DonutChart from './DonutChart/DonutChart'
 import DonutPatient from './DonutChart/DonutPatient'
 import Drug from './Drug/Drug'
 import DrugSearch from './Drug/DrugSearch'
+import DrugTable from './Drug/DrugTable'
 import Footer from './Footer/Footer'
 import HeatMapData from './HeatMap/HeatMapData'
 import Home from './Home/Home'
@@ -23,6 +24,7 @@ export {
     DonutPatient,
     Drug,
     DrugSearch,
+    DrugTable,
     Footer,
     HeatMapData,
     Home,
