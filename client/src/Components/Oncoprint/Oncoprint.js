@@ -395,7 +395,7 @@ class Oncoprint extends React.Component {
                     .attr("stroke", "black")
                     .attr("stroke-width", 1)
                     .style("stroke-dasharray", "3 2")
-                    .style("opacity", 0.4)
+                    .style("opacity", 0.2)
 
         lines.selectAll("rect.hlight-space")
                     .data(patient_id)
@@ -459,11 +459,11 @@ class Oncoprint extends React.Component {
                     .style("opacity", 0)
                         .on("mouseover", function(d,i) {
                             d3.selectAll(".hmap-hlight-" + patient_id[j])
-                                .style("opacity", 0.4)
+                                .style("opacity", 0.2)
                             d3.selectAll(".oprint-hlight-" + patient_id[j])
-                                .style("opacity", 0.4)
+                                .style("opacity", 0.2)
                             d3.selectAll(".hlight-space-" + patient_id[j])
-                                .style("opacity", 0.4)
+                                .style("opacity", 0.2)
                         
                         })
                         .on("mouseout", function(d,i) {

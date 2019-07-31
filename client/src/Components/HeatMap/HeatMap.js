@@ -31,6 +31,7 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
+       console.log(drug)
     this.node = node
     // height and width for the SVG based on the number of drugs and patient/sample ids.
     // height and width of the rectangles in the main skeleton.
@@ -168,7 +169,7 @@ class HeatMap extends React.Component {
     //                             })
 
 
-    let rectKeys, rectValues;
+    let rectKeys;
     // this will append rect equivalent to number of patient ids.
     let drawrectangle = gskeleton.selectAll('rect.hmap-rect')
                                   .data(function(d) {  
@@ -176,8 +177,7 @@ class HeatMap extends React.Component {
                                     calculate_evaluations(d);
                                     //this returns the object values to next chaining method.
                                     rectKeys = Object.keys(d);
-                                    rectValues = Object.values(d);
-                                    return rectValues;
+                                    return Object.values(d);
                                    })
                                   .enter()
                                   .append('a')
@@ -215,45 +215,32 @@ class HeatMap extends React.Component {
                                     } else {
                                         return target_color[4]
                                     }
-                                })                   
-    // let highlight = hmap_highlight.selectAll("rect.highlight")
-    //                             .data(function() {  
-    //                                 let rect_keys = Object.keys(data[0])
-    //                                 rect_keys.shift(); // remove Drug
-    //                                 return rect_keys; 
-    //                             })
-    //                             .enter()
-    //                             .append('rect')
-    //                             .attr("class", function(d) {
-    //                             // i+1 because drug is included in there
-    //                             return "highlight heatmap-highlight-" + d
-    //                             })
-    //                             .attr('width', rect_width - 2)
-    //                             .attr('height', rect_height*data.length)
-    //                             .attr('x', function(d,i) {
-    //                             return i * rect_width ;  
-    //                             })
-    //                             .attr('y', rect_height)
-    //                             .attr("fill", "#000")
-    //                             .style("opacity", 0)
-    //                             .style("visibility", "hidden")
-    //                             .on("mouseover", function(d,i) {
-    //                                 d3.select(".heatmap-highlight-" + rectData[i+1])
-    //                                     .style("opacity", 0.4)
-    //                                     .style("visibility", "visible")
-    //                               })
-    //                               .on("mouseout", function(d,i) {
-    //                                 d3.select(".heatmap-highlight-" + rectData[i+1])
-    //                                     .style("opacity", 0)
-    //                                     .style("visibility", "hidden")
-    //                               });
+                                })     
+                                
+    //reset 
+    drug_evaluations = {}
+    for(var i=0; i<drug.length; i++) {
+        drug_evaluations[drug[i]] = {'CR':0, 'PR': 0, 'SD': 0, 'PD': 0, 'NA':0, 'empty': 0}
+    }
 
+    // patient evaluations
+    patient_evaluations = {}
+    for(let j=0; j<patient.length; j++) {
+        patient_evaluations[patient[j]] = {'CR':0, 'PR': 0, 'SD': 0, 'PD': 0, 'NA':0, 'empty': 0, 'total':0}
+    }
+    
     let highlight = gskeleton.selectAll('rect.hmap-hlight')
-                        .data(rectValues)
+                        .data(function(d) { 
+                            //calling the function and passing the data d as parameter.
+                            calculate_evaluations(d);
+                            //this returns the object values to next chaining method.
+                            rectKeys = Object.keys(d);
+                            return Object.values(d);
+                        })
                         .enter()
                         .append('a')
-                        .attr('xlink:href', function(d) {
-                        return querystring_value(d);
+                        .attr('xlink:href', function(d,i) {
+                            return querystring_value(d);
                         })
                         .filter(function(d) {
                             if (d.length > 2 ) { return 0;}
@@ -275,11 +262,11 @@ class HeatMap extends React.Component {
                         .style("opacity", 0)
                         .on("mouseover", function(d,i) {
                             d3.selectAll(".hmap-hlight-" + rectKeys[i+1])
-                                .style("opacity", 0.4)
+                                .style("opacity", 0.2)
                             d3.selectAll(".oprint-hlight-" + rectKeys[i+1])
-                                .style("opacity", 0.4)
+                                .style("opacity", .2)
                             d3.selectAll(".hlight-space-" + rectKeys[i+1])
-                                .style("opacity", 0.4)
+                                .style("opacity", .2)
                         
                         })
                         .on("mouseout", function(d,i) {
@@ -314,7 +301,7 @@ class HeatMap extends React.Component {
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
                 .style("stroke-dasharray", "3 2")
-                .style("opacity", 0.4)
+                .style("opacity", .2)
 
     lines.selectAll("rect.hlight-space")
                 .data(patient)
