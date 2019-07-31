@@ -31,7 +31,6 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
-       console.log(drug)
     this.node = node
     // height and width for the SVG based on the number of drugs and patient/sample ids.
     // height and width of the rectangles in the main skeleton.
@@ -228,7 +227,7 @@ class HeatMap extends React.Component {
     for(let j=0; j<patient.length; j++) {
         patient_evaluations[patient[j]] = {'CR':0, 'PR': 0, 'SD': 0, 'PD': 0, 'NA':0, 'empty': 0, 'total':0}
     }
-    
+    let p_count = 0;
     let highlight = gskeleton.selectAll('rect.hmap-hlight')
                         .data(function(d) { 
                             //calling the function and passing the data d as parameter.
@@ -250,7 +249,11 @@ class HeatMap extends React.Component {
                         .append('rect')
                         .attr("class", function(d, i) {
                             // i+1 because drug is included in there
-                            return "hmap-hlight-" + rectKeys[i+1]
+                            let drug_class = drug[p_count].replace(/\s/g,'').replace(/[\+]/,'-')
+                            if (i == (patient.length - 1)) {
+                                p_count++
+                            }
+                            return "hmap-hlight-" + rectKeys[i+1] + " hmap-hlight-" + drug_class
                         })
                         .attr('width', rect_width - 2)
                         .attr('height', rect_height - 2)
@@ -261,20 +264,28 @@ class HeatMap extends React.Component {
                         .attr('y', rect_height)
                         .style("opacity", 0)
                         .on("mouseover", function(d,i) {
+                            // i+1 because drug is included in there
+                            let drug_class = d3.select(this).attr("class").split(" ")[1]
                             d3.selectAll(".hmap-hlight-" + rectKeys[i+1])
                                 .style("opacity", 0.2)
                             d3.selectAll(".oprint-hlight-" + rectKeys[i+1])
-                                .style("opacity", .2)
+                                .style("opacity", 0.2)
                             d3.selectAll(".hlight-space-" + rectKeys[i+1])
-                                .style("opacity", .2)
+                                .style("opacity", 0.2)
+                            d3.selectAll("." + drug_class)
+                                .style("opacity", 0.2)
                         
                         })
                         .on("mouseout", function(d,i) {
+                            // i+1 because drug is included in there
+                            let drug_class = d3.select(this).attr("class").split(" ")[1]
                             d3.selectAll(".hmap-hlight-" + rectKeys[i+1])
                                 .style("opacity", 0)
                             d3.selectAll(".oprint-hlight-" + rectKeys[i+1])
                                 .style("opacity", 0)
                             d3.selectAll(".hlight-space-" + rectKeys[i+1])
+                                .style("opacity", 0)
+                            d3.selectAll("." + drug_class)
                                 .style("opacity", 0)
                         })
 
