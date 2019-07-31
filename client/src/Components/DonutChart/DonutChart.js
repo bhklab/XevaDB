@@ -22,11 +22,17 @@ class DonutChart extends React.Component {
     DonutChart() {
         const node = this.node
         const data = this.props.data
-        this.makeDonutChart(node, data)
+        const height = this.props.dimensions.height
+        const width = this.props.dimensions.width
+        const left = this.props.margin.left
+        const top = this.props.margin.top
+        const bottom = this.props.margin.bottom
+        const right = this.props.margin.right
+        this.makeDonutChart(node, data, height, width, left, top, bottom, right)
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(node, data) {
+    makeDonutChart(node, data, height, width, left, top, bottom, right) {
         //console.log(data)
 
                                                 /** SETTING SVG ATTRIBUTES **/
@@ -37,10 +43,10 @@ class DonutChart extends React.Component {
                     .attr('id', 'donutchart-' + this.props.chartId)
                     .attr('xmlns', 'http://wwww.w3.org/2000/svg')
                     .attr('xmlns:xlink', 'http://wwww.w3.org/1999/xlink')
-                    .attr('height',this.props.dimensions.height + this.props.margin.top + this.props.margin.bottom)
-                    .attr('width',this.props.dimensions.width + this.props.margin.left + this.props.margin.right)
+                    .attr('height',height + top + bottom)
+                    .attr('width',width + left + right)
                     .append('g')
-                    .attr('transform', 'translate(' + this.props.margin.left + ',' + this.props.margin.top + ')')
+                    .attr('transform', 'translate(' + left + ',' + top + ')')
         
                                                 /* Skeleton for the pie/donut chart */
         // structure of the chart
@@ -216,7 +222,45 @@ class DonutChart extends React.Component {
                     .on('mouseout', (d) => {
                         mouseout(d)
                     })
+                        
+
+                                                                    /**   Legends for the Donut Chart **/
+
+        // small side rectangles or legends for the donut chart.
+            let donut_rect = svg.append('g')
+                                     .attr('id', 'donut_small_rect')
                             
+                            
+                            donut_rect.selectAll('rect')
+                                        .data(data)
+                                        .enter()
+                                        .append('rect')
+                                        .attr('x', (width) - 220)
+                                        .attr('y', function(d, i) {
+                                            return (-30 * i) - i * 10
+                                        })
+                                        .attr('width', 20)
+                                        .attr('height', 20)
+                                        .attr('fill', (d) => {
+                                            return color(d.value);
+                                        })
+
+
+                            donut_rect.selectAll('text')
+                                        .data(data)
+                                        .enter()
+                                        .append('text')
+                                        .attr('x', (width) - 180)
+                                        .attr('y', function(d, i) {
+                                            return (-30 * i) - i * 10 + 15
+                                        })
+                                        .attr('fill', (d) => {
+                                            return color(d.value)
+                                        })
+                                        .text(d => {
+                                            console.log(d)
+                                            return d.id;
+                                        })              
     }
 
     render() {
