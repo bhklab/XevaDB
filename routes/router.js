@@ -6,6 +6,10 @@ const drugScreening = require('./api/drug_screening_api');
 const responseEvaluation = require('./api/response_evaluation_api');
 const mutation = require('./api/sequencing_data_api');
 const modelInformation = require('./api/model_information_api');
+const drugTable = require('./api/drug_api');
+
+
+
 
 
 // APIs related to the drug screening table.
@@ -36,6 +40,10 @@ router.get('/v1/models', modelInformation.getTotalModels);
 router.get('/v1/alldrugs', modelInformation.getTotalDrugs);
 router.get('/v1/alltissues', modelInformation.getTotalTissues);
 router.get('/v1/counter', modelInformation.getCounter);
+
+
+//APIs related to drug table.
+router.get('/v1/drugTable', drugTable.getDrugTableData)
 
 
 
