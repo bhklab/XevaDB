@@ -95,6 +95,15 @@ class Oncoprint extends React.Component {
                 .attr('dy', i * (rect_height) + 23)
                 .attr('font-weight', '500')
                 .text(genes[i])
+                .on("mouseover", function() {
+                    d3.selectAll(".oprint-hlight-" + genes[i])
+                                .style("opacity", 0.2)
+                    d3.select(this).attr("cursor", "default")
+                  })
+                  .on("mouseout", function() {
+                    d3.selectAll(".oprint-hlight-" + genes[i])
+                                .style("opacity", 0)
+                  });
         }
     
                                                 /** Setting Alterations **/
@@ -464,8 +473,6 @@ class Oncoprint extends React.Component {
                                 .style("opacity", 0.2)
                             d3.selectAll(".hlight-space-" + patient_id[j])
                                 .style("opacity", 0.2)
-                            d3.selectAll(".oprint-hlight-" + genes[i])
-                                .style("opacity", 0.2)
                         
                         })
                         .on("mouseout", function(d,x) {
@@ -474,8 +481,6 @@ class Oncoprint extends React.Component {
                             d3.selectAll(".oprint-hlight-" + patient_id[j])
                                 .style("opacity", 0)
                             d3.selectAll(".hlight-space-" + patient_id[j])
-                                .style("opacity", 0)
-                            d3.selectAll(".oprint-hlight-" + genes[i])
                                 .style("opacity", 0)
                         })
             }
