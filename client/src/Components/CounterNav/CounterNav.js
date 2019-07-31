@@ -1,5 +1,6 @@
 import React from 'react'
 import CountUp from 'react-countup'
+import { Link } from 'react-router-dom'
 import DonutNav from './CounterStyle'
 import axios from 'axios'
 
@@ -35,7 +36,7 @@ class CounterNav extends React.Component {
         return (
             <DonutNav>
 
-                <div>
+                <Link>
                     <CountUp 
                         start = {0}
                         end = {this.state.datasets} 
@@ -43,10 +44,10 @@ class CounterNav extends React.Component {
                         useEasing={true}
                     />
                     <h4> DATASETS </h4>
-                </div>
+                </Link>
 
 
-                <div>
+                <Link to='/tissues'>
                     <CountUp 
                         start = {0}
                         end = {this.state.tissues} 
@@ -54,10 +55,10 @@ class CounterNav extends React.Component {
                         useEasing={true}
                     />
                     <h4> TISSUES </h4>
-                </div>
+                </Link>
 
 
-                 <div>
+                 <Link>
                     <CountUp 
                         start = {0}
                         end = {this.state.patients} 
@@ -65,10 +66,10 @@ class CounterNav extends React.Component {
                         useEasing={true}
                     />
                     <h4> PATIENTS </h4> 
-                </div>
+                </Link>
 
 
-                <div>
+                <Link to='/drugs'>
                     <CountUp 
                         start = {0}
                         end = {this.state.drugs}
@@ -76,7 +77,8 @@ class CounterNav extends React.Component {
                         useEasing={true}
                     /> 
                     <h4> DRUGS </h4>
-                </div>
+                </Link>
+                    
 
             </DonutNav>
         )
