@@ -450,28 +450,32 @@ class Oncoprint extends React.Component {
         for (let i = 0; i < genes.length; i++) {
             for (let j = 0; j < patient_id.length; j++) {
                 highlight.append('rect')
-                    .attr('class', 'oprint-hlight-' + patient_id[j])
+                    .attr('class', 'oprint-hlight-' + patient_id[j] + " oprint-hlight-" + genes[i])
                     .attr('width', rect_width - 2)
                     .attr('height', rect_height - 2)
                     .attr('fill', 'black')
                     .attr('x', j * (rect_width))
                     .attr('y', i * (rect_height ))
                     .style("opacity", 0)
-                        .on("mouseover", function(d,i) {
+                        .on("mouseover", function(d,x) {
                             d3.selectAll(".hmap-hlight-" + patient_id[j])
                                 .style("opacity", 0.2)
                             d3.selectAll(".oprint-hlight-" + patient_id[j])
                                 .style("opacity", 0.2)
                             d3.selectAll(".hlight-space-" + patient_id[j])
+                                .style("opacity", 0.2)
+                            d3.selectAll(".oprint-hlight-" + genes[i])
                                 .style("opacity", 0.2)
                         
                         })
-                        .on("mouseout", function(d,i) {
+                        .on("mouseout", function(d,x) {
                             d3.selectAll(".hmap-hlight-" + patient_id[j])
                                 .style("opacity", 0)
                             d3.selectAll(".oprint-hlight-" + patient_id[j])
                                 .style("opacity", 0)
                             d3.selectAll(".hlight-space-" + patient_id[j])
+                                .style("opacity", 0)
+                            d3.selectAll(".oprint-hlight-" + genes[i])
                                 .style("opacity", 0)
                         })
             }
