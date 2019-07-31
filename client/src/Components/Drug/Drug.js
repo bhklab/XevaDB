@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import DonutChart from '../DonutChart/DonutChart'
 import Footer from '../Footer/Footer'
+import DrugTable from '../Drug/DrugTable'
 import axios from 'axios'
 import styled from 'styled-components'
 
@@ -68,6 +69,9 @@ class DonutDrug extends React.Component {
                         arc={this.arc}
                     />
                 </Wrapper>
+                <Wrapper>
+                    <DrugTable/>
+                </Wrapper>    
                 <Footer/>
             </Fragment>
         )

@@ -1,8 +1,7 @@
 import React, {Fragment} from 'react'
 import {  CounterNav,
           Documentation,
-          DonutChart,
-          DonutPatient,
+          DrugTable,
           Drug,
           DrugSearch,
           Footer,
@@ -32,7 +31,7 @@ class App extends React.Component {
     return (
       <Fragment>
         <Router>
-        <TopNav/>
+          <TopNav/>
           <Switch>
             <Route path='/' exact component={Home}></Route>
             <Route path="/curve" exact component={TumorGrowthCurve}></Route>
