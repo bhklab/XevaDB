@@ -3,7 +3,7 @@ import OncoprintData from './Oncoprint/OncoprintData'
 import TumorGrowthCurve from './TumorGrowthCurve/TumorGrowthCurve'
 import DonutChart from './DonutChart/DonutChart'
 import Drug from './Drug/Drug'
-import DonutTissue from './DonutChart/DonutTissues'
+import Tissue from './Tissue/Tissue'
 import TopNav from './TopNav/TopNav'
 import Home from './Home/Home'
 import DonutPatient from './DonutChart/DonutPatient'
@@ -17,7 +17,7 @@ export {
     OncoprintData,
     TumorGrowthCurve,
     DonutChart,
-    DonutTissue,
+    Tissue,
     TopNav,
     Home,
     DonutPatient,

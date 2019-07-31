@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import DonutChart from '../DonutChart/DonutChart'
+import Footer from '../Footer/Footer'
 import axios from 'axios'
 import styled from 'styled-components'
 
@@ -57,14 +58,16 @@ class DonutDrug extends React.Component {
 
     render() {
         return (
-            <Wrapper>
-                <DonutChart 
-                    dimensions={this.dimensions} margin={this.margin} 
-                    chartId={this.chartId} data={this.state.data}
-                    arc={this.arc}
-                />
-            </Wrapper>
-        
+            <Fragment>
+                <Wrapper>
+                    <DonutChart 
+                        dimensions={this.dimensions} margin={this.margin} 
+                        chartId={this.chartId} data={this.state.data}
+                        arc={this.arc}
+                    />
+                </Wrapper>
+                <Footer/>
+            </Fragment>
         )
     }
 }
