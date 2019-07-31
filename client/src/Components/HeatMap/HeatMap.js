@@ -116,7 +116,8 @@ class HeatMap extends React.Component {
     let yAxis = d3.axisLeft()
                   .scale(yScale)
                   .tickSize(0)
-                  .tickPadding(15);
+                  .tickPadding(15)
+                  
     
     let xAxis = d3.axisTop()
                   .scale(xScale)
@@ -272,8 +273,6 @@ class HeatMap extends React.Component {
                                 .style("opacity", 0.2)
                             d3.selectAll(".hlight-space-" + rectKeys[i+1])
                                 .style("opacity", 0.2)
-                            d3.selectAll("." + drug_class)
-                                .style("opacity", 0.2)
                         
                         })
                         .on("mouseout", function(d,i) {
@@ -285,8 +284,7 @@ class HeatMap extends React.Component {
                                 .style("opacity", 0)
                             d3.selectAll(".hlight-space-" + rectKeys[i+1])
                                 .style("opacity", 0)
-                            d3.selectAll("." + drug_class)
-                                .style("opacity", 0)
+                            
                         })
 
     let lines = svg.append("g")
@@ -338,7 +336,19 @@ class HeatMap extends React.Component {
     drug_name.attr('stroke-width', '0')
               .style('font-size', '13px')
               .attr('font-weight', '500')
-              .call(yAxis);
+              .call(yAxis)
+              .selectAll("text")
+                  .on("mouseover", function() {
+                    let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')
+                    d3.selectAll(".hmap-hlight-" + drug_class)
+                                .style("opacity", 0.2)
+                    d3.select(this).attr("cursor", "default")
+                  })
+                  .on("mouseout", function() {
+                    let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')
+                    d3.selectAll(".hmap-hlight-" + drug_class)
+                                .style("opacity", 0)
+                  });
 
     // calling the x-axis to set the axis and we have also transformed the text.
     let patient_id = skeleton.append('g')
