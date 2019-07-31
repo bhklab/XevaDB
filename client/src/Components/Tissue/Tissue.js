@@ -7,9 +7,11 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     margin-top: 100px;
+    color: #bd0808;
 `
 
 
@@ -61,7 +63,9 @@ class DonutTissue extends React.Component {
     render() {
         return (
             <Fragment>
+                
                 <Wrapper>
+                    <h1> Number of Model IDs Per Tissue Type in XevaDB </h1>
                     <DonutChart 
                         dimensions={this.dimensions} margin={this.margin} 
                         chartId={this.chartId} data={this.state.data}
