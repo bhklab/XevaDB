@@ -7,9 +7,11 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     margin-top: 100px;
+    color: #bd0808;
 `
 
 class DonutDrug extends React.Component {
