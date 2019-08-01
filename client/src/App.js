@@ -12,8 +12,25 @@ import {  CounterNav,
           TopNav,
           TumorGrowthCurve } from './Components/index'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import bgImg from './images/bgImg.jpg';
+import styled, { createGlobalStyle } from 'styled-components';
 
+const GlobalStyles = createGlobalStyle`
+  #root {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background: linear-gradient(
+      to right top,
+      rgba(255, 255, 255, 0.6), 
+      rgba(255, 255, 255, 0.6)
+    ),url('${bgImg}');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+  }
 
+`
 
 const Merge = () => {
     return (

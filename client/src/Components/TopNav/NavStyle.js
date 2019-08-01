@@ -30,9 +30,10 @@ const LinkStyle = styled.div`
         letter-spacing:1px;
         font-family: 'Raleway', sans-serif;
         font-weight:700;
-        font-size: 24px;
+        font-size: 27px;
         &:hover {
-            color: #fdbb84;
+            color: #e5ac11;
+            cursor:pointer;
         }
     }
 
@@ -42,7 +43,7 @@ const LinkStyle = styled.div`
 
     @media screen and (max-width: 1500px) {
         a {
-            font-size: 20px;
+            font-size: 22px;
         }
 
         a:nth-child(1) {

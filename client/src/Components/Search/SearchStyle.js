@@ -3,13 +3,25 @@ import styled from 'styled-components'
 const StyleBar = styled.div`
     margin-top: 30vh;
     font-family: "Raleway", sans-serif;
-    background: rgb(255,255,255,0.4);
-    padding-bottom:50px;
+    display:flex;
+    margin:auto;
+    
+    .search-container {
+        background: rgb(255,255,255,0.6);
+        padding:20px 20px 60px 20px;
+        max-width: 800px;
+        text-align:center;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        border-radius:25px;
+        
+    }
 
     h1 {
       color: #0e8a83;
       text-align: center;
-
       font-size: 50px;
     }    
 
@@ -17,7 +29,7 @@ const StyleBar = styled.div`
       width: 45%;
       margin: auto;
       min-width: 500px;
-      margin-top: 40px;
+      margin-top: 0px;
    }
 
    @media screen and (max-width: 1500px) {
@@ -41,16 +53,18 @@ const customStyles = {
     placeholder: (provided) => ({
           ...provided,
           color: '#0e8a83',
-          fontSize: '20px'
+          fontWeight:'400',
+          fontSize: '25px'
     }),
 
     control: (provided) => ({
         ...provided,
         '&:hover': { borderColor: '#0e8a83' },
-        border: '1.5px solid #0e8a83',
+        border: '1px solid #0e8a83',
         boxShadow: 'none',
-        padding: '20px',
-        borderRadius: '18px'
+        padding: '10px 20px',
+        borderRadius: '15px',
+        background: 'rgb(255,255,255,0.7)',
     }),
 
     indicatorSeparator: (provided) => ({
