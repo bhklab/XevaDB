@@ -58,7 +58,7 @@ class Search extends React.Component {
     render() {
         return (
             <StyleBar>
-                <h1> XevaDB: A Database For PDX Pharmacogenomic Data </h1>
+                <h1> XevaDB: A Database For <br></br>PDX Pharmacogenomic Data </h1>
                 <div className='select-component' onKeyPress={this.handleKeyPress}>
                     <Select 
                         options={this.state.data} 

@@ -1,14 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import {HeaderStyle, LogoStyle, LinkStyle} from './NavStyle'
+import logo from '../../images/logo.png';
 
 class TopNav extends React.Component {
     render() {
         return (
             <HeaderStyle>
-                <LogoStyle>
-                    <Link to='/'> <h3> XevaDB</h3> </Link> 
-                </LogoStyle>
+                
+                <Link to="/">
+                    <LogoStyle src={logo} alt="logo" />
+                </Link>
+                
+                
                 <LinkStyle>
                     <Link to='/'> Home </Link>
                     <Link to='/maps'> HeatMap </Link>

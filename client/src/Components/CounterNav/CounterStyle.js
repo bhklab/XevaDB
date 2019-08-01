@@ -4,20 +4,23 @@ import styled from 'styled-components'
 const DonutNav = styled.div`
     display: flex;
     justify-content: space-around;
-    background-color: #f6eeee;
-    font-family: 'Raleway', sans-serif;
-    min-height: 80px;
+    background-color: rgb(255,255,255,0.6);
+    min-height: 90px;
     position: fixed;
     bottom:0;
     left:0;
     width: 100%;
+    align-items: flex-end;
+    font-family: 'Montserrat', sans-serif;
+    font-weight:500;
+    font-size: 1.4em;
+    padding-bottom:10px;
     a{
         padding: 10px;
-        color: #bd0808;
+        color: #0e8a83;
         letter-spacing: 2px;
         font-weight: bold;
-        font-size: 18px;
-        margin-top: 6px;
+        font-size: 20px;
         text-decoration: none;
         &:hover {
             color: #fdbb84;

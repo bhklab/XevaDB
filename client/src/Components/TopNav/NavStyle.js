@@ -10,9 +10,9 @@ const HeaderStyle = styled.header`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    min-height: 80px;
+    min-height: 100px;
     font-family: 'Raleway', sans-serif;
-    background-color: #f6eeee;
+    background-color: rgb(255,255,255,0.5);
     position: fixed;
     top: 0;
     left: 0;
@@ -25,11 +25,12 @@ const LinkStyle = styled.div`
     width: 60%;
 
     a {
-        color: #bd0808;
+        color: #0e8a83;
         text-decoration: none;
-        letter-spacing: 2px;
-        font-weight: bold;
-        font-size: 20px;
+        letter-spacing:1px;
+        font-family: 'Raleway', sans-serif;
+        font-weight:700;
+        font-size: 24px;
         &:hover {
             color: #fdbb84;
         }
@@ -41,7 +42,7 @@ const LinkStyle = styled.div`
 
     @media screen and (max-width: 1500px) {
         a {
-            font-size: 18px;
+            font-size: 20px;
         }
 
         a:nth-child(1) {
@@ -80,14 +81,20 @@ const LinkStyle = styled.div`
     }
 `
 
-const LogoStyle = styled.div`
-    a {
-        color: #393b79;
-        text-decoration: none;
-        letter-spacing: 2px;
-        font-weight: bold;
-        font-size: 26px;
-    }
+// const LogoStyle = styled.div`
+//     a {
+//         color: #393b79;
+//         text-decoration: none;
+//         letter-spacing: 2px;
+//         font-weight: bold;
+//         font-size: 26px;
+//     }
+// `;
+
+const LogoStyle = styled.img`
+    width:calc(5em + 2vw);
+    margin-top:2px;
+    z-index:999;
 `;
 
 
