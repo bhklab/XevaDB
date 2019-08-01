@@ -82,7 +82,7 @@ const LinkStyle = styled.div`
 
 const LogoStyle = styled.div`
     a {
-        color: #393b79;
+        color: #fdbb84;
         text-decoration: none;
         letter-spacing: 2px;
         font-weight: bold;
