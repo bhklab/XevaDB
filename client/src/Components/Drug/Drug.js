@@ -12,7 +12,7 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 100px;
-    color: #bd0808;
+    margin-bottom: 100px;
 `
 
 class DonutDrug extends React.Component {
