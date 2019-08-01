@@ -2,12 +2,15 @@ import styled from 'styled-components'
 
 const StyleBar = styled.div`
     margin-top: 30vh;
+    font-family: "Raleway", sans-serif;
+    background: rgb(255,255,255,0.4);
+    padding-bottom:50px;
 
     h1 {
-      color: #bd0808;
+      color: #0e8a83;
       text-align: center;
-      line-height: 0.4;
-      font-size: 30px;
+
+      font-size: 50px;
     }    
 
    .select-component {
@@ -37,14 +40,14 @@ const StyleBar = styled.div`
 const customStyles = {
     placeholder: (provided) => ({
           ...provided,
-          color: '#bd0808',
+          color: '#0e8a83',
           fontSize: '20px'
     }),
 
     control: (provided) => ({
         ...provided,
-        '&:hover': { borderColor: '#bd0808' },
-        border: '1.5px solid #bd0808',
+        '&:hover': { borderColor: '#0e8a83' },
+        border: '1.5px solid #0e8a83',
         boxShadow: 'none',
         padding: '20px',
         borderRadius: '18px'
@@ -52,23 +55,23 @@ const customStyles = {
 
     indicatorSeparator: (provided) => ({
         ...provided,
-        background: '#bd0808',
-        '&:hover': { background: '#bd0808'},
+        background: '#0e8a83',
+        '&:hover': { background: '#0e8a83'},
         height: '30px'
     }), 
     
     dropdownIndicator: (provided ) => ({
         ...provided,
-        color: '#bd0808',
+        color: '#0e8a83',
         '&:hover': {
-          color: '#bd0808',
+          color: '#0e8a83',
           cursor: 'pointer'
         }
     }),
 
     option: (provided) => ({
         ...provided,
-        color: '#bd0808',
+        color: '#0e8a83',
         background: '#ffffff',
         margin: '5px 0px',
         '&:hover': {
@@ -79,18 +82,18 @@ const customStyles = {
 
     singleValue: (provided) => ({
         ...provided,
-        color: '#bd0808',
+        color: '#0e8a83',
         fontSize: '20px'
     }),
 
     input: (provided) => ({
         ...provided,
-        color: '#bd0808',
+        color: '#0e8a83',
     }),
 
     clearIndicator: (provided) => ({
         ...provided,
-        color: '#bd0808',
+        color: '#0e8a83',
         '&:hover': {
           color: '#fee8c8',
         }
