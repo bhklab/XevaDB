@@ -13,7 +13,6 @@ class Home extends React.Component {
     render() {
         return (
             <Container>
-                <TopNav/>
                 <Search/>
                 <CounterNav/>
             </Container>

@@ -18,16 +18,16 @@ const StyleBar = styled.div`
     }
 
     .select-component {
-        background: rgb(255,255,255,0.8);
+        background: rgb(255,255,255,0.7);
         width: 45%;
-        min-width: 800px;
+        min-width: 750px;
         margin-top: 0px;
         display: flex;
         flex-wrap: wrap;
         margin: 35px;
         padding: 15px 25px 50px 25px;
         justify-content: space-around;
-        border-radius: 35px;
+        border-radius: 20px;
 
         .div-1, .div-2 {
             max-width: 49%;
@@ -57,12 +57,12 @@ const StyleBar = styled.div`
     }
 
     h1 {
-      color: #3453b0;
+      color: #3453b0; //#3453b0
       text-align: center;
       font-size: 50px;
-      span {
-          color: #523e6e;
-      }
+    //   span {
+    //       color: #AA4C45;
+    //   }
     }    
 
    @media screen and (max-width: 1500px) {
