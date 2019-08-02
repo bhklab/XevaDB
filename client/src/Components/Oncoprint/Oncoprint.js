@@ -21,26 +21,22 @@ class Oncoprint extends React.Component {
         let data = this.props.data;
         let genes = this.props.genes;
         let plotId = 'plots';
+        let margin = this.props.margin;
+        let dimensions = this.props.dimensions;
         let patient_id = this.props.patient_id;
-        this.makeOncoprint(data, genes, plotId, node, patient_id)
+        this.makeOncoprint(data, genes, plotId, node, patient_id, dimensions, margin)
     }
 
 
-    makeOncoprint(data, genes, plotId, node, patient_id) {
+    makeOncoprint(data, genes, plotId, node, patient_id, dimensions, margin) {
         this.node = node
         // height and width for the SVG based on the number of drugs and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
-        let rect_height = 40;
-        let rect_width = 20;
+        let rect_height = dimensions.height;
+        let rect_width = dimensions.width;
         // this height and width is used for setting the body.
-        let height = genes.length * (rect_height + 10)+ 200;
-        let width = patient_id.length * (rect_width + 5) + 200;
-        let margin = {
-            top: 30,
-            right: 200,
-            bottom: 100,
-            left: 250
-        }
+        let height = genes.length * rect_height + 100;
+        let width = patient_id.length * rect_width + 500;
 
         // adding this for rectangles on right side of oncoprint.
         let rect_alterations = [
@@ -61,7 +57,7 @@ class Oncoprint extends React.Component {
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
             .attr('transform',
-                    'translate(' + margin.left + ',' + (margin.top+20) + ')')
+                    'translate(' + margin.left + ',' + (margin.top) + ')')
 
 
                                                     /** Oncoprint SKELETOON **/
@@ -490,9 +486,10 @@ class Oncoprint extends React.Component {
 
     render() {
         return (
-            <svg ref = {node => this.node = node} width={1500} height={1300}>
-                
-            </svg>
+            <div 
+                ref = {node => this.node = node} 
+            >
+            </div>
         )
     }
 }
