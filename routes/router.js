@@ -44,7 +44,7 @@ router.get('/v1/counter', modelInformation.getCounter);
 
 //APIs related to drug table.
 router.get('/v1/drugtable', drugTable.getDrugTableData)
-
+router.get('/v1/drugclass', drugTable.getDrugClassName)
 
 
 module.exports = router;
