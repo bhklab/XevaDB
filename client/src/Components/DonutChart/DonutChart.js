@@ -198,6 +198,7 @@ class DonutChart extends React.Component {
                                                                     /* Label with event listeners */
 
         // append the text labels.
+        if(this.props.chartId !== 'donut_drug') {
             arcs.append('text')
                     .attr('transform', (d) => {
                         return 'translate(' + labelArc.centroid(d) + ')'
@@ -221,7 +222,9 @@ class DonutChart extends React.Component {
                     })
                     .on('mouseout', (d) => {
                         mouseout(d)
-                    })
+                    })             
+        }
+            
                         
 
                                                                     /**   Legends for the Donut Chart **/
@@ -244,7 +247,6 @@ class DonutChart extends React.Component {
                                         .attr('fill', (d) => {
                                             return color(d.value);
                                         })
-
 
                             donut_rect.selectAll('text')
                                         .data(data)
