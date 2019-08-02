@@ -31,6 +31,13 @@ const GlobalStyles = createGlobalStyle`
     background-attachment: fixed;
     background-position: center;
   }
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
 `
 
 const Merge = () => {

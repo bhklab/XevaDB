@@ -54,7 +54,7 @@ class HeatMapData extends React.Component {
 
     render() {
         return (
-            <div style={{margin:"0", fontSize:"0"}}>
+            <div className="wrapper" style={{margin:"auto", fontSize:"0"}}>
                 <HeatMap
                     data={this.state.data} drug_id={this.state.drug_id} 
                     patient_id={this.state.patient_id} dimensions={this.dimensions}
