@@ -12,7 +12,7 @@ import {  CounterNav,
           TopNav,
           TumorGrowthCurve } from './Components/index'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import bgImg from './images/bgImg.jpg';
+import bgImg from './images/bgImg2.jpg';
 import styled, { createGlobalStyle } from 'styled-components';
 
 

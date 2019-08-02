@@ -25,7 +25,7 @@ const LinkStyle = styled.div`
     width: 60%;
 
     a {
-        color: #0e8a83;
+        color: #3453b0;
         text-decoration: none;
         letter-spacing:1px;
         font-family: 'Raleway', sans-serif;

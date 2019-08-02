@@ -59,22 +59,27 @@ class Search extends React.Component {
         return (
             <StyleBar className="wrapper">
                 <div className="search-container">
-                    <h1> XevaDB: A Database For PDX Pharmacogenomic Data </h1>
+                    
                     <div className='select-component' onKeyPress={this.handleKeyPress}>
-                        <div className="div-1">
-                            <Select 
-                                styles={customStyles}
-                                placeholder={'Select the Dataset'}
-                            />
+                    <h1> <span>XevaDB:</span> A Database For PDX Pharmacogenomic Data </h1>
+
+                        <div className="two-col">
+                            <div className="div-1">
+                                <Select 
+                                    styles={customStyles}
+                                    placeholder={'Select the Dataset'}
+                                />
+                            </div>
+                            <div className="div-2">
+                                <Select 
+                                    options={this.state.data} 
+                                    styles={customStyles}
+                                    placeholder={'Search for Drug (eg. CLR457)'}
+                                    onChange={this.handleDrugChange}
+                                />
+                            </div>
                         </div>
-                        <div className="div-2">
-                            <Select 
-                                options={this.state.data} 
-                                styles={customStyles}
-                                placeholder={'Search for Drug (eg. CLR457)'}
-                                onChange={this.handleDrugChange}
-                            />
-                        </div>
+                        
                         <div className="div-3"> 
                             <Select 
                                 styles={customStyles}
