@@ -10,8 +10,9 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 100px;
-    color: #bd0808;
+    margin-top: 200px;
+    color: #0e8a83;
+    margin-bottom: 100px;
 `
 
 
@@ -63,7 +64,6 @@ class DonutTissue extends React.Component {
     render() {
         return (
             <Fragment>
-                
                 <Wrapper>
                     <h1> Number of Model IDs Per Tissue Type </h1>
                     <DonutChart 

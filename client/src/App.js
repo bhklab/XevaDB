@@ -15,6 +15,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import bgImg from './images/bgImg.jpg';
 import styled, { createGlobalStyle } from 'styled-components';
 
+
+
 const GlobalStyles = createGlobalStyle`
   #root {
     display: flex;
@@ -29,7 +31,6 @@ const GlobalStyles = createGlobalStyle`
     background-attachment: fixed;
     background-position: center;
   }
-
 `
 
 const Merge = () => {
