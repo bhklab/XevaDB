@@ -25,7 +25,7 @@ const getMutation = function(req,res) {
                                         .from('model_information')
                                         .where('tissue', 'Breast Cancer'))
                             )
-        ).limit(840)
+        ).limit(1050)
         .then((sequencing_data) => {
         let data = [];
         let value = 0;
