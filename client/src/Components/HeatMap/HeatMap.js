@@ -210,7 +210,7 @@ class HeatMap extends React.Component {
                                 
     //reset 
     drug_evaluations = {}
-    for(var i=0; i<drug.length; i++) {
+    for(let i=0; i<drug.length; i++) {
         drug_evaluations[drug[i]] = {'CR':0, 'PR': 0, 'SD': 0, 'PD': 0, 'NA':0, 'empty': 0}
     }
 
@@ -220,7 +220,8 @@ class HeatMap extends React.Component {
         patient_evaluations[patient[j]] = {'CR':0, 'PR': 0, 'SD': 0, 'PD': 0, 'NA':0, 'empty': 0, 'total':0}
     }
     let p_count = 0;
-    let highlight = gskeleton.selectAll('rect.hmap-hlight')
+    //let highlight = 
+               gskeleton.selectAll('rect.hmap-hlight')
                         .data(function(d) { 
                             //calling the function and passing the data d as parameter.
                             calculate_evaluations(d);
@@ -241,8 +242,8 @@ class HeatMap extends React.Component {
                         .append('rect')
                         .attr("class", function(d, i) {
                             // i+1 because drug is included in there
-                            let drug_class = drug[p_count].replace(/\s/g,'').replace(/[\+]/,'-')
-                            if (i == (patient.length - 1)) {
+                            let drug_class = drug[p_count].replace(/\s/g,'').replace(/[+]/,'-')
+                            if (i === (patient.length - 1)) {
                                 p_count++
                             }
                             return "hmap-hlight-" + rectKeys[i+1] + " hmap-hlight-" + drug_class
@@ -334,12 +335,12 @@ class HeatMap extends React.Component {
                   else return 'black'
               })
               .on("mouseover", function() {
-              let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')
+              let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[+]/,'-')
               d3.selectAll(".hmap-hlight-" + drug_class)
                           .style("opacity", 0.2)    
               })
               .on("mouseout", function() {
-              let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')
+              let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[+]/,'-')
               d3.selectAll(".hmap-hlight-" + drug_class)
                           .style("opacity", 0)
               });
