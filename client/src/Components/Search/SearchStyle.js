@@ -8,7 +8,7 @@ const StyleBar = styled.div`
     
     .search-container {
         padding:20px 20px 60px 20px;
-        max-width: 600px;
+        max-width: 1000px;
         text-align:center;
         display: flex;
         flex-wrap: wrap;
@@ -21,7 +21,7 @@ const StyleBar = styled.div`
     .select-component {
         background: rgb(255,255,255,0.6);
         width: 45%;
-        min-width: 600px;
+        min-width: 800px;
         margin-top: 0px;
         display: flex;
         flex-wrap: wrap;
@@ -31,11 +31,11 @@ const StyleBar = styled.div`
         border-radius: 35px;
         .div-1, .div-2 {
             max-width: 49%;
-            min-width: 290px;
+            min-width: 390px;
         }
         .div-3, .div-4 {
             margin: 10px;
-            min-width: 400px;
+            min-width: 600px;
             max-width: 70%
         }
     }
