@@ -12,7 +12,7 @@ import {  CounterNav,
           TopNav,
           TumorGrowthCurve } from './Components/index'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import bgImg from './images/bgImg2.jpg';
+import bgImg from './images/bgImg7.png';
 import styled, { createGlobalStyle } from 'styled-components';
 
 
@@ -24,8 +24,8 @@ const GlobalStyles = createGlobalStyle`
     flex-direction: column;
     background: linear-gradient(
       to right top,
-      rgba(255, 255, 255, 0.6), 
-      rgba(255, 255, 255, 0.6)
+      rgba(255, 255, 255, 0.3), 
+      rgba(255, 255, 255, 0.3)
     ),url('${bgImg}');
     background-size: cover;
     background-attachment: fixed;
@@ -49,6 +49,7 @@ class App extends React.Component {
     return (
       <Fragment>
         <Router>
+          <GlobalStyles />
           <TopNav/>
           <Switch>
             <Route path='/' exact component={Home}></Route>
