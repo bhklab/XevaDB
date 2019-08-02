@@ -159,15 +159,6 @@ class HeatMap extends React.Component {
                                     return `translate(0,${i * rect_height})`
                                   })
 
-    // let hmap_highlight = drug_response.selectAll("g#highlight")
-    //                             .data(data)
-    //                             .enter()
-    //                             .append('g')
-    //                             .attr("id", "highlight")
-    //                             .attr('transform', function(d,i) {
-    //                             return `translate(0,${i * rect_height})`
-    //                             })
-
 
     let rectKeys;
     // this will append rect equivalent to number of patient ids.
@@ -338,17 +329,20 @@ class HeatMap extends React.Component {
               .attr('font-weight', '500')
               .call(yAxis)
               .selectAll("text")
-                  .on("mouseover", function() {
-                    let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')
-                    d3.selectAll(".hmap-hlight-" + drug_class)
-                                .style("opacity", 0.2)
-
-                  })
-                  .on("mouseout", function() {
-                    let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')
-                    d3.selectAll(".hmap-hlight-" + drug_class)
-                                .style("opacity", 0)
-                  });
+              .attr('fill', function(d) {
+                  if(d === 'untreated') {return '#3453b0'}
+                  else return 'black'
+              })
+              .on("mouseover", function() {
+              let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')
+              d3.selectAll(".hmap-hlight-" + drug_class)
+                          .style("opacity", 0.2)    
+              })
+              .on("mouseout", function() {
+              let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[\+]/,'-')
+              d3.selectAll(".hmap-hlight-" + drug_class)
+                          .style("opacity", 0)
+              });
 
     // calling the x-axis to set the axis and we have also transformed the text.
     let patient_id = skeleton.append('g')
