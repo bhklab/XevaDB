@@ -13,6 +13,7 @@ const Wrapper = styled.div`
     align-items: center;
     margin-top: 200px;
     margin-bottom: 100px;
+    color: #0e8a83;
 `
 
 class DonutDrug extends React.Component {
@@ -26,12 +27,12 @@ class DonutDrug extends React.Component {
 
     componentDidMount() {
         let new_values = []
-        axios.get(`http://localhost:5000/api/v1/drugs`)
+        axios.get(`http://localhost:5000/api/v1/drugclass`)
              .then((response) => {
                  response.data.data.forEach((data) => {
                      let value = {}
-                     value['id'] = (data.drug).replace(/\s/g, '').replace('+', '_')
-                     value['value'] = data.total
+                     value['id'] = (data.class_name).replace(/\s/g, '').replace('+', '_')
+                     value['value'] = data.model_ids
                      new_values.push(value)
                  })
                  this.setState({
@@ -63,6 +64,7 @@ class DonutDrug extends React.Component {
         return (
             <Fragment>
                 <Wrapper>
+                    <h1> Number of Model IDs Per Drug class </h1>
                     <DonutChart 
                         dimensions={this.dimensions} margin={this.margin} 
                         chartId={this.chartId} data={this.state.data}
