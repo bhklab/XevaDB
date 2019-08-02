@@ -133,7 +133,6 @@ class HeatMap extends React.Component {
                 .attr('xmlns:xlink', 'http://wwww.w3.org/1999/xlink')
                 .attr('height',height + margin.bottom + margin.top) 
                 .attr('width', width + margin.left + margin.right)
-                
                 .append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
                 
@@ -328,7 +327,7 @@ class HeatMap extends React.Component {
                     .attr('id', 'drug_name')
 
     drug_name.attr('stroke-width', '0')
-              .style('font-size', '13px')
+              .style('font-size', '15px')
               .attr('font-weight', '500')
               .call(yAxis)
               .selectAll("text")
@@ -431,7 +430,7 @@ class HeatMap extends React.Component {
                                .attr('class', 'drug_eval_rect')
                                .attr('x', patient.length * rect_width + 20)
                                .attr('y', 35)
-                               .attr('height', 40 * drug.length )
+                               .attr('height', rect_height * drug.length)
                                .attr('width', drug_Scale(max_drug))
                                .attr('fill', 'white')
                                .style('stroke', 'black')

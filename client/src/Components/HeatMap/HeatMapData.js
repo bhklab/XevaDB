@@ -41,7 +41,7 @@ class HeatMapData extends React.Component {
 
 
     dimensions = {
-        height: 40,
+        height: 35,
         width: 20,
     }
 
