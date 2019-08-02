@@ -15,7 +15,7 @@ const TableWrapper = styled.div`
     }
 
     .ReactTable .rt-thead {
-        color:  #bd0808;
+        color:  #0e8a83;
         font-size: 18px;
         font-weight: 600;
     }
@@ -25,12 +25,12 @@ const TableWrapper = styled.div`
     }
 
     .ReactTable .rt-tbody{
-        color:  #f94d4d;
+        color:  #0e8a83;
         font-size: 16px;
     }
 
     .-previous, .-next, .-btn   {
-      background: #e7a1a1;
+      background: #0e8a83;
     }
 `
 

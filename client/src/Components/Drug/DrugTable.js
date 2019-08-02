@@ -6,7 +6,7 @@ import TableWrapper from './DrugTableStyle'
 
 
 var h1Style = {
-  color: '#bd0808',
+  color: '#0e8a83',
   margin: '50px'
 }
 
