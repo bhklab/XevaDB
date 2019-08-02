@@ -133,8 +133,10 @@ class HeatMap extends React.Component {
                 .attr('xmlns:xlink', 'http://wwww.w3.org/1999/xlink')
                 .attr('height',height + margin.bottom + margin.top) 
                 .attr('width', width + margin.left + margin.right)
+                
                 .append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                
                 
     
 
