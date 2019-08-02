@@ -2,12 +2,12 @@ import React from 'react';
 
 
 const styles = {
-	color: '#0e8a83',
+	color: '#3453b0',
 	fontSize: 18, 
 	textAlign: 'center',
     paddingTop: '30px',
     minHeight: '60px',
-    backgroundColor: "#fafcfc",
+    backgroundColor: "#f2f4f9",
     fontFamily: 'Raleway',
 };
 
