@@ -23,6 +23,8 @@ const getResponseEvaluation = function(req,res) {
                         data[value-1][element.patient_id] = element.response
                     }
                 });
+            // pushing the last element of the array to the first position.
+            data.unshift(data.pop())
             res.send(data);
         })
         .catch(error => res.status(500).json({
