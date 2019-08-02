@@ -7,9 +7,8 @@ const StyleBar = styled.div`
     margin:auto;
     
     .search-container {
-        background: rgb(255,255,255,0.6);
         padding:20px 20px 60px 20px;
-        max-width: 1200px;
+        max-width: 600px;
         text-align:center;
         display: flex;
         flex-wrap: wrap;
@@ -20,22 +19,23 @@ const StyleBar = styled.div`
     }
 
     .select-component {
+        background: rgb(255,255,255,0.6);
         width: 45%;
-        min-width: 1000px;
+        min-width: 600px;
         margin-top: 0px;
         display: flex;
         flex-wrap: wrap;
-        margin: 5px;
+        margin: 35px;
         padding: 25px;
         justify-content: space-around;
+        border-radius: 35px;
         .div-1, .div-2 {
             max-width: 49%;
-            min-width: 470px;
-            margin: 10px;
+            min-width: 290px;
         }
         .div-3, .div-4 {
             margin: 10px;
-            min-width: 600px;
+            min-width: 400px;
             max-width: 70%
         }
     }
@@ -68,7 +68,7 @@ const customStyles = {
           ...provided,
           color: '#0e8a83',
           fontWeight:'400',
-          fontSize: '20px'
+          fontSize: '15px'
     }),
 
     control: (provided) => ({
@@ -76,7 +76,7 @@ const customStyles = {
         '&:hover': { borderColor: '#0e8a83' },
         border: '1px solid #0e8a83',
         boxShadow: 'none',
-        padding: '20px 20px',
+        padding: '10px 10px',
         borderRadius: '15px',
         background: 'rgb(255,255,255,0.7)',
     }),

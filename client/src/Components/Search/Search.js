@@ -59,7 +59,7 @@ class Search extends React.Component {
         return (
             <StyleBar className="wrapper">
                 <div className="search-container">
-                    <h1> XevaDB: A Database For <br></br>PDX Pharmacogenomic Data </h1>
+                    <h1> XevaDB: A Database For PDX Pharmacogenomic Data </h1>
                     <div className='select-component' onKeyPress={this.handleKeyPress}>
                         <div className="div-1">
                             <Select 
