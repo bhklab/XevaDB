@@ -55,7 +55,7 @@ class Drug extends React.Component {
     margin = {
         top: 400,
         right: 200,
-        bottom: 1,
+        bottom: 100,
         left: 250
     }
 
