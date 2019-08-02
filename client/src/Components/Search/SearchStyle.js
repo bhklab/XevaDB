@@ -9,14 +9,35 @@ const StyleBar = styled.div`
     .search-container {
         background: rgb(255,255,255,0.6);
         padding:20px 20px 60px 20px;
-        max-width: 800px;
+        max-width: 1200px;
         text-align:center;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
         border-radius:25px;
-        
+        max-height: 500px;
+    }
+
+    .select-component {
+        width: 45%;
+        min-width: 1000px;
+        margin-top: 0px;
+        display: flex;
+        flex-wrap: wrap;
+        margin: 5px;
+        padding: 25px;
+        justify-content: space-around;
+        .div-1, .div-2 {
+            max-width: 49%;
+            min-width: 470px;
+            margin: 10px;
+        }
+        .div-3, .div-4 {
+            margin: 10px;
+            min-width: 600px;
+            max-width: 70%
+        }
     }
 
     h1 {
@@ -24,13 +45,6 @@ const StyleBar = styled.div`
       text-align: center;
       font-size: 50px;
     }    
-
-   .select-component {
-      width: 45%;
-      margin: auto;
-      min-width: 500px;
-      margin-top: 0px;
-   }
 
    @media screen and (max-width: 1500px) {
        h1 {
@@ -54,7 +68,7 @@ const customStyles = {
           ...provided,
           color: '#0e8a83',
           fontWeight:'400',
-          fontSize: '25px'
+          fontSize: '20px'
     }),
 
     control: (provided) => ({
@@ -62,7 +76,7 @@ const customStyles = {
         '&:hover': { borderColor: '#0e8a83' },
         border: '1px solid #0e8a83',
         boxShadow: 'none',
-        padding: '10px 20px',
+        padding: '20px 20px',
         borderRadius: '15px',
         background: 'rgb(255,255,255,0.7)',
     }),
