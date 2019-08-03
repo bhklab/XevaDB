@@ -10,7 +10,8 @@ const HeaderStyle = styled.header`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    min-height: 100px;
+    min-height: 80px;
+    max-height: 100px;
     font-family: 'Raleway', sans-serif;
     background-color: rgb(255,255,255,0.7);
     position: fixed;

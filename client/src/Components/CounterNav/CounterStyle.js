@@ -4,7 +4,8 @@ import styled from 'styled-components'
 const DonutNav = styled.div`
     display: flex;
     background-color: rgb(255,255,255,0.7);
-    min-height: 90px;
+    min-height: 70px;
+    max-height: 70px;
     position: fixed;
     bottom:0;
     left:0;
@@ -15,7 +16,7 @@ const DonutNav = styled.div`
     font-family: 'Montserrat', sans-serif;
     font-weight:500;
     font-size: 1.4em;
-    padding-bottom:10px;
+    padding-bottom:5px;
     a{
         padding: 10px;
         color: #3453b0; // #0e8a83;
@@ -35,7 +36,7 @@ const DonutNav = styled.div`
 
     @media screen and (max-width: 1500px) {
         a {
-            font-size: 22px;
+            font-size: 18px;
         }
 
         a:nth-child(1) {
