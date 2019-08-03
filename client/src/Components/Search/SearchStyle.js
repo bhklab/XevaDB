@@ -79,6 +79,29 @@ const StyleBar = styled.div`
 `;
 
 
+const StyleButton = styled.button`
+    background-color: #3453b0;
+    border: none;
+    border-radius:6px;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    margin: auto;
+    transition: .2s;
+    outline-style: none;
+    &:hover {
+        opacity: 0.5;
+        cursor: pointer;
+        color:  #3453b0;
+        background-color: #ffffff;
+        border: 1px solid #3453b0;
+    }
+`;
+
+
 const customStyles = {
     placeholder: (provided) => ({
           ...provided,
@@ -148,5 +171,6 @@ const customStyles = {
 
 export {
     StyleBar,
-    customStyles
+    customStyles,
+    StyleButton
 }
