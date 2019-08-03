@@ -60,9 +60,6 @@ const StyleBar = styled.div`
       color: #3453b0; //#3453b0
       text-align: center;
       font-size: 50px;
-    //   span {
-    //       color: #AA4C45;
-    //   }
     }    
 
    @media screen and (max-width: 1500px) {
@@ -96,7 +93,7 @@ const customStyles = {
         border: '1px solid #3453b0',
         boxShadow: 'none',
         padding: '0px 5px',
-        borderRadius: '15px',
+        borderRadius: '5px',
         background: 'rgb(255,255,255,0.7)',
     }),
 
