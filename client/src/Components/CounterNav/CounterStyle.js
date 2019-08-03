@@ -25,7 +25,7 @@ const DonutNav = styled.div`
         font-size: 20px;
         text-decoration: none;
         &:hover {
-            color: #fdbb84;
+            color: #e5ac11;
         }
         text-align:center;
     }
