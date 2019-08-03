@@ -1,8 +1,9 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom';
-import {StyleBar, customStyles} from './SearchStyle'
+import {StyleBar, customStyles, StyleButton} from './SearchStyle'
 import Select from 'react-select'
 import axios from 'axios'
+
 
 
 class Search extends React.Component {
@@ -15,6 +16,7 @@ class Search extends React.Component {
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleKeyPress = this.handleKeyPress.bind(this)
+        this.redirectUser = this.redirectUser.bind(this)
     }
 
     componentDidMount() {
@@ -57,20 +59,19 @@ class Search extends React.Component {
 
     render() {
         return (
-            <StyleBar className="wrapper">
-                <div className="search-container">
+            <StyleBar className='wrapper'>
+                <div className='search-container'>
                     
                     <div className='select-component' onKeyPress={this.handleKeyPress}>
                     <h1> <span>XevaDB:</span> A Database For PDX Pharmacogenomic Data </h1>
-
-                        <div className="two-col">
-                            <div className="div-1">
+                        <div className='two-col'>
+                            <div className='div-1'>
                                 <Select 
                                     styles={customStyles}
                                     placeholder={'Select the Dataset'}
                                 />
                             </div>
-                            <div className="div-2">
+                            <div className='div-2'>
                                 <Select 
                                     options={this.state.data} 
                                     styles={customStyles}
@@ -80,22 +81,27 @@ class Search extends React.Component {
                             </div>
                         </div>
                         
-                        <div className="div-3"> 
+                        <div className='div-3'> 
                             <Select 
                                 styles={customStyles}
                                 placeholder={'Genomics'}
                             />
                         </div>
-                        <div className="div-4">
+
+                        <div className='div-4'>
                             <Select 
                                 styles={customStyles}
                                 placeholder={'Search for Gene'}
                             />
                         </div>
                     </div>
+                    <StyleButton onClick={this.redirectUser} type='button'> 
+                        <span>
+                            Search
+                        </span>
+                    </StyleButton>
                 </div>
             </StyleBar>
-           
         )
     }
 }
