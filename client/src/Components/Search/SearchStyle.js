@@ -22,6 +22,7 @@ const StyleBar = styled.div`
         width: 45%;
         min-width: 750px;
         margin-top: 0px;
+        max-height: 350px;
         display: flex;
         flex-wrap: wrap;
         margin: 35px;
@@ -29,17 +30,11 @@ const StyleBar = styled.div`
         justify-content: space-around;
         border-radius: 20px;
 
-        .div-1, .div-2 {
+        .div-dataset, .div-drug {
             max-width: 49%;
             min-width: 295px;
         }
-        .div-1 {
-
-        }
-        .div-2 {
-
-        }
-        .div-3, .div-4 {
+        .div-genomics, .div-gene {
             margin: 10px;
             min-width: 600px;
             max-width: 70%;
@@ -57,7 +52,7 @@ const StyleBar = styled.div`
     }
 
     h1 {
-      color: #3453b0; //#3453b0
+      color: #3453b0;
       text-align: center;
       font-size: 50px;
     }    
@@ -90,10 +85,11 @@ const StyleButton = styled.button`
     display: inline-block;
     font-size: 32px;
     margin: auto;
-    transition: .2s;
+    transition: .3s;
     outline-style: none;
+    margin-top: 20px;
     &:hover {
-        opacity: 0.5;
+        opacity: 1;
         cursor: pointer;
         color:  #3453b0;
         background-color: #ffffff;
@@ -144,13 +140,13 @@ const customStyles = {
         '&:hover': {
           background: '#fee8c8'
         },
-        fontSize: '18px'
+        fontSize: '16px'
     }),
 
     singleValue: (provided) => ({
         ...provided,
         color: '#3453b0',
-        fontSize: '20px'
+        fontSize: '18px'
     }),
 
     input: (provided) => ({
