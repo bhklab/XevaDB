@@ -19,7 +19,7 @@ const results = [];
 let streams = [];
 
 // creates a write stream with headers we require in final csv file and creating a writable stream with the final file.
-let csvStream = csv.createWriteStream({headers: ["model_id", "tissue_id", "tissue", "patient_id", "drug"]});
+let csvStream = csv.createWriteStream({headers: ["model_id", "tissue_id", "tissue", "patient_id", "drug", "dataset"]});
 let writableStream = fs.createWriteStream(`./Final_Csv_File/${file_final}_final.csv`);
 
         // This is async way to read through the files.
@@ -44,7 +44,21 @@ function outputData() {
                         results.map((data) => {
                             if((data[0] ===  "") || (data[0] === "model.id")) {} 
                             else {
-                                csvStream.write({model_id: data[1], tissue_id: data[2], tissue: data[3], patient_id: data[4], drug: data[5]});
+                                let dataset = 0;
+                                if(data[3].match(/Breast/g)) {
+                                  dataset = 1;
+                                } else if (data[3].match(/Colorectal/g)) {
+                                  dataset = 2;
+                                }  else if (data[3].match(/Cutaneous/g)) {
+                                  dataset = 3;
+                                }  else if (data[3].match(/Gastric/g)) {
+                                  dataset = 4;
+                                }  else if (data[3].match(/Lung/g)) {
+                                  dataset = 5;
+                                }  else if (data[3].match(/Pancreatic/g)) {
+                                  dataset = 6;
+                                } 
+                                csvStream.write({model_id: data[1], tissue_id: data[2], tissue: data[3], patient_id: data[4], drug: data[5], dataset: dataset});
                             }
                       })
                     console.log("Done with the conversion");
