@@ -6,9 +6,9 @@ const styles = {
 	fontSize: 18, 
 	textAlign: 'center',
     paddingTop: '30px',
-    minHeight: '60px',
+    minHeight: '50px',
     backgroundColor: "#f2f4f9",
-    fontFamily: 'Raleway',
+    fontFamily: 'sans-serif'
 };
 
 
