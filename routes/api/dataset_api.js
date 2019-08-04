@@ -4,9 +4,10 @@ const knex = require('../../db/knex1');
 const getDatasetTableData = function(req,res) {
     knex.select()
         .from('datasets')
-        .then((dataset) => {
-            res.send(dataset);
-        })
+        .then((dataset) => res.status(200).json({
+            status: 'success',
+            data: dataset
+        }))
         .catch((error) => res.status(500).json({
             status: 'could not find data from dataset table, getDatasetTableData',
             data: error
