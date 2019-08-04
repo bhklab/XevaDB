@@ -13,6 +13,11 @@ exports.up = function(knex, Promise) {
              .references('drug_id')
              .inTable('drug')
              .index();
+        table.integer('dataset')
+             .notNullable()
+             .references('dataset_id')
+             .inTable('datasets')
+             .index();
     });
 };
 
