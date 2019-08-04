@@ -12,6 +12,7 @@ class Search extends React.Component {
         console.log(this.props)
         this.state = {
             data : [],
+            dataset: [],
             selectedDrug : 'Search for Drug'
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
@@ -20,22 +21,27 @@ class Search extends React.Component {
     }
 
     componentDidMount() {
-        let values = [];
         let initial = 1;
         axios.get(`http://localhost:5000/api/v1/alldrugs`)
-             .then((response) => {
-                 response.data.data.forEach(item => {
-                     values.push(
-                         {  
+            .then((response) => {
+                 const data = response.data.data.map(item => ({
                             value: initial++,
                             label: item.drug
-                         }
-                     )
-                 })
+                 }))
                  this.setState ({
-                    data: values
+                    data: [...data]
                 })
-             })
+            })
+        axios.get(`http://localhost:5000/api/v1/dataset`)
+            .then((response) => {
+                    const dataset = response.data.data.map(item => ({
+                            value: item.dataset_id,
+                            label: item.dataset_name
+                    }))
+                    this.setState ({
+                    dataset: [...dataset]
+                })
+            })
     }
 
     handleDrugChange = selectedOption => {
@@ -61,17 +67,17 @@ class Search extends React.Component {
         return (
             <StyleBar className='wrapper'>
                 <div className='search-container'>
-                    
                     <div className='select-component' onKeyPress={this.handleKeyPress}>
                     <h1> <span>XevaDB:</span> A Database For PDX Pharmacogenomic Data </h1>
                         <div className='two-col'>
-                            <div className='div-1'>
+                            <div className='div-dataset'>
                                 <Select 
+                                    options={this.state.dataset} 
                                     styles={customStyles}
                                     placeholder={'Select the Dataset'}
                                 />
                             </div>
-                            <div className='div-2'>
+                            <div className='div-drug'>
                                 <Select 
                                     options={this.state.data} 
                                     styles={customStyles}
@@ -81,25 +87,25 @@ class Search extends React.Component {
                             </div>
                         </div>
                         
-                        <div className='div-3'> 
+                        <div className='div-genomics'> 
                             <Select 
                                 styles={customStyles}
                                 placeholder={'Genomics'}
                             />
                         </div>
 
-                        <div className='div-4'>
+                        <div className='div-gene'>
                             <Select 
                                 styles={customStyles}
                                 placeholder={'Search for Gene'}
                             />
                         </div>
+                        <StyleButton onClick={this.redirectUser} type='button'> 
+                            <span>
+                                Search
+                            </span>
+                        </StyleButton>
                     </div>
-                    <StyleButton onClick={this.redirectUser} type='button'> 
-                        <span>
-                            Search
-                        </span>
-                    </StyleButton>
                 </div>
             </StyleBar>
         )
