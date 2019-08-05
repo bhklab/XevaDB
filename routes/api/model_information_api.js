@@ -124,7 +124,7 @@ const getCounter = function(req,res) {
 }
 
 
-// getting all the distinct drugs based on the dataset.
+// getting a list of all the distinct drugs based on the dataset.
 const postDrugBasedOnDataset = function(req,res) {
     dataset = req.body.label
     knex('model_information')
