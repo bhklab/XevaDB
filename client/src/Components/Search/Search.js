@@ -42,10 +42,12 @@ class Search extends React.Component {
     }
 
     handleDrugChange = selectedOption => {
-        const label = selectedOption.label
-        this.setState ({
-            selectedDrug : label
-        })
+        if (selectedOption !== null && selectedOption.length > 0) {
+            const label = selectedOption[0].label
+            this.setState ({
+                selectedDrug : label
+            })
+        }
     }
 
     handleDatasetChange = selectedOption => {
@@ -93,10 +95,14 @@ class Search extends React.Component {
                             </div>
                             <div className='div-drug'>
                                 <Select 
+                                    closeMenuOnSelect={false}
                                     options={this.state.data} 
                                     styles={customStyles}
                                     placeholder={'Search for Drug (eg. CLR457)'}
                                     onChange={this.handleDrugChange}
+                                    isMulti
+                                    isSearchable
+                                    isClearable
                                 />
                             </div>
                         </div>
