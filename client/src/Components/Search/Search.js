@@ -10,12 +10,12 @@ import { GeneList } from './GeneList'
 class Search extends React.Component {
     constructor(props) {
         super(props)
-        console.log(this.props)
+        //console.log(this.props)
         this.state = {
             data : [],
             datasets: [],
             genes: [],
-            selectedDrug : 'Search for Drug'
+            selectedDrugs: []
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleDatasetChange = this.handleDatasetChange.bind(this)
@@ -44,27 +44,28 @@ class Search extends React.Component {
     componentDidMount() {
         axios.get(`http://localhost:5000/api/v1/dataset`)
             .then((response) => {
-                    const datasets = response.data.data.map(item => ({
-                            value: item.dataset_id,
-                            label: item.dataset_name
-                    }))
-                    this.setState ({
-                    datasets: [...datasets]
+                const datasets = response.data.data.map(item => ({
+                        value: item.dataset_id,
+                        label: item.dataset_name
+                }))
+                this.setState ({
+                datasets: [...datasets]
                 })
             })
     }
 
-    handleDrugChange = selectedOption => {
+    handleDrugChange = (selectedOption, action) => {
         if (selectedOption !== null && selectedOption.length > 0) {
-            const label = selectedOption[0].label
+            const label = selectedOption.map((value) => {
+                return value.label;
+            })
             this.setState ({
-                selectedDrug : label
+                selectedDrugs : label
             })
         }
     }
 
     handleDatasetChange = selectedOption => {
-        console.log(GeneList)
         const label = selectedOption.value
         let initial = 1;
         axios.post(`http://localhost:5000/api/v1/drug/dataset`, {label}, this.axiosConfig)
@@ -87,7 +88,7 @@ class Search extends React.Component {
 
     redirectUser = () => {
         const { history } = this.props
-        history.push(`/drug/${this.state.selectedDrug}`)
+        history.push(`/drug/${this.state.selectedDrugs}`)
     }
 
     render() {
