@@ -158,7 +158,7 @@ const customStyles = {
         ...provided,
         color: '#3453b0',
         '&:hover': {
-          color: '#fee8c8',
+          color: '#3453b0',
         }
     })
 }
