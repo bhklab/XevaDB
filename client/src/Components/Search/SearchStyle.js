@@ -140,13 +140,13 @@ const customStyles = {
         '&:hover': {
           background: '#fee8c8'
         },
-        fontSize: '16px'
+        fontSize: '14px'
     }),
 
     singleValue: (provided) => ({
         ...provided,
         color: '#3453b0',
-        fontSize: '18px'
+        fontSize: '16px'
     }),
 
     input: (provided) => ({
