@@ -48,14 +48,14 @@ class Drug extends React.Component {
     }
 
     dimensions = {
-        height: 40,
-        width: 20
+        height: 35,
+        width: 20,
     }
 
     margin = {
-        top: 400,
+        top: 300,
         right: 200,
-        bottom: 100,
+        bottom: 0,
         left: 250
     }
 
