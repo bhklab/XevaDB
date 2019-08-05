@@ -114,13 +114,35 @@ const getCounter = function(req,res) {
             .countDistinct('tissue as tissue')
             .countDistinct('drug as drug')
         .then((data) => res.status(200).json({
-           data: data
+            status: 'success',
+            data: data
         }))
         .catch((error) => res.status(500).json({
             status: 'could not find the data',
             data: error
         }))
 }
+
+
+// getting all the distinct drugs based on the dataset.
+const postDrugBasedOnDataset = function(req,res) {
+    dataset = req.body.label
+    knex('model_information')
+        .distinct('drug')
+        .where({
+            dataset: dataset
+        })
+        .then((data) => res.status(200).json({
+            status: 'success',
+            data: data
+        }))
+
+}
+
+
+
+
+
 
 module.exports = {
     getModelInformation,
@@ -130,5 +152,6 @@ module.exports = {
     getTotalDrugs,
     getTotalTissues,
     getTotalModels,
-    getCounter
+    getCounter,
+    postDrugBasedOnDataset
 }

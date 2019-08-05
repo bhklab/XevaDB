@@ -38,7 +38,7 @@ router.get('/v1/models', modelInformation.getTotalModels);
 router.get('/v1/alldrugs', modelInformation.getTotalDrugs);
 router.get('/v1/alltissues', modelInformation.getTotalTissues);
 router.get('/v1/counter', modelInformation.getCounter);
-
+router.post('/v1/drug/dataset', modelInformation.postDrugBasedOnDataset);
 
 //APIs related to drug table.
 router.get('/v1/drugtable', drugTable.getDrugTableData)
