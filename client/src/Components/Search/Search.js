@@ -16,22 +16,19 @@ class Search extends React.Component {
             selectedDrug : 'Search for Drug'
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
+        this.handleDatasetChange = this.handleDatasetChange.bind(this)
         this.handleKeyPress = this.handleKeyPress.bind(this)
         this.redirectUser = this.redirectUser.bind(this)
     }
 
+    axiosConfig = {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    };
+
     componentDidMount() {
-        let initial = 1;
-        axios.get(`http://localhost:5000/api/v1/alldrugs`)
-            .then((response) => {
-                 const data = response.data.data.map(item => ({
-                            value: initial++,
-                            label: item.drug
-                 }))
-                 this.setState ({
-                    data: [...data]
-                })
-            })
         axios.get(`http://localhost:5000/api/v1/dataset`)
             .then((response) => {
                     const dataset = response.data.data.map(item => ({
@@ -49,6 +46,22 @@ class Search extends React.Component {
         this.setState ({
             selectedDrug : label
         })
+    }
+
+    handleDatasetChange = selectedOption => {
+        const label = selectedOption.value
+        let initial = 1;
+        axios.post(`http://localhost:5000/api/v1/drug/dataset`, {label}, this.axiosConfig)
+             .then((response) => {
+                console.log(response)
+                const data = response.data.data.map(item => ({
+                    value: initial++,
+                    label: item.drug
+                }))
+                this.setState ({
+                    data: [...data]
+                })
+             })
     }
 
     handleKeyPress = (event) => {
@@ -75,6 +88,7 @@ class Search extends React.Component {
                                     options={this.state.dataset} 
                                     styles={customStyles}
                                     placeholder={'Select the Dataset'}
+                                    onChange={this.handleDatasetChange}
                                 />
                             </div>
                             <div className='div-drug'>
