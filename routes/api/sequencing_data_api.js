@@ -1,8 +1,8 @@
 const knex = require('../../db/knex1');
 
 const isValidId = function (req, res, next) {
-    console.log(req.param.id)
-    console.log(req.query.page)
+    //console.log(req.param.id)
+    //console.log(req.query.page)
     if(!isNaN(req.params.id)) return next();
     next(new Error('Invalid Id'));
 }
@@ -14,9 +14,9 @@ const getMutationId = function(req,res) {
 }
 
 const getMutation = function(req,res) {
-    console.log(req.query.page)
+    //console.log(req.query.page)
     var tissue_name = req.query.tissue;
-    console.log(tissue_name);
+    //console.log(tissue_name);
     knex.select('gene_id', 'patient_id', 'mutation')
         .from('sequencing_data')
         .where((builder) =>
