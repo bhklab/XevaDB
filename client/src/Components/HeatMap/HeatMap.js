@@ -100,7 +100,8 @@ class HeatMap extends React.Component {
             i = 0;
             drug_use = d.replace(/\s/g,'');
         }
-        else { return `/curve?patient=${patient_use[i++]}&drug_id=${drug_use}` }
+        else if (d.length === 2) { return `/curve?patient=${patient_use[i++]}&drug_id=${drug_use}` }
+        else { i++; }
     }
     
 
