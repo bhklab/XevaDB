@@ -21,27 +21,33 @@ class Drug extends React.Component {
 
     // this function takes the parsed result and set the states.
     parseData(result) {
-        let patient = Object.keys(result);
+        const dataset = result;
+        let patient = Object.keys(dataset[0]);
         patient.shift();
-        let drug = [];
-        const entries = Object.entries(result)
-        entries.forEach(element => {
-            if(element[0] === 'Drug') {
-                drug.push(element[1]);
-            }
-        });
-        let dataset = [];
-        dataset.push(result)
+        let drug = dataset.map((data) => {
+            return data.Drug;
+        })
+        //console.log(drug)
+        //console.log(patient)
         this.setState({
             drug_id : drug,
             patient_id : patient,
             data: dataset
-        })  
+        })
+    }
+
+    // grab the query parameters passed to this component.
+    getParams() {
+        // grabbing the parameters
+        let params = new URLSearchParams(this.props.location.search);
+        let drug_param = params.get('drug')
+        //console.log(drug_param)
+        return drug_param;
     }
 
     componentDidMount() {
-        let id = this.props.match.params.id
-        axios.get(`http://localhost:5000/api/v1/respevaldrug/${id}`)
+        let drug_param = this.getParams()
+        axios.get(`http://localhost:5000/api/v1/respevaldrug/?drug=${drug_param}`)
              .then(response => {
                  this.parseData(response.data);
              })
@@ -74,5 +80,8 @@ class Drug extends React.Component {
         )
     }
 }
+
+
+
 
 export default Drug

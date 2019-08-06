@@ -55,9 +55,10 @@ class Search extends React.Component {
     }
 
     handleDrugChange = (selectedOption, action) => {
+        //console.log(selectedOption)
         if (selectedOption !== null && selectedOption.length > 0) {
             const label = selectedOption.map((value) => {
-                return value.label;
+                return (value.label).replace(/\s/g,'').replace('+','_');
             })
             this.setState ({
                 selectedDrugs : label
@@ -87,8 +88,9 @@ class Search extends React.Component {
     }
 
     redirectUser = () => {
+        //console.log(this.state.selectedDrugs)
         const { history } = this.props
-        history.push(`/drug/${this.state.selectedDrugs}`)
+        history.push(`/drug/?drug=${this.state.selectedDrugs}`)
     }
 
     render() {
