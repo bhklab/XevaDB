@@ -77,6 +77,8 @@ class DonutDrug extends React.Component {
                             chartId={this.chartId} data={this.state.data}
                             arc={this.arc}
                         />
+                    </div>
+                    <div className="donut-wrapper">
                         <DrugTable/>
                     </div>
                 </Wrapper>
