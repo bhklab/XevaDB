@@ -36,8 +36,38 @@ const GlobalStyles = createGlobalStyle`
     display: flex;
     align-items: center;
     justify-content: center;
+
+    h1 {
+      font-family:'Raleway', sans-serif;
+      font-weight:700;
+      text-align:center;
+      color: #3453b0;
+    }
   }
 
+  .heatmap-wrapper, .doc-wrapper {
+    margin-top: 200px;
+  }
+
+  .curve-wrapper {
+    margin-top:100px;
+  }
+
+  .oprint-wrapper {
+    margin-bottom:100px;
+  }
+
+  .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
+  .donut-wrapper, .doc-wrapper { //put all wrappers here and wrap them with wrapper
+    background:white;
+    font-family:Arial;
+  }
+
+
+  .heatmap, .oprint {
+    height:700px;
+    overflow:auto;
+  }
 `
 
 const Merge = () => {

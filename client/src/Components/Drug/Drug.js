@@ -14,6 +14,12 @@ const Wrapper = styled.div`
     margin-top: 200px;
     margin-bottom: 100px;
     color: #0e8a83;
+
+    h1 {
+        font-family:'Raleway', sans-serif;
+        font-weight:700;
+        text-align:center;
+    }
 `
 
 class DonutDrug extends React.Component {
@@ -64,16 +70,17 @@ class DonutDrug extends React.Component {
         return (
             <Fragment>
                 <Wrapper>
-                    <h1> Number of Model IDs Per Drug class </h1>
-                    <DonutChart 
-                        dimensions={this.dimensions} margin={this.margin} 
-                        chartId={this.chartId} data={this.state.data}
-                        arc={this.arc}
-                    />
+                    <div className="donut-wrapper">
+                        <h1> Number of Model IDs Per Drug class </h1>
+                        <DonutChart 
+                            dimensions={this.dimensions} margin={this.margin} 
+                            chartId={this.chartId} data={this.state.data}
+                            arc={this.arc}
+                        />
+                        <DrugTable/>
+                    </div>
                 </Wrapper>
-                <Wrapper>
-                    <DrugTable/>
-                </Wrapper>    
+                 
                 <Footer/>
             </Fragment>
         )

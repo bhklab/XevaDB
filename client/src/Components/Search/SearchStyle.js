@@ -14,15 +14,15 @@ const StyleBar = styled.div`
         justify-content: space-around;
         align-items: center;
         border-radius:25px;
-        max-height: 500px;
+        max-height: 600px;
     }
 
     .select-component {
-        background: rgb(255,255,255,0.7);
+        background: rgb(255,255,255,0.8);
         width: 45%;
         min-width: 750px;
         margin-top: 0px;
-        max-height: 350px;
+        max-height: 450px;
         display: flex;
         flex-wrap: wrap;
         margin: 35px;
@@ -84,6 +84,8 @@ const StyleButton = styled.button`
     text-decoration: none;
     display: inline-block;
     font-size: 32px;
+    font-family: "Raleway", sans-serif; 
+    font-weight:700;
     margin: auto;
     transition: .3s;
     outline-style: none;

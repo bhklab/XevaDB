@@ -41,7 +41,7 @@ class HeatMap extends React.Component {
     let rect_width = dimensions.width;
     // this height and width is used for setting the body.
     let height = drug.length * rect_height + 100;
-    let width = patient.length * rect_width + 500;
+    let width = patient.length * rect_width + 100;
 
     //'#1f77b4', '#2ca02c', '#ffbb78', '#d62728'
     //'#0033CC', '#1a9850', '#fed976', '#e41a1c'
@@ -588,13 +588,12 @@ class HeatMap extends React.Component {
 
     render() {
         return (
-            <div 
-                ref = {node => this.node = node} 
-            >
+            <div ref = {node => this.node = node} className="heatmap-wrapper">
             </div>
         )
     }
 }
+
 
 
 HeatMap.propTypes = {
