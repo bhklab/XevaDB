@@ -63,6 +63,10 @@ const GlobalStyles = createGlobalStyle`
     font-family:Arial;
   }
 
+  .donut-wrapper {
+    margin-bottom:20px;
+    min-width:1300px;
+  }
 
   .heatmap, .oprint {
     height:700px;
