@@ -31,6 +31,9 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
+       //console.log(data)
+       //console.log(drug)
+       //console.log(patient)
     this.node = node
     // height and width for the SVG based on the number of drugs and patient/sample ids.
     // height and width of the rectangles in the main skeleton.
