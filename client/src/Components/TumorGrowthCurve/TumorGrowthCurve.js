@@ -214,9 +214,9 @@ class TumorGrowthCurve extends React.Component {
             var width = 600;
             var height = 500;
             var margin = {
-                top:200,
+                top:100,
                 right:250,
-                bottom:150,
+                bottom:100,
                 left:200
             }
             // make the svg element
@@ -248,7 +248,7 @@ class TumorGrowthCurve extends React.Component {
                     .attr('id', function(d,i) {
                         return 'legend-dot-' + exp_types[i]
                     })
-                    .attr('class', '.legend')
+                    .attr('class', 'legend')
                     .attr('r', 4)
                     .attr('fill',function(d,i) {
                         if (exp_types[i] === 'control') {
@@ -264,10 +264,11 @@ class TumorGrowthCurve extends React.Component {
                     .attr('id', function(d,i) {
                         return 'legend-text-' + exp_types[i]
                     })
-                    .attr('class', '.legend')
+                    .attr('class', 'legend')
                     .attr('fill','black')
-                    .attr('dx', width + 40)
-                    .attr('dy', function(d,i) {return height/2 - 46 + (i*50);})
+                    .style('font-size', '14px')
+                    .attr('x', width+40)
+                    .attr('y', function(d,i) {return height/2 - 46 + (i*50);})
                     .text(function(d,i) {return exp_types[i]})
 
 
@@ -435,7 +436,7 @@ class TumorGrowthCurve extends React.Component {
                 .attr('stroke-dasharray', ('3', '3'))
         
             //plotMeans(data, svg, xrange, yrange, width, height)
-            //modelToggle(svg, width, height)
+            // modelToggle(svg, width, height)
         }
 
         function mean(arr) {
@@ -446,203 +447,203 @@ class TumorGrowthCurve extends React.Component {
             return (total/arr.length)
         }
 
-       /* // plot the mean of each experiment type (control, treatment)
-        function plotMeans(data, svg, xrange, yrange, width, height) {
-            var timeUnion = getUnionOfTimepoints(data)
-            var exp_types = ['control', 'treatment']
+        // // plot the mean of each experiment type (control, treatment)
+        // function plotMeans(data, svg, xrange, yrange, width, height) {
+        //     var timeUnion = getUnionOfTimepoints(data)
+        //     var exp_types = ['control', 'treatment']
             
-            var ypoint_arr = [] // un-yranged
-            var all_ypoint = [] // for std devs
+        //     var ypoint_arr = [] // un-yranged
+        //     var all_ypoint = [] // for std devs
 
-            //TODO: fix the batch, it's the first one rn
-            var batch = data[0].batch
+        //     //TODO: fix the batch, it's the first one rn
+        //     var batch = data[0].batch
 
-            // for control, then treatment
-            for (var n = 0; n < exp_types.length; n++) {
-                var exp = exp_types[n]
-                var times = timeUnion[n]
-                var selection = d3.selectAll('.model-path.' + exp_types[n])[0]
+        //     // for control, then treatment
+        //     for (var n = 0; n < exp_types.length; n++) {
+        //         var exp = exp_types[n]
+        //         var times = timeUnion[n]
+        //         var selection = d3.selectAll('.model-path.' + exp_types[n])[0]
                 
 
-                // for each timepoint
-                for (var i = 0; i < timeUnion[n].length; i++) {
-                    var temp_ycoord = []
+        //         // for each timepoint
+        //         for (var i = 0; i < timeUnion[n].length; i++) {
+        //             var temp_ycoord = []
                     
-                    // for each path, get ycoord for each timepoint in union
-                    for (var j = 0; j < selection.length; j++) {
-                        var path = selection[j]
-                        var ycoord = findY(path, xrange(timeUnion[n][i])) 
-                        temp_ycoord.push(yrange.invert(ycoord))
-                    }
+        //             // for each path, get ycoord for each timepoint in union
+        //             for (var j = 0; j < selection.length; j++) {
+        //                 var path = selection[j]
+        //                 var ycoord = findY(path, xrange(timeUnion[n][i])) 
+        //                 temp_ycoord.push(yrange.invert(ycoord))
+        //             }
 
-                    // append array to all_ypoint for std devs
-                    all_ypoint.push(temp_ycoord)
-                    // append mean to ypoint_arr
-                    ypoint_arr.push(mean(temp_ycoord))
-                }
+        //             // append array to all_ypoint for std devs
+        //             all_ypoint.push(temp_ycoord)
+        //             // append mean to ypoint_arr
+        //             ypoint_arr.push(mean(temp_ycoord))
+        //         }
 
-                // plot error bars
-                plotErrorBars(data, exp, times, all_ypoint, ypoint_arr, svg, xrange, yrange)
+        //         // plot error bars
+        //         plotErrorBars(data, exp, times, all_ypoint, ypoint_arr, svg, xrange, yrange)
 
-                // mean svg
-                var mean_svg = svg.append('g')
-                    .attr('id', 'mean_' + exp_types[n])
+        //         // mean svg
+        //         var mean_svg = svg.append('g')
+        //             .attr('id', 'mean_' + exp_types[n])
 
-                //tooltips
-                var tooltips = svg.selectAll('.tooltip-mean-dot' + exp)
-                    .data(ypoint_arr)
-                    .enter();
+        //         //tooltips
+        //         var tooltips = svg.selectAll('.tooltip-mean-dot' + exp)
+        //             .data(ypoint_arr)
+        //             .enter();
 
-                // timepoint
-                tooltips.append('text')
-                    .attr('id', function(d,i) { return 'tooltip-mean-t-' + batch + '-' + exp + i})
-                    .attr('class', 'tooltip-mean-dot' + exp)
-                    .attr('dx', width+20)
-                    .attr('dy', height/2 + 30)
-                    .attr('font-size', '14px')
-                    .style('opacity', 0)
-                    .attr('fill', 'black')
-                    .html(function(d,i) {return 'Time: ' + times[i] + ' days'})
+        //         // timepoint
+        //         tooltips.append('text')
+        //             .attr('id', function(d,i) { return 'tooltip-mean-t-' + batch + '-' + exp + i})
+        //             .attr('class', 'tooltip-mean-dot' + exp)
+        //             .attr('dx', width+20)
+        //             .attr('dy', height/2 + 30)
+        //             .attr('font-size', '14px')
+        //             .style('opacity', 0)
+        //             .attr('fill', 'black')
+        //             .html(function(d,i) {return 'Time: ' + times[i] + ' days'})
 
-                // volume
-                tooltips.append('text')
-                    .attr('id', function(d,i) { return 'tooltip-mean-v-' + batch + '-' + exp + i})
-                    .attr('class', 'tooltip-mean-dot')
-                    .attr('dx', width+20)
-                    .attr('dy', height/2 + 45)
-                    .attr('font-size', '14px')
-                    .style('opacity', 0)
-                    .attr('fill', 'black')
-                    .html(function(d,i) {return 'Volume: ' + d3.format('.2f')(ypoint_arr[i]) + ' mm³'})
+        //         // volume
+        //         tooltips.append('text')
+        //             .attr('id', function(d,i) { return 'tooltip-mean-v-' + batch + '-' + exp + i})
+        //             .attr('class', 'tooltip-mean-dot')
+        //             .attr('dx', width+20)
+        //             .attr('dy', height/2 + 45)
+        //             .attr('font-size', '14px')
+        //             .style('opacity', 0)
+        //             .attr('fill', 'black')
+        //             .html(function(d,i) {return 'Volume: ' + d3.format('.2f')(ypoint_arr[i]) + ' mm³'})
                 
-                var mean_dots = mean_svg.selectAll('.mean-dot')
-                    .data(ypoint_arr)
-                    .enter()
+        //         var mean_dots = mean_svg.selectAll('.mean-dot')
+        //             .data(ypoint_arr)
+        //             .enter()
 
-                mean_dots.append('circle')
-                    .attr('id', function(d,i) {
-                        return 'mean-dot-' + exp_types[n] + '-' + batch
-                    })
-                    .attr('class', 'mean-dot ' + batch)
-                    .attr('r', 4)
-                    .attr('fill',function() {
-                        if (exp_types[n] == 'control') {
-                            return '#3b9dd6'; 
-                        } else {
-                            return '#e0913c';
-                        }
-                    })
-                    .attr('cx', function(d,i) {return xrange(timeUnion[n][i]);})
-                    .attr('cy', function(d,i) {return yrange(ypoint_arr[i]);})
-                    .on({
-                        'mouseover': function(d,i) {
-                            d3.select('#tooltip-mean-t-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 1);
-                            d3.select('#tooltip-mean-v-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 1);
-                        },
-                        'mouseout': function(d,i) {
-                            d3.select('#tooltip-mean-t-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 0);
-                            d3.select('#tooltip-mean-v-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 0);
-                        },
-                    })
+        //         mean_dots.append('circle')
+        //             .attr('id', function(d,i) {
+        //                 return 'mean-dot-' + exp_types[n] + '-' + batch
+        //             })
+        //             .attr('class', 'mean-dot ' + batch)
+        //             .attr('r', 4)
+        //             .attr('fill',function() {
+        //                 if (exp_types[n] == 'control') {
+        //                     return '#3b9dd6'; 
+        //                 } else {
+        //                     return '#e0913c';
+        //                 }
+        //             })
+        //             .attr('cx', function(d,i) {return xrange(timeUnion[n][i]);})
+        //             .attr('cy', function(d,i) {return yrange(ypoint_arr[i]);})
+        //             .on({
+        //                 'mouseover': function(d,i) {
+        //                     d3.select('#tooltip-mean-t-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 1);
+        //                     d3.select('#tooltip-mean-v-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 1);
+        //                 },
+        //                 'mouseout': function(d,i) {
+        //                     d3.select('#tooltip-mean-t-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 0);
+        //                     d3.select('#tooltip-mean-v-' + batch + '-' + exp + i).transition().duration(300).style('opacity', 0);
+        //                 },
+        //             })
 
-                var mean_path = mean_svg.selectAll('.mean-path')
-                    .data(ypoint_arr)
-                    .enter();
-
-                
-                var linepath = d3.svg.line()
-                    .x(function(d,i) {return xrange(timeUnion[n][i]);})
-                    .y(function(d,i) {return yrange(ypoint_arr[i]);})
-
-                mean_path.append('path')
-                    .attr('id', 'mean-path-' + exp_types[n] + '-' + batch)
-                    .attr('class',  'mean-path ' + batch)
-                    .attr('d', function(d) {return linepath(ypoint_arr)})
-                    .attr('fill', 'none')
-                    .style('opacity', 1)
-                    .attr('stroke', function() {
-                        if (exp_types[n] == 'control') {
-                            return '#3b9dd6'; 
-                        } else {
-                            return '#e0913c';
-                        }
-                    })
-                    .attr('stroke-width', 2)
+        //         var mean_path = mean_svg.selectAll('.mean-path')
+        //             .data(ypoint_arr)
+        //             .enter();
 
                 
+        //         var linepath = d3.svg.line()
+        //             .x(function(d,i) {return xrange(timeUnion[n][i]);})
+        //             .y(function(d,i) {return yrange(ypoint_arr[i]);})
 
-                // reset y arrs
-                all_ypoint = []
-                ypoint_arr = []
-            }       
-        }
+        //         mean_path.append('path')
+        //             .attr('id', 'mean-path-' + exp_types[n] + '-' + batch)
+        //             .attr('class',  'mean-path ' + batch)
+        //             .attr('d', function(d) {return linepath(ypoint_arr)})
+        //             .attr('fill', 'none')
+        //             .style('opacity', 1)
+        //             .attr('stroke', function() {
+        //                 if (exp_types[n] == 'control') {
+        //                     return '#3b9dd6'; 
+        //                 } else {
+        //                     return '#e0913c';
+        //                 }
+        //             })
+        //             .attr('stroke-width', 2)
 
-        //toggle to show each model
-        function modelToggle(svg, width, height) {
-            var nest = d3.nest()
-                .key(function(d) {return d;})
-                .entries([''])
+                
+
+        //         // reset y arrs
+        //         all_ypoint = []
+        //         ypoint_arr = []
+        //     }       
+        // }
+
+        // //toggle to show each model
+        // function modelToggle(svg, width, height) {
+        //     var nest = d3.nest()
+        //         .key(function(d) {return d;})
+        //         .entries([''])
             
-            nest.forEach(function(d,i) {
-                var modelToggle = svg.append('rect')
-                .attr('x', width + 21)
-                .attr('y', height/2 + 40)
-                .attr('id', 'modelToggle')
-                .attr('width', 10)
-                .attr('height', 10)
-                .attr('fill', 'black')
-                .attr('stroke', 'black')
-                .attr('stroke-width', 1)
-                .on('click', function () {
-                    var active = d.active ? false : true ,
-                    newOpacity = active ? 0 : 1,
-                    newFill = active? 'white' : 'black';
+        //     nest.forEach(function(d,i) {
+        //         var modelToggle = svg.append('rect')
+        //         .attr('x', width + 21)
+        //         .attr('y', height/2 + 40)
+        //         .attr('id', 'modelToggle')
+        //         .attr('width', 10)
+        //         .attr('height', 10)
+        //         .attr('fill', 'black')
+        //         .attr('stroke', 'black')
+        //         .attr('stroke-width', 1)
+        //         .on('click', function () {
+        //             var active = d.active ? false : true ,
+        //             newOpacity = active ? 0 : 1,
+        //             newFill = active? 'white' : 'black';
 
-                    // Hide or show the elements
-                    d3.selectAll('.model-dot').style('opacity', newOpacity);
-                    d3.selectAll('.model-path').style('opacity', newOpacity);
-                    d3.select('#modelToggle').attr('fill', newFill)
+        //             // Hide or show the elements
+        //             d3.selectAll('.model-dot').style('opacity', newOpacity);
+        //             d3.selectAll('.model-path').style('opacity', newOpacity);
+        //             d3.select('#modelToggle').attr('fill', newFill)
 
-                    // Update whether or not the elements are active
-                    d.active = active;
-                })
-                .on({
-                    'mouseover': function() {
-                        d3.select(this).style('cursor', 'pointer');
-                    },
-                    'mouseout': function() {
-                        d3.select(this).style('cursor', 'default');
-                    }
-                })
+        //             // Update whether or not the elements are active
+        //             d.active = active;
+        //         })
+        //         .on({
+        //             'mouseover': function() {
+        //                 d3.select(this).style('cursor', 'pointer');
+        //             },
+        //             'mouseout': function() {
+        //                 d3.select(this).style('cursor', 'default');
+        //             }
+        //         })
 
-                var modelToggleText = svg.append('text')
-                    .attr('dx', width + 35)
-                    .attr('dy', height/2 + 50)
-                    .attr('fill', 'black')
-                    .text('Show all curves')
-                    .on('click', function () {
-                        var active = d.active ? false : true ,
-                        newOpacity = active ? 0 : 1,
-                        newFill = active? 'white' : 'black';
+        //         var modelToggleText = svg.append('text')
+        //             .attr('dx', width + 35)
+        //             .attr('dy', height/2 + 50)
+        //             .attr('fill', 'black')
+        //             .text('Show all curves')
+        //             .on('click', function () {
+        //                 var active = d.active ? false : true ,
+        //                 newOpacity = active ? 0 : 1,
+        //                 newFill = active? 'white' : 'black';
             
-                        // Hide or show the elements
-                        d3.selectAll('.model-dot').style('opacity', newOpacity);
-                        d3.selectAll('.model-path').style('opacity', newOpacity);
-                        d3.select('#modelToggle').attr('fill', newFill)
+        //                 // Hide or show the elements
+        //                 d3.selectAll('.model-dot').style('opacity', newOpacity);
+        //                 d3.selectAll('.model-path').style('opacity', newOpacity);
+        //                 d3.select('#modelToggle').attr('fill', newFill)
             
-                        // Update whether or not the elements are active
-                        d.active = active;
-                    })
-                    .on({
-                        'mouseover': function() {
-                            d3.select(this).style('cursor', 'pointer');
-                        },
-                        'mouseout': function() {
-                            d3.select(this).style('cursor', 'default');
-                        }
-                    })
-            })
-        } */
+        //                 // Update whether or not the elements are active
+        //                 d.active = active;
+        //             })
+        //             .on({
+        //                 'mouseover': function() {
+        //                     d3.select(this).style('cursor', 'pointer');
+        //                 },
+        //                 'mouseout': function() {
+        //                     d3.select(this).style('cursor', 'default');
+        //                 }
+        //             })
+        //     })
+        // } 
 
         // thank you stackoverflow user Wei
         // https://stackoverflow.com/questions/15578146/get-y-coordinate-of-point-along-svg-path-with-given-an-x-coordinate
@@ -756,8 +757,11 @@ class TumorGrowthCurve extends React.Component {
 
     render() {
         return (
-            <svg ref = {node => this.node = node} width={1000} height={1000}>
-            </svg>
+            <div className="wrapper" style={{margin:"auto", fontSize:"0"}}>
+                <svg ref = {node => this.node = node} width={1000} height={700} className="curve-wrapper">
+                </svg>
+            </div>
+            
         )
     }
 }

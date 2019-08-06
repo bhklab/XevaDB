@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 
 const TableWrapper = styled.div`
+    padding:10px 20px 30px 20px;
 
     .ReactTable * {
         box-sizing: border-box;
@@ -29,8 +30,9 @@ const TableWrapper = styled.div`
         font-size: 16px;
     }
 
-    .-previous, .-next, .-btn   {
+    .-previous, .-next, .-btn {
       background: #3453b0;
+      color:white;
     }
 `
 

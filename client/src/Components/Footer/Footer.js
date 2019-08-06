@@ -7,7 +7,7 @@ const styles = {
 	textAlign: 'center',
     paddingTop: '30px',
     minHeight: '50px',
-    backgroundColor: "#f2f4f9",
+    backgroundColor: "rgb(255,255,255,0.8)",
     fontFamily: 'sans-serif'
 };
 

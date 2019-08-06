@@ -13,6 +13,12 @@ const Wrapper = styled.div`
     margin-top: 200px;
     color: #0e8a83;
     margin-bottom: 100px;
+
+    h1 {
+        font-family:'Raleway', sans-serif;
+        font-weight:700;
+        text-align:center;
+    }
 `
 
 
@@ -65,12 +71,14 @@ class DonutTissue extends React.Component {
         return (
             <Fragment>
                 <Wrapper>
-                    <h1> Number of Model IDs Per Tissue Type </h1>
-                    <DonutChart 
-                        dimensions={this.dimensions} margin={this.margin} 
-                        chartId={this.chartId} data={this.state.data}
-                        arc={this.arc}
-                    />
+                    <div className="donut-wrapper">
+                        <h1> Number of Model IDs Per Tissue Type </h1>
+                        <DonutChart 
+                            dimensions={this.dimensions} margin={this.margin} 
+                            chartId={this.chartId} data={this.state.data}
+                            arc={this.arc}
+                        />
+                    </div>
                 </Wrapper>
                 <Footer/>
             </Fragment>

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const DonutNav = styled.div`
     display: flex;
-    background-color: rgb(255,255,255,0.7);
+    background-color: rgb(255,255,255,0.8);
     min-height: 70px;
     max-height: 70px;
     position: fixed;

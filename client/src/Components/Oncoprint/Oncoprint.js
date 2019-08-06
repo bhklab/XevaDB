@@ -36,7 +36,7 @@ class Oncoprint extends React.Component {
         let rect_width = dimensions.width;
         // this height and width is used for setting the body.
         let height = genes.length * rect_height + 100;
-        let width = patient_id.length * rect_width + 500;
+        let width = patient_id.length * rect_width + 120;
 
         // adding this for rectangles on right side of oncoprint.
         let rect_alterations = [
@@ -428,7 +428,7 @@ class Oncoprint extends React.Component {
                             .data(rect_alterations)
                             .enter()
                             .append('rect')
-                            .attr('x', 1040)
+                            .attr('x', 1000)
                             .attr('y', function(d, i) {
                                 return 200 + i * 25;
                             })
@@ -442,7 +442,7 @@ class Oncoprint extends React.Component {
                             .data(rect_alterations)
                             .enter()
                             .append('text')
-                            .attr('x', 1070)
+                            .attr('x', 1020)
                             .attr('y', function(d,i) {
                                 return 212 + i * 25;
                             })
@@ -486,9 +486,7 @@ class Oncoprint extends React.Component {
 
     render() {
         return (
-            <div 
-                ref = {node => this.node = node} 
-            >
+            <div ref = {node => this.node = node} className="oprint-wrapper">
             </div>
         )
     }
