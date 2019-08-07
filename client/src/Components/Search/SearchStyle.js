@@ -48,11 +48,11 @@ const StyleBar = styled.div`
                     min-width: 600px;
                     min-height: 150px;
                     outline-style: none;
-                    border-radius: 20px;
+                    border-radius: 10px;
                     color: #3453b0;
                     font-weight: 300;
                     font-size: 16px;
-                    border:1px solid #3453b0;
+                    border: 1px solid #3453b0;
                 }
         }
     }
