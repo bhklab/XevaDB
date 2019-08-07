@@ -127,16 +127,21 @@ const getCounter = function(req,res) {
 // getting a list of all the distinct drugs based on the dataset.
 const postDrugBasedOnDataset = function(req,res) {
     dataset = req.body.label
-    knex('model_information')
-        .distinct('drug')
-        .where({
-            dataset: dataset
-        })
-        .then((data) => res.status(200).json({
-            status: 'success',
-            data: data
-        }))
-
+    let promise1 = knex('model_information')
+                        .distinct('drug')
+                        .where({
+                            dataset: dataset
+                        })
+    let promise2 = knex('model_information')
+                        .distinct('patient_id')
+                        .where({
+                            dataset: dataset
+                        })
+    Promise.all([promise1, promise2])
+            .then((data) => res.status(200).json({
+                status: 'success',
+                data: data
+            }))
 }
 
 
