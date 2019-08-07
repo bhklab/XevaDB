@@ -14,7 +14,7 @@ const StyleBar = styled.div`
         justify-content: space-around;
         align-items: center;
         border-radius:25px;
-        max-height: 600px;
+        max-height: 700px;
     }
 
     .select-component {
@@ -22,7 +22,7 @@ const StyleBar = styled.div`
         width: 45%;
         min-width: 750px;
         margin-top: 0px;
-        max-height: 450px;
+        max-height: 600px;
         display: flex;
         flex-wrap: wrap;
         margin: 35px;
@@ -34,10 +34,26 @@ const StyleBar = styled.div`
             max-width: 49%;
             min-width: 295px;
         }
-        .div-genomics, .div-gene {
+        .div-genomics, .div-gene{
             margin: 10px;
             min-width: 600px;
             max-width: 70%;
+        }
+
+        .div-gene-enter{
+            margin: 15px;
+            min-width: 620px;
+            min-height: 180px;
+                input {
+                    min-width: 600px;
+                    min-height: 150px;
+                    outline-style: none;
+                    border-radius: 20px;
+                    border-color: #3453b0;
+                    color: #3453b0;
+                    font-weight: 300;
+                    font-size: 16px
+                }
         }
     }
 
