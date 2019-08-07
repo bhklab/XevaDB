@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import * as d3 from 'd3'
 import axios from 'axios'
 
@@ -77,7 +77,8 @@ class TumorGrowthCurve extends React.Component {
                 } else {
                     if (data[i]['time'] <= 200) {
                         data_formatted[data_formatted.length - 1].pdx_points[0].times.push(parseInt(data[i]['time']))
-                        data_formatted[data_formatted.length - 1].pdx_points[0].volumes.push(parseInt(data[i]['volume']))
+                        data_formatted[data_formatted.length - 1].pdx_points[0].volumes.push(parseFloat(data[i]['volume']))
+                        data_formatted[data_formatted.length - 1].pdx_points[0].volume_normals.push(parseFloat(data[i]['volume_normal']))
                         data_formatted[data_formatted.length - 1].pdx_json.push(
                             {
                                 model: data[i]['model_id'],
@@ -178,15 +179,18 @@ class TumorGrowthCurve extends React.Component {
             var maxTimeArray = [];
             var minVolArray = [];
             var maxVolArray = [];
+            var maxVolNormArray = [];
             for (var i = 0; i < data.length; i++) {
                 maxTimeArray.push(d3.max(data[i].pdx_points[0].times));
                 minVolArray.push(d3.min(data[i].pdx_points[0].volumes));
                 maxVolArray.push(d3.max(data[i].pdx_points[0].volumes));
+                maxVolNormArray.push(d3.max(data[i].pdx_points[0].volume_normals));
             }
 
             var maxTime = Math.max.apply(null, maxTimeArray);
             var minVolume = Math.min.apply(null, minVolArray);
             var maxVolume = Math.max.apply(null, maxVolArray);
+            var maxVolNorm = Math.max.apply(null, maxVolNormArray);
 
             var exp_types = ['control', 'treatment']
 
@@ -209,15 +213,6 @@ class TumorGrowthCurve extends React.Component {
                         .attr('height', height + margin.top + margin.bottom)
                         .append('g')
                         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-
-            // plot title
-            svg.append('text')
-                .attr('text-anchor', 'middle')
-                .attr('id', 'pdxTitle')
-                .style('font-size', '20px')
-                .attr('transform', 'translate('+ (width/2) +','+ -40 +')')
-                .style('fill','black')
-                .text(drug)
 
             // legend
             var legend = svg.selectAll('.legend')
@@ -273,7 +268,7 @@ class TumorGrowthCurve extends React.Component {
                             .tickPadding(2);
 
             // Add the X Axis
-            svg.append('g')
+            var xAxisAdd = svg.append('g')
                 .attr('class', 'x axis')
                 .attr('transform', 'translate(0,' + yrange(0) + ')')
                 .attr('fill', 'none')
@@ -306,15 +301,18 @@ class TumorGrowthCurve extends React.Component {
             // remove strokes for all ticks
             svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
             
+            let graph = svg.append("g")
+                            .attr("id", "curves")
             // plot each model
-            plotBatch(data, svg, xrange, yrange, width, height)
+            plotBatch(data, graph, xrange, yrange, width, height, false)
+            volumeToggle(data, svg, xrange, yrange, yAxis, yAxisAdd, width, height, maxVolume, maxVolNorm)
         }
 
-        function plotBatch(data, svg, xrange, yrange, width, height) {
+        function plotBatch(data, graph, xrange, yrange, width, height, norm) {
             //when using d.model, use d.model.replace(/\./g,' ').replaceAll(' ', '-')
             //to replace all the periods with dashes because dots interfere with classes
         
-            var models = svg.selectAll('g.model')
+            var models = graph.selectAll('g.model')
                 .data(data)
                 .enter()
                     .append('g')
@@ -325,36 +323,43 @@ class TumorGrowthCurve extends React.Component {
                 .data(function(d) {return d.pdx_json})
                 .enter();
         
-            var paths = svg.selectAll('.model-path')
+            var paths = graph.selectAll('.model-path')
                 .data(function(d) {return data})
                 .enter();
         
             // making tooltips
-            var tooltips = models.selectAll('.tooltip-dot')
-                .data(function(d) {return d.pdx_json})
-                .enter();
+            // var tooltips = models.selectAll('.tooltip-dot')
+            //     .data(function(d) {return d.pdx_json})
+            //     .enter();
         
-                // timepoint
-                tooltips.append('text')
-                    .attr('id', function(d,i) { return 'tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i})
-                    .attr('class', 'tooltip-dot')
-                    .attr('dx', width+20)
-                    .attr('dy', height/2 + 30)
-                    .attr('font-size', '14px')
-                    .style('opacity', 0)
-                    .attr('fill', 'black')
-                    .html(function(d) {return 'Time: ' + d.time + ' days'})
+            //     // timepoint
+            //     tooltips.append('text')
+            //         .attr('id', function(d,i) { return 'tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i})
+            //         .attr('class', 'tooltip-dot')
+            //         .attr('dx', width+20)
+            //         .attr('dy', height/2 + 30)
+            //         .attr('font-size', '14px')
+            //         .style('opacity', 0)
+            //         .attr('fill', 'black')
+            //         .html(function(d) {return 'Time: ' + d.time + ' days'})
                 
-                // volume
-                tooltips.append('text')
-                    .attr('id', function(d,i) { return 'tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i})
-                    .attr('class', 'tooltip-dot')
-                    .attr('dx', width+20)
-                    .attr('dy', height/2 + 45)
-                    .attr('font-size', '14px')
-                    .style('opacity', 0)
-                    .attr('fill', 'black')
-                    .html(function(d) {return 'Volume: ' + d3.format('.2f')(d.volume) + ' mm³'})
+            //     // volume
+            //     tooltips.append('text')
+            //         .attr('id', function(d,i) { return 'tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i})
+            //         .attr('class', 'tooltip-dot')
+            //         .attr('dx', width+20)
+            //         .attr('dy', height/2 + 45)
+            //         .attr('font-size', '14px')
+            //         .style('opacity', 0)
+            //         .attr('fill', 'black')
+            //         .html(function(d) {
+            //             if (norm) {
+            //                 return 'Volume: ' + d3.format('.2f')(d.volume_normal) + ' mm³'
+            //             } else {
+            //                 return 'Volume: ' + d3.format('.2f')(d.volume) + ' mm³'
+            //             }
+                        
+            //         })
                 
             dots.append('circle')
                 .attr('id', function(d,i) {
@@ -376,22 +381,35 @@ class TumorGrowthCurve extends React.Component {
                 })
                 .style('opacity', 0.8)
                 .attr('cx', function(d) {return xrange(d.time);})
-                .attr('cy', function(d) {return yrange(d.volume);})
-                .on({
-                    'mouseover': function(d,i) {
-                        d3.select('#tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 1);
-                        d3.select('#tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 1);
-                    },
-                    'mouseout': function(d,i) {
-                        d3.select('#tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 0);
-                        d3.select('#tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 0);
-                    },
-                  })
+                .attr('cy', function(d) {
+                    if (norm) {
+                        return yrange(d.volume_normal);
+                    } else {
+                        return yrange(d.volume);
+                    }
+                    
+                })
+                // .on({
+                //     'mouseover': function(d,i) {
+                //         d3.select('#tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 1);
+                //         d3.select('#tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 1);
+                //     },
+                //     'mouseout': function(d,i) {
+                //         d3.select('#tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 0);
+                //         d3.select('#tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i).transition().duration(300).style('opacity', 0);
+                //     },
+                //   })
         
             // line function, to join dots
             var linepath = d3.line()
                 .x(function(d) {return xrange(d.time);})
-                .y(function(d) {return yrange(d.volume);})
+                .y(function(d) {
+                    if (norm) {
+                        return yrange(d.volume_normal);
+                    } else {
+                        return yrange(d.volume);
+                    }
+                })
                 
         
             // add line
@@ -532,15 +550,151 @@ class TumorGrowthCurve extends React.Component {
                     .attr('y2', function(d,i) { return yrange(ypoint_arr[i] - stdDevs[i]);});
         }
 
+        //toggle to show each model
+        function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm) {
+            var nest = d3.nest()
+                .key(function(d) {return d;})
+                .entries([''])
+            
+            nest.forEach(function(d,i) {
+                var volToggle = svg.append('rect')
+                    .attr('x', width + 21)
+                    .attr('y', height/2 + 40)
+                    .attr('id', 'volToggle')
+                    .attr('width', 10)
+                    .attr('height', 10)
+                    .attr('fill', 'white')
+                    .attr('stroke', 'black')
+                    .attr('stroke-width', 1)
+                    .on('click', function () {
+                        var active = d.active ? false : true ,
+                        newFill = active? 'black' : 'white';
+
+                        // if active, normalize
+                        if (active) {
+                            yrange = d3.scaleLinear()
+                                            .domain([0, maxVolNorm])
+                                            .range([height, 0])
+                                            .nice();
+
+                            yAxis = d3.axisLeft()
+                                            .scale(yrange)
+                                            .tickPadding(2);
+
+                            d3.selectAll("g.y.axis").call(yAxis)
+                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
+                            d3.select("#curves").remove()
+                            let graph = svg.append("g")
+                                            .attr("id", "curves")
+                            plotBatch(data, graph, xrange, yrange, width, height, true)
+                        } else {
+                            yrange = d3.scaleLinear()
+                                            .domain([0, maxVolume])
+                                            .range([height, 0])
+                                            .nice();
+
+                            yAxis = d3.axisLeft()
+                                            .scale(yrange)
+                                            .tickPadding(2);
+
+                            d3.selectAll("g.y.axis").call(yAxis)
+                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
+                            d3.select("#curves").remove()
+                            let graph = svg.append("g")
+                                            .attr("id", "curves")
+                            plotBatch(data, graph, xrange, yrange, width, height, false)
+
+                        }
+                        d3.select('#volToggle').attr('fill', newFill)
+
+                        // Update whether or not the elements are active
+                        d.active = active;
+                    })
+                    .on({
+                        'mouseover': function() {
+                            d3.select(this).style('cursor', 'pointer');
+                        },
+                        'mouseout': function() {
+                            d3.select(this).style('cursor', 'default');
+                        }
+                    })
+
+                var volToggleText = svg.append('text')
+                    .attr('dx', width + 35)
+                    .attr('dy', height/2 + 50)
+                    .attr('fill', 'black')
+                    .text('Volume normalized')
+                    .on('click', function () {
+                        var active = d.active ? false : true ,
+                        newVolAxis = active ? 0 : 1,
+                        newFill = active? 'black' : 'white';
+            
+                        // if active, normalize
+                        if (active) {
+                            yrange = d3.scaleLinear()
+                                            .domain([0, maxVolNorm])
+                                            .range([height, 0])
+                                            .nice();
+
+                            yAxis = d3.axisLeft()
+                                            .scale(yrange)
+                                            .tickPadding(2);
+
+                            d3.selectAll("g.y.axis").call(yAxis)
+                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
+                            d3.select("#curves").remove()
+                            let graph = svg.append("g")
+                                            .attr("id", "curves")
+                            plotBatch(data, graph, xrange, yrange, width, height, true)
+                        } else {
+                            yrange = d3.scaleLinear()
+                                            .domain([0, maxVolume])
+                                            .range([height, 0])
+                                            .nice();
+
+                            yAxis = d3.axisLeft()
+                                            .scale(yrange)
+                                            .tickPadding(2);
+
+                            d3.selectAll("g.y.axis").call(yAxis)
+                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
+                            d3.select("#curves").remove()
+                            let graph = svg.append("g")
+                                            .attr("id", "curves")
+                            plotBatch(data, graph, xrange, yrange, width, height, false)
+
+                        }
+                        d3.select('#volToggle').attr('fill', newFill)
+            
+                        // Update whether or not the elements are active
+                        d.active = active;
+                    })
+                    .on({
+                        'mouseover': function() {
+                            d3.select(this).style('cursor', 'pointer');
+                        },
+                        'mouseout': function() {
+                            d3.select(this).style('cursor', 'default');
+                        }
+                    })
+            })
+        } 
+
     }
 
     render() {
         return (
-            // <h1>{this.props}</h1>
+            <Fragment>
             <div className="wrapper" style={{margin:"auto", fontSize:"14px"}}>
-                <svg ref = {node => this.node = node} width={1000} height={700} className="curve-wrapper">
-                </svg>
+                <div className="curve-wrapper">
+                    <h1>{this.getParams().drugid_param} + {this.getParams().patient_param}</h1>
+                    <svg ref = {node => this.node = node} width={1000} height={700} >
+                    </svg>
+                </div>
+               
             </div>
+            </Fragment>
+            
             
         )
     }
