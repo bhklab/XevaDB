@@ -58,18 +58,24 @@ const getResponseEvaluationSingleDrug = function(req,res) {
 
 // this will get the evaluations based one the query parameter.
 const getResponseEvaluationDrug = function(req,res) {
-        let param = req.query.drug
-        //console.log(param)
-        let drug = param.split(',')
+        let param_drug = req.query.drug
+        let param_dataset = req.query.dataset
+        let drug = param_drug.split(',')
         drug = drug.map(value => {
             return value.replace('_', ' + ')
         })
-        //console.log(drug)
-        knex.select('patient_id', 'drug', 'response')
+        
+        knex.select('response_evaluation.patient_id', 'response_evaluation.drug', 'response_evaluation.response')
             .from('response_evaluation')
-            .limit(43)
-            .whereIn('drug', drug)
+            .whereIn('response_evaluation.drug', drug)     
+            .where((builder) => {
+                builder.whereIn('response_evaluation.patient_id', (knex('model_information').distinct('patient_id')
+                .where('dataset', param_dataset)
+                .whereIn('drug', drug)
+                ))
+            })
             .then((row) => {
+                console.log('Row', row)
                 let drug = ''
                 let data = []
                 let value = 0
@@ -85,7 +91,6 @@ const getResponseEvaluationDrug = function(req,res) {
                         value += 1
                     }
                 })
-                //console.log(data)
                 res.send(data)
             })
 }
