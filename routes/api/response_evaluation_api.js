@@ -76,7 +76,6 @@ const getResponseEvaluationDrug = function(req,res) {
                 ))
             })
             .then((row) => {
-                console.log('Row', row)
                 let drug = ''
                 let data = []
                 let value = 0
