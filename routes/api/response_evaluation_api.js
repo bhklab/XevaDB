@@ -57,6 +57,7 @@ const getResponseEvaluationSingleDrug = function(req,res) {
 
 
 // this will get the evaluations based one the query parameter.
+// Todo: Change this query to use joins.
 const getResponseEvaluationDrug = function(req,res) {
         let param_drug = req.query.drug
         let param_dataset = req.query.dataset
