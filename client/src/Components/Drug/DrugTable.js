@@ -40,35 +40,35 @@ class DrugTable extends React.Component {
           Cell: props => props.value.toUpperCase(),
           sortable: true
         }, 
-        {
-          Header: 'StandardName',
-          accessor: 'standard_name',
-          minWidth: 180,
-          Cell: props => props.value.toUpperCase()
-        }, 
-        {
-          Header: 'Targets',
-          accessor: 'targets',
-          minWidth: 150
-        },
+        //{
+        //  Header: 'StandardName',
+        //  accessor: 'standard_name',
+        //  minWidth: 180,
+        //  Cell: props => props.value.toUpperCase()
+        //}, 
         {
           Header: 'TreatmentType',
           accessor: 'treatment_type',
           minWidth: 150
         },
-        /*{
-          Header: 'PubchemID',
-          accessor: 'pubchemId',
-        },*/
+        //{
+        //  Header: 'PubchemID',
+        //  accessor: 'pubchemId',
+        //},
+        //{
+        //  Header: 'Class',
+        //  accessor: 'class',
+        //  minWidth: 230
+        //},
         {
           Header: 'Class',
-          accessor: 'class',
+          accessor: 'class_name',
           minWidth: 230
         },
         {
-          Header: 'ClassName',
-          accessor: 'class_name',
-          minWidth: 230
+          Header: 'Targets',
+          accessor: 'targets',
+          minWidth: 150
         },
         {
           Header: 'Source',
