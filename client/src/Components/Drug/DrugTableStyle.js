@@ -32,7 +32,11 @@ const TableWrapper = styled.div`
 
     .-previous, .-next, .-btn {
       background: #3453b0;
-      color:white;
+      color:white !important;
+    }
+
+    .ReactTable .-pagination .-pageJump input{
+        color: #3453b0;
     }
 `
 

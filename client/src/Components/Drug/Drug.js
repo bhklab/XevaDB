@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     align-items: center;
     margin-top: 200px;
     margin-bottom: 100px;
-    color: #0e8a83;
+    color: #3453b0
 
     h1 {
         font-family:'Raleway', sans-serif;
@@ -35,16 +35,23 @@ class DonutDrug extends React.Component {
         let new_values = []
         axios.get(`http://localhost:5000/api/v1/drugclass`)
              .then((response) => {
+                 //console.log(response)
                  response.data.data.forEach((data) => {
                      let value = {}
-                     value['id'] = (data.class_name).replace(/\s/g, '').replace('+', '_')
-                     value['value'] = data.model_ids
-                     new_values.push(value)
+                     if(data.class_name !== '') {
+                        console.log(data.class_name)
+                        //value['id'] = (data.class_name).replace(/\s/g, '').replace('+', '_')
+                        value['id'] = (data.class_name).replace('"', '').replace("/", "_")
+                        value['value'] = data.model_ids
+                        new_values.push(value)
+                     }
                  })
                  this.setState({
                      data : new_values
                  })
+                 console.log(this.state.data)
              })
+             
     }
 
     dimensions = {
