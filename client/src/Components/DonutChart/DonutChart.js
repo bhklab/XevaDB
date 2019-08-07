@@ -57,7 +57,10 @@ class DonutChart extends React.Component {
 
         // color scheme for the pie/donut chart using the ordinal scale.     
         
-        let colors = ['#e0f3db', '#a8ddb5', '#43a2ca', '#ece2f0', '#1c9099', '#a6bddb']
+        let colors = ["#E64B35FF" ,"#4DBBD5FF" ,"#00A087FF" ,"#3C5488FF" ,"#F39B7FFF"  ,"#8491B4FF" ,"#91D1C2FF" ,"#B09C85FF"
+                        ,"#0073C2FF" ,"#868686FF" ,"#CD534CFF" ,"#7AA6DCFF" ,"#003C67FF" ,"#8F7700FF" ,"#3B3B3BFF" ,"#A73030FF" ,"#4A6990FF"
+                       ,"#00468BBF" ,"#42B540BF" ,"#0099B4BF" ,"#925E9FBF" ,"#FDAF91BF" ,"#AD002ABF" ,"#ADB6B6BF"
+                     ]
 
         let color = d3.scaleOrdinal()
                       .domain(data)
@@ -107,6 +110,7 @@ class DonutChart extends React.Component {
                       .enter()
                       .append('g')
                       .attr('class', (d) => {
+                          console.log(d)
                           return (d.data.id).replace(/\s/g,'_') + '_Arc'
                       })
         
@@ -260,7 +264,7 @@ class DonutChart extends React.Component {
                                             return color(d.value)
                                         })
                                         .text(d => {
-                                            console.log(d)
+                                            //console.log(d)
                                             return d.id;
                                         })              
     }
