@@ -54,7 +54,7 @@ const StyleBar = styled.div`
     h1 {
       color: #3453b0;
       text-align: center;
-      font-size: 50px;
+      font-size: 36px;
     }    
 
    @media screen and (max-width: 1500px) {
