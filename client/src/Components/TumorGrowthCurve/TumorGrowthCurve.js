@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import * as d3 from 'd3'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 class TumorGrowthCurve extends React.Component {
 
@@ -198,10 +199,10 @@ class TumorGrowthCurve extends React.Component {
             var width = 600;
             var height = 500;
             var margin = {
-                top:100,
+                top:50,
                 right:250,
                 bottom:200,
-                left:200
+                left:130
             }
             // make the svg element
             var svg = d3.select(node)
@@ -686,11 +687,16 @@ class TumorGrowthCurve extends React.Component {
         return (
             <Fragment>
             <div className="wrapper" style={{margin:"auto", fontSize:"14px"}}>
-                <div className="curve-wrapper">
+                <div className="curve-wrapper" style={{marginTop:"100px"}}>
                     <h1>{this.getParams().drugid_param} + {this.getParams().patient_param}</h1>
-                    <svg ref = {node => this.node = node} width={1000} height={700} >
+                    <svg ref = {node => this.node = node} width={900} height={620} >
                     </svg>
+                    
                 </div>
+                <div className="curve-wrapper" style={{marginTop:"20px", padding:"10px 0px"}}>
+                    <Link to='/maps'> ←&nbsp;&nbsp;Back to Heatmap </Link>
+                </div>
+                
                
             </div>
             </Fragment>

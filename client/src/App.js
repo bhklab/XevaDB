@@ -34,8 +34,9 @@ const GlobalStyles = createGlobalStyle`
 
   .wrapper {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 
     h1 {
       font-family:'Raleway', sans-serif;
@@ -47,10 +48,6 @@ const GlobalStyles = createGlobalStyle`
 
   .heatmap-wrapper, .doc-wrapper {
     margin-top: 200px;
-  }
-
-  .curve-wrapper {
-    margin-top:100px;
   }
 
   .oprint-wrapper {
@@ -72,6 +69,19 @@ const GlobalStyles = createGlobalStyle`
     height:700px;
     overflow:auto;
   }
+
+  .curve-wrapper {
+    min-width:900px;
+
+    a {
+      text-decoration:none;
+      font-size:16px;
+      padding:20px;
+      font-family: 'Raleway', sans-serif;
+      color: #3453b0;
+    }
+  }
+
 `
 
 const Merge = () => {
