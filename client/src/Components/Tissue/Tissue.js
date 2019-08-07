@@ -11,7 +11,7 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 200px;
-    color: #0e8a83;
+    color: #3453b0;
     margin-bottom: 100px;
 
     h1 {
