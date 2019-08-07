@@ -15,7 +15,8 @@ class Search extends React.Component {
             data : [],
             datasets: [],
             genes: [],
-            selectedDrugs: []
+            selectedDrugs: [],
+            selectedDataset: '' 
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleDatasetChange = this.handleDatasetChange.bind(this)
@@ -67,6 +68,9 @@ class Search extends React.Component {
     }
 
     handleDatasetChange = selectedOption => {
+        this.setState({
+            selectedDataset: selectedOption.value
+        })
         const label = selectedOption.value
         let initial = 1;
         axios.post(`http://localhost:5000/api/v1/drug/dataset`, {label}, this.axiosConfig)
@@ -90,7 +94,7 @@ class Search extends React.Component {
     redirectUser = () => {
         //console.log(this.state.selectedDrugs)
         const { history } = this.props
-        history.push(`/drug/?drug=${this.state.selectedDrugs}`)
+        history.push(`/drug/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}`)
     }
 
     render() {
