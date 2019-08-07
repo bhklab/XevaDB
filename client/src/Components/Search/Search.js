@@ -86,15 +86,17 @@ class Search extends React.Component {
     }
 
     handleKeyPress = (event) => {
+        
         if(event.key === 'Enter'){
            this.redirectUser()
         }
     }
 
     redirectUser = () => {
-        //console.log(this.state.selectedDrugs)
-        const { history } = this.props
-        history.push(`/drug/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}`)
+        if((this.state.selectedDataset != '') && (this.state.selectedDrugs.length > 0)) {
+            const { history } = this.props
+            history.push(`/drug/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}`)
+        }
     }
 
     render() {
