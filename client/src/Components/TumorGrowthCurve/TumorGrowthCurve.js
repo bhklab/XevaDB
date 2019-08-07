@@ -196,11 +196,11 @@ class TumorGrowthCurve extends React.Component {
             var exp_types = ['control', 'treatment']
 
             // positioning variables
-            var width = 600;
+            var width = 970;
             var height = 500;
             var margin = {
                 top:50,
-                right:250,
+                right:260,
                 bottom:200,
                 left:130
             }
@@ -225,7 +225,7 @@ class TumorGrowthCurve extends React.Component {
                         return 'legend-dot-' + exp_types[i]
                     })
                     .attr('class', 'legend')
-                    .attr('r', 4)
+                    .attr('r', 5)
                     .attr('fill',function(d,i) {
                         if (exp_types[i] === 'control') {
                             return '#cd5686';
@@ -242,9 +242,9 @@ class TumorGrowthCurve extends React.Component {
                     })
                     .attr('class', 'legend')
                     .attr('fill','black')
-                    .style('font-size', '14px')
+                    .style('font-size', '16px')
                     .attr('x', width+40)
-                    .attr('y', function(d,i) {return height/2 - 46 + (i*50);})
+                    .attr('y', function(d,i) {return height/2 - 45 + (i*50);})
                     .text(function(d,i) {return exp_types[i]})
 
 
@@ -300,7 +300,10 @@ class TumorGrowthCurve extends React.Component {
                 .text('Volume (mm³)');
 
             // remove strokes for all ticks
-            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
+            svg.selectAll('.tick').select('text')
+                    .attr('fill', 'black')
+                    .attr('stroke', 'none')
+                    .attr("font-size", "14px")
             
             let graph = svg.append("g")
                             .attr("id", "curves")
@@ -372,7 +375,7 @@ class TumorGrowthCurve extends React.Component {
                             d.model.replace(/\./g,' ').replaceAll(' ', '-') + ' ' + 
                             d.batch
                 })
-                .attr('r', 3)
+                .attr('r', 4)
                 .attr('fill', function(d,i) {
                     if (d.exp_type === 'control') {
                         return '#cd5686';
@@ -431,7 +434,7 @@ class TumorGrowthCurve extends React.Component {
                         return '#5974c4';
                     }
                 })
-                .attr('stroke-width', 1.5)
+                .attr('stroke-width', 2)
                 .attr('stroke-dasharray', ('3', '3'))
         }
 
@@ -558,18 +561,21 @@ class TumorGrowthCurve extends React.Component {
                 .entries([''])
             
             nest.forEach(function(d,i) {
-                var volToggle = svg.append('rect')
-                    .attr('x', width + 21)
-                    .attr('y', height/2 + 40)
+                var div = svg
+                    .append("div")
+                    .attr("id", "mouseover")
+                    .attr("class", "decisionMenu")
+                    .style("opacity", 1);
+
+                div.append('button')
+                    .attr("type", "button")
+                    .text("Click Me")
+                    .attr('transform', 'translate(' + (width+30) + ',' + (height/2 + 50) + ')')
                     .attr('id', 'volToggle')
-                    .attr('width', 10)
-                    .attr('height', 10)
-                    .attr('fill', 'white')
-                    .attr('stroke', 'black')
-                    .attr('stroke-width', 1)
+                    .style("color", "black")
                     .on('click', function () {
                         var active = d.active ? false : true ,
-                        newFill = active? 'black' : 'white';
+                        newFill = active? '#00bfa5' : 'white';
 
                         // if active, normalize
                         if (active) {
@@ -583,7 +589,7 @@ class TumorGrowthCurve extends React.Component {
                                             .tickPadding(2);
 
                             d3.selectAll("g.y.axis").call(yAxis)
-                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
+                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "14px")
                             d3.select("#curves").remove()
                             let graph = svg.append("g")
                                             .attr("id", "curves")
@@ -599,7 +605,7 @@ class TumorGrowthCurve extends React.Component {
                                             .tickPadding(2);
 
                             d3.selectAll("g.y.axis").call(yAxis)
-                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
+                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "14px")
                             d3.select("#curves").remove()
                             let graph = svg.append("g")
                                             .attr("id", "curves")
@@ -608,65 +614,6 @@ class TumorGrowthCurve extends React.Component {
                         }
                         d3.select('#volToggle').attr('fill', newFill)
 
-                        // Update whether or not the elements are active
-                        d.active = active;
-                    })
-                    .on({
-                        'mouseover': function() {
-                            d3.select(this).style('cursor', 'pointer');
-                        },
-                        'mouseout': function() {
-                            d3.select(this).style('cursor', 'default');
-                        }
-                    })
-
-                var volToggleText = svg.append('text')
-                    .attr('dx', width + 35)
-                    .attr('dy', height/2 + 50)
-                    .attr('fill', 'black')
-                    .text('Volume normalized')
-                    .on('click', function () {
-                        var active = d.active ? false : true ,
-                        newVolAxis = active ? 0 : 1,
-                        newFill = active? 'black' : 'white';
-            
-                        // if active, normalize
-                        if (active) {
-                            yrange = d3.scaleLinear()
-                                            .domain([0, maxVolNorm])
-                                            .range([height, 0])
-                                            .nice();
-
-                            yAxis = d3.axisLeft()
-                                            .scale(yrange)
-                                            .tickPadding(2);
-
-                            d3.selectAll("g.y.axis").call(yAxis)
-                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
-                            d3.select("#curves").remove()
-                            let graph = svg.append("g")
-                                            .attr("id", "curves")
-                            plotBatch(data, graph, xrange, yrange, width, height, true)
-                        } else {
-                            yrange = d3.scaleLinear()
-                                            .domain([0, maxVolume])
-                                            .range([height, 0])
-                                            .nice();
-
-                            yAxis = d3.axisLeft()
-                                            .scale(yrange)
-                                            .tickPadding(2);
-
-                            d3.selectAll("g.y.axis").call(yAxis)
-                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "12px")
-                            d3.select("#curves").remove()
-                            let graph = svg.append("g")
-                                            .attr("id", "curves")
-                            plotBatch(data, graph, xrange, yrange, width, height, false)
-
-                        }
-                        d3.select('#volToggle').attr('fill', newFill)
-            
                         // Update whether or not the elements are active
                         d.active = active;
                     })
@@ -686,11 +633,12 @@ class TumorGrowthCurve extends React.Component {
     render() {
         return (
             <Fragment>
-            <div className="wrapper" style={{margin:"auto", fontSize:"14px"}}>
+            <div className="wrapper" style={{margin:"auto", fontSize:"16px"}}>
                 <div className="curve-wrapper" style={{marginTop:"100px"}}>
                     <h1>{this.getParams().drugid_param} + {this.getParams().patient_param}</h1>
-                    <svg ref = {node => this.node = node} width={900} height={620} >
+                    <svg ref = {node => this.node = node} width={1300} height={620} >
                     </svg>
+                    
                     
                 </div>
                 <div className="curve-wrapper" style={{marginTop:"20px", padding:"10px 0px"}}>
