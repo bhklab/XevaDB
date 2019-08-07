@@ -49,10 +49,10 @@ const StyleBar = styled.div`
                     min-height: 150px;
                     outline-style: none;
                     border-radius: 20px;
-                    border-color: #3453b0;
                     color: #3453b0;
                     font-weight: 300;
-                    font-size: 16px
+                    font-size: 16px;
+                    border:1px solid #3453b0;
                 }
         }
     }
