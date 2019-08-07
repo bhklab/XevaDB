@@ -4,6 +4,15 @@ import axios from 'axios'
 import TopNav from '../TopNav/TopNav'
 import OncoprintData from '../Oncoprint/OncoprintData'
 import Footer from '../Footer/Footer'
+//import styled from 'styled-components'
+
+
+/* const WrapIt = styled.div`
+    height: 3000px;
+    width: 3000px;
+    background-color:  red;
+    border-width: 2px;
+`*/
 
 class Drug extends React.Component {
 
@@ -41,13 +50,15 @@ class Drug extends React.Component {
         // grabbing the parameters
         let params = new URLSearchParams(this.props.location.search);
         let drug_param = params.get('drug')
+        let dataset_param = params.get('dataset')
         //console.log(drug_param)
-        return drug_param;
+        return {dataset_param: dataset_param, drug_param: drug_param}
     }
 
     componentDidMount() {
-        let drug_param = this.getParams()
-        axios.get(`http://localhost:5000/api/v1/respevaldrug/?drug=${drug_param}`)
+        let drug_param = this.getParams().drug_param
+        let dataset_param = this.getParams().dataset_param
+        axios.get(`http://localhost:5000/api/v1/respevaldrug/?drug=${drug_param}&dataset=${dataset_param}`)
              .then(response => {
                  this.parseData(response.data);
              })
@@ -68,7 +79,6 @@ class Drug extends React.Component {
     render() {
         return (
             <div>
-                <TopNav/>
                 <HeatMap
                     data={this.state.data} drug_id={this.state.drug_id} 
                     patient_id={this.state.patient_id} dimensions={this.dimensions}
@@ -80,7 +90,6 @@ class Drug extends React.Component {
         )
     }
 }
-
 
 
 
