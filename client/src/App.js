@@ -71,7 +71,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .curve-wrapper {
-    min-width:900px;
+    min-width:1300px;
 
     a {
       text-decoration:none;
