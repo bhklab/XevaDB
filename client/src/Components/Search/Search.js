@@ -10,16 +10,18 @@ import { GeneList } from './GeneList'
 class Search extends React.Component {
     constructor(props) {
         super(props)
-        //console.log(this.props)
         this.state = {
             data : [],
             datasets: [],
             genes: [],
+            selectedGeneSearch: [],
             selectedDrugs: [],
             selectedDataset: '' 
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleDatasetChange = this.handleDatasetChange.bind(this)
+        this.handleGeneListChange = this.handleGeneListChange.bind(this)
+        this.handleGeneSearchChange = this.handleGeneSearchChange.bind(this)
         this.handleKeyPress = this.handleKeyPress.bind(this)
         this.redirectUser = this.redirectUser.bind(this)
     } 
@@ -32,10 +34,9 @@ class Search extends React.Component {
     };
 
     componentWillMount() {
-        let initial = 1;
         const genes = GeneList.map(item => ({
-            value: initial++,
-            label: item
+            value: item.split('=')[1].replace(/\s/g, ", "),
+            label: item.split('=')[0]
         }))
         this.setState ({
             genes: [...genes]
@@ -55,8 +56,8 @@ class Search extends React.Component {
             })
     }
 
+
     handleDrugChange = (selectedOption, action) => {
-        //console.log(selectedOption)
         if (selectedOption !== null && selectedOption.length > 0) {
             const label = selectedOption.map((value) => {
                 return (value.label).replace(/\s/g,'').replace('+','_');
@@ -85,15 +86,28 @@ class Search extends React.Component {
              })
     }
 
+
+    handleGeneListChange = selectedOption => {
+        this.setState({
+            selectedGeneSearch: selectedOption.value
+        })
+    }
+
+
+    handleGeneSearchChange = (event) => {
+        this.setState({
+            selectedGeneSearch: event.target.value
+        })
+    }
+
     handleKeyPress = (event) => {
-        
         if(event.key === 'Enter'){
            this.redirectUser()
         }
     }
 
     redirectUser = () => {
-        if((this.state.selectedDataset != '') && (this.state.selectedDrugs.length > 0)) {
+        if((this.state.selectedDataset !== '') && (this.state.selectedDrugs.length > 0)) {
             const { history } = this.props
             history.push(`/drug/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}`)
         }
@@ -104,7 +118,7 @@ class Search extends React.Component {
             <StyleBar className='wrapper'>
                 <div className='search-container'>
                     <div className='select-component' onKeyPress={this.handleKeyPress}>
-                    <h1> <span>XevaDB:</span> A Database For PDX Pharmacogenomic Data </h1>
+                        <h1> <span>XevaDB:</span> A Database For PDX Pharmacogenomic Data </h1>
                         <div className='two-col'>
                             <div className='div-dataset'>
                                 <Select 
@@ -138,9 +152,17 @@ class Search extends React.Component {
                             <Select 
                                 options={this.state.genes} 
                                 styles={customStyles}
-                                placeholder={'Search for Gene'}
+                                placeholder={'User Defined List'}
+                                onChange={this.handleGeneListChange}
                             />
                         </div>
+
+                        <div className='div-gene-enter'>
+                            <form>
+                                <input type="text" value={this.state.selectedGeneSearch} onChange={this.handleGeneSearchChange}/>
+                            </form>
+                        </div>
+
                         <StyleButton onClick={this.redirectUser} type='button'> 
                             <span>
                                 Search
