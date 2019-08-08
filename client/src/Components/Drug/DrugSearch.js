@@ -4,15 +4,8 @@ import axios from 'axios'
 import TopNav from '../TopNav/TopNav'
 import OncoprintData from '../Oncoprint/OncoprintData'
 import Footer from '../Footer/Footer'
-//import styled from 'styled-components'
 
 
-/* const WrapIt = styled.div`
-    height: 3000px;
-    width: 3000px;
-    background-color:  red;
-    border-width: 2px;
-`*/
 
 class Drug extends React.Component {
 
@@ -20,7 +13,7 @@ class Drug extends React.Component {
         super(props)
         //setting the states for the data.
         this.state = {
-            data : [],
+            drug_data : [],
             patient_id : [],
             drug_id : [],
         };
@@ -36,12 +29,10 @@ class Drug extends React.Component {
         let drug = dataset.map((data) => {
             return data.Drug;
         })
-        //console.log(drug)
-        //console.log(patient)
         this.setState({
             drug_id : drug,
             patient_id : patient,
-            data: dataset
+            drug_data: dataset
         })
     }
 
@@ -51,17 +42,23 @@ class Drug extends React.Component {
         let params = new URLSearchParams(this.props.location.search);
         let drug_param = params.get('drug')
         let dataset_param = params.get('dataset')
-        //console.log(drug_param)
-        return {dataset_param: dataset_param, drug_param: drug_param}
+        let gene_param = params.get('genes')
+        return {dataset_param: dataset_param, drug_param: drug_param, gene_param: gene_param}
     }
 
     componentDidMount() {
         let drug_param = this.getParams().drug_param
         let dataset_param = this.getParams().dataset_param
+        let gene_param = this.getParams().gene_param
         axios.get(`http://localhost:5000/api/v1/respevaldrug/?drug=${drug_param}&dataset=${dataset_param}`)
              .then(response => {
                  this.parseData(response.data);
              })
+
+        axios.get(`http://localhost:5000/api/v1/mutationgene/?genes=${gene_param}&dataset=${dataset_param}`)
+            .then(response => {
+                //console.log(response)
+            })
     }
 
     dimensions = {
@@ -72,7 +69,7 @@ class Drug extends React.Component {
     margin = {
         top: 300,
         right: 200,
-        bottom: 0,
+        bottom: 200,
         left: 250
     }
 
@@ -80,12 +77,10 @@ class Drug extends React.Component {
         return (
             <div>
                 <HeatMap
-                    data={this.state.data} drug_id={this.state.drug_id} 
+                    data={this.state.drug_data} drug_id={this.state.drug_id} 
                     patient_id={this.state.patient_id} dimensions={this.dimensions}
                     margin={this.margin}
                 />
-                <OncoprintData/>
-                <Footer/>
             </div>
         )
     }
