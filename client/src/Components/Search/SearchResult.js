@@ -101,7 +101,9 @@ class SearchResult extends React.Component {
 
     render() {
         return (
+            
             <div>
+                
                 <HeatMap
                     data={this.state.drug_data} drug_id={this.state.drug_id} 
                     patient_id={this.state.patient_id_drug} dimensions={this.dimensions}
