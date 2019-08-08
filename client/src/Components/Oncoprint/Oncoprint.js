@@ -224,7 +224,7 @@ class Oncoprint extends React.Component {
         
         let gene_alter = svg.append('g')
             .attr('id', 'gene-alter')
-            .attr('transform', 'translate(880,0)')
+            .attr('transform', 'translate(' + (patient_id.length * rect_width + 20) + ',0)')
 
         let stroke_width = 1; // this will set the stroke width of the outer rectangle 
 
@@ -283,7 +283,7 @@ class Oncoprint extends React.Component {
                     .attr('fill', 'none')
                     .attr('stroke', 'black')
                     .attr('stroke-width', 1)
-                    .attr('transform', 'translate(' + 880+ ' -0 )')
+                    .attr('transform', 'translate(' + (patient_id.length * rect_width + 20) + ' -0 )')
                     .call(x_axis)
                     .selectAll('text')
                     .attr('fill', 'black')

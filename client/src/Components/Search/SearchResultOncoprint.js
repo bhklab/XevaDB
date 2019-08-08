@@ -57,7 +57,7 @@ class SearchResultOncoprint extends React.Component {
     }
 
     margin = {
-        top: 300,
+        top: 100,
         right: 200,
         bottom: 200,
         left: 250
