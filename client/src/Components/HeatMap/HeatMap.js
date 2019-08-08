@@ -374,7 +374,7 @@ class HeatMap extends React.Component {
                                  .data(target_eval)
                                  .enter()
                                  .append('rect')
-                                 .attr('x', 1040)
+                                 .attr('x', (patient.length * rect_width + 120))
                                  .attr('y', function(d, i) {
                                     return 100 + i * 25;
                                  })
@@ -388,7 +388,7 @@ class HeatMap extends React.Component {
                                  .data(target_eval)
                                  .enter()
                                  .append('text')
-                                 .attr('x', 1070)
+                                 .attr('x', (patient.length * rect_width + 140))
                                  .attr('y', function(d,i) {
                                      return 112 + i * 25;
                                  })
