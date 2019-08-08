@@ -1,5 +1,4 @@
 import React from 'react'
-import TopNav from '../TopNav/TopNav'
 import Search from '../Search/Search'
 import CounterNav from '../CounterNav/CounterNav'
 import Container from './HomeStyle'

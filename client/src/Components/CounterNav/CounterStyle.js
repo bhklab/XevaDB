@@ -19,7 +19,7 @@ const DonutNav = styled.div`
     padding-bottom:5px;
     a{
         padding: 10px;
-        color: #3453b0; // #0e8a83;
+        color: #3453b0;
         letter-spacing: 2px;
         font-weight: bold;
         font-size: 20px;

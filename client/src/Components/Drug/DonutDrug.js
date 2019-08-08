@@ -76,16 +76,17 @@ class DonutDrug extends React.Component {
                     <div className="donut-wrapper">
                         <h1> Number of Model IDs Per Drug class </h1>
                         <DonutChart 
-                            dimensions={this.dimensions} margin={this.margin} 
-                            chartId={this.chartId} data={this.state.data}
-                            arc={this.arc}
+                            dimensions = {this.dimensions} 
+                            margin = {this.margin} 
+                            chartId = {this.chartId} 
+                            data = {this.state.data}
+                            arc = {this.arc}
                         />
                     </div>
                     <div className="donut-wrapper">
                         <DrugTable/>
                     </div>
                 </Wrapper>
-                 
                 <Footer/>
             </Fragment>
         )

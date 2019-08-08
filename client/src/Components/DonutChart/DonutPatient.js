@@ -64,9 +64,11 @@ class DonutPatient extends React.Component {
         return (
             <div className='DonutPatient'>
                 <DonutChart 
-                    dimensions={this.dimensions} margin={this.margin} 
-                    chartId={this.chartId} data={this.state.data}
-                    arc={this.arc}
+                    dimensions = {this.dimensions} 
+                    margin = {this.margin} 
+                    chartId = {this.chartId} 
+                    data = {this.state.data}
+                    arc = {this.arc}
                 />
             </div>
         )
