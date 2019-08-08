@@ -31,7 +31,7 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
-       //console.log(data)
+       console.log('its rendering heatmap', data)
        //console.log(drug)
        //console.log(patient)
     this.node = node

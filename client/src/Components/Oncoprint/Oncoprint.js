@@ -29,6 +29,7 @@ class Oncoprint extends React.Component {
 
 
     makeOncoprint(data, genes, plotId, node, patient_id, dimensions, margin) {
+        console.log('this is oncoprint', data)
         this.node = node
         // height and width for the SVG based on the number of drugs and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
