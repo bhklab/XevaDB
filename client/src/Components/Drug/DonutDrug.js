@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import DonutChart from '../DonutChart/DonutChart'
 import Footer from '../Footer/Footer'
-import DrugTable from '../Drug/DrugTable'
+import DrugTable from './DrugTable'
 import axios from 'axios'
 import styled from 'styled-components'
 
