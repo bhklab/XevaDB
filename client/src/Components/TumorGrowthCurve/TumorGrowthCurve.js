@@ -309,7 +309,7 @@ class TumorGrowthCurve extends React.Component {
                             .attr("id", "curves")
             // plot each model
             plotBatch(data, graph, xrange, yrange, width, height, false)
-            volumeToggle(data, svg, xrange, yrange, yAxis, yAxisAdd, width, height, maxVolume, maxVolNorm)
+            volumeToggle(data, svg, xrange, yrange, yAxis, yAxisAdd, width, height, maxVolume, maxVolNorm, plotId)
         }
 
         function plotBatch(data, graph, xrange, yrange, width, height, norm) {
@@ -555,77 +555,145 @@ class TumorGrowthCurve extends React.Component {
         }
 
         //toggle to show each model
-        function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm) {
-            var nest = d3.nest()
-                .key(function(d) {return d;})
-                .entries([''])
-            
-            nest.forEach(function(d,i) {
-                var div = svg
-                    .append("div")
-                    .attr("id", "mouseover")
-                    .attr("class", "decisionMenu")
-                    .style("opacity", 1);
+        function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm, plotId) {
+            // var nest = d3.nest()
+            //     .key(function(d) {return d;})
+            //     .entries([''])
 
-                div.append('button')
-                    .attr("type", "button")
-                    .text("Click Me")
-                    .attr('transform', 'translate(' + (width+30) + ',' + (height/2 + 50) + ')')
-                    .attr('id', 'volToggle')
-                    .style("color", "black")
+            // nest.forEach(function(d,i) {
+                
+
+                var volRaw = svg.append("rect")
+                    .attr('x', width+25)
+                    .attr("y", height/2 + 50)
+                    .attr("width", 50)
+                    .attr("height", 20)
+                    .attr("fill", "#cd5686")
+                    .style("opacity", 0.8)
+                    .attr('id', 'volRawToggle')
                     .on('click', function () {
-                        var active = d.active ? false : true ,
-                        newFill = active? '#00bfa5' : 'white';
+                        yrange = d3.scaleLinear()
+                                        .domain([0, maxVolume])
+                                        .range([height, 0])
+                                        .nice();
 
-                        // if active, normalize
-                        if (active) {
-                            yrange = d3.scaleLinear()
-                                            .domain([0, maxVolNorm])
-                                            .range([height, 0])
-                                            .nice();
+                        yAxis = d3.axisLeft()
+                                        .scale(yrange)
+                                        .tickPadding(2);
 
-                            yAxis = d3.axisLeft()
-                                            .scale(yrange)
-                                            .tickPadding(2);
-
-                            d3.selectAll("g.y.axis").call(yAxis)
-                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "14px")
-                            d3.select("#curves").remove()
-                            let graph = svg.append("g")
-                                            .attr("id", "curves")
-                            plotBatch(data, graph, xrange, yrange, width, height, true)
-                        } else {
-                            yrange = d3.scaleLinear()
-                                            .domain([0, maxVolume])
-                                            .range([height, 0])
-                                            .nice();
-
-                            yAxis = d3.axisLeft()
-                                            .scale(yrange)
-                                            .tickPadding(2);
-
-                            d3.selectAll("g.y.axis").call(yAxis)
-                            svg.selectAll('.tick').select('text').attr('fill', 'black').attr('stroke', 'none').attr("font-size", "14px")
-                            d3.select("#curves").remove()
-                            let graph = svg.append("g")
-                                            .attr("id", "curves")
-                            plotBatch(data, graph, xrange, yrange, width, height, false)
-
-                        }
-                        d3.select('#volToggle').attr('fill', newFill)
-
-                        // Update whether or not the elements are active
-                        d.active = active;
+                        d3.selectAll("g.y.axis").call(yAxis)
+                        svg.selectAll('.tick').select('text')
+                            .attr('fill', 'black')
+                            .attr('stroke', 'none')
+                            .attr("font-size", "14px")
+                        d3.select("#curves").remove()
+                        let graph = svg.append("g")
+                                        .attr("id", "curves")
+                        plotBatch(data, graph, xrange, yrange, width, height, false)
+                    
+                        d3.select('#volRawToggle').attr('fill', "#cd5686")
+                        d3.select('#volNormToggle').attr('fill', "lightgray")
+                        
                     })
-                    .on({
-                        'mouseover': function() {
-                            d3.select(this).style('cursor', 'pointer');
-                        },
-                        'mouseout': function() {
-                            d3.select(this).style('cursor', 'default');
-                        }
+
+                var volNorm = svg.append("rect")
+                    .attr('x', width+75)
+                    .attr("y", height/2 + 50)
+                    .attr("width", 50)
+                    .attr("height", 20)
+                    .style("opacity", 0.8)
+                    .attr("fill", "lightgray")
+                    .attr('id', 'volNormToggle')
+                    .on('click', function () {
+                        yrange = d3.scaleLinear()
+                        .domain([0, maxVolNorm])
+                        .range([height, 0])
+                        .nice();
+
+                        yAxis = d3.axisLeft()
+                                        .scale(yrange)
+                                        .tickPadding(2);
+
+                        d3.selectAll("g.y.axis").call(yAxis)
+                        svg.selectAll('.tick').select('text')
+                            .attr('fill', 'black')
+                            .attr('stroke', 'none')
+                            .attr("font-size", "14px")
+                        d3.select("#curves").remove()
+                        let graph = svg.append("g")
+                                        .attr("id", "curves")
+                        plotBatch(data, graph, xrange, yrange, width, height, true)
+                    
+                        d3.select('#volRawToggle').attr('fill', "lightgray")
+                        d3.select('#volNormToggle').attr('fill', "#cd5686")
+                        
                     })
-            })
+
+            var volRawText = svg.append("text")
+                    .attr('fill','black')
+                    .style('font-size', '12px')
+                    .attr("id", "volRawText")
+                    .attr("text-anchor", "middle")
+                    .attr('x', width+50)
+                    .attr("y", height/2 + 64)
+                    .text("Raw")
+                    .on('click', function () {
+                        yrange = d3.scaleLinear()
+                                        .domain([0, maxVolume])
+                                        .range([height, 0])
+                                        .nice();
+
+                        yAxis = d3.axisLeft()
+                                        .scale(yrange)
+                                        .tickPadding(2);
+
+                        d3.selectAll("g.y.axis").call(yAxis)
+                        svg.selectAll('.tick').select('text')
+                            .attr('fill', 'black')
+                            .attr('stroke', 'none')
+                            .attr("font-size", "14px")
+                        d3.select("#curves").remove()
+                        let graph = svg.append("g")
+                                        .attr("id", "curves")
+                        plotBatch(data, graph, xrange, yrange, width, height, false)
+                    
+                        d3.select('#volRawToggle').attr('fill', "#cd5686")
+                        d3.select('#volNormToggle').attr('fill', "lightgray")
+                       
+                    })
+
+            var volNormText = svg.append("text")
+                    .attr('fill','black')
+                    .style('font-size', '12px')
+                    .attr("id", "volNormText")
+                    .attr('x', width+85)
+                    .attr("y", height/2 + 64)
+                    .text("Norm")
+                    .on('click', function () {
+                        yrange = d3.scaleLinear()
+                        .domain([0, maxVolNorm])
+                        .range([height, 0])
+                        .nice();
+
+                        yAxis = d3.axisLeft()
+                                        .scale(yrange)
+                                        .tickPadding(2);
+
+                        d3.selectAll("g.y.axis").call(yAxis)
+                        svg.selectAll('.tick').select('text')
+                            .attr('fill', 'black')
+                            .attr('stroke', 'none')
+                            .attr("font-size", "14px")
+                        d3.select("#curves").remove()
+                        let graph = svg.append("g")
+                                        .attr("id", "curves")
+                        plotBatch(data, graph, xrange, yrange, width, height, true)
+                    
+                        d3.select('#volRawToggle').attr('fill', "lightgray")
+                        d3.select('#volNormToggle').attr('fill', "#cd5686")
+                        
+                    })
+            // })
         } 
 
     }
