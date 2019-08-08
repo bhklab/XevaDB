@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {    CounterNav,
+            DatasetDonut,
             Documentation,
             DonutChart,
             DonutDrug,
@@ -110,6 +111,7 @@ class App extends React.Component {
           <Switch>
             <Route path='/' exact component={Home}></Route>
             <Route path="/curve" exact component={TumorGrowthCurve}></Route>
+            <Route path="/datasets" exact component={DatasetDonut}></Route>
             <Route path='/doc' exact component={Documentation}></Route>
             <Route path='/drugs' exact component={DonutDrug}></Route>
             <Route path="/drug/:id" exact component={DrugTable}></Route>

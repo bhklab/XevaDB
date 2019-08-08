@@ -8,7 +8,11 @@ const styles = {
     paddingTop: '30px',
     minHeight: '50px',
     backgroundColor: "rgb(255,255,255,0.8)",
-    fontFamily: 'sans-serif'
+    fontFamily: 'sans-serif',
+    position: 'fixed',
+    bottom: 0,
+    right: 0, 
+    width: '100%'
 };
 
 
