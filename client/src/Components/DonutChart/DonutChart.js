@@ -110,7 +110,7 @@ class DonutChart extends React.Component {
                       .enter()
                       .append('g')
                       .attr('class', (d) => {
-                          return (d.data.id).replace(/\s/g,'_') + '_Arc'
+                          return (d.data.id).replace(/\s/g,'').replace(/[(-)]/g, '') + '_Arc'
                       })
         
         // here we are appending path and use of d element to create the path.
@@ -146,7 +146,7 @@ class DonutChart extends React.Component {
                                                                         /* event listeners */
 
         let mouseover = function(d) {
-            let selection = (d.data.id).replace(/\s/g, '_')
+            let selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '')
             d3.select('.' + selection + '_Arc')
                 .transition()
                 .duration(300)
@@ -158,7 +158,7 @@ class DonutChart extends React.Component {
         }
 
         let mousemove = function(d) {
-            let selection = (d.data.id).replace(/\s/g, '_')
+            let selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '')
             d3.select('.' + selection + '_Arc')
                 .transition()
                 .duration(300)
@@ -175,7 +175,7 @@ class DonutChart extends React.Component {
         }
 
         let mouseout = function(d) {
-            let selection = (d.data.id).replace(/\s/g, '_')
+            let selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '')
             d3.select('.' + selection + '_Arc')
                 .transition()
                 .duration(300)
@@ -201,7 +201,7 @@ class DonutChart extends React.Component {
                                                                     /* Label with event listeners */
 
         // append the text labels.
-        if(this.props.chartId !== 'donut_drug') {
+        if(this.props.chartId !== 'donut_drug' && this.props.chartId !== 'donut_dataset') {
             arcs.append('text')
                     .attr('transform', (d) => {
                         return 'translate(' + labelArc.centroid(d) + ')'
@@ -241,7 +241,7 @@ class DonutChart extends React.Component {
                                         .data(data)
                                         .enter()
                                         .append('rect')
-                                        .attr('x', (width) - 220)
+                                        .attr('x', (width) - 240)
                                         .attr('y', function(d, i) {
                                             return (-20 * i + (data.length)*10) - i * 8
                                         })
@@ -255,7 +255,7 @@ class DonutChart extends React.Component {
                                         .data(data)
                                         .enter()
                                         .append('text')
-                                        .attr('x', (width) - 180)
+                                        .attr('x', (width) - 200)
                                         .attr('y', function(d, i) {
                                             return (-20 * i + (data.length)*10) - i * 8 + 15
                                         })

@@ -1,4 +1,5 @@
 import CounterNav from './CounterNav/CounterNav'
+import DatasetDonut from './Dataset/DatasetDonut'
 import Documentation from './Documentation/Documentation'
 import DonutChart from './DonutChart/DonutChart'
 import DonutDrug from './Drug/DonutDrug'
@@ -20,6 +21,7 @@ import TumorGrowthCurve from './TumorGrowthCurve/TumorGrowthCurve'
 
 export {
     CounterNav,
+    DatasetDonut,
     Documentation,
     DonutChart,
     DonutDrug,

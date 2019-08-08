@@ -12,7 +12,7 @@ class TopNav extends React.Component {
                 </Link>
                 <LinkStyle>
                     <Link to='/'> Home </Link>
-                    <Link to='/maps'> HeatMap </Link>
+                    <Link to='/datasets'> Datasets </Link>
                     <Link to='/drugs'> Drugs </Link>
                     <Link to='/tissues'> Tissues </Link>
                     <Link to='/doc'> Documentation </Link>
