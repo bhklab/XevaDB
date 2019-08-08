@@ -57,6 +57,9 @@ const GlobalStyles = createGlobalStyle`
     margin-bottom:100px;
   }
 
+  .heatmap-wrapper, .oprint-wrapper {
+    min-width:1000px;
+  }
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
   .donut-wrapper, .doc-wrapper { //put all wrappers here and wrap them with wrapper
     background:white;
