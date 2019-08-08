@@ -28,6 +28,7 @@ router.get('/v1/mutation/:id', mutation.isValidId, mutation.getMutationId);
 router.get('/v1/mutation', mutation.getMutation);
 router.get('/v1/patientnottested', mutation.getNotTestedPatient);
 router.get('/v1/getonlysequencing', mutation.getOnlySequenceData);
+router.get('/v1/mutationgene', mutation.getMutationGeneList);
 
 
 // APIs related to models.
