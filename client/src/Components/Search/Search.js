@@ -35,7 +35,7 @@ class Search extends React.Component {
 
     componentWillMount() {
         const genes = GeneList.map(item => ({
-            value: item.split('=')[1].replace(/\s/g, ", "),
+            value: item.split('=')[1].replace(/\s/g, ","),
             label: item.split('=')[0]
         }))
         this.setState ({
@@ -109,7 +109,7 @@ class Search extends React.Component {
     redirectUser = () => {
         if((this.state.selectedDataset !== '') && (this.state.selectedDrugs.length > 0)) {
             const { history } = this.props
-            history.push(`/drug/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}`)
+            history.push(`/search/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}&genes=${this.state.selectedGeneSearch}`)
         }
     }
 

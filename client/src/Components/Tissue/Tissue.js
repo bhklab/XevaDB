@@ -61,7 +61,7 @@ class DonutTissue extends React.Component {
     }
 
     arc = {
-        outerRadius: 260,
+        outerRadius: 280,
         innerRadius: 150
     }
 

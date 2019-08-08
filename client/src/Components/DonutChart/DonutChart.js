@@ -110,7 +110,6 @@ class DonutChart extends React.Component {
                       .enter()
                       .append('g')
                       .attr('class', (d) => {
-                          console.log(d)
                           return (d.data.id).replace(/\s/g,'_') + '_Arc'
                       })
         
