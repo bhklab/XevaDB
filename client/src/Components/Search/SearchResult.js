@@ -2,7 +2,7 @@ import React from 'react'
 import HeatMap from '../HeatMap/HeatMap'
 import axios from 'axios'
 import TopNav from '../TopNav/TopNav'
-import OncoprintData from '../Oncoprint/OncoprintData'
+import Oncoprint from '../Oncoprint/Oncoprint'
 import Footer from '../Footer/Footer'
 
 
@@ -15,7 +15,10 @@ class SearchResult extends React.Component {
         this.state = {
             drug_data : [],
             patient_id : [],
+            patient_id_drug : [],
             drug_id : [],
+            gene_id: [],
+            gene_data: []
         };
         //binding the functions declared.
         this.parseData= this.parseData.bind(this);
@@ -31,8 +34,29 @@ class SearchResult extends React.Component {
         })
         this.setState({
             drug_id : drug,
-            patient_id : patient,
+            patient_id_drug : patient,
             drug_data: dataset
+        })
+    }
+
+
+    updateResults(result) {
+        console.log('result is here', result)
+        const datasets = result;
+        let gene = [];
+        let patient = [];
+        
+        patient = Object.keys(datasets[0]);
+        patient.shift();
+
+        datasets.map((data) => {
+            return gene.push(data['gene_id']);
+        })
+        
+        this.setState({
+            gene_data : datasets,
+            gene_id : gene,
+            patient_id : patient
         })
     }
 
@@ -50,6 +74,7 @@ class SearchResult extends React.Component {
         let drug_param = this.getParams().drug_param
         let dataset_param = this.getParams().dataset_param
         let gene_param = this.getParams().gene_param
+        
         axios.get(`http://localhost:5000/api/v1/respevaldrug/?drug=${drug_param}&dataset=${dataset_param}`)
              .then(response => {
                  this.parseData(response.data);
@@ -57,7 +82,8 @@ class SearchResult extends React.Component {
 
         axios.get(`http://localhost:5000/api/v1/mutationgene/?genes=${gene_param}&dataset=${dataset_param}`)
             .then(response => {
-                //console.log(response)
+                console.log(response)
+                this.updateResults(response.data)
             })
     }
 
@@ -78,9 +104,14 @@ class SearchResult extends React.Component {
             <div>
                 <HeatMap
                     data={this.state.drug_data} drug_id={this.state.drug_id} 
-                    patient_id={this.state.patient_id} dimensions={this.dimensions}
+                    patient_id={this.state.patient_id_drug} dimensions={this.dimensions}
                     margin={this.margin}
                 />
+                 <Oncoprint 
+                    data={this.state.gene_data} patient_id={this.state.patient_id}
+                    genes={this.state.gene_id} dimensions={this.dimensions}
+                    margin={this.margin}
+                />   
             </div>
         )
     }
