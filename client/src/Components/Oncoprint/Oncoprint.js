@@ -234,7 +234,7 @@ class Oncoprint extends React.Component {
                     .attr('x', 0)
                     .attr('y', 0)
                     .attr('height', (rect_height) *(genes.length))
-                    .attr('width', 80 + stroke_width)
+                    .attr('width', xrange_gene(max_width))
                     .attr('fill', 'white')
                     .style('stroke', 'black')
                     .style('stroke-width', stroke_width)
@@ -429,7 +429,7 @@ class Oncoprint extends React.Component {
                             .data(rect_alterations)
                             .enter()
                             .append('rect')
-                            .attr('x', 1000)
+                            .attr('x', (patient_id.length * rect_width + 120))
                             .attr('y', function(d, i) {
                                 return 200 + i * 25;
                             })
@@ -443,7 +443,7 @@ class Oncoprint extends React.Component {
                             .data(rect_alterations)
                             .enter()
                             .append('text')
-                            .attr('x', 1020)
+                            .attr('x', (patient_id.length * rect_width + 140))
                             .attr('y', function(d,i) {
                                 return 212 + i * 25;
                             })
