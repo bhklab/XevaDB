@@ -52,7 +52,7 @@ class SearchResultHeatMap extends React.Component {
     margin = {
         top: 300,
         right: 200,
-        bottom: 200,
+        bottom: 100,
         left: 250
     }
 

@@ -30,8 +30,10 @@ class SearchResult extends React.Component {
     render() {
         return (
             <Fragment>
-                <SearchResultHeatMap drug_param={this.state.drug_param} dataset_param={this.state.dataset_param}/>
-                <SearchResultOncoprint gene_param={this.state.gene_param} dataset_param={this.state.dataset_param} />
+                 <div className="wrapper" style={{margin:"auto", fontSize:"0"}}>
+                    <SearchResultHeatMap drug_param={this.state.drug_param} dataset_param={this.state.dataset_param}/>
+                    <SearchResultOncoprint gene_param={this.state.gene_param} dataset_param={this.state.dataset_param} />
+                </div>
             </Fragment>
 
         )
