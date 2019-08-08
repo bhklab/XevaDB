@@ -57,10 +57,12 @@ class OncoprintData extends React.Component {
         return (
             <div className="wrapper" style={{margin:"auto", fontSize:"0"}}>
                 <Oncoprint 
-                    data={this.state.data} patient_id={this.state.patient_id}
-                    className="oprint"
-                    genes={this.state.genes} dimensions={this.dimensions}
-                    margin={this.margin}
+                    data = {this.state.data} 
+                    patient_id = {this.state.patient_id}
+                    className = "oprint"
+                    genes = {this.state.genes} 
+                    dimensions = {this.dimensions}
+                    margin = {this.margin}
                 />   
             </div>    
         )

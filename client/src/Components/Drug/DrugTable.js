@@ -78,13 +78,13 @@ class DrugTable extends React.Component {
       
         return (
           <Fragment>
-            <h1 style={h1Style}> Drug Table </h1>
+            <h1 style = {h1Style}> Drug Table </h1>
             <TableWrapper className='wrap'>
               <ReactTable
-                data={data}
-                columns={columns}
-                className="-highlight"
-                defaultPageSize={10}
+                data = {data}
+                columns = {columns}
+                className = "-highlight"
+                defaultPageSize = {10}
                 filterable
               /> 
             </TableWrapper>         

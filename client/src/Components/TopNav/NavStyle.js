@@ -83,16 +83,6 @@ const LinkStyle = styled.div`
     }
 `
 
-// const LogoStyle = styled.div`
-//     a {
-//         color: #393b79;
-//         text-decoration: none;
-//         letter-spacing: 2px;
-//         font-weight: bold;
-//         font-size: 26px;
-//     }
-// `;
-
 const LogoStyle = styled.img`
     width:calc(5em + 2vw);
     margin-top:2px;

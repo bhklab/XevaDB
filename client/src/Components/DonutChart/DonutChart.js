@@ -272,7 +272,7 @@ class DonutChart extends React.Component {
         return (
             <div 
                 ref = {node => this.node = node} 
-                className='donut-chart'
+                className = 'donut-chart'
             >
             </div>
         )

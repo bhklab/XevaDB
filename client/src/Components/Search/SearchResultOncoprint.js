@@ -18,7 +18,6 @@ class SearchResultOncoprint extends React.Component {
         this.updateResults = this.updateResults.bind(this);
     }
 
-
     updateResults(result) {
         console.log('result is here', result)
         const datasets = result;
@@ -38,7 +37,6 @@ class SearchResultOncoprint extends React.Component {
             patient_id : patient
         })
     }
-
 
     componentDidMount() {
         let dataset_param = this.props.dataset_param
@@ -66,9 +64,11 @@ class SearchResultOncoprint extends React.Component {
     render() {
         return (
             <Oncoprint 
-                data={this.state.gene_data} patient_id={this.state.patient_id}
-                genes={this.state.gene_id} dimensions={this.dimensions}
-                margin={this.margin}
+                data = {this.state.gene_data}
+                patient_id = {this.state.patient_id}
+                genes = {this.state.gene_id} 
+                dimensions = {this.dimensions}
+                margin = {this.margin}
             />
         )
     }
