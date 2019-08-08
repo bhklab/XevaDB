@@ -7,7 +7,7 @@ import Footer from '../Footer/Footer'
 
 
 
-class Drug extends React.Component {
+class SearchResult extends React.Component {
 
     constructor(props) {
         super(props)
@@ -88,4 +88,4 @@ class Drug extends React.Component {
 
 
 
-export default Drug
+export default SearchResult
