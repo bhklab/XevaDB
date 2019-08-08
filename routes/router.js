@@ -48,6 +48,7 @@ router.get('/v1/drugclass', drugTable.getDrugClassName)
 
 //APIs related to dataset table.
 router.get('/v1/dataset', datasetTable.getDatasetTableData)
+router.get('/v1/datasetpatient', datasetTable.getDatasetDistinctPatient)
 
 
 module.exports = router;

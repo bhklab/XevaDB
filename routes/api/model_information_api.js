@@ -148,7 +148,6 @@ const postDrugBasedOnDataset = function(req,res) {
 
 
 
-
 module.exports = {
     getModelInformation,
     getDistinctDrugs,
