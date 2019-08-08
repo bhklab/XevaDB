@@ -78,7 +78,7 @@ const StyleBar = styled.div`
            font-size: 28px;
        }
        .select-component {
-          width: 55%
+          width: 55%;
       }
    }
 
