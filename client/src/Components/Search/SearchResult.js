@@ -33,6 +33,7 @@ class SearchResult extends React.Component {
                 <SearchResultHeatMap drug_param={this.state.drug_param} dataset_param={this.state.dataset_param}/>
                 <SearchResultOncoprint gene_param={this.state.gene_param} dataset_param={this.state.dataset_param} />
             </Fragment>
+
         )
     }
 
