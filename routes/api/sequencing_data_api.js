@@ -113,36 +113,50 @@ const getMutationGeneList = function(req,res) {
 
 
 // This will get the mutation for the selected genes or the genes those are passed as the query parameters.
+// Todo: Improve this using joins, could be done later.
 const getMutationDataset = function(req,res) {
     let param_dataset = req.params.dataset
 
-    knex.select('patient_id', 'gene_id', 'mutation')
+    knex.countDistinct('sequencing_data.patient_id as total')
         .from('sequencing_data')
         .whereIn('sequencing_data.patient_id', 
                 (knex('model_information')
                     .distinct('patient_id')
                     .where('dataset', param_dataset)
                 )
-        ).limit(1050)
-        .then((mutation_data) => {
-            console.log(mutation_data)
-            let gene_id = ''
-            let data = []
-            let i = 0
-            usersRows = JSON.parse(JSON.stringify(mutation_data));
-            usersRows.map((element) => {
-                if(element.gene_id !== gene_id) {
-                    gene_id = element.gene_id;
-                    data[i] = {}
-                    data[i]['gene_id'] = element.gene_id
-                    data[i][element.patient_id] = element.mutation
-                    i++
-                } else {
-                    data[i-1][element.patient_id] = element.mutation
-                }
+        )
+        .then((total) => {
+            value = JSON.parse(JSON.stringify(total));
+            value = value[0].total
+            console.log(value)
+            knex.select('patient_id', 'gene_id', 'mutation')
+            .from('sequencing_data')
+            .whereIn('sequencing_data.patient_id', 
+                    (knex('model_information')
+                        .distinct('patient_id')
+                        .where('dataset', param_dataset)
+                    )
+            ).limit(value*25)
+            .then((mutation_data) => {
+                console.log(mutation_data)
+                let gene_id = ''
+                let data = []
+                let i = 0
+                usersRows = JSON.parse(JSON.stringify(mutation_data));
+                usersRows.map((element) => {
+                    if(element.gene_id !== gene_id) {
+                        gene_id = element.gene_id;
+                        data[i] = {}
+                        data[i]['gene_id'] = element.gene_id
+                        data[i][element.patient_id] = element.mutation
+                        i++
+                    } else {
+                        data[i-1][element.patient_id] = element.mutation
+                    }
+                })
+                res.send(data)
             })
-            res.send(data)
-        })
+        })   
 }
 
 
