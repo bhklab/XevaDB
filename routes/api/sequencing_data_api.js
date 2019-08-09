@@ -3,14 +3,8 @@ const knex = require('../../db/knex1');
 const isValidId = function (req, res, next) {
     //console.log(req.param.id)
     //console.log(req.query.page)
-    if(!isNaN(req.params.id)) return next();
+    if(!isNaN(req.params.dataset)) return next();
     next(new Error('Invalid Id'));
-}
-
-const getMutationId = function(req,res) {
-    res.json({
-        message: 'Hello!'
-    })
 }
 
 const getMutation = function(req,res) {
@@ -117,11 +111,48 @@ const getMutationGeneList = function(req,res) {
 }
 
 
+
+// This will get the mutation for the selected genes or the genes those are passed as the query parameters.
+const getMutationDataset = function(req,res) {
+    let param_dataset = req.params.dataset
+
+    knex.select('patient_id', 'gene_id', 'mutation')
+        .from('sequencing_data')
+        .whereIn('sequencing_data.patient_id', 
+                (knex('model_information')
+                    .distinct('patient_id')
+                    .where('dataset', param_dataset)
+                )
+        ).limit(1050)
+        .then((mutation_data) => {
+            console.log(mutation_data)
+            let gene_id = ''
+            let data = []
+            let i = 0
+            usersRows = JSON.parse(JSON.stringify(mutation_data));
+            usersRows.map((element) => {
+                if(element.gene_id !== gene_id) {
+                    gene_id = element.gene_id;
+                    data[i] = {}
+                    data[i]['gene_id'] = element.gene_id
+                    data[i][element.patient_id] = element.mutation
+                    i++
+                } else {
+                    data[i-1][element.patient_id] = element.mutation
+                }
+            })
+            res.send(data)
+        })
+}
+
+
+
+
 module.exports = {
-    getMutationId,
     getMutation,
     isValidId,
     getNotTestedPatient,
     getOnlySequenceData,
-    getMutationGeneList
+    getMutationGeneList,
+    getMutationDataset
 }
