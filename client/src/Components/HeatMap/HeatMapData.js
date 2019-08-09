@@ -11,10 +11,11 @@ class HeatMapData extends React.Component {
         this.state = {
             data : [],
             patient_id : [],
-            drug_id : []
+            drug_id : [],
+            dataset_param : 0
         };
         //binding the functions declared.
-        this.parseData= this.parseData.bind(this);
+        this.parseData = this.parseData.bind(this);
     }
 
     // this function takes the parsed result and set the states.
@@ -32,11 +33,24 @@ class HeatMapData extends React.Component {
         })
     }
 
+    componentWillMount() {
+        this.setState ({
+            dataset_param : this.props.dataset
+        })
+    }
+
     componentDidMount() {
-        axios.get(`http://localhost:5000/api/v1/respeval`)
+        if(this.state.dataset_param > 0) {
+            axios.get(`http://localhost:5000/api/v1/respeval/${this.state.dataset_param}`)
              .then(response => {
                  this.parseData(response.data);
              })
+        } else {
+            axios.get(`http://localhost:5000/api/v1/respeval`)
+            .then(response => {
+                this.parseData(response.data);
+            })
+        }
     }
 
 
