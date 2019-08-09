@@ -37,7 +37,7 @@ class DonutChart extends React.Component {
         let chartId = this.props.chartId
 
                                                 /** SETTING SVG ATTRIBUTES **/
-
+        d3.select("svg").remove()
         // make the SVG element.
         let svg = d3.select(node)
                     .append('svg')
