@@ -16,7 +16,8 @@ class Search extends React.Component {
             genes: [],
             selectedGeneSearch: [],
             selectedDrugs: [],
-            selectedDataset: '' 
+            selectedDataset: '' ,
+            genomics: ['Mutation', 'CNV', 'RNASeq']
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleDatasetChange = this.handleDatasetChange.bind(this)
@@ -41,6 +42,16 @@ class Search extends React.Component {
         this.setState ({
             genes: [...genes]
         })
+        
+        const genomic = this.state.genomics.map((item, i) => {
+            return ({
+                label: item,
+                value: i
+            })
+        })
+        this.setState({
+            genomics: [...genomic]
+        })
     }
 
     componentDidMount() {
@@ -54,6 +65,7 @@ class Search extends React.Component {
                 datasets: [...datasets]
                 })
             })
+            console.log(this.state.genomics)
     }
 
 
@@ -143,6 +155,7 @@ class Search extends React.Component {
                         
                         <div className='div-genomics'> 
                             <Select 
+                                options={this.state.genomics} 
                                 styles={customStyles}
                                 placeholder={'Genomics'}
                             />
