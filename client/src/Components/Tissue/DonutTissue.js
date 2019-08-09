@@ -65,7 +65,7 @@ class DonutTissue extends React.Component {
         innerRadius: 150
     }
 
-    chartId = 'donut_tissue'
+    chartId = 'donut_tissues'
 
     render() {
         return (

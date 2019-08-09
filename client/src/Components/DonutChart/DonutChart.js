@@ -34,6 +34,7 @@ class DonutChart extends React.Component {
     // data should be like => {id: 'Gastric Cancer', value: 1007}
     makeDonutChart(node, data, height, width, left, top, bottom, right) {
         //console.log(data)
+        let chartId = this.props.chartId
 
                                                 /** SETTING SVG ATTRIBUTES **/
 
@@ -107,7 +108,13 @@ class DonutChart extends React.Component {
                       .data(() => {
                           return pie(data);
                       })
-                      .enter()
+                      .enter()  
+                      .append('a')
+                      .attr('xlink:href', function(d,i) {
+                           if(chartId === 'donut_datasets') {
+                                return `/dataset/${data[i].parameter}`
+                           }
+                      })
                       .append('g')
                       .attr('class', (d) => {
                           return (d.data.id).replace(/\s/g,'').replace(/[(-)]/g, '') + '_Arc'
@@ -201,7 +208,7 @@ class DonutChart extends React.Component {
                                                                     /* Label with event listeners */
 
         // append the text labels.
-        if(this.props.chartId !== 'donut_drug' && this.props.chartId !== 'donut_dataset') {
+        if(this.props.chartId !== 'donut_drugs' && this.props.chartId !== 'donut_datasets') {
             arcs.append('text')
                     .attr('transform', (d) => {
                         return 'translate(' + labelArc.centroid(d) + ')'

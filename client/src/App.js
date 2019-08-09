@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {    CounterNav,
+            Dataset,
             DatasetDonut,
             Documentation,
             DonutChart,
@@ -110,14 +111,15 @@ class App extends React.Component {
           <TopNav/>
           <Switch>
             <Route path='/' exact component={Home}></Route>
-            <Route path="/curve" exact component={TumorGrowthCurve}></Route>
-            <Route path="/datasets" exact component={DatasetDonut}></Route>
+            <Route path='/curve' exact component={TumorGrowthCurve}></Route>
+            <Route path='/datasets' exact component={DatasetDonut}></Route>
+            <Route path='/dataset/:id' exact component={Dataset}></Route>
             <Route path='/doc' exact component={Documentation}></Route>
             <Route path='/drugs' exact component={DonutDrug}></Route>
-            <Route path="/drug/:id" exact component={DrugTable}></Route>
+            <Route path='/drug/:id' exact component={DrugTable}></Route>
             <Route path='/home' exact component={CounterNav}></Route>
-            <Route path="/maps" exact component={Merge}></Route>
-            <Route path="/search" exact component={SearchResult}></Route>
+            <Route path='/maps' exact component={Merge}></Route>
+            <Route path='/search' exact component={SearchResult}></Route>
             <Route path='/tissues' exact component={DonutTissue}></Route>
             <Route render = { () => <h1> 404 Error </h1> } />
           </Switch>
