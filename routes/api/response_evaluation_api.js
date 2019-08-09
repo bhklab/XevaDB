@@ -36,6 +36,7 @@ const getResponseEvaluation = function(req,res) {
 
 
 // this will get the result based on a single drug id, the parameter passed here is like 'BGJ398'
+// not used anywhere :)
 const getResponseEvaluationSingleDrug = function(req,res) {
     let drug = req.params.id
         knex.select('patient_id', 'drug', 'response')
@@ -96,8 +97,45 @@ const getResponseEvaluationDrug = function(req,res) {
 }
 
 
+// this will get the evaluations based one the param id which is the dataset id.
+// Todo: change this query to use joins.
+const getResponseEvaluationDataset = function(req,res) {
+    let param_dataset = req.params.dataset
+    console.log(param_dataset)
+    knex.select('patient_id', 'drug', 'response')
+        .from('response_evaluation')
+        .whereIn('response_evaluation.patient_id', 
+            (knex('model_information')
+                .distinct('patient_id')
+                .where('dataset', param_dataset)
+            ))
+        .then((row) => {
+            console.log(row)
+            let drug = ''
+            let data = []
+            let value = 0
+            usersRows = JSON.parse(JSON.stringify(row));
+            usersRows.forEach(element => {
+                if (element.drug === drug) {
+                    data[value-1][element.patient_id] = element.response
+                } else {
+                    drug = element.drug
+                    data.push({})
+                    data[value]['Drug'] = element.drug
+                    data[value][element.patient_id] = element.response
+                    value += 1
+                }
+            })
+            data.unshift(data.pop())
+            res.send(data)
+        })
+}
+
+
+
 
 module.exports = {
     getResponseEvaluation,
-    getResponseEvaluationDrug
+    getResponseEvaluationDrug,
+    getResponseEvaluationDataset
 }

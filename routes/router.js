@@ -22,6 +22,8 @@ router.get('/v1/getinboth', drugScreening.getInBoth)
 router.get('/v1/respeval', responseEvaluation.getResponseEvaluation);
 //router.get('/v1/respevaldrug/:id', responseEvaluation.getResponseEvaluationDrug);
 router.get('/v1/respevaldrug', responseEvaluation.getResponseEvaluationDrug);
+router.get('/v1/respeval/:dataset', responseEvaluation.getResponseEvaluationDataset);
+
 
 // APIs related to the mutation table.
 router.get('/v1/mutation/:id', mutation.isValidId, mutation.getMutationId);
