@@ -74,12 +74,27 @@ const StyleBar = styled.div`
     }    
 
    @media screen and (max-width: 1500px) {
-       h1 {
-           font-size: 28px;
-       }
-       .select-component {
-          width: 55%;
-      }
+        h1 {
+            font-size: 28px;
+        }
+        .select-component {
+            width: 55%;
+            max-height: 400px;
+        }
+        .search-container {
+            max-height: 500px;
+        }
+        .div-gene-enter {
+            min-height: 100px !important;
+            margin: 10px !important;
+            input {
+                min-height: 100px !important;
+                max-height: 100px;
+            }
+        }
+        .div-genomics, .div-gene {
+            margin: 5px !important;
+        }
    }
 
    @media screen and (max-width: 650px) {
@@ -105,7 +120,7 @@ const StyleButton = styled.button`
     margin: auto;
     transition: .3s;
     outline-style: none;
-    margin-top: 20px;
+    margin-top: 10px;
     &:hover {
         opacity: 1;
         cursor: pointer;
