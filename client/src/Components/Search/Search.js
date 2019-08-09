@@ -162,12 +162,13 @@ class Search extends React.Component {
                                 <input type="text" value={this.state.selectedGeneSearch} onChange={this.handleGeneSearchChange}/>
                             </form>
                         </div>
-
-                        <StyleButton onClick={this.redirectUser} type='button'> 
-                            <span>
-                                Search
-                            </span>
-                        </StyleButton>
+                        <div>
+                            <StyleButton onClick={this.redirectUser} type='button'> 
+                                <span>
+                                    Search
+                                </span>
+                            </StyleButton>
+                        </div>       
                     </div>
                 </div>
             </StyleBar>
