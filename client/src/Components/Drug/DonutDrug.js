@@ -86,6 +86,7 @@ class DonutDrug extends React.Component {
                     <div className="donut-wrapper">
                         <DrugTable/>
                     </div>
+                    
                 </Wrapper>
                 <Footer/>
             </Fragment>

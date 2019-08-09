@@ -23,10 +23,8 @@ import { createGlobalStyle } from 'styled-components';
 
 
 const GlobalStyles = createGlobalStyle`
-  #root {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
+
+  body {
     background: linear-gradient(
       to right top,
       rgba(255, 255, 255, 0.3), 
@@ -35,6 +33,19 @@ const GlobalStyles = createGlobalStyle`
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
+    margin: auto,
+    width:100%;
+  }
+
+  #root {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    
+    min-width:100vw;
+    width:auto;
+    position:relative;
+    margin:0px;
   }
 
   .wrapper {
