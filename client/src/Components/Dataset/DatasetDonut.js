@@ -31,11 +31,11 @@ class DatasetDonut extends React.Component {
     componentDidMount() {
         axios.get(`http://localhost:5000/api/v1/datasetpatient`)
             .then((response) => {
-                console.log(response)
                 response = response.data.data.map((element) => {
                     return ({
                         id: element.dataset_name,
-                        value: element.patient_id
+                        value: element.patient_id,
+                        parameter: element.dataset_id
                     })
                 })
                 this.setState({
@@ -61,7 +61,7 @@ class DatasetDonut extends React.Component {
         innerRadius: 150
     }
 
-    chartId = 'donut_dataset'
+    chartId = 'donut_datasets'
 
     render() {
         return (
