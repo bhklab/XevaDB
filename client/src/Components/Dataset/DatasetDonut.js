@@ -68,7 +68,7 @@ class DatasetDonut extends React.Component {
             <Fragment>
                 <Wrapper>
                     <div className="donut-wrapper">
-                        <h1> Number of Model IDs Per Drug class </h1>
+                        <h1> Number of Patient IDs Per Dataset </h1>
                         <DonutChart 
                             dimensions = {this.dimensions} 
                             margin = {this.margin} 
