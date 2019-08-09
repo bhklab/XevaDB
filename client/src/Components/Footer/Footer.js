@@ -7,6 +7,12 @@ const styles = {
 	textAlign: 'center',
     paddingTop: '30px',
     minHeight: '50px',
+    bottom: '0',
+    right: '0',
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'absolute',
+    minWidth:'100vw',
     backgroundColor: "rgb(255,255,255,0.8)",
     fontFamily: 'sans-serif',
    
