@@ -5,11 +5,13 @@ import axios from 'axios'
 class OncoprintData extends React.Component {
 
     constructor(props) {
+        //console.log(this.props)
         super(props)
         this.state = {
             data : [],
             genes : [],
-            patient_id : []
+            patient_id : [],
+            dataset_param : 0
         };
         this.updateResults = this.updateResults.bind(this);
     }
@@ -33,12 +35,27 @@ class OncoprintData extends React.Component {
         })
     }
 
+    componentWillMount() {
+        this.setState ({
+            dataset_param : this.props.dataset
+        })
+    }
+
     componentDidMount() {
-        axios.get(`http://localhost:5000/api/v1/mutation`)
+        if(this.state.dataset_param > 0) {
+            axios.get(`http://localhost:5000/api/v1/mutation/${this.state.dataset_param}`)
              .then(response => {
                  console.log(response)
                  this.updateResults(response.data);
-             })
+            })
+        } else {
+            axios.get(`http://localhost:5000/api/v1/mutation`)
+            .then(response => {
+                console.log(response)
+                this.updateResults(response.data);
+            })
+        }
+        
     }
 
     dimensions = {
