@@ -101,16 +101,16 @@ const getResponseEvaluationDrug = function(req,res) {
 // Todo: change this query to use joins.
 const getResponseEvaluationDataset = function(req,res) {
     let param_dataset = req.params.dataset
-    console.log(param_dataset)
+    
     knex.select('patient_id', 'drug', 'response')
         .from('response_evaluation')
         .whereIn('response_evaluation.patient_id', 
             (knex('model_information')
                 .distinct('patient_id')
                 .where('dataset', param_dataset)
-            ))
+            )
+        )
         .then((row) => {
-            console.log(row)
             let drug = ''
             let data = []
             let value = 0
