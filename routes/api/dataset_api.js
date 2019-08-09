@@ -18,7 +18,7 @@ const getDatasetTableData = function(req,res) {
 // get all the count of distinct patient ids for a particular dataset, this uses the modelinformation table.
 const getDatasetDistinctPatient = function(req,res) {
     knex.countDistinct('model_information.patient_id as patient_id')
-        .select('dataset_name')
+        .select('dataset_name', 'dataset_id')
         .from('model_information')
         .leftJoin(
             'datasets',
