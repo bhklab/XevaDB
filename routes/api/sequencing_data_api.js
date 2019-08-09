@@ -117,14 +117,17 @@ const getMutationGeneList = function(req,res) {
 const getMutationDataset = function(req,res) {
     let param_dataset = req.params.dataset
 
-    knex.countDistinct('sequencing_data.patient_id as total')
-        .from('sequencing_data')
-        .whereIn('sequencing_data.patient_id', 
-                (knex('model_information')
-                    .distinct('patient_id')
-                    .where('dataset', param_dataset)
-                )
-        )
+        knex.countDistinct('sequencing_data.patient_id as total')
+            .from('sequencing_data')
+            .leftJoin(
+                knex('model_information')
+                .distinct('patient_id')
+                .where('model_information.dataset', param_dataset)
+                .as('model_information')
+                , 'sequencing_data.patient_id'
+                , 'model_information.patient_id'
+            )
+        .whereNotNull('model_information.patient_id')
         .then((total) => {
             value = JSON.parse(JSON.stringify(total));
             value = value[0].total
@@ -136,7 +139,8 @@ const getMutationDataset = function(req,res) {
                         .distinct('patient_id')
                         .where('dataset', param_dataset)
                     )
-            ).limit(value*25)
+            )
+            .limit(value*25)
             .then((mutation_data) => {
                 console.log(mutation_data)
                 let gene_id = ''
