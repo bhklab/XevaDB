@@ -17,7 +17,8 @@ class Search extends React.Component {
             selectedGeneSearch: [],
             selectedDrugs: [],
             selectedDataset: '' ,
-            genomics: ['Mutation', 'CNV', 'RNASeq']
+            genomics: ['Mutation', 'CNV', 'RNASeq'],
+            allDrugs: []
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleDatasetChange = this.handleDatasetChange.bind(this)
@@ -65,12 +66,18 @@ class Search extends React.Component {
                 datasets: [...datasets]
                 })
             })
-            console.log(this.state.genomics)
     }
 
 
     handleDrugChange = (selectedOption, action) => {
-        if (selectedOption !== null && selectedOption.length > 0) {
+        console.log(selectedOption[0].value)
+        console.log(this.state.allDrugs)
+        if(selectedOption[0].value === 'all') {
+            this.setState ({
+                selectedDrugs : this.state.allDrugs
+            })
+        }
+        else if (selectedOption !== null && selectedOption.length > 0) {
             const label = selectedOption.map((value) => {
                 return (value.label).replace(/\s/g,'').replace('+','_');
             })
@@ -88,12 +95,19 @@ class Search extends React.Component {
         let initial = 1;
         axios.post(`http://localhost:5000/api/v1/drug/dataset`, {label}, this.axiosConfig)
              .then((response) => {
+                 console.log(response.data.data[0])
                 const data = response.data.data[0].map(item => ({
                     value: initial++,
                     label: item.drug
                 }))
                 this.setState ({
-                    data: [...data]
+                    data: [ {value: 'all', label:'All'}, ...data]
+                })
+                const drug = response.data.data[0].map(item => {
+                    return (item.drug).replace(/\s/g,'').replace('+','_');
+                })
+                this.setState ({
+                    allDrugs: [...drug]
                 })
              })
     }
