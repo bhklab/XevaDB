@@ -1,16 +1,12 @@
 const knex = require('../../db/knex1');
 
 const isValidId = function (req, res, next) {
-    //console.log(req.param.id)
-    //console.log(req.query.page)
     if(!isNaN(req.params.dataset)) return next();
     next(new Error('Invalid Id'));
 }
 
 const getMutation = function(req,res) {
-    //console.log(req.query.page)
     var tissue_name = req.query.tissue;
-    //console.log(tissue_name);
     knex.select('gene_id', 'patient_id', 'mutation')
         .from('sequencing_data')
         .where((builder) =>
@@ -113,7 +109,6 @@ const getMutationGeneList = function(req,res) {
 
 
 // This will get the mutation for the selected genes or the genes those are passed as the query parameters.
-// Todo: Improve this using joins, could be done later.
 const getMutationDataset = function(req,res) {
     let param_dataset = req.params.dataset
 
@@ -128,10 +123,27 @@ const getMutationDataset = function(req,res) {
                 , 'model_information.patient_id'
             )
         .whereNotNull('model_information.patient_id')
+        // this is slow because of orderBy.
+        //.then((total) => {
+        //    value = JSON.parse(JSON.stringify(total));
+        //    value = value[0].total
+        //    knex.select('sequencing_data.patient_id', 'sequencing_data.gene_id', 'sequencing_data.mutation')
+        //        .from('sequencing_data')
+        //        .leftJoin(
+        //            knex('model_information')
+        //            .distinct('model_information.patient_id')
+        //            .where('model_information.dataset', param_dataset)
+        //            .as('model_information')
+        //            , 'sequencing_data.patient_id'
+        //            , 'model_information.patient_id'
+        //        )
+        //        .whereNotNull('model_information.patient_id')
+        //        .orderBy('sequencing_data.gene_id')
+        //        .limit(value * 25)
+        //        .offset(value * 30)
         .then((total) => {
             value = JSON.parse(JSON.stringify(total));
             value = value[0].total
-            console.log(value)
             knex.select('patient_id', 'gene_id', 'mutation')
             .from('sequencing_data')
             .whereIn('sequencing_data.patient_id', 
