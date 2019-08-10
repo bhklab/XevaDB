@@ -98,7 +98,6 @@ const getResponseEvaluationDrug = function(req,res) {
 
 
 // this will get the evaluations based one the param id which is the dataset id.
-// Todo: change this query to use joins.
 const getResponseEvaluationDataset = function(req,res) {
     let param_dataset = req.params.dataset
     
