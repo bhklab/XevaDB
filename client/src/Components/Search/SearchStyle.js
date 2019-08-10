@@ -53,6 +53,8 @@ const StyleBar = styled.div`
                     font-weight: 300;
                     font-size: 16px;
                     border: 1px solid #3453b0;
+                    padding: 20px;
+                    box-sizing: border-box;
                 }
         }
     }

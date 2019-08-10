@@ -14,7 +14,7 @@ class Search extends React.Component {
             data : [],
             datasets: [],
             genes: [],
-            selectedGeneSearch: [],
+            selectedGeneSearch: ['Enter Gene Symbol(s)'],
             selectedDrugs: [],
             selectedDataset: '' ,
             genomics: ['Mutation', 'CNV', 'RNASeq'],
@@ -41,7 +41,7 @@ class Search extends React.Component {
             label: item.split('=')[0]
         }))
         this.setState ({
-            genes: [...genes]
+            genes: [{value: 'user defined list', label: 'User-Defined List'}, ...genes]
         })
         
         const genomic = this.state.genomics.map((item, i) => {
@@ -70,8 +70,6 @@ class Search extends React.Component {
 
 
     handleDrugChange = (selectedOption, action) => {
-        console.log(selectedOption[0].value)
-        console.log(this.state.allDrugs)
         if(selectedOption[0].value === 'all') {
             this.setState ({
                 selectedDrugs : this.state.allDrugs
@@ -95,7 +93,6 @@ class Search extends React.Component {
         let initial = 1;
         axios.post(`http://localhost:5000/api/v1/drug/dataset`, {label}, this.axiosConfig)
              .then((response) => {
-                 console.log(response.data.data[0])
                 const data = response.data.data[0].map(item => ({
                     value: initial++,
                     label: item.drug
@@ -114,9 +111,15 @@ class Search extends React.Component {
 
 
     handleGeneListChange = selectedOption => {
-        this.setState({
-            selectedGeneSearch: selectedOption.value
-        })
+        if(selectedOption.value === 'user defined list') {
+            this.setState({
+                selectedGeneSearch: ''
+            })
+        } else {
+            this.setState({
+                selectedGeneSearch: selectedOption.value
+            })
+        }
     }
 
 
@@ -186,7 +189,11 @@ class Search extends React.Component {
 
                         <div className='div-gene-enter'>
                             <form>
-                                <input type="text" value={this.state.selectedGeneSearch} onChange={this.handleGeneSearchChange}/>
+                                <input
+                                    type="text" 
+                                    value={this.state.selectedGeneSearch} 
+                                    onChange={this.handleGeneSearchChange}
+                                />
                             </form>
                         </div>
                         <div>
