@@ -27,8 +27,8 @@ const getUntreated = function (req,res) {
     knex.select()
         .from('drug_screening')
         .where({
-        patient_id: patient,
-        drug: 'untreated'
+            patient_id: patient,
+            drug: 'untreated'
         })
         .then((untreated) => {
             res.send(untreated);
