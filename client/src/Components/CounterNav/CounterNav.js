@@ -14,7 +14,7 @@ class CounterNav extends React.Component {
             drugs: 0,
             patients: 0,
             models: 0,
-            datasets: 1,
+            datasets: 8,
             tissues: 0
         }
     }
