@@ -24,7 +24,9 @@ class Dataset extends React.Component {
                 <HeatMapData  
                     dataset = {this.state.dataset}
                 />
-               
+                <OncoprintData
+                    dataset = {this.state.dataset}
+                />
                 <Footer/>
             </Fragment>
         )
