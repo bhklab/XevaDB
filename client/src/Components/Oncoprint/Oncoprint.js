@@ -31,7 +31,7 @@ class Oncoprint extends React.Component {
 
     makeOncoprint(data, genes, plotId, node, patient_id, hmap_patients, dimensions, margin) {
         this.node = node
-        // height and width for the SVG based on the number of drugs and patient/sample ids.
+        // height and width for the SVG based on the number of genes and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
         let rect_height = dimensions.height;
         let rect_width = dimensions.width;
@@ -44,8 +44,8 @@ class Oncoprint extends React.Component {
             { value : 'Deep Deletion', color: '#0033CC' },
             { value: 'Amplification', color: '#1a9850' },
             { value: 'Mutation', color: '#e41a1c'},
-            { value: 'Not Sequenced', color: "none"},
-            { value: 'Wild Type', color: "lightgray"}
+            { value: 'Wild Type', color: "lightgray"},
+            { value: 'Not Available', color: "none"}   
         ]
 
                                                     /** SETTING SVG ATTRIBUTES **/
