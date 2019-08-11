@@ -112,7 +112,7 @@ const getCounter = function(req,res) {
     knex('model_information')
             .countDistinct('model_id as model')
             .countDistinct('patient_id as patient')
-            .countDistinct('tissue as tissue')
+            .countDistinct('tissue as tissue').whereNot('tissue','')
             .countDistinct('drug as drug')
         .then((data) => res.status(200).json({
             status: 'success',
