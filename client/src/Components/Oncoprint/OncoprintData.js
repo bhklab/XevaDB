@@ -59,7 +59,6 @@ class OncoprintData extends React.Component {
         } else {
             axios.get(`http://localhost:5000/api/v1/mutation`)
             .then(response => {
-                console.log(response)
                 this.updateResults(response.data);
             })
         }
