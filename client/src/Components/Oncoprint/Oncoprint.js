@@ -31,7 +31,7 @@ class Oncoprint extends React.Component {
 
     makeOncoprint(data, genes, plotId, node, patient_id, hmap_patients, dimensions, margin) {
         this.node = node
-        // height and width for the SVG based on the number of drugs and patient/sample ids.
+        // height and width for the SVG based on the number of genes and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
         let rect_height = dimensions.height;
         let rect_width = dimensions.width;
@@ -44,8 +44,8 @@ class Oncoprint extends React.Component {
             { value : 'Deep Deletion', color: '#0033CC' },
             { value: 'Amplification', color: '#1a9850' },
             { value: 'Mutation', color: '#e41a1c'},
-            { value: 'Not Sequenced', color: "none"},
-            { value: 'Wild Type', color: "lightgray"}
+            { value: 'Wild Type', color: "lightgray"},
+            { value: 'Not Available', color: "none"}   
         ]
 
                                                     /** SETTING SVG ATTRIBUTES **/
@@ -134,7 +134,7 @@ class Oncoprint extends React.Component {
         for (let i = 0; i < genes.length; i++) {
             for (let j = 0; j < hmap_patients.length; j++) {
                 //data[i][hmap_patients[j]] === ''
-                if (diff.indexOf(hmap_patients[j]) != -1) {
+                if (diff.indexOf(hmap_patients[j]) !== -1) {
                     // if not sequenced, make it white with a border
                     alterations.append('rect')
                     .attr('class', 'alter-rect del')
@@ -453,7 +453,7 @@ class Oncoprint extends React.Component {
                             .attr('height', '15')
                             .attr('width', '15')
                             .attr('fill', function(d) {
-                                if (d.color == "none") {
+                                if (d.color === "none") {
                                     d3.select(this).attr("stroke",'lightgray')
                                                 .attr("transform", "translate(1,1)")
                                                 .attr("width", 14)
