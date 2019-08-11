@@ -23,6 +23,7 @@ const getDistinctTissues = function(req,res) {
         .count('patient_id as total')
         .groupBy('tissue')
         .from('model_information')
+        .whereNot('tissue','')
         .then((tissue) => res.status(200).json({
             status: 'success',
             data: tissue
