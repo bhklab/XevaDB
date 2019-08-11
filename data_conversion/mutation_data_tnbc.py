@@ -3,7 +3,7 @@ import re
 
 
 input_file = '../../TNBC_XevaDB/sequencing_data.csv'
-output_file = '../../TNBC_XevaDB/final_sequencing_data_tnbc.csv'
+output_file = '../../TNBC_XevaDB/final_mutation_tnbc.csv'
 
 def readFile(readfile, writefile):
     value = 4167047
