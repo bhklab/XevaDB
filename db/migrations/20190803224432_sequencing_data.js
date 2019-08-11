@@ -1,4 +1,4 @@
-
+// This has been changed to mutation. Will delete this migration later.
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('sequencing_data', (table) => {
         table.increments();
