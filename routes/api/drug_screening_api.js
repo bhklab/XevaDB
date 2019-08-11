@@ -62,17 +62,17 @@ const getNotDrugAvailable = function(req,res) {
 
 
 // This will give a list of the patients those are 
-// not availabe in the sequencing_data table ie they only have drug screening data.
+// not availabe in the mutation table ie they only have drug screening data.
 const getOnlyDrugData = function(req,res) {
     knex('drug_screening')
         .distinct('drug_screening.patient_id')
         .leftJoin(
-            knex('sequencing_data')
-            .distinct('patient_id').as('sequencing_data')
+            knex('mutation')
+            .distinct('patient_id').as('mutation')
             , 'drug_screening.patient_id'
-            , 'sequencing_data.patient_id'
+            , 'mutation.patient_id'
         )
-        .where('sequencing_data.patient_id', null)
+        .where('mutation.patient_id', null)
         .then((patients) => {
             res.send(patients)
         })
@@ -84,17 +84,17 @@ const getOnlyDrugData = function(req,res) {
 
 
 // This will give a list of the patients those are 
-// not availabe in the sequencing_data table ie they only have drug screening data.
+// not availabe in the mutation table ie they only have drug screening data.
 const getInBoth = function(req,res) {
     knex('drug_screening')
         .distinct('drug_screening.patient_id')
         .leftJoin(
-            knex('sequencing_data')
-            .distinct('patient_id').as('sequencing_data')
+            knex('mutation')
+            .distinct('patient_id').as('mutation')
             , 'drug_screening.patient_id'
-            , 'sequencing_data.patient_id'
+            , 'mutation.patient_id'
         )
-        .whereNotNull('sequencing_data.patient_id')
+        .whereNotNull('mutation.patient_id')
         .then((patients) => {
             res.send(patients)
         })
