@@ -8,7 +8,7 @@ const isValidId = function (req, res, next) {
 const getMutation = function(req,res) {
     var tissue_name = req.query.tissue;
     knex.select('gene_id', 'patient_id', 'mutation')
-        .from('sequencing_data')
+        .from('mutation')
         .where((builder) =>
             builder.whereIn('patient_id',
                                         (knex.select('patient_id')
@@ -16,12 +16,12 @@ const getMutation = function(req,res) {
                                         .where('tissue', 'Breast Cancer'))
                             )
         ).limit(1050)
-        .then((sequencing_data) => {
+        .then((mutation) => {
         let data = [];
         let value = 0;
         let patient = ''
         let gene = '';
-        usersRows = JSON.parse(JSON.stringify(sequencing_data));
+        usersRows = JSON.parse(JSON.stringify(mutation));
         usersRows.forEach(element => {
             if(patient === '' || element.patient_id === patient || element.gene_id !== gene) {
                 patient = element.patient_id;
@@ -40,17 +40,17 @@ const getMutation = function(req,res) {
 
 
 // This will get the list of the patient id's which are not 
-// available in the sequencing_data table ie don't have sequencing data.
+// available in the mutation table ie don't have sequencing data.
 const getNotTestedPatient = function(req,res) {
     knex('model_information')
         .distinct('model_information.patient_id')
         .leftJoin(
-            knex('sequencing_data')
-            .distinct('patient_id').as('sequencing_data')
+            knex('mutation')
+            .distinct('patient_id').as('mutation')
             , 'model_information.patient_id'
-            , 'sequencing_data.patient_id'
+            , 'mutation.patient_id'
         )
-        .where('sequencing_data.patient_id', null)
+        .where('mutation.patient_id', null)
         .then((patient) => {
             res.send(patient)
         })
@@ -59,9 +59,9 @@ const getNotTestedPatient = function(req,res) {
 
 
 // This will give a list of the patients those are 
-// not availabe in the drug_screening table ie they only have sequencing_data screening data.
+// not availabe in the drug_screening table ie they only have mutation screening data.
 const getOnlySequenceData = function(req,res) {
-       knex('sequencing_data')
+       knex('mutation')
             .distinct('patient_id')
             .whereNotIn('patient_id', knex('drug_screening')
                             .distinct('patient_id')
@@ -78,11 +78,11 @@ const getMutationGeneList = function(req,res) {
         let param_dataset = req.query.dataset
         let genes = param_gene.split(',')
 
-        knex.select('sequencing_data.patient_id', 'sequencing_data.gene_id', 'sequencing_data.mutation')
-            .from('sequencing_data')
-            .whereIn('sequencing_data.gene_id', genes)     
+        knex.select('mutation.patient_id', 'mutation.gene_id', 'mutation.mutation')
+            .from('mutation')
+            .whereIn('mutation.gene_id', genes)     
             .where((builder) => {
-                builder.whereIn('sequencing_data.patient_id', (knex('model_information').distinct('patient_id')
+                builder.whereIn('mutation.patient_id', (knex('model_information').distinct('patient_id')
                 .where('dataset', param_dataset)
                 ))
             })
@@ -112,14 +112,14 @@ const getMutationGeneList = function(req,res) {
 const getMutationDataset = function(req,res) {
     let param_dataset = req.params.dataset
 
-        knex.countDistinct('sequencing_data.patient_id as total')
-            .from('sequencing_data')
+        knex.countDistinct('mutation.patient_id as total')
+            .from('mutation')
             .leftJoin(
                 knex('model_information')
                 .distinct('patient_id')
                 .where('model_information.dataset', param_dataset)
                 .as('model_information')
-                , 'sequencing_data.patient_id'
+                , 'mutation.patient_id'
                 , 'model_information.patient_id'
             )
         .whereNotNull('model_information.patient_id')
@@ -127,26 +127,26 @@ const getMutationDataset = function(req,res) {
         //.then((total) => {
         //    value = JSON.parse(JSON.stringify(total));
         //    value = value[0].total
-        //    knex.select('sequencing_data.patient_id', 'sequencing_data.gene_id', 'sequencing_data.mutation')
-        //        .from('sequencing_data')
+        //    knex.select('mutation.patient_id', 'mutation.gene_id', 'mutation.mutation')
+        //        .from('mutation')
         //        .leftJoin(
         //            knex('model_information')
         //            .distinct('model_information.patient_id')
         //            .where('model_information.dataset', param_dataset)
         //            .as('model_information')
-        //            , 'sequencing_data.patient_id'
+        //            , 'mutation.patient_id'
         //            , 'model_information.patient_id'
         //        )
         //        .whereNotNull('model_information.patient_id')
-        //        .orderBy('sequencing_data.gene_id')
+        //        .orderBy('mutation.gene_id')
         //        .limit(value * 25)
         //        .offset(value * 30)
         .then((total) => {
             value = JSON.parse(JSON.stringify(total));
             value = value[0].total
             knex.select('patient_id', 'gene_id', 'mutation')
-            .from('sequencing_data')
-            .whereIn('sequencing_data.patient_id', 
+            .from('mutation')
+            .whereIn('mutation.patient_id', 
                     (knex('model_information')
                         .distinct('patient_id')
                         .where('dataset', param_dataset)
