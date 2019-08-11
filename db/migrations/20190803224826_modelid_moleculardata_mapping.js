@@ -1,4 +1,4 @@
-
+// delete this later.
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('modelid_moleculardata_mapping', (table) => {
         table.increments();
