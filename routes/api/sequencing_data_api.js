@@ -154,7 +154,6 @@ const getMutationDataset = function(req,res) {
             )
             .limit(value*25)
             .then((mutation_data) => {
-                console.log(mutation_data)
                 let gene_id = ''
                 let data = []
                 let i = 0
