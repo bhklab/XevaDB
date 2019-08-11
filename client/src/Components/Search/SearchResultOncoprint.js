@@ -12,20 +12,25 @@ class SearchResultOncoprint extends React.Component {
         this.state = {
             patient_id : [],
             gene_id: [],
-            gene_data: []
+            gene_data: [],
+            heatmap_patients: [],
         };
         //binding the functions declared.
         this.updateResults = this.updateResults.bind(this);
     }
 
-    updateResults(result) {
+    updateResults(result, heatmap) {
         console.log('result is here', result)
         const datasets = result;
         let gene = [];
         let patient = [];
+        let heatmap_patients = [];
         
         patient = Object.keys(datasets[0]);
         patient.shift();
+
+        heatmap_patients = Object.keys(heatmap[0]);
+        heatmap_patients.shift();
 
         datasets.map((data) => {
             return gene.push(data['gene_id']);
@@ -34,18 +39,22 @@ class SearchResultOncoprint extends React.Component {
         this.setState({
             gene_data : datasets,
             gene_id : gene,
-            patient_id : patient
+            patient_id : patient,
+            heatmap_patients : heatmap_patients
         })
     }
 
     componentDidMount() {
         let dataset_param = this.props.dataset_param
         let gene_param = this.props.gene_param
+        let drug_for_onco = this.props.drug_for_onco
         
         axios.get(`http://localhost:5000/api/v1/mutationgene/?genes=${gene_param}&dataset=${dataset_param}`)
             .then(response => {
-                console.log(response)
-                this.updateResults(response.data)
+                axios.get(`http://localhost:5000/api/v1/respevaldrug/?drug=${drug_for_onco}&dataset=${dataset_param}`)
+                .then(heatmap_patient => {
+                    this.updateResults(response.data, heatmap_patient.data);
+                })
             })
     }
 
@@ -69,6 +78,7 @@ class SearchResultOncoprint extends React.Component {
                 genes = {this.state.gene_id} 
                 dimensions = {this.dimensions}
                 margin = {this.margin}
+                hmap_patients = {this.state.heatmap_patients}
             />
         )
     }

@@ -134,7 +134,7 @@ class Oncoprint extends React.Component {
         for (let i = 0; i < genes.length; i++) {
             for (let j = 0; j < hmap_patients.length; j++) {
                 //data[i][hmap_patients[j]] === ''
-                if (diff.indexOf(hmap_patients[j]) != -1) {
+                if (diff.indexOf(hmap_patients[j]) !== -1) {
                     // if not sequenced, make it white with a border
                     alterations.append('rect')
                     .attr('class', 'alter-rect del')
@@ -453,7 +453,7 @@ class Oncoprint extends React.Component {
                             .attr('height', '15')
                             .attr('width', '15')
                             .attr('fill', function(d) {
-                                if (d.color == "none") {
+                                if (d.color === "none") {
                                     d3.select(this).attr("stroke",'lightgray')
                                                 .attr("transform", "translate(1,1)")
                                                 .attr("width", 14)

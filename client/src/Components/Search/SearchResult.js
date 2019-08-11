@@ -8,7 +8,8 @@ class SearchResult extends React.Component {
         this.state = {
             drug_param : '',
             dataset_param : '',
-            gene_param : ''
+            gene_param : '',
+            drug_param_for_onco : ''
         }
     }
 
@@ -17,10 +18,12 @@ class SearchResult extends React.Component {
         let drug = params.get('drug')
         let dataset = params.get('dataset')
         let gene = params.get('genes')
+        let drug_for_onco = drug.split(',')[0]
         this.setState({
             drug_param : drug,
             dataset_param : dataset,
-            gene_param: gene
+            gene_param: gene,
+            drug_param_for_onco: drug_for_onco
         })
     }
        
@@ -35,6 +38,7 @@ class SearchResult extends React.Component {
                     <SearchResultOncoprint 
                         gene_param = {this.state.gene_param} 
                         dataset_param = {this.state.dataset_param} 
+                        drug_for_onco = {this.state.drug_param_for_onco}
                     />
                 </div>
             </Fragment>
