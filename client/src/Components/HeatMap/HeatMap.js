@@ -31,9 +31,6 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
-       console.log('its rendering heatmap', data)
-       //console.log(drug)
-       //console.log(patient)
     this.node = node
     // height and width for the SVG based on the number of drugs and patient/sample ids.
     // height and width of the rectangles in the main skeleton.
@@ -75,12 +72,12 @@ class HeatMap extends React.Component {
       patient_evaluations object the values for PD,SD,PR,CR 
       and also sets the value of the letiable max_drug. */
     function calculate_evaluations(d) {
+        let drug_alt = d['Drug'];
             keys = Object.entries(d);
             let current_max_drug = 0;
             for(const key of keys) {
-                if(key[0] === 'Drug') {
-                        var drug_alt = key[1];
-                } else {
+                if(key[0] === 'Drug') {} 
+                else {
                     if(key[1] === '') {key[1] = 'empty'}
                     drug_evaluations[drug_alt][key[1]]++
                     patient_evaluations[key[0]][key[1]]++
