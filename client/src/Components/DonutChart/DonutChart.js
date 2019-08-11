@@ -208,7 +208,7 @@ class DonutChart extends React.Component {
                                                                     /* Label with event listeners */
 
         // append the text labels.
-        if(this.props.chartId !== 'donut_drugs' && this.props.chartId !== 'donut_datasets') {
+        if(this.props.chartId !== 'donut_drugs' && this.props.chartId !== 'donut_datasets' && this.props.chartId !== 'donut_tissues') {
             arcs.append('text')
                     .attr('transform', (d) => {
                         return 'translate(' + labelArc.centroid(d) + ')'
