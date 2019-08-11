@@ -24,12 +24,12 @@ class Oncoprint extends React.Component {
         let margin = this.props.margin;
         let dimensions = this.props.dimensions;
         let patient_id = this.props.patient_id;
-        this.makeOncoprint(data, genes, plotId, node, patient_id, dimensions, margin)
+        let hmap_patients = this.props.hmap_patients;
+        this.makeOncoprint(data, genes, plotId, node, patient_id, hmap_patients, dimensions, margin)
     }
 
 
-    makeOncoprint(data, genes, plotId, node, patient_id, dimensions, margin) {
-        console.log('this is oncoprint', data)
+    makeOncoprint(data, genes, plotId, node, patient_id, hmap_patients, dimensions, margin) {
         this.node = node
         // height and width for the SVG based on the number of drugs and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
@@ -37,13 +37,15 @@ class Oncoprint extends React.Component {
         let rect_width = dimensions.width;
         // this height and width is used for setting the body.
         let height = genes.length * rect_height + 100;
-        let width = patient_id.length * rect_width + 120;
+        let width = hmap_patients.length * rect_width + 100;
 
         // adding this for rectangles on right side of oncoprint.
         let rect_alterations = [
             { value : 'Deep Deletion', color: '#0033CC' },
             { value: 'Amplification', color: '#1a9850' },
-            { value: 'Mutation', color: '#e41a1c'}
+            { value: 'Mutation', color: '#e41a1c'},
+            { value: 'Not Sequenced', color: "none"},
+            { value: 'Wild Type', color: "lightgray"}
         ]
 
                                                     /** SETTING SVG ATTRIBUTES **/
@@ -68,7 +70,7 @@ class Oncoprint extends React.Component {
             .attr('id', 'skeleton')
     
         for (let i = 0; i < genes.length; i++) {
-            for (let j = 0; j < patient_id.length; j++) {
+            for (let j = 0; j < hmap_patients.length; j++) {
                 skeleton.append('rect')
                     .attr('class', 'bg-rect') 
                     .attr('width', rect_width - 2)
@@ -119,16 +121,32 @@ class Oncoprint extends React.Component {
         } 
 
         let patient_alterations = []
-        for (let i = 0; i < patient_id.length; i++) {
+        for (let i = 0; i < hmap_patients.length; i++) {
             patient_alterations.push({'mut':0,'amp':0,'del':0})
         }
-        for (let i = 0; i < genes.length; i++) {
-            for (let j = 0; j < patient_id.length; j++) {
 
-                if (data[i][patient_id[j]] === '') {
-                    // if no alterations
+        // take the difference of patient_id from hmap_patients
+        let diff = hmap_patients.filter(x => !patient_id.includes(x))
+        console.log(diff)
+
+
+
+        for (let i = 0; i < genes.length; i++) {
+            for (let j = 0; j < hmap_patients.length; j++) {
+                //data[i][hmap_patients[j]] === ''
+                if (diff.indexOf(hmap_patients[j]) != -1) {
+                    // if not sequenced, make it white with a border
+                    alterations.append('rect')
+                    .attr('class', 'alter-rect del')
+                    .attr('width', rect_width - 4)
+                    .attr('height', rect_height - 4)
+                    .attr('fill', 'white')
+                    .attr("stroke", "lightgray")
+                    .attr("stroke-width", "1px")
+                    .attr('x', j * (rect_width)+1) 
+                    .attr('y', i * (rect_height)+1)
                 } else {
-                    if (data[i][patient_id[j]].includes('Del0.8')) {
+                    if (data[i][hmap_patients[j]].includes('Del0.8')) {
                         gene_alterations[genes[i]]['del']++;
                         patient_alterations[j]['del']++;
                         alterations.append('rect')
@@ -139,7 +157,7 @@ class Oncoprint extends React.Component {
                             .attr('x', j * (rect_width)) 
                             .attr('y', i * (rect_height))
                     }
-                    if (data[i][patient_id[j]].includes('Amp')) {
+                    if (data[i][hmap_patients[j]].includes('Amp')) {
                         gene_alterations[genes[i]]['amp']++;
                         patient_alterations[j]['amp']++;
                         alterations.append('rect')
@@ -150,7 +168,7 @@ class Oncoprint extends React.Component {
                             .attr('x', j * (rect_width)) 
                             .attr('y', i * (rect_height))
                     }
-                    if (data[i][patient_id[j]].includes('MutNovel')) {
+                    if (data[i][hmap_patients[j]].includes('MutNovel')) {
                         gene_alterations[genes[i]]['mut']++;
                         patient_alterations[j]['mut']++;
                         alterations.append('rect')
@@ -161,7 +179,7 @@ class Oncoprint extends React.Component {
                             .attr('x', j * (rect_width)) 
                             .attr('y', i * (rect_height) + 12)
                     }
-                    if (data[i][patient_id[j]].includes('NA')) {
+                    if (data[i][hmap_patients[j]].includes('NA')) {
                         alterations.append('rect')
                             .attr('class', 'alter-rect amp')
                             .attr('width', rect_width - 2)
@@ -224,7 +242,7 @@ class Oncoprint extends React.Component {
         
         let gene_alter = svg.append('g')
             .attr('id', 'gene-alter')
-            .attr('transform', 'translate(' + (patient_id.length * rect_width + 20) + ',0)')
+            .attr('transform', 'translate(' + (hmap_patients.length * rect_width + 20) + ',0)')
 
         let stroke_width = 1; // this will set the stroke width of the outer rectangle 
 
@@ -283,7 +301,7 @@ class Oncoprint extends React.Component {
                     .attr('fill', 'none')
                     .attr('stroke', 'black')
                     .attr('stroke-width', 1)
-                    .attr('transform', 'translate(' + (patient_id.length * rect_width + 20) + ' -0 )')
+                    .attr('transform', 'translate(' + (hmap_patients.length * rect_width + 20) + ' -0 )')
                     .call(x_axis)
                     .selectAll('text')
                     .attr('fill', 'black')
@@ -383,7 +401,7 @@ class Oncoprint extends React.Component {
                                 .attr('transform', function(d,i) {
                                     return `translate(2,-200)`
                                 })
-        const temp = patient_id.slice(0)
+        const temp = hmap_patients.slice(0)
         temp.push("")
         lines.selectAll("line.dashed-line")
                 .data(temp)
@@ -404,7 +422,7 @@ class Oncoprint extends React.Component {
                     .style("opacity", 0.2)
 
         lines.selectAll("rect.hlight-space")
-                    .data(patient_id)
+                    .data(hmap_patients)
                     .enter()
                     .append('rect')
                     .attr("class", function(d) {
@@ -420,7 +438,6 @@ class Oncoprint extends React.Component {
                     .style("opacity", 0)  
 
                                                                                          /** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint **/
-
         // This will create four rectangles on right side for alterations.
         let target_rect = skeleton.append('g')
                                     .attr('id', 'small_rectangle')
@@ -429,13 +446,20 @@ class Oncoprint extends React.Component {
                             .data(rect_alterations)
                             .enter()
                             .append('rect')
-                            .attr('x', (patient_id.length * rect_width + 120))
+                            .attr('x', (hmap_patients.length * rect_width + 120))
                             .attr('y', function(d, i) {
                                 return 200 + i * 25;
                             })
                             .attr('height', '15')
                             .attr('width', '15')
                             .attr('fill', function(d) {
+                                if (d.color == "none") {
+                                    d3.select(this).attr("stroke",'lightgray')
+                                                .attr("transform", "translate(1,1)")
+                                                .attr("width", 14)
+                                                .attr("height", 14)
+                                    return "white"
+                                }
                                 return d.color;
                             })
 
@@ -443,7 +467,7 @@ class Oncoprint extends React.Component {
                             .data(rect_alterations)
                             .enter()
                             .append('text')
-                            .attr('x', (patient_id.length * rect_width + 140))
+                            .attr('x', (hmap_patients.length * rect_width + 140))
                             .attr('y', function(d,i) {
                                 return 212 + i * 25;
                             })
@@ -452,11 +476,12 @@ class Oncoprint extends React.Component {
                             })
                             .attr('font-size', '14px')
 
+
         // highlight
         for (let i = 0; i < genes.length; i++) {
-            for (let j = 0; j < patient_id.length; j++) {
+            for (let j = 0; j < hmap_patients.length; j++) {
                 highlight.append('rect')
-                    .attr('class', 'oprint-hlight-' + patient_id[j] + " oprint-hlight-" + genes[i])
+                    .attr('class', 'oprint-hlight-' + hmap_patients[j] + " oprint-hlight-" + genes[i])
                     .attr('width', rect_width - 2)
                     .attr('height', rect_height - 2)
                     .attr('fill', 'black')
@@ -464,20 +489,20 @@ class Oncoprint extends React.Component {
                     .attr('y', i * (rect_height ))
                     .style("opacity", 0)
                         .on("mouseover", function(d,x) {
-                            d3.selectAll(".hmap-hlight-" + patient_id[j])
+                            d3.selectAll(".hmap-hlight-" + hmap_patients[j])
                                 .style("opacity", 0.2)
-                            d3.selectAll(".oprint-hlight-" + patient_id[j])
+                            d3.selectAll(".oprint-hlight-" + hmap_patients[j])
                                 .style("opacity", 0.2)
-                            d3.selectAll(".hlight-space-" + patient_id[j])
+                            d3.selectAll(".hlight-space-" + hmap_patients[j])
                                 .style("opacity", 0.2)
                         
                         })
                         .on("mouseout", function(d,x) {
-                            d3.selectAll(".hmap-hlight-" + patient_id[j])
+                            d3.selectAll(".hmap-hlight-" + hmap_patients[j])
                                 .style("opacity", 0)
-                            d3.selectAll(".oprint-hlight-" + patient_id[j])
+                            d3.selectAll(".oprint-hlight-" + hmap_patients[j])
                                 .style("opacity", 0)
-                            d3.selectAll(".hlight-space-" + patient_id[j])
+                            d3.selectAll(".hlight-space-" + hmap_patients[j])
                                 .style("opacity", 0)
                         })
             }
@@ -497,6 +522,7 @@ class Oncoprint extends React.Component {
 Oncoprint.propTypes = {
     genes: PropTypes.array.isRequired,
     patient_id: PropTypes.array.isRequired,
+    hmap_patients: PropTypes.array.isRequired,
     data: PropTypes.array.isRequired
 }
 

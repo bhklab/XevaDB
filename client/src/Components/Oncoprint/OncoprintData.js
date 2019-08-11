@@ -11,18 +11,23 @@ class OncoprintData extends React.Component {
             data : [],
             genes : [],
             patient_id : [],
+            hmap_patients: [],
             dataset_param : 0
         };
         this.updateResults = this.updateResults.bind(this);
     }
 
-    updateResults(result) {
-        const dataset = result;
+    updateResults(onco, hmap) {
+        const dataset = onco;
         let gene_id = [];
         let patient = [];
+        let hmap_patients = [];
         
         patient = Object.keys(dataset[0]);
         patient.shift();
+
+        hmap_patients = Object.keys(hmap[0]);
+        hmap_patients.shift();
 
         dataset.map((data) => {
             return gene_id.push(data['gene_id']);
@@ -31,7 +36,8 @@ class OncoprintData extends React.Component {
         this.setState({
             data : dataset,
             genes : gene_id,
-            patient_id : patient
+            patient_id : patient,
+            hmap_patients : hmap_patients
         })
     }
 
@@ -45,8 +51,10 @@ class OncoprintData extends React.Component {
         if(this.state.dataset_param > 0) {
             axios.get(`http://localhost:5000/api/v1/mutation/${this.state.dataset_param}`)
              .then(response => {
-                 console.log(response)
-                 this.updateResults(response.data);
+                axios.get(`http://localhost:5000/api/v1/respeval/${this.state.dataset_param}`)
+                    .then(hmap => {
+                        this.updateResults(response.data, hmap.data);
+                    })
             })
         } else {
             axios.get(`http://localhost:5000/api/v1/mutation`)
@@ -76,6 +84,7 @@ class OncoprintData extends React.Component {
                 <Oncoprint 
                     data = {this.state.data} 
                     patient_id = {this.state.patient_id}
+                    hmap_patients = {this.state.hmap_patients}
                     className = "oprint"
                     genes = {this.state.genes} 
                     dimensions = {this.dimensions}
