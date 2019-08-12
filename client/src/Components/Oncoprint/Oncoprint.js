@@ -146,7 +146,7 @@ class Oncoprint extends React.Component {
                     .attr('x', j * (rect_width)+1) 
                     .attr('y', i * (rect_height)+1)
                 } else {
-                    if (data[i][hmap_patients[j]].includes('Del0.8')) {
+                    if (data[i][hmap_patients[j]].includes('Del0.8') || data[i][hmap_patients[j]].includes('Deletion')) {
                         gene_alterations[genes[i]]['del']++;
                         patient_alterations[j]['del']++;
                         alterations.append('rect')
@@ -157,7 +157,7 @@ class Oncoprint extends React.Component {
                             .attr('x', j * (rect_width)) 
                             .attr('y', i * (rect_height))
                     }
-                    if (data[i][hmap_patients[j]].includes('Amp')) {
+                    if (data[i][hmap_patients[j]].includes('Amp') || data[i][hmap_patients[j]].includes('Amplification')) {
                         gene_alterations[genes[i]]['amp']++;
                         patient_alterations[j]['amp']++;
                         alterations.append('rect')
@@ -237,7 +237,7 @@ class Oncoprint extends React.Component {
 
         let xrange_gene = d3.scaleLinear()
             .domain([0, d3.max([maxGAmp, maxGMut, maxGHomdel])])
-            .range([0,80]);
+            .range([0,40]);
 
         
         let gene_alter = svg.append('g')
