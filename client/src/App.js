@@ -88,6 +88,10 @@ const GlobalStyles = createGlobalStyle`
 
   .curve-wrapper {
     min-width:1300px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     a {
       text-decoration:none;
@@ -95,6 +99,10 @@ const GlobalStyles = createGlobalStyle`
       padding:20px;
       font-family: 'Raleway', sans-serif;
       color: #3453b0;
+    }
+
+    .no-graph {
+      padding:50px;
     }
   }
 `
