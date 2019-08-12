@@ -2,8 +2,9 @@ import csv
 import re
 
 
-input_file = '../modelInfo.csv'
-output_file = '../final_model_information.csv'
+
+input_file = '../../MP_XevaDB/model_information.csv'
+output_file = '../../MP_XevaDB/model_information_final_mp.csv'
 
 
 def readFile(readfile, writefile):
