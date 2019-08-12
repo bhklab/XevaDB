@@ -2,11 +2,12 @@ import csv
 import re
 
 
-input_file = '../../TNBC_XevaDB/response_evaluation.csv'
-output_file = '../../TNBC_XevaDB/final_response_evaluation_tnbc.csv'
+
+input_file = '../../MP_XevaDB/response_evaluation.csv'
+output_file = '../../MP_XevaDB/final_response_evaluation_tnbc.csv'
 
 def readFile(readfile, writefile):
-    value = 6366
+    value = 8811
     with open(readfile, 'r') as txt_file:
         with open(writefile, 'w') as csv_file:
             csv_writer = csv.writer(csv_file, delimiter = ",")
