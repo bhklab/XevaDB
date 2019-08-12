@@ -20,8 +20,14 @@ class SearchResultHeatMap extends React.Component {
     // this function takes the parsed result and set the states.
     parseData(result) {
         const dataset = result;
-        let patient = Object.keys(dataset[0]);
-        patient.shift();
+        let patient = [];
+
+        Object.keys(dataset[0]).forEach(value => {
+            if(value !== 'Drug') {
+                patient.push(value)
+            }
+        });
+        
         let drug = dataset.map((data) => {
             return data.Drug;
         })
