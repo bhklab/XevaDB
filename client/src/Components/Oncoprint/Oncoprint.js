@@ -107,7 +107,7 @@ class Oncoprint extends React.Component {
     
                                                 /** Setting Alterations **/
 
-        // alterations: mutations are green and a third, AMP/del are red/blue and full respectively
+        // alterations: mutations are #1a9850 and a third, AMP/del are #e41a1c/#0033CC and full respectively
         let alterations = svg.append('g')
             .attr('id', 'alterations')
 
@@ -153,7 +153,7 @@ class Oncoprint extends React.Component {
                             .attr('class', 'alter-rect del')
                             .attr('width', rect_width - 2)
                             .attr('height', rect_height - 2)
-                            .attr('fill', 'blue')
+                            .attr('fill', '#0033CC')
                             .attr('x', j * (rect_width)) 
                             .attr('y', i * (rect_height))
                     }
@@ -164,18 +164,18 @@ class Oncoprint extends React.Component {
                             .attr('class', 'alter-rect amp')
                             .attr('width', rect_width - 2)
                             .attr('height', rect_height - 2)
-                            .attr('fill', 'red')
+                            .attr('fill', '#1a9850')
                             .attr('x', j * (rect_width)) 
                             .attr('y', i * (rect_height))
                     }
-                    if (data[i][hmap_patients[j]].includes('MutNovel')) {
+                    if (data[i][hmap_patients[j]].includes('MutNovel') || data[i][hmap_patients[j]].includes('mutation')) {
                         gene_alterations[genes[i]]['mut']++;
                         patient_alterations[j]['mut']++;
                         alterations.append('rect')
                             .attr('class', 'alter-rect mut')
                             .attr('width', rect_width - 2)
                             .attr('height', rect_height - 25)
-                            .attr('fill', 'green')
+                            .attr('fill', '#e41a1c')
                             .attr('x', j * (rect_width)) 
                             .attr('y', i * (rect_height) + 12)
                     }
@@ -262,7 +262,7 @@ class Oncoprint extends React.Component {
                     .attr('class', 'gene-rect mut')
                     .attr('height', rect_height - 2)
                     .attr('width', xrange_gene(gene_alterations[genes[i]]['mut']))
-                    .attr('fill', 'green')
+                    .attr('fill', '#e41a1c')
                     .attr('y', (i * (rect_height)))
                     .attr('x', stroke_width/2)
     
@@ -270,7 +270,7 @@ class Oncoprint extends React.Component {
                     .attr('class', 'gene-rect amp')
                     .attr('height', rect_height - 2)
                     .attr('width', xrange_gene(gene_alterations[genes[i]]['amp']))
-                    .attr('fill', 'red')
+                    .attr('fill', '#1a9850')
                     .attr('y', i * (rect_height) ) 
                     .attr('x', xrange_gene(gene_alterations[genes[i]]['mut']) + stroke_width/2)
                      
@@ -279,7 +279,7 @@ class Oncoprint extends React.Component {
                     .attr('class', 'gene-rect del')
                     .attr('height', rect_height - 2)
                     .attr('width', xrange_gene(gene_alterations[genes[i]]['del']))
-                    .attr('fill', 'blue')
+                    .attr('fill', '#0033CC')
                     .attr('y', i * (rect_height)) 
                     .attr('x', xrange_gene(gene_alterations[genes[i]]['amp']) + xrange_gene(gene_alterations[genes[i]]['mut']) + stroke_width/2)
                 
@@ -337,7 +337,7 @@ class Oncoprint extends React.Component {
                     .attr('class', 'patient-rect mut')
                     .attr('width', rect_width - 5)
                     .attr('height', 35 - yrange_patient(patient_alterations[i]['mut']))
-                    .attr('fill', 'green')
+                    .attr('fill', '#e41a1c')
                     .attr('x', i * 20 + 1) 
                     .attr('y', yrange_patient(patient_alterations[i]['mut']))
                     .attr('transform', 'translate(0,-40)')
@@ -346,7 +346,7 @@ class Oncoprint extends React.Component {
                     .attr('class', 'patient-rect amp')
                     .attr('width', rect_width - 5)
                     .attr('height', 35 - yrange_patient(patient_alterations[i]['amp']))
-                    .attr('fill', 'red')
+                    .attr('fill', '#1a9850')
                     .attr('x', i * 20 + 1) 
                     .attr('y', yrange_patient(patient_alterations[i]['amp']) - (35 - yrange_patient(patient_alterations[i]['mut'])))
                     .attr('transform', 'translate(0,-40)')
@@ -355,7 +355,7 @@ class Oncoprint extends React.Component {
                     .attr('class', 'patient-rect del')
                     .attr('width', rect_width - 5)
                     .attr('height', 35 - yrange_patient(patient_alterations[i]['del']))
-                    .attr('fill', 'blue')
+                    .attr('fill', '#0033CC')
                     .attr('x', i * 20 + 1) 
                     .attr('y', yrange_patient(patient_alterations[i]['del']) - (35 - yrange_patient(patient_alterations[i]['mut'])) - (35 - yrange_patient(patient_alterations[i]['amp'])))
                     .attr('transform', 'translate(0,-40)')
