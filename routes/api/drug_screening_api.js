@@ -4,14 +4,16 @@ const knex = require('../../db/knex1');
 const getDrugScreening = function(req,res) {
     let drug = req.query.drug;
     let patient = req.query.patient;
-    knex.select()
-        .from('drug_screening')
+    knex.select("drug_screening.*", "batch_information.type", "batch_information.batch")
+        .from('drug_screening', "batch_information")
+        .join("batch_information", "drug_screening.model_id", "=", "batch_information.model_id")
         .where(function() {
             this.where('drug', drug)
                 .orWhere('drug', 'untreated')
         })
         .andWhere({ patient_id: patient})
         .then((treatment) => {
+            console.log(treatment)
             res.send(treatment);
         })
         .catch(error => res.status(500).json({
