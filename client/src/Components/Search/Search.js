@@ -136,7 +136,7 @@ class Search extends React.Component {
     }
 
     redirectUser = () => {
-        if((this.state.selectedDataset !== '') && (this.state.selectedDrugs.length > 0)) {
+        if((this.state.selectedDataset !== '') && (this.state.selectedDrugs.length > 0) && (this.state.selectedGeneSearch[0] !== 'Enter Gene Symbol(s)')) {
             const { history } = this.props
             history.push(`/search/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}&genes=${this.state.selectedGeneSearch}`)
         }
