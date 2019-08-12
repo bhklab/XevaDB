@@ -2,7 +2,7 @@ import csv
 import re
 
 
-input_file = '../../TNBC_XevaDB/sequencing_data.csv'
+input_file = '../../TNBC_XevaDB/mutation.csv'
 output_file = '../../TNBC_XevaDB/final_mutation_tnbc.csv'
 
 def readFile(readfile, writefile):

@@ -328,7 +328,7 @@ class HeatMap extends React.Component {
                     .attr('id', 'drug_name')
 
     drug_name.attr('stroke-width', '0')
-              .style('font-size', '15px')
+              .style('font-size', '12px')
               .attr('font-weight', '500')
               .call(yAxis)
               .selectAll("text")

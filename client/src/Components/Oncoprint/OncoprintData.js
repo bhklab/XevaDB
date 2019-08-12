@@ -22,13 +22,22 @@ class OncoprintData extends React.Component {
         let gene_id = [];
         let patient = [];
         let hmap_patients = [];
+
+        console.log(dataset)
+        console.log(hmap)
         
-        patient = Object.keys(dataset[0]);
-        patient.shift();
+        Object.keys(dataset[0]).forEach(value => {
+            if(value !== 'gene_id') {
+                patient.push(value)
+            }
+        });
 
-        hmap_patients = Object.keys(hmap[0]);
-        hmap_patients.shift();
-
+        Object.keys(hmap[0]).forEach(value => {
+            if(value !== 'Drug') {
+                hmap_patients.push(value)
+            }
+        });
+        
         dataset.map((data) => {
             return gene_id.push(data['gene_id']);
         })
