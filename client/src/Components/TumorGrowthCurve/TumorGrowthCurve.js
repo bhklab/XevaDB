@@ -964,7 +964,7 @@ class TumorGrowthCurve extends React.Component {
                     
                 </div>
                 <div className="curve-wrapper" style={{marginTop:"20px", padding:"10px 0px"}}>
-                    <Link to='/maps'> ←&nbsp;&nbsp;Back to Heatmap </Link>
+                    <Link to='/datasets'> ←&nbsp;&nbsp;Back to Datasets </Link>
                 </div>
                 
                
