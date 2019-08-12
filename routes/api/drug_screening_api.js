@@ -9,6 +9,7 @@ const getDrugScreening = function(req,res) {
         .join("batch_information", "drug_screening.model_id", "=", "batch_information.model_id")
         .where(function() {
             this.where('drug', drug)
+                .orWhere('drug', 'water')
                 .orWhere('drug', 'untreated')
         })
         .andWhere({ patient_id: patient})
