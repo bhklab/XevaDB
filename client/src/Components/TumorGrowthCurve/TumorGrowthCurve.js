@@ -149,7 +149,13 @@ class TumorGrowthCurve extends React.Component {
     componentDidUpdate() {
         const node = this.node;
         let plotId = 'plot'
-        this.makeTumorGrowthCurve(this.state.data, plotId, node)
+        if (this.state.data.length != 0) {
+            this.makeTumorGrowthCurve(this.state.data, plotId, node)
+            d3.select(".no-graph").remove()
+        } else {
+            d3.select("svg").remove()
+        }
+        
     }
 
     // This is the main function to create Growth curves.
@@ -202,7 +208,6 @@ class TumorGrowthCurve extends React.Component {
                     minTreatment = temp[temp.length - 1] < minTreatment ? temp[temp.length - 1] : minTreatment
                 }
             }
-            console.log(control, treatment, minControl, minTreatment)
             // unique, sort, and cut off at the last timepoint of shortest graph
             control = control.filter(unique).sort(function (a, b) {  return a - b;  });
             var index = control.indexOf(minControl)
@@ -429,7 +434,7 @@ class TumorGrowthCurve extends React.Component {
                         return '#5974c4';
                     }
                 })
-                .style('opacity', 0.8)
+                .style('opacity', 0.6)
                 .attr('cx', function(d) {return xrange(d.time);})
                 .attr('cy', function(d) {
                     if (norm) {
@@ -463,7 +468,7 @@ class TumorGrowthCurve extends React.Component {
                 })
                 .attr('d', function(d) {return linepath(d.pdx_json)})
                 .attr('fill', 'none')
-                .style('opacity', 1)
+                .style('opacity', 0.6)
                 .attr('stroke', function (d) {
                     if (d.exp_type === 'control') {
                         return '#cd5686';
@@ -481,7 +486,6 @@ class TumorGrowthCurve extends React.Component {
         // plot the mean of each experiment type (control, treatment)
         function plotMeans(data, svg, xrange, yrange, width, height) {
             var timeUnion = getUnionOfTimepoints(data)
-            console.log(timeUnion)
             let exp_types = []
 
             // if there is no control
@@ -950,9 +954,12 @@ class TumorGrowthCurve extends React.Component {
             <Fragment>
             <div className="wrapper" style={{margin:"auto", fontSize:"16px"}}>
                 <div className="curve-wrapper" style={{marginTop:"100px"}}>
-                    <h1>{this.getParams().drugid_param} + {this.getParams().patient_param}</h1>
+                    <h1>Drug ID = <span style={{color:"#cd5686"}}>{this.getParams().drugid_param}</span> and Patient ID = <span style={{color:"#cd5686"}}>{this.getParams().patient_param}</span></h1>
+                    
                     <svg ref = {node => this.node = node} width={1300} height={620} >
                     </svg>
+
+                    <div className="no-graph">There is no data for this graph.</div>
                     
                     
                 </div>
