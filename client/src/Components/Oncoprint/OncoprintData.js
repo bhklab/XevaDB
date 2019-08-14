@@ -23,9 +23,6 @@ class OncoprintData extends React.Component {
         let patient = [];
         let hmap_patients = [];
 
-        console.log(dataset)
-        console.log(hmap)
-        
         Object.keys(dataset[0]).forEach(value => {
             if(value !== 'gene_id') {
                 patient.push(value)

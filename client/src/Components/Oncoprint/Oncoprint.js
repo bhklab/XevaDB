@@ -127,7 +127,7 @@ class Oncoprint extends React.Component {
 
         // take the difference of patient_id from hmap_patients
         let diff = hmap_patients.filter(x => !patient_id.includes(x))
-        console.log(diff)
+        //console.log(diff)
 
 
 
