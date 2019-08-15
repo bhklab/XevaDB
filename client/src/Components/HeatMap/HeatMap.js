@@ -31,21 +31,18 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
-       console.log(patient)
-       console.log(drug)
-       console.log(data)
+
     this.node = node
+
     // height and width for the SVG based on the number of drugs and patient/sample ids.
     // height and width of the rectangles in the main skeleton.
     let rect_height = dimensions.height;
     let rect_width = dimensions.width;
+
     // this height and width is used for setting the body.
     let height = drug.length * rect_height + 100;
     let width = patient.length * rect_width + 100;
 
-    //'#1f77b4', '#2ca02c', '#ffbb78', '#d62728'
-    //'#0033CC', '#1a9850', '#fed976', '#e41a1c'
-    //'blue', 'green', 'yellow', 'red'
     let target_eval = [
                             { value : 'CR', color: '#0033CC' },
                             { value: 'PR', color: '#1a9850' },
@@ -60,9 +57,9 @@ class HeatMap extends React.Component {
     let patient_use = patient
 
     // drug evaluations
-    var max_drug = 0;
-    var drug_evaluations = {}
-    for(var i=0; i<drug.length; i++) {
+    let max_drug = 0;
+    let drug_evaluations = {}
+    for(let i=0; i<drug.length; i++) {
         drug_evaluations[drug[i]] = {'CR':0, 'PR': 0, 'SD': 0, 'PD': 0, 'NA':0, 'empty': 0}
     }
 
@@ -75,20 +72,17 @@ class HeatMap extends React.Component {
     /* this code will add to the drug_evaluations and 
       patient_evaluations object the values for PD,SD,PR,CR 
       and also sets the value of the letiable max_drug. */
-    function calculate_evaluations(d) {
-        let drug_alt = d['Drug'];
+    function calculate_evaluations(d,i) {
+        let drug_alt = drug[i];
             keys = Object.entries(d);
             let current_max_drug = 0;
             for(const key of keys) {
-                if(key[0] === 'Drug') {} 
-                else {
-                    if(key[1] === '') {key[1] = 'empty'}
-                    drug_evaluations[drug_alt][key[1]]++
-                    patient_evaluations[key[0]][key[1]]++
-                    if(key[1] !== 'NA' || key[1] !== 'empty') { 
-                        current_max_drug++;
-                        patient_evaluations[key[0]].total++;
-                    } 
+                if(key[1] === '') {key[1] = 'empty'}
+                drug_evaluations[drug_alt][key[1]]++
+                patient_evaluations[key[0]][key[1]]++
+                if(key[1] !== 'NA' || key[1] !== 'empty') { 
+                    current_max_drug++;
+                    patient_evaluations[key[0]].total++;
                 }
             }
             if (current_max_drug > max_drug) { max_drug = current_max_drug }
@@ -96,18 +90,15 @@ class HeatMap extends React.Component {
 
 
     /* This code is used to produce the query strings */
-    //function querystring_value(d) {
-    //    if(d.length > 2) {
-    //        i = 0;
-    //        drug_use = d.replace(/\s/g,'');
-    //    }
-    //    else if (d.length === 2) { 
-    //        if(patient_use !== 'Drug') {
-    //            return `/curve?patient=${patient_use[i++]}&drug_id=${drug_use}` 
-    //        }
-    //    }
-    //    else { i++; }
-    //}
+    function querystring_value(d,i) {
+        if(i === 0) {
+            drug_use = drug[drug_index]
+            drug_index++
+        }
+        if (d.length === 2 || d.length === 'empty') {
+            return `/curve?patient=${patient_use[i]}&drug_id=${drug_use}` 
+        }
+    }
     
 
                                     /** SCALE FOR MAIN SKELETON **/
@@ -160,61 +151,42 @@ class HeatMap extends React.Component {
                                 .attr('id', 'targ_rect')
 
     
-
     let gskeleton =  drug_response.selectAll('g')
                                   .data(data)
                                   .enter()
                                   .append('g')
                                   .attr('transform', function(d,i) {
-                                    return `translate(0,${i * rect_height})`
+                                        return `translate(0,${i * rect_height})`
                                   })
 
 
     let rectKeys;
     // this will append rect equivalent to number of patient ids.
     let drawrectangle = gskeleton.selectAll('rect.hmap-rect')
-                                .data(function(d) {  
+                                .data(function(d,i) {  
                                     //calling the function and passing the data d as parameter.
-                                    calculate_evaluations(d);
+                                    calculate_evaluations(d,i);
                                     //this returns the object values to next chaining method.
                                     rectKeys = Object.keys(d);
-                                    console.log(Object.values(d))
-                                    const rectValue = Object.values(d)
-                                                            .filter((value) => {
-                                                               // console.log(value, 'length is' ,value.length)                                
+                                    const rectValue = Object.values(d,i)
+                                                            .map((value) => {
+                                                                // console.log(value, 'length is' ,value.length)                                
                                                                 if (value.length === 2) {
-                                                                   return value
+                                                                    return value
                                                                 } else if (value.length === 0) {
-                                                                   value = 'empty'
-                                                                   return value
+                                                                    return value = 'empty'
                                                                 }
                                                             })
-                                    console.log(rectValue)
                                     return rectValue;
                                     })
                                 .enter()
                                 .append('a')
                                 .attr('xlink:href', function(d,i) {
-                                    console.log(d)
-                                    if(i === 0) {
-                                        drug_use = drug[drug_index]
-                                        drug_index++
-                                    }
-                                    if ((d.length === 2  || d.length === 0) && patient_use !== 'Drug') {
-                                        //console.log(patient_use[i])
-                                        return `/curve?patient=${patient_use[i]}&drug_id=${drug_use}` 
-                                    }
-                                })
-                                .filter(function(d) {
-                                    //console.log(d)
-                                    if (d.length > 2 ) { return 0;}
-                                    else if (d.length === 0) {return 'empty'}
-                                    else { return d; }
+                                    return querystring_value(d,i)
                                 })
                                 .append('rect')
-                                .attr("class", function(d, i) {
-                                    // i+1 because drug is included in there
-                                    return "hmap-rect heatmap-" + rectKeys[i+1]
+                                .attr("class", function(d,i) {
+                                    return "hmap-rect heatmap-" + rectKeys[i]
                                 })
                                 .attr('width', rect_width - 2)
                                 .attr('height', rect_height - 2)
@@ -253,52 +225,37 @@ class HeatMap extends React.Component {
     }
     let p_count = 0;
     drug_index = 0;
+
     //let highlight = 
     gskeleton.selectAll('rect.hmap-hlight')
-                        .data(function(d) {  
+                        .data(function(d,i) {  
                             //calling the function and passing the data d as parameter.
-                            calculate_evaluations(d);
+                            calculate_evaluations(d,i);
                             //this returns the object values to next chaining method.
                             rectKeys = Object.keys(d);
-                            const rectValue = Object.values(d)
-                                                            .filter((value) => {
-                                                               // console.log(value, 'length is' ,value.length)                                
-                                                                if (value.length === 2) {
-                                                                   return value
-                                                                } else if (value.length === 0) {
-                                                                   value = 'empty'
-                                                                   return value
-                                                                }
-                                                            })
-                                    return rectValue;
+                            const rectValue = Object.values(d,i)
+                                                    .map((value) => {
+                                                        // console.log(value, 'length is' ,value.length)                                
+                                                        if (value.length === 2) {
+                                                            return value
+                                                        } else if (value.length === 0) {
+                                                            return value = 'empty'
+                                                        }
+                                                    })
+                            return rectValue;
                             })
                         .enter()
                         .append('a')
                         .attr('xlink:href', function(d,i) {
-                            //console.log(d)
-                            if(i === 0) {
-                                drug_use = drug[drug_index]
-                                drug_index++
-                            }
-                            if ((d.length === 2  || d.length === 0) && patient_use !== 'Drug') {
-                                //console.log(patient_use[i])
-                                return `/curve?patient=${patient_use[i]}&drug_id=${drug_use}` 
-                            }
-                        })
-                        .filter(function(d) {
-                            //console.log(d)
-                            if (d.length > 2 ) { return 0;}
-                            else if (d.length === 0) {return 'empty'}
-                            else { return d; }
+                            return querystring_value(d,i)
                         })
                         .append('rect')
                         .attr("class", function(d, i) {
-                            // i+1 because drug is included in there
                             let drug_class = drug[p_count].replace(/\s/g,'').replace(/[+]/,'-')
                             if (i === (patient.length - 1)) {
                                 p_count++
                             }
-                            return "hmap-hlight-" + rectKeys[i+1] + " hmap-hlight-" + drug_class
+                            return "hmap-hlight-" + rectKeys[i] + " hmap-hlight-" + drug_class
                         })
                         .attr('width', rect_width - 2)
                         .attr('height', rect_height - 2)
@@ -309,93 +266,94 @@ class HeatMap extends React.Component {
                         .attr('y', rect_height)
                         .style("opacity", 0)
                         .on("mouseover", function(d,i) {
-                            // i+1 because drug is included in there
                             let drug_class = d3.select(this).attr("class").split(" ")[1]
-                            d3.selectAll(".hmap-hlight-" + rectKeys[i+1])
+                            d3.selectAll(".hmap-hlight-" + rectKeys[i])
                                 .style("opacity", 0.2)
-                            d3.selectAll(".oprint-hlight-" + rectKeys[i+1])
+                            d3.selectAll(".oprint-hlight-" + rectKeys[i])
                                 .style("opacity", 0.2)
-                            d3.selectAll(".hlight-space-" + rectKeys[i+1])
+                            d3.selectAll(".hlight-space-" + rectKeys[i])
                                 .style("opacity", 0.2)
                         
                         })
                         .on("mouseout", function(d,i) {
-                            // i+1 because drug is included in there
                             let drug_class = d3.select(this).attr("class").split(" ")[1]
-                            d3.selectAll(".hmap-hlight-" + rectKeys[i+1])
+                            d3.selectAll(".hmap-hlight-" + rectKeys[i])
                                 .style("opacity", 0)
-                            d3.selectAll(".oprint-hlight-" + rectKeys[i+1])
+                            d3.selectAll(".oprint-hlight-" + rectKeys[i])
                                 .style("opacity", 0)
-                            d3.selectAll(".hlight-space-" + rectKeys[i+1])
+                            d3.selectAll(".hlight-space-" + rectKeys[i])
                                 .style("opacity", 0)
-                            
                         })
 
+    //Creating lines.
     let lines = svg.append("g")
-                                .attr("id", "lines")
-                                .attr('transform', function(d,i) {
-                                    return `translate(2,${height-62})`
-                                })
+                    .attr("id", "lines")
+                    .attr('transform', function(d,i) {
+                        return `translate(2,${height-62})`
+                    })
+
     const temp = patient.slice(0)
     temp.push("")
-    lines.selectAll("line.dashed-line")
-            .data(temp)
-            .enter()
-                .append("line")
-                .attr("class", "dashed-line")
-                .attr("x1", function(d,i) {
-                    return i * (rect_width) - 3;  
-                })
-                .attr("x2", function(d,i) {
-                    return i * (rect_width) - 3;  
-                })
-                .attr("y1", 2)
-                .attr("y2", 200)
-                .attr("stroke", "black")
-                .attr("stroke-width", 1)
-                .style("stroke-dasharray", "3 2")
-                .style("opacity", .2)
 
-    lines.selectAll("rect.hlight-space")
-                .data(patient)
-                .enter()
-                .append('rect')
-                .attr("class", function(d) {
-                    return "hlight-space-" + d
-                })
-                .attr('width', rect_width - 2)
-                .attr('height', 200)
-                .attr('x', function(d,i) {
-                    return i * rect_width - 2;  
-                })
-                .attr("fill", "rgb(0,0,0)")
-                .attr('y', 0)
-                .style("opacity", 0)            
+                lines.selectAll("line.dashed-line")
+                        .data(temp)
+                        .enter()
+                            .append("line")
+                            .attr("class", "dashed-line")
+                            .attr("x1", function(d,i) {
+                                return i * (rect_width) - 3;  
+                            })
+                            .attr("x2", function(d,i) {
+                                return i * (rect_width) - 3;  
+                            })
+                            .attr("y1", 2)
+                            .attr("y2", 200)
+                            .attr("stroke", "black")
+                            .attr("stroke-width", 1)
+                            .style("stroke-dasharray", "3 2")
+                            .style("opacity", .2)
+
+                lines.selectAll("rect.hlight-space")
+                        .data(patient)
+                        .enter()
+                        .append('rect')
+                        .attr("class", function(d) {
+                            return "hlight-space-" + d
+                        })
+                        .attr('width', rect_width - 2)
+                        .attr('height', 200)
+                        .attr('x', function(d,i) {
+                            return i * rect_width - 2;  
+                        })
+                        .attr("fill", "rgb(0,0,0)")
+                        .attr('y', 0)
+                        .style("opacity", 0)    
+
                             /** X-AXIS AND Y-AXIS FOR THE SKELETON **/
                                                                         
     // calling the y-axis and removing the stroke.
     let drug_name = skeleton.append('g')
                     .attr('id', 'drug_name')
 
-    drug_name.attr('stroke-width', '0')
-              .style('font-size', '12px')
-              .attr('font-weight', '500')
-              .call(yAxis)
-              .selectAll("text")
-              .attr('fill', function(d) {
-                  if(d === 'untreated') {return '#3453b0'}
-                  else return 'black'
-              })
-              .on("mouseover", function() {
-              let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[+]/,'-')
-              d3.selectAll(".hmap-hlight-" + drug_class)
-                          .style("opacity", 0.2)    
-              })
-              .on("mouseout", function() {
-              let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[+]/,'-')
-              d3.selectAll(".hmap-hlight-" + drug_class)
-                          .style("opacity", 0)
-              });
+                    drug_name.attr('stroke-width', '0')
+                            .style('font-size', '12px')
+                            .attr('font-weight', '500')
+                            .call(yAxis)
+                            .selectAll("text")
+                            .attr('fill', function(d) {
+                                if(d === 'untreated') {return '#3453b0'}
+                                else return 'black'
+                            })
+                            .on("mouseover", function() {
+                            let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[+]/,'-')
+                            d3.selectAll(".hmap-hlight-" + drug_class)
+                                        .style("opacity", 0.2)    
+                            })
+                            .on("mouseout", function() {
+                            let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[+]/,'-')
+                            d3.selectAll(".hmap-hlight-" + drug_class)
+                                        .style("opacity", 0)
+                            });
 
     // calling the x-axis to set the axis and we have also transformed the text.
     let patient_id = skeleton.append('g')
@@ -555,7 +513,7 @@ class HeatMap extends React.Component {
         patient_eval.append('rect')
                     .attr('class', 'patient_eval_rect')
                     .attr('x', 0)
-                    .attr('y', -120)
+                    .attr('y', -130)
                     .attr('height', box_height)
                     .attr('width', patient.length * 20)
                     .attr('fill', 'white')
@@ -581,7 +539,7 @@ class HeatMap extends React.Component {
                             .tickFormat(d3.format('.0f'));
 
             svg.append('g')
-                .attr('transform', 'translate(0,-120.5)')
+                .attr('transform', 'translate(0,-130.5)')
                 .call(y_axis)
         }
 
@@ -592,7 +550,7 @@ class HeatMap extends React.Component {
                     .attr('height', patient_Scale(patient_evaluations[patient[i]]['CR']))
                     .attr('width', 16)
                     .attr('x', i * 20)
-                    .attr('y', -120 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']))
+                    .attr('y', -130 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']))
                     .attr('fill', target_color[0])
                     .style('stroke', 'black')
                     .style('stroke-width', stroke_width)
@@ -602,7 +560,7 @@ class HeatMap extends React.Component {
                     .attr('height', patient_Scale(patient_evaluations[patient[i]]['PR']))
                     .attr('width', 16)
                     .attr('x', i * 20)
-                    .attr('y', -120 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']) - patient_Scale(patient_evaluations[patient[i]]['PR']))
+                    .attr('y', -130 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']) - patient_Scale(patient_evaluations[patient[i]]['PR']))
                     .attr('fill', target_color[1])
                     .style('stroke', 'black')
                     .style('stroke-width', stroke_width)
@@ -612,7 +570,7 @@ class HeatMap extends React.Component {
                     .attr('height', patient_Scale(patient_evaluations[patient[i]]['SD']))
                     .attr('width', 16)
                     .attr('x', i * 20)
-                    .attr('y', -120 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']) - patient_Scale(patient_evaluations[patient[i]]['PR']) - patient_Scale(patient_evaluations[patient[i]]['SD']))
+                    .attr('y', -130 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']) - patient_Scale(patient_evaluations[patient[i]]['PR']) - patient_Scale(patient_evaluations[patient[i]]['SD']))
                     .attr('fill', target_color[2])
                     .style('stroke', 'black')
                     .style('stroke-width', stroke_width)
@@ -622,7 +580,7 @@ class HeatMap extends React.Component {
                     .attr('height', patient_Scale(patient_evaluations[patient[i]]['PD']))
                     .attr('width', 16)
                     .attr('x', i * 20)
-                    .attr('y', -120 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']) - patient_Scale(patient_evaluations[patient[i]]['PR']) - patient_Scale(patient_evaluations[patient[i]]['SD']) - patient_Scale(patient_evaluations[patient[i]]['PD']))
+                    .attr('y', -130 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']) - patient_Scale(patient_evaluations[patient[i]]['PR']) - patient_Scale(patient_evaluations[patient[i]]['SD']) - patient_Scale(patient_evaluations[patient[i]]['PD']))
                     .attr('fill', target_color[3])
                     .style('stroke', 'black')
                     .style('stroke-width', stroke_width)

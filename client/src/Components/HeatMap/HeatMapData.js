@@ -20,16 +20,21 @@ class HeatMapData extends React.Component {
 
     // this function takes the parsed result and set the states.
     parseData(result) {
-        const dataset = result;
+        let dataset = []
         let patient = []
+        let drug = []
 
-        Object.keys(dataset[0]).forEach(value => {
+        Object.keys(result[0]).forEach((value) => {
             if(value !== 'Drug') {
                 patient.push(value)
             }
-        });
-        let drug = dataset.map((data) => {
-            return data.Drug;
+        })
+
+        dataset = result.map((data) => {
+            drug.push(data.Drug)
+            //removing the Drug entry.
+            delete data.Drug
+            return data
         })
 
         this.setState({
@@ -37,8 +42,6 @@ class HeatMapData extends React.Component {
             patient_id : patient,
             data: dataset
         })
-
-        
     }
 
     componentWillMount() {
