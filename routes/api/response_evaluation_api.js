@@ -112,7 +112,7 @@ const getResponseEvaluationDataset = function(req,res) {
         .then((row) => {
             let drug = ''
             let data = []
-            let untreated = {}
+            let untreated = {Drug:'untreated'}
             let value = 0
             usersRows = JSON.parse(JSON.stringify(row));
             usersRows.forEach(element => {
@@ -120,7 +120,6 @@ const getResponseEvaluationDataset = function(req,res) {
                     data[value-1][element.patient_id] = element.response
                 } 
                 else if (element.drug === 'untreated') {
-                    untreated['Drug'] = element.drug
                     untreated[element.patient_id] = element.response
                 }
                 else {
@@ -131,7 +130,7 @@ const getResponseEvaluationDataset = function(req,res) {
                     value += 1
                 }
             })
-            if(Object.entries(untreated).length === 0 && untreated.constructor === Object) {}
+            if(Object.entries(untreated).length === 1 && untreated.constructor === Object) {}
             else {data.unshift(untreated)}
             res.send(data)
         })
