@@ -31,6 +31,9 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
+       console.log(patient)
+       console.log(drug)
+       console.log(data)
     this.node = node
     // height and width for the SVG based on the number of drugs and patient/sample ids.
     // height and width of the rectangles in the main skeleton.
@@ -167,44 +170,59 @@ class HeatMap extends React.Component {
                                   })
 
 
-                                  let rectKeys;
-                                  // this will append rect equivalent to number of patient ids.
-                                  let drawrectangle = gskeleton.selectAll('rect.hmap-rect')
-                                                                .data(function(d) {  
-                                                                  //calling the function and passing the data d as parameter.
-                                                                  calculate_evaluations(d);
-                                                                  //this returns the object values to next chaining method.
-                                                                  rectKeys = Object.keys(d);
-                                                                  return Object.values(d);
-                                                                 })
-                                                                .enter()
-                                                                .append('a')
-                                                                .attr('xlink:href', function(d,i) {
-                                                                    if(i === 0) {
-                                                                        drug_use = drug[drug_index]
-                                                                        drug_index++
-                                                                    } 
-                                                                    if (d.length === 2 && patient_use !== 'Drug') {
-                                                                        return `/curve?patient=${patient_use[i]}&drug_id=${drug_use}` 
-                                                                    }
-                                                                })
-                                                                .filter(function(d) {
-                                                                  if (d.length > 2 ) { return 0;}
-                                                                  else if (d.length === 0) {return 'empty'}
-                                                                  else { return d; }
-                                                                })
-                                                                .append('rect')
-                                                                .attr("class", function(d, i) {
-                                                                  // i+1 because drug is included in there
-                                                                  return "hmap-rect heatmap-" + rectKeys[i+1]
-                                                                })
-                                                                .attr('width', rect_width - 2)
-                                                                .attr('height', rect_height - 2)
-                                                                .attr('x', function(d,i) {
-                                                                  return i * rect_width ;  
-                                                                })
-                                                                .attr('y', rect_height)
-                              
+    let rectKeys;
+    // this will append rect equivalent to number of patient ids.
+    let drawrectangle = gskeleton.selectAll('rect.hmap-rect')
+                                .data(function(d) {  
+                                    //calling the function and passing the data d as parameter.
+                                    calculate_evaluations(d);
+                                    //this returns the object values to next chaining method.
+                                    rectKeys = Object.keys(d);
+                                    console.log(Object.values(d))
+                                    const rectValue = Object.values(d)
+                                                            .filter((value) => {
+                                                               // console.log(value, 'length is' ,value.length)                                
+                                                                if (value.length === 2) {
+                                                                   return value
+                                                                } else if (value.length === 0) {
+                                                                   value = 'empty'
+                                                                   return value
+                                                                }
+                                                            })
+                                    console.log(rectValue)
+                                    return rectValue;
+                                    })
+                                .enter()
+                                .append('a')
+                                .attr('xlink:href', function(d,i) {
+                                    console.log(d)
+                                    if(i === 0) {
+                                        drug_use = drug[drug_index]
+                                        drug_index++
+                                    }
+                                    if ((d.length === 2  || d.length === 0) && patient_use !== 'Drug') {
+                                        //console.log(patient_use[i])
+                                        return `/curve?patient=${patient_use[i]}&drug_id=${drug_use}` 
+                                    }
+                                })
+                                .filter(function(d) {
+                                    //console.log(d)
+                                    if (d.length > 2 ) { return 0;}
+                                    else if (d.length === 0) {return 'empty'}
+                                    else { return d; }
+                                })
+                                .append('rect')
+                                .attr("class", function(d, i) {
+                                    // i+1 because drug is included in there
+                                    return "hmap-rect heatmap-" + rectKeys[i+1]
+                                })
+                                .attr('width', rect_width - 2)
+                                .attr('height', rect_height - 2)
+                                .attr('x', function(d,i) {
+                                    return i * rect_width ;  
+                                })
+                                .attr('y', rect_height)
+
 
                                  
     // this will fill the rectangles with different color based on the data. 
@@ -236,26 +254,39 @@ class HeatMap extends React.Component {
     let p_count = 0;
     drug_index = 0;
     //let highlight = 
-               gskeleton.selectAll('rect.hmap-hlight')
-                        .data(function(d) { 
+    gskeleton.selectAll('rect.hmap-hlight')
+                        .data(function(d) {  
                             //calling the function and passing the data d as parameter.
                             calculate_evaluations(d);
                             //this returns the object values to next chaining method.
                             rectKeys = Object.keys(d);
-                            return Object.values(d);
-                        })
+                            const rectValue = Object.values(d)
+                                                            .filter((value) => {
+                                                               // console.log(value, 'length is' ,value.length)                                
+                                                                if (value.length === 2) {
+                                                                   return value
+                                                                } else if (value.length === 0) {
+                                                                   value = 'empty'
+                                                                   return value
+                                                                }
+                                                            })
+                                    return rectValue;
+                            })
                         .enter()
                         .append('a')
                         .attr('xlink:href', function(d,i) {
+                            //console.log(d)
                             if(i === 0) {
                                 drug_use = drug[drug_index]
                                 drug_index++
-                            } 
-                            if (d.length === 2 && patient_use !== 'Drug') {
+                            }
+                            if ((d.length === 2  || d.length === 0) && patient_use !== 'Drug') {
+                                //console.log(patient_use[i])
                                 return `/curve?patient=${patient_use[i]}&drug_id=${drug_use}` 
                             }
                         })
                         .filter(function(d) {
+                            //console.log(d)
                             if (d.length > 2 ) { return 0;}
                             else if (d.length === 0) {return 'empty'}
                             else { return d; }
