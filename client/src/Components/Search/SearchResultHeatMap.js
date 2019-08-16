@@ -12,6 +12,7 @@ class SearchResultHeatMap extends React.Component {
             drug_data : [],
             patient_id_drug : [],
             drug_id : [],
+            dataset_param : 0
         };
         //binding the functions declared.
         this.parseData = this.parseData.bind(this);
@@ -19,18 +20,23 @@ class SearchResultHeatMap extends React.Component {
 
     // this function takes the parsed result and set the states.
     parseData(result) {
-        const dataset = result;
-        let patient = [];
+        let dataset = []
+        let patient = []
+        let drug = []
 
-        Object.keys(dataset[0]).forEach(value => {
+        Object.keys(result[0]).forEach((value) => {
             if(value !== 'Drug') {
                 patient.push(value)
             }
-        });
-        
-        let drug = dataset.map((data) => {
-            return data.Drug;
         })
+
+        dataset = result.map((data) => {
+            drug.push(data.Drug)
+            //removing the Drug entry.
+            delete data.Drug
+            return data
+        })
+        
         this.setState({
             drug_id : drug,
             patient_id_drug : patient,
