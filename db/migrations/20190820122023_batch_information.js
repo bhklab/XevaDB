@@ -1,8 +1,10 @@
 
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('batch_information', (table) => {
-        table.increments();
-        table.string('batch_id').notNullable();
+        table.increments('batch_id')
+             .notNullable();
+        table.string('batch_name')
+             .notNullable();
         table.integer('model_id')
              .notNullable()
              .unsigned()
