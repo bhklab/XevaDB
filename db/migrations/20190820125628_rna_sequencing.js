@@ -10,7 +10,7 @@ exports.up = function(knex, Promise) {
              .index();
         table.string('sequencing_id')
              .notNullable();
-        table.string('expression').notNullable();
+        table.string('value').notNullable();
     });
 };
 
