@@ -5,6 +5,8 @@ exports.up = function(knex, Promise) {
              .primary();
         table.string('tissue_name')
              .notNullable();
+        table.string('tissue_code')
+             .notNullable();
     })
 };
 
