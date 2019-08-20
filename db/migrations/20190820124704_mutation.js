@@ -2,12 +2,14 @@
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('mutation', (table) => {
         table.increments();
-        table.string('gene_id').notNullable();
-        table.string('patient_id')
+        table.integer('gene_id')
              .notNullable()
-             .references('patient_id')
-             .inTable('patient_information')
+             .unsigned()
+             .references('gene_id')
+             .inTable('genes')
              .index();
+        table.string('sequencing_id')
+             .notNullable();
         table.string('mutation').notNullable();
     });
 };
