@@ -42,9 +42,7 @@ function outputData() {
                             })
 
                             tissues.forEach((tissue) => {
-                                console.log(tissue)
                                 tissue = tissue.split('/')
-                                console.log(tissue)
                                 csvStream.write({tissue_id: id++, tissue_name: tissue[1], tissue_code: tissue[0]})
                             })
                             console.log("Done with the conversion");
