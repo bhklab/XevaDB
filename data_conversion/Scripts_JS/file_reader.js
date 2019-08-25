@@ -10,7 +10,10 @@ let file_reader = function(files, total_files, file_folder, outputData, streams)
         // variable to store the data read from the file.
         let file_data = '';
         let toggle = false;
-          fs.createReadStream(__dirname + file_folder + file).setEncoding('utf8')
+        let dirname = __dirname.split('/')
+                      dirname.pop();
+                      dirname = dirname.join("/")
+          fs.createReadStream(dirname + file_folder + file).setEncoding('utf8')
             .on("data", (data) => {
               if(data.match(/\t/g)) {
                 data = data.replace(/\t/g,",")
@@ -21,10 +24,10 @@ let file_reader = function(files, total_files, file_folder, outputData, streams)
             .on("end", () => {
               //this will check for the toggle if true will re-write to the same file else it will push it to the stream.
               if(toggle) {
-                fs.createWriteStream(__dirname + file_folder + file).write(file_data);
-                streams.push(fs.createReadStream(__dirname + file_folder + file));
+                fs.createWriteStream(dirname + file_folder + file).write(file_data);
+                streams.push(fs.createReadStream(dirname + file_folder + file));
               } else {
-                streams.push(fs.createReadStream(__dirname + file_folder + file));
+                streams.push(fs.createReadStream(dirname + file_folder + file));
               }  
               // this is a checkpoint, if the number of files to be processed is equal to 1 then it will run the output data function else will reduce.
               if(total_files == 1) {

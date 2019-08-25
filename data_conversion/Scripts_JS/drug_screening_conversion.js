@@ -20,11 +20,11 @@ let streams = [];
 //creating a writable stream which writes to growthcurve_data csv file.
 //let csvStream = csv.createWriteStream({headers: ["model_id", "drug", "time", "volume", "body_weight", "volume_normal", "tissue", "patient_id"]});
 let csvStream = csv.createWriteStream({headers: ["model_id", "drug", "time", "volume", "volume_normal", "patient_id"]});
-let writableStream = fs.createWriteStream(`./Final_Csv_File/${file_final}_final.csv`);
+let writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
 
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
-let files = fs.readdirSync(`.${file_folder}`);
+let files = fs.readdirSync(`..${file_folder}`);
 let total_files = files.length;
 
 //creating a read stream which is used to 
