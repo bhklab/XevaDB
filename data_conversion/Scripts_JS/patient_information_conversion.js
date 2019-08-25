@@ -14,32 +14,33 @@ let results = [];
 let streams = [];
 
 // creates a write stream with headers we require in final csv file.
-var csvStream = csv.createWriteStream({headers: ["patient_id", "sex", "age", "biopsy"]});
-var writableStream = fs.createWriteStream(`./Final_Csv_File/patient_information_final.csv`);
+var csvStream = csv.createWriteStream({headers: ["patient_id", "patient"]});
+var writableStream = fs.createWriteStream(`../Final_Csv_File/patient_final.csv`);
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
-let files = fs.readdirSync(`.${file_folder}`);
+let files = fs.readdirSync(`..${file_folder}`);
 let total_files = files.length;
+let id = 1;
 
 // reads the input file.
 function outputData() {
   MultiStream(streams).pipe(csv())
-  .on('data', function(data) {
-    if(data[0] === "" && (data[1].includes("X-"))) {
-      data.shift()
-      results.push(data)
-    } else if(data[0].includes("X-") && (data[1].includes("X-"))) {results.push(data)}
-    
-  })
-  .on('end', () => {
-    csvStream.pipe(writableStream);
-    results.map((data) => {
-      data.forEach(data => {
-        csvStream.write({patient_id: data, sex: "M", age: "1", biopsy:"cancer"});
-      })   
-    })
-    console.log("Done with the conversion");
-  });
+                      .on('data', function(data) {
+                        if(data[0] === "" && (data[1].includes("X-"))) {
+                          data.shift()
+                          results.push(data)
+                        } else if(data[0].includes("X-") && (data[1].includes("X-"))) {results.push(data)}
+                        
+                      })
+                      .on('end', () => {
+                        csvStream.pipe(writableStream);
+                        results.map((data) => {
+                          data.forEach(data => {
+                            csvStream.write({patient_id: id++, patient: data});
+                          })   
+                        })
+                        console.log("Done with the conversion");
+                      });
 }
 
 //calling function to loop through all the files in folder and gives the output
