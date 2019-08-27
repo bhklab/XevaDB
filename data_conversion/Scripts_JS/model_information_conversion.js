@@ -17,20 +17,15 @@ const file_final = (file_folder.split("/"))[2]
 //this array is required to store the lines read from the input csv file.
 const results = [];
 let streams = [];
+let id = 1;
 
 // creates a write stream with headers we require in final csv file and creating a writable stream with the final file.
-let csvStream = csv.createWriteStream({headers: ["model_id", "tissue_id", "tissue", "patient_id", "drug", "dataset"]});
-let writableStream = fs.createWriteStream(`./Final_Csv_File/${file_final}_final.csv`);
+let csvStream = csv.createWriteStream({headers: ["id", "model_id", "tissue_id", "patient_id", "drug_id", "tested", "dataset_id"]});
+let writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
 
-        // This is async way to read through the files.
-        /* fs.readdir(file_folder, (err, files) => {
-          files.forEach(file => {
-            streams.push(fs.createReadStream(__dirname + "/Initial_Csv_File/model_information/" + file ));
-          });
-        }); */ 
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
-let files = fs.readdirSync(`.${file_folder}`);
+let files = fs.readdirSync(`..${file_folder}`);
 let total_files = files.length;
 
 // reads the input file and streams the data with particular format to the output file.
@@ -58,7 +53,7 @@ function outputData() {
                                 }  else if (data[3].match(/Pancreatic/g)) {
                                   dataset = 6;
                                 } 
-                                csvStream.write({model_id: data[1], tissue_id: data[2], tissue: data[3], patient_id: data[4], drug: data[5], dataset: dataset});
+                                csvStream.write({id: id++, model_id: data[1], tissue_id: data[2], patient_id: data[4], drug_id: data[5], dataset_id: dataset});
                             }
                       })
                     console.log("Done with the conversion");
