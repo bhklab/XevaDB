@@ -26,7 +26,10 @@ let writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
 let files = fs.readdirSync(`..${file_folder}`);
+console.log(files)
 let total_files = files.length;
+
+//let imagine_object = {"X.1004.BG98": "1" , "X.1004.biib":"2"}
 
 // reads the input file and streams the data with particular format to the output file.
 function outputData() {
@@ -39,6 +42,9 @@ function outputData() {
                         results.map((data) => {
                             if((data[0] ===  "") || (data[0] === "model.id")) {} 
                             else {
+                                // let model = imagine_object[data[1]]
+                                // if(model !== undefined) { console.log(model)}
+                               
                                 let dataset = 0;
                                 if(data[3].match(/Breast/g)) {
                                   dataset = 1;

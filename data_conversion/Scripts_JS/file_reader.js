@@ -1,9 +1,6 @@
 // This function is used by each of the CSV files and will replace any tabs with commas and will produce streams of different CSV files.
 
-const csv = require('fast-csv')
 const fs = require('fs')
-const path = require('path')
-let MultiStream = require('multistream')
 
 let file_reader = function(files, total_files, file_folder, outputData, streams) {
     files.forEach(file => {
@@ -15,6 +12,7 @@ let file_reader = function(files, total_files, file_folder, outputData, streams)
                       dirname = dirname.join("/")
           fs.createReadStream(dirname + file_folder + file).setEncoding('utf8')
             .on("data", (data) => {
+              console.log(data)
               if(data.match(/\t/g)) {
                 data = data.replace(/\t/g,",")
                 file_data += data;
