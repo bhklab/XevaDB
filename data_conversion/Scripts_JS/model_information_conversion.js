@@ -8,6 +8,8 @@ const csv = require('fast-csv')
 let MultiStream = require('multistream')
 
 // this will take the file_reader function from file_reader file used to loop through the files.
+const file_iterator = require('./file_iterator')
+
 const file_reader = require('./file_reader')
 
 //folder from where the files will be read.
@@ -19,6 +21,7 @@ const results = [];
 let streams = [];
 let id = 1;
 
+
 // creates a write stream with headers we require in final csv file and creating a writable stream with the final file.
 let csvStream = csv.createWriteStream({headers: ["id", "model_id", "tissue_id", "patient_id", "drug_id", "tested", "dataset_id"]});
 let writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
@@ -26,10 +29,16 @@ let writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
 let files = fs.readdirSync(`..${file_folder}`);
-console.log(files)
 let total_files = files.length;
 
 //let imagine_object = {"X.1004.BG98": "1" , "X.1004.biib":"2"}
+
+
+const file_folder_map = "/Final_Csv_File/"
+//let files = ['model_final.csv', 'tissues_final.csv', 'patient_final.csv', 'drug_final.csv', 'dataset_final.csv']
+let files_map = ['dataset_final.csv', 'drug_final.csv']
+let streams_map = [];
+let mapped_data = {};
 
 // reads the input file and streams the data with particular format to the output file.
 function outputData() {
@@ -67,4 +76,26 @@ function outputData() {
 }
 
 //calling function to loop through all the files in folder and gives the output
-file_reader(files, total_files, file_folder, outputData, streams)
+//file_iterator(files, total_files, file_folder, outputData, streams, mapped_data)
+
+let callIterator = () => {
+  return new Promise((resolve, reject) => {
+    file_iterator(files_map, file_folder_map, streams_map, mapped_data, (response) => {
+        if(Object.entries(response).length === 0 && response.constructor === Object) {
+          reject('Error')
+        } else {
+          resolve(mapped_data)
+        }
+      }
+    )
+  })
+}
+  
+
+callIterator()
+      .then(data => {
+          file_reader(files, total_files, file_folder, outputData, streams)
+      }).catch(error => {
+          console.log(error);
+        }
+      )
