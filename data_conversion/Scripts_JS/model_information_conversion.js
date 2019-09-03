@@ -1,5 +1,5 @@
-// This code will read through each of the files in ./Initial_Csv_File/model_information folder and produce the required result in the corresponding
-// file modelinfo_final in Final_Csv_File folder.
+// This code will read through each of the files in ./Initial_Csv_File/model_information folder 
+// and produce the required result in the corresponding file modelinfo_final in Final_Csv_File folder.
 
 
 // requiring various packages.
@@ -8,8 +8,8 @@ const csv = require('fast-csv')
 let MultiStream = require('multistream')
 
 // this will take the file_reader function from file_reader file used to loop through the files.
+// file iterator.
 const file_iterator = require('./file_iterator')
-
 const file_reader = require('./file_reader')
 
 //folder from where the files will be read.
@@ -19,7 +19,19 @@ const file_final = (file_folder.split("/"))[2]
 //this array is required to store the lines read from the input csv file.
 const results = [];
 let streams = [];
-let id = 1;
+
+// synch. way of reading through the files and push createReadStream for each file with it's path.
+let files = fs.readdirSync(`..${file_folder}`);
+let total_files = files.length;
+
+
+// These variables are for file_iterator, the mapped variables.
+const file_folder_map = "/Final_Csv_File/"
+let files_map = ['model_final.csv', 'tissues_final.csv', 'patient_final.csv', 'drug_final.csv', 'dataset_final.csv']
+//let files_map = ['dataset_final.csv', 'drug_final.csv']
+let streams_map = [];
+let mapped_data = {};
+
 
 
 // creates a write stream with headers we require in final csv file and creating a writable stream with the final file.
@@ -27,20 +39,9 @@ let csvStream = csv.createWriteStream({headers: ["id", "model_id", "tissue_id", 
 let writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
 
 
-// synch. way of reading through the files and push createReadStream for each file with it's path.
-let files = fs.readdirSync(`..${file_folder}`);
-let total_files = files.length;
-
-//let imagine_object = {"X.1004.BG98": "1" , "X.1004.biib":"2"}
-
-
-const file_folder_map = "/Final_Csv_File/"
-//let files = ['model_final.csv', 'tissues_final.csv', 'patient_final.csv', 'drug_final.csv', 'dataset_final.csv']
-let files_map = ['dataset_final.csv', 'drug_final.csv']
-let streams_map = [];
-let mapped_data = {};
 
 // reads the input file and streams the data with particular format to the output file.
+let id = 1;
 function outputData() {
   MultiStream(streams).pipe(csv())
                       .on('data', function(data) {
@@ -51,9 +52,6 @@ function outputData() {
                         results.map((data) => {
                             if((data[0] ===  "") || (data[0] === "model.id")) {} 
                             else {
-                                // let model = imagine_object[data[1]]
-                                // if(model !== undefined) { console.log(model)}
-                               
                                 let dataset = 0;
                                 if(data[3].match(/Breast/g)) {
                                   dataset = 1;
@@ -68,16 +66,15 @@ function outputData() {
                                 }  else if (data[3].match(/Pancreatic/g)) {
                                   dataset = 6;
                                 } 
-                                csvStream.write({id: id++, model_id: data[1], tissue_id: data[2], patient_id: data[4], drug_id: data[5], dataset_id: dataset});
+                                csvStream.write({id: id++, model_id: mapped_data[data[1]], tissue_id: mapped_data[data[3]], patient_id: mapped_data[data[4]], drug_id: mapped_data[data[5]], dataset_id: dataset});
                             }
                       })
                     console.log("Done with the conversion");
                     }); 
 }
 
-//calling function to loop through all the files in folder and gives the output
-//file_iterator(files, total_files, file_folder, outputData, streams, mapped_data)
 
+// function to create a new promise and calling the file iterator function.
 let callIterator = () => {
   return new Promise((resolve, reject) => {
     file_iterator(files_map, file_folder_map, streams_map, mapped_data, (response) => {
@@ -90,12 +87,11 @@ let callIterator = () => {
     )
   })
 }
-  
 
-callIterator()
-      .then(data => {
-          file_reader(files, total_files, file_folder, outputData, streams)
-      }).catch(error => {
-          console.log(error);
-        }
-      )
+// calling the file reader function when the file iterator has been resolved or rejected.
+callIterator().then(() => {
+                      file_reader(files, total_files, file_folder, outputData, streams)
+                    })
+              .catch(error => {
+                  console.log(error);
+              })

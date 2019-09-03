@@ -1,23 +1,13 @@
-// This function iterates through each of the csv files 
+// This function iterates through each of the final csv files to
+// produce an object to be used by different scripts.
 
 
 const fs = require('fs')
 let MultiStream = require('multistream')
 const csv = require('fast-csv')
 
-// this will take the file_reader function from file_reader file used to loop through the files.
-//const file_reader = require('./file_reader')
 
-//const file_folder = "/Final_Csv_File/"
-//let files = ['model_final.csv', 'tissues_final.csv', 'patient_final.csv', 'drug_final.csv', 'dataset_final.csv']
-//let files = ['dataset_final.csv', 'drug_final.csv']
-
-//let streams = [];
-//let results = [];
-
-
-
-let file_iterator = function (files, file_folder, streams, mapped_data, response) {
+let file_iterator = (files, file_folder, streams, mapped_data, response) => {
     let total_files = files.length
     let results = []
     files.forEach(file => {
@@ -46,7 +36,6 @@ let file_iterator = function (files, file_folder, streams, mapped_data, response
       });
 }
   
-//file_iterator(files, file_folder, streams)
 
 
 module.exports = file_iterator;

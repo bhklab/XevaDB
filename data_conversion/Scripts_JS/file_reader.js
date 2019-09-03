@@ -12,7 +12,6 @@ let file_reader = function(files, total_files, file_folder, outputData, streams)
                       dirname = dirname.join("/")
           fs.createReadStream(dirname + file_folder + file).setEncoding('utf8')
             .on("data", (data) => {
-              console.log(data)
               if(data.match(/\t/g)) {
                 data = data.replace(/\t/g,",")
                 file_data += data;
