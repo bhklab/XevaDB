@@ -2,6 +2,12 @@
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('model_response', (table) => {
         table.increments();
+        table.integer('drug_id')
+             .notNullable()
+             .unsigned()
+             .references('drug_id')
+             .inTable('drugs')
+             .index();
         table.integer('model_id')
              .notNullable()
              .unsigned()
