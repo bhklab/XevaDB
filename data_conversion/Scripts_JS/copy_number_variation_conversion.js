@@ -4,6 +4,7 @@ const fs = require('fs')
 let MultiStream = require('multistream')
 
 // this will take the file_reader function from file_reader file used to loop through the files.
+const file_iterator = require('./file_iterator')
 const file_reader = require('./file_reader')
 
 //folder from where the files will be read.
@@ -14,15 +15,24 @@ const file_final = (file_folder.split("/"))[2]
 const results = [];
 let streams = [];
 
-// creates a write stream with headers we require in final csv file.
-var csvStream = csv.createWriteStream({headers: ["gene_id", "patient_id", "copy_number"]});
-var writableStream = fs.createWriteStream(`./Final_Csv_File/${file_final}_final.csv`);
-
 // synch. way of reading through the files and push createReadStream for each file with it's path.
-let files = fs.readdirSync(`.${file_folder}`);
+let files = fs.readdirSync(`..${file_folder}`);
 let total_files = files.length;
 
+// These variables are for file_iterator, the mapped variables.
+const file_folder_map = "/Final_Csv_File/"
+let files_map = ['genes_final.csv', 'sequencing_final.csv']
+let streams_map = [];
+let mapped_data = {};
+
+
+// creates a write stream with headers we require in final csv file.
+var csvStream = csv.createWriteStream({headers: ["id", "gene_id", "sequencing_uid", "value"]});
+var writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
+
+
 // reads the input file.
+let id = 1;
 function outputData() {
             MultiStream(streams).pipe(csv())
                         .on('data', function(data) {
@@ -47,7 +57,7 @@ function outputData() {
                                         if(CopyNumber==geneId) {}
                                         else {
                                             if(patientId[value]!= " ") {
-                                                csvStream.write({gene_id: geneId,patient_id: patientId[value], copy_number: CopyNumber});
+                                                csvStream.write({id: id++, gene_id: mapped_data[geneId], sequencing_uid: mapped_data[patientId[value]], value: CopyNumber});
                                                 value++;
                                             } else {}
                                         }
@@ -60,5 +70,24 @@ function outputData() {
 
 }
 
-//calling function to loop through all the files in folder and gives the output
-file_reader(files, total_files, file_folder, outputData, streams)
+// function to create a new promise and calling the file iterator function.
+let callIterator = () => {
+    return new Promise((resolve, reject) => {
+      file_iterator(files_map, file_folder_map, streams_map, mapped_data, (response) => {
+          if(Object.entries(response).length === 0 && response.constructor === Object) {
+            reject('Error')
+          } else {
+            resolve(mapped_data)
+          }
+        }
+      )
+    })
+  }
+  
+  // calling the file reader function when the file iterator has been resolved or rejected.
+  callIterator().then(() => {
+                        file_reader(files, total_files, file_folder, outputData, streams)
+                      })
+                .catch(error => {
+                    console.log(error);
+                })
