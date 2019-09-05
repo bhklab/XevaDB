@@ -27,7 +27,7 @@ let total_files = files.length;
 
 // These variables are for file_iterator, the mapped variables.
 const file_folder_map = "/Final_Csv_File/"
-let files_map = ['model_final.csv', 'tissues_final.csv', 'patient_final.csv', 'drug_final.csv', 'dataset_final.csv']
+let files_map = ['models_final.csv', 'tissues_final.csv', 'patients_final.csv', 'drugs_final.csv', 'datasets_final.csv']
 //let files_map = ['dataset_final.csv', 'drug_final.csv']
 let streams_map = [];
 let mapped_data = {};

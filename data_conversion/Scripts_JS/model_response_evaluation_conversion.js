@@ -22,13 +22,13 @@ let total_files = files.length;
 
 // These variables are for file_iterator, the mapped variables.
 const file_folder_map = "/Final_Csv_File/"
-let files_map = ['patient_final.csv', 'drug_final.csv']
+let files_map = ['patients_final.csv', 'drugs_final.csv']
 let streams_map = [];
 let mapped_data = {};
 
 // creates a write stream with headers we require in final csv file.
 var csvStream = csv.createWriteStream({headers: ["id", "drug_id", "model_id", "response_type", "value"]});
-var writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
+var writableStream = fs.createWriteStream(`../Final_Csv_File/model_${file_final}_final.csv`);
 
 
 
