@@ -19,7 +19,7 @@ let id = 1;
 
 //creating a writable stream which writes to growthcurve_data csv file.
 var csvStream = csv.createWriteStream({headers: ["sequencing_uid", "sequencing_id"]});
-var writableStream = fs.createWriteStream(`../Final_Csv_File/sequencing_final.csv`);
+var writableStream = fs.createWriteStream(`../Final_Csv_File/sequencings_final.csv`);
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
 let files = fs.readdirSync(`..${file_folder}`);
