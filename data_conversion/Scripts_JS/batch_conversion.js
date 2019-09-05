@@ -19,7 +19,7 @@ let id = 1;
 
 //creating a writable stream which writes to growthcurve_data csv file.
 var csvStream = csv.createWriteStream({headers: ["batch_id", "batch"]});
-var writableStream = fs.createWriteStream(`../Final_Csv_File/batch_final.csv`);
+var writableStream = fs.createWriteStream(`../Final_Csv_File/batches_final.csv`);
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
 let files = fs.readdirSync(`..${file_folder}`);

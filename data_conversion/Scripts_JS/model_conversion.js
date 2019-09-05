@@ -21,7 +21,7 @@ let id = 1;
 
 // creates a write stream with headers we require in final csv file and creating a writable stream with the final file.
 let csvStream = csv.createWriteStream({headers: ["model_id", "model"]});
-let writableStream = fs.createWriteStream(`../Final_Csv_File/model_final.csv`);
+let writableStream = fs.createWriteStream(`../Final_Csv_File/models_final.csv`);
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
 let files = fs.readdirSync(`..${file_folder}`);

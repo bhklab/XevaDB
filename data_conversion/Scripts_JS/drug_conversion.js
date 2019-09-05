@@ -20,7 +20,7 @@ let id = 1;
 
 //creating a writable stream which writes to growthcurve_data csv file.
 let csvStream = csv.createWriteStream({headers: ["drug_id", "drug_name", "standard_name", "targets", "treatment_type", "pubchemId", "class", "class_name", "source"]});
-let writableStream = fs.createWriteStream(`../Final_Csv_File/drug_final.csv`);
+let writableStream = fs.createWriteStream(`../Final_Csv_File/drugs_final.csv`);
 
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
