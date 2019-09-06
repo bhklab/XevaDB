@@ -10,7 +10,7 @@ const getTissues = function(request, response) {
             data: tissue
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from dataset table, getDatasets',
+            status: 'could not find data from tissue table, getTissues',
             data: error
         }))
 }
