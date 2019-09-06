@@ -9,7 +9,7 @@ const getDatasets = function(request, response) {
             data: dataset
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from dataset table, getDatasetTableData',
+            status: 'could not find data from dataset table, getDatasets',
             data: error
         }))
 }
