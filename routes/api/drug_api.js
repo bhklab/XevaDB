@@ -1,5 +1,6 @@
 const knex = require('../../db/knex1');
 
+
 // get all the data from drug table.
 const getDrugs = function(req,res) {
     knex.select()
