@@ -16,6 +16,30 @@ const getDrugs = function(request,response) {
 
 
 
+// this will get the patients/model ids corresponding to a class of drug.
+const getDrugClass = function(request, response) {
+    knex('model_information')
+        .count('model_information.patient_id as model_ids')
+        .leftJoin(
+            'drugs',
+            'model_information.drug_id',
+            'drugs.drug_id'
+        )
+        .select('class_name')
+        .groupBy('class_name')
+        .then((class_name) => response.status(200).json({
+            status: 'success',
+            data: class_name
+          }))
+        .catch((error) => response.status(500).json({
+            status: 'could not find data from drug table, getDrugClass',
+            data: error
+        }))
+}
+
+
+
 module.exports = {
-    getDrugs
+    getDrugs,
+    getDrugClass
 }
