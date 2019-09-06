@@ -1,7 +1,7 @@
 const knex = require('../../db/knex1');
 
 
-// get all the data from the dataset table.
+// get all the data from the tissues table.
 const getTissues = function(request, response) {
     knex.select()
         .from('tissues')
