@@ -21,7 +21,7 @@ class DrugTable extends React.Component {
     }
 
     componentDidMount() {
-      axios.get(`http://localhost:5000/api/v1/drugtable`)
+      axios.get(`http://localhost:5000/api/v1/drugs`)
             .then(response => {
                 this.setState ({
                   data: response.data
@@ -37,7 +37,7 @@ class DrugTable extends React.Component {
           Header: 'Drug',
           accessor: 'drug_id',
           minWidth: 180,
-          Cell: props => props.value.toUpperCase(),
+          //Cell: props => props.value.toUpperCase(),
           sortable: true
         }, 
         //{
