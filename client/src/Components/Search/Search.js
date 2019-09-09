@@ -56,7 +56,7 @@ class Search extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:5000/api/v1/dataset`)
+        axios.get(`http://localhost:5000/api/v1/datasets`)
             .then((response) => {
                 const datasets = response.data.data.map(item => ({
                         value: item.dataset_id,
@@ -91,8 +91,9 @@ class Search extends React.Component {
         })
         const label = selectedOption.value
         let initial = 1;
-        axios.post(`http://localhost:5000/api/v1/drug/dataset`, {label}, this.axiosConfig)
+        axios.post(`http://localhost:5000/api/v1/drugpatient/dataset`, {label}, this.axiosConfig)
              .then((response) => {
+                console.log(response)
                 const data = response.data.data[0].map(item => ({
                     value: initial++,
                     label: item.drug
