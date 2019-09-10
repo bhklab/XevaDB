@@ -16,8 +16,8 @@ const getDrugs = function(request,response) {
 
 
 
-// this will get the patients/model ids corresponding to a class of drug.
-const getDrugClass = function(request, response) {
+// this will get the patients/model ids grouped by class.
+const getDrugGroupedByClass = function(request, response) {
     knex('model_information')
         .count('model_information.patient_id as model_ids')
         .leftJoin(
@@ -41,5 +41,5 @@ const getDrugClass = function(request, response) {
 
 module.exports = {
     getDrugs,
-    getDrugClass
+    getDrugGroupedByClass
 }
