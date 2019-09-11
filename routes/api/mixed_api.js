@@ -1,6 +1,7 @@
 const knex = require('../../db/knex1');
 
 
+// this is the function for grabing the total for counter.
 const getCounter = function(request, response) {
     let tissues = knex('tissues')
                     .countDistinct('tissue_name as tissues')
