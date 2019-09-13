@@ -20,17 +20,16 @@ class HeatMapData extends React.Component {
 
     // this function takes the parsed result and set the states.
     parseData(result) {
+        console.log(result)
         let dataset = []
         let patient = []
         let drug = []
 
-        Object.keys(result[0]).forEach((value) => {
-            if(value !== 'Drug') {
-                patient.push(value)
-            }
-        })
+        //patient array.
+        patient = result.pop()
 
         dataset = result.map((data) => {
+            console.log(patient)
             drug.push(data.Drug)
             //removing the Drug entry.
             delete data.Drug
@@ -52,7 +51,7 @@ class HeatMapData extends React.Component {
 
     componentDidMount() {
         if(this.state.dataset_param > 0) {
-            axios.get(`http://localhost:5000/api/v1/respeval/${this.state.dataset_param}`)
+            axios.get(`http://localhost:5000/api/v1/response/${this.state.dataset_param}`)
              .then(response => {
                  this.parseData(response.data);
              })
