@@ -22,7 +22,7 @@ id = 0
 with open(input_file, 'r') as read_file:
     with open(output_file, 'w') as out_file:
         csv_writer = csv.writer(out_file, delimiter = ",")
-        csv_writer.writerow(['id', 'drug_id', 'model_id', 'response_type', 'id'])
+        csv_writer.writerow(['id', 'drug_id', 'model_id', 'response_type', 'value'])
         for line in read_file:
             if(re.search(r'\bmodel_id\b', line)):
                     print('not useful')
