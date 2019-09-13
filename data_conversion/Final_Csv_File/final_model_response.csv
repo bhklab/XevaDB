@@ -1,4 +1,4 @@
-id,drug_id,model_id,response_type,id
+id,drug_id,model_id,response_type,value
 1,18,1,mRECIST,NA
 2,18,1,best.average.response,NA
 3,18,1,slope,89.2668
