@@ -38,8 +38,8 @@ function outputData() {
                           models = []
                           results.forEach((data) => {
                               if(data[0] !== "model.id"){
-                                  if(!(models.includes(data[0]))) {
-                                      models.push(data[0])
+                                  if(!(models.includes(data[1]))) {
+                                      models.push(data[1])
                                   }
                               }
                           })

@@ -53,20 +53,20 @@ function outputData() {
                             if((data[0] ===  "") || (data[0] === "model.id")) {} 
                             else {
                                 let dataset = 0;
-                                if(data[3].match(/Breast/g)) {
+                                if(data[3].match(/Breast/g) || data[2].match(/BRCA/g)) {
                                   dataset = 1;
-                                } else if (data[3].match(/Colorectal/g)) {
+                                } else if (data[3].match(/Colorectal/g) || data[2].match(/CRC/g)) {
                                   dataset = 2;
-                                }  else if (data[3].match(/Cutaneous/g)) {
+                                }  else if (data[3].match(/Cutaneous/g) || data[2].match(/CM/g)) {
                                   dataset = 3;
-                                }  else if (data[3].match(/Gastric/g)) {
+                                }  else if (data[3].match(/Gastric/g) || data[2].match(/GC/g)) {
                                   dataset = 4;
-                                }  else if (data[3].match(/Lung/g)) {
+                                }  else if (data[3].match(/Lung/g) || data[2].match(/NSCLC/g)) {
                                   dataset = 5;
-                                }  else if (data[3].match(/Pancreatic/g)) {
+                                }  else if (data[3].match(/Pancreatic/g) || data[2].match(/PDAC/g)) {
                                   dataset = 6;
                                 } 
-                                csvStream.write({id: id++, model_id: mapped_data[data[1]], tissue_id: mapped_data[data[3]], patient_id: mapped_data[data[4]], drug_id: mapped_data[data[5]], dataset_id: dataset});
+                                csvStream.write({id: id++, model_id: mapped_data[data[1]], tissue_id: mapped_data[data[2]], patient_id: mapped_data[data[4]], drug_id: mapped_data[data[5]], tested: data[6], dataset_id: dataset});
                             }
                       })
                     console.log("Done with the conversion");
