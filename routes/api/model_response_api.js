@@ -45,6 +45,7 @@ const getModelResponseBasedOnDataset = function(req,res) {
         .whereIn('model_response.model_id', distinctPatient)
         .andWhere('model_response.response_type', 'mRECIST')
         .orderBy('drug_name')
+        .orderBy('patient')
 
         Promise.all([promise1, promise2])
                 .then((row) => {
