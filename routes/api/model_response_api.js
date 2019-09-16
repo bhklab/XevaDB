@@ -25,30 +25,36 @@ const getModelResponseBasedOnDataset = function(req,res) {
                             dataset_id: param_dataset
                         })
 
-    let promise2 = knex.select('patients.patient', 'drugs.drug_name', 'value')
-        .from('model_response')
-        .leftJoin(
-            'drugs',
-            'model_response.drug_id',
-            'drugs.drug_id'
-        )
-        .leftJoin(
-            'model_information',
-            'model_response.model_id',
-            'model_information.model_id'
-        )
-        .leftJoin(
-            'patients',
-            'model_information.patient_id',
-            'patients.patient_id'
-        )
-        .whereIn('model_response.model_id', distinctPatient)
-        .andWhere('model_response.response_type', 'mRECIST')
-        .orderBy('drug_name')
-        .orderBy('patient')
+    let promise2 = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id')
+                        .from('model_response')
+                        .rightJoin(
+                            'model_information',
+                            'model_response.model_id',
+                            'model_information.model_id'
+                        )
+                        .leftJoin(
+                            'patients',
+                            'model_information.patient_id',
+                            'patients.patient_id'
+                        )
+                        .leftJoin(
+                            'drugs',
+                            'model_information.drug_id',
+                            'drugs.drug_id'
+                        )
+                        .where('model_information.dataset_id', param_dataset)
+                        // .whereIn('model_response.model_id', distinctPatient)
+                        // .andWhere('model_response.response_type', 'mRECIST')
+                        .andWhere(function() {
+                            this.where('model_response.response_type', 'mRECIST')
+                                .orWhereNull('model_response.response_type')
+                        })
+                        .orderBy('drug_name')
+                        .orderBy('patient')
 
         Promise.all([promise1, promise2])
                 .then((row) => {
+                    console.log(row)
                     let drug = ''
                     let data = []
                     let untreated = {Drug:'untreated'}
