@@ -23,7 +23,7 @@ const postDrugandPatientBasedOnDataset = function(req,res) {
                     .as('model_information')
     }
 
-    let drugs = knex.select('drugs.drug_name as drug')
+    let drugs = knex.select('drugs.drug_name as drug', 'drugs.drug_id as drug_id')
                     .from(distinctDrug)
                     .leftJoin(
                         'drugs',
@@ -31,7 +31,7 @@ const postDrugandPatientBasedOnDataset = function(req,res) {
                         'drugs.drug_id'
                     )
 
-    let patients = knex.select('patients.patient as patient')
+    let patients = knex.select('patients.patient as patient', 'patients.patient_id as patient_id')
                         .from(distinctPatient)
                         .leftJoin(
                             'patients',
