@@ -49,38 +49,8 @@ router.post('/v1/drugpatient/dataset', modelInformation.postDrugandPatientBasedO
 
 // APIs for model response table.
 router.get('/v1/response/:dataset', modelResponse.getModelResponseBasedOnDataset);
+router.get('/v1/response', modelResponse.getModelResponseBasedPerDatasetBasedOnDrugs)
 
-
-
-
-
-
-// // APIs related to the drug screening table.
-// router.get('/v1/treatment', drugScreening.getDrugScreening);
-// router.get('/v1/untreated', drugScreening.getUntreated);
-// router.get('/v1/drugdatanotavailable', drugScreening.getNotDrugAvailable);
-// router.get('/v1/getonlydrug', drugScreening.getOnlyDrugData);
-// router.get('/v1/getinboth', drugScreening.getInBoth)
-
-
-// // APIs related to the response evaluation table.
-// router.get('/v1/respeval', responseEvaluation.getResponseEvaluation);
-// //router.get('/v1/respevaldrug/:id', responseEvaluation.getResponseEvaluationDrug);
-// router.get('/v1/respevaldrug', responseEvaluation.getResponseEvaluationDrug);
-// router.get('/v1/respeval/:dataset', responseEvaluation.getResponseEvaluationDataset);
-
-
-// // APIs related to the mutation table.
-// router.get('/v1/mutation', mutation.getMutation);
-// router.get('/v1/patientnottested', mutation.getNotTestedPatient);
-// router.get('/v1/getonlysequencing', mutation.getOnlySequenceData);
-// router.get('/v1/mutationgene', mutation.getMutationGeneList);
-// router.get('/v1/mutation/:dataset', mutation.isValidId, mutation.getMutationDataset);
-
-
-// // APIs related to models.
-// router.get('/v1/alldrugs', modelInformation.getTotalDrugs);
-// router.get('/v1/alltissues', modelInformation.getTotalTissues);
 
 
 
