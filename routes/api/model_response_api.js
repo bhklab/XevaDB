@@ -120,30 +120,30 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function(request, response) 
                                     })
 
         let response_data = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id')
-                        .from('model_response')
-                        .rightJoin(
-                            'model_information',
-                            'model_response.model_id',
-                            'model_information.model_id'
-                        )
-                        .leftJoin(
-                            'patients',
-                            'model_information.patient_id',
-                            'patients.patient_id'
-                        )
-                        .leftJoin(
-                            'drugs',
-                            'model_information.drug_id',
-                            'drugs.drug_id'
-                        )
-                        .where('model_information.dataset_id', param_dataset)
-                        .andWhere(function() {
-                            this.where('model_response.response_type', 'mRECIST')
-                                .orWhereNull('model_response.response_type')
-                        })
-                        .whereIn('drugs.drug_name', drug)
-                        .orderBy('drug_name')
-                        .orderBy('patient')
+                                .from('model_response')
+                                .rightJoin(
+                                    'model_information',
+                                    'model_response.model_id',
+                                    'model_information.model_id'
+                                )
+                                .leftJoin(
+                                    'patients',
+                                    'model_information.patient_id',
+                                    'patients.patient_id'
+                                )
+                                .leftJoin(
+                                    'drugs',
+                                    'model_information.drug_id',
+                                    'drugs.drug_id'
+                                )
+                                .where('model_information.dataset_id', param_dataset)
+                                .andWhere(function() {
+                                    this.where('model_response.response_type', 'mRECIST')
+                                        .orWhereNull('model_response.response_type')
+                                })
+                                .whereIn('drugs.drug_name', drug)
+                                .orderBy('drug_name')
+                                .orderBy('patient')
 
         Promise.all([distinct_patients, response_data])
                 .then((row) => {
