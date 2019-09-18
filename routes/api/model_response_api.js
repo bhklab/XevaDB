@@ -47,7 +47,7 @@ const getModelResponseBasedOnDataset = function(request,response) {
                         // .andWhere('model_response.response_type', 'mRECIST')
                         .andWhere(function() {
                             this.where('model_response.response_type', 'mRECIST')
-                                .orWhereNull('model_response.response_type')
+                                //.orWhereNull('model_response.response_type')
                         })
                         .orderBy('drug_name')
                         .orderBy('patient')
