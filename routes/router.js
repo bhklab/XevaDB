@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 
-
-
 // setting the path of the drugscreening api to variable so that we can use it later.
 const datasets = require('./api/dataset_api')
 const drugs = require('./api/drug_api')
@@ -14,7 +12,7 @@ const batches = require('./api/batch_api')
 const mixed = require('./api/mixed_api')
 const modelInformation = require('./api/model_information_api')
 const modelResponse = require('./api/model_response_api')
-
+const mutation = require('./api/mutation_api')
 
 
 // APIs related to dataset table.
@@ -50,6 +48,9 @@ router.post('/v1/drugpatient/dataset', modelInformation.postDrugandPatientBasedO
 // APIs for model response table.
 router.get('/v1/response/:dataset', modelResponse.getModelResponseBasedOnDataset);
 router.get('/v1/response', modelResponse.getModelResponseBasedPerDatasetBasedOnDrugs)
+
+// APIs related to mutation table.
+router.get('/v1/mutation/:dataset', mutation.isValidId, mutation.getMutationBasedOnDataset);
 
 
 
