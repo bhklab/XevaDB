@@ -18,6 +18,7 @@ class OncoprintData extends React.Component {
     }
 
     updateResults(onco, hmap) {
+        
         const dataset = onco;
         let gene_id = [];
         let patient = [];
@@ -29,12 +30,10 @@ class OncoprintData extends React.Component {
             }
         });
 
-        Object.keys(hmap[0]).forEach(value => {
-            if(value !== 'Drug') {
-                hmap_patients.push(value)
-            }
-        });
-        
+        // grabbing the total patients from hmap.
+        hmap_patients = hmap.pop()
+
+        // genes
         dataset.map((data) => {
             return gene_id.push(data['gene_id']);
         })
