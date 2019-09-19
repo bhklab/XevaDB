@@ -25,7 +25,6 @@ const getCounter = function(request, response) {
 
 
 
-
 module.exports = {
     getCounter
 }
