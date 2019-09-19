@@ -51,7 +51,7 @@ router.get('/v1/response', modelResponse.getModelResponseBasedPerDatasetBasedOnD
 
 // APIs related to mutation table.
 router.get('/v1/mutation/:dataset', mutation.isValidId, mutation.getMutationBasedOnDataset);
-
+router.get('/v1/mutation', mutation.getMutationBasedPerDatasetBasedOnDrugs)
 
 
 
