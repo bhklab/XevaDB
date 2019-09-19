@@ -52,6 +52,7 @@ const getModelResponseBasedOnDataset = function(request,response) {
                         .orderBy('drug_name')
                         .orderBy('patient')
 
+
         Promise.all([promise1, promise2])
                 .then((row) => {
                     console.log(row)
@@ -145,9 +146,9 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function(request, response) 
                                 .orderBy('drug_name')
                                 .orderBy('patient')
 
+
         Promise.all([distinct_patients, response_data])
                 .then((row) => {
-                    console.log(row)
                     let drug = ''
                     let data = []
                     let untreated = {Drug:'untreated'}
@@ -184,8 +185,8 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function(request, response) 
                     //sending the response.
                     response.send(data)
                 })
-        
 }
+
 
 
 module.exports = {
