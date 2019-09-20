@@ -13,6 +13,8 @@ const mixed = require('./api/mixed_api')
 const modelInformation = require('./api/model_information_api')
 const modelResponse = require('./api/model_response_api')
 const mutation = require('./api/mutation_api')
+const drugScreening = require('./api/drug_screening')
+
 
 
 // APIs related to dataset table.
@@ -53,7 +55,8 @@ router.get('/v1/response', modelResponse.getModelResponseBasedPerDatasetBasedOnD
 router.get('/v1/mutation/:dataset', mutation.isValidId, mutation.getMutationBasedOnDataset);
 router.get('/v1/mutation', mutation.getMutationBasedPerDatasetBasedOnDrugs)
 
-
+// APIs related to drug screening table.
+router.get('/v1/treatment', drugScreening.getDrugScreening);
 
 
 module.exports = router;
