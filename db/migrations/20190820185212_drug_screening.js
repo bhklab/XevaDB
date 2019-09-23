@@ -2,24 +2,21 @@
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('drug_screening', (table) => {
         table.increments();
-        table.string('model_id')
+        table.integer('model_id')
+             .unsigned()
              .notNullable()
              .references('model_id')
-             .inTable('model_information')
+             .inTable('models')
              .index();
-        table.string('drug')
+        table.integer('drug_id')
+             .unsigned()
              .notNullable()
              .references('drug_id')
-             .inTable('drug')
+             .inTable('drugs')
              .index();
         table.decimal('time').notNullable();
         table.decimal('volume').notNullable();
         table.decimal('volume_normal',64,16).notNullable();
-        table.string('patient_id')
-             .notNullable()
-             .references('patient_id')
-             .inTable('patient_information')
-             .index();
     });
 };
 

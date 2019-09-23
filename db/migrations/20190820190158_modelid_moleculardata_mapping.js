@@ -1,18 +1,21 @@
-// delete this later.
+
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('modelid_moleculardata_mapping', (table) => {
         table.increments();
-        table.string('model_id')
+        table.integer('model_id')
              .notNullable()
+             .unsigned()
              .references('model_id')
-             .inTable('model_information')
+             .inTable('models')
              .index();
-        table.string('patient_id')
+        table.integer('sequencing_uid')
              .notNullable()
-             .references('patient_id')
-             .inTable('patient_information')
+             .unsigned()
+             .references('sequencing_uid')
+             .inTable('sequencing')
              .index();
-        table.string('mDataType').notNullable();
+        table.string('mDataType')
+             .notNullable();
     });
 };
 

@@ -13,6 +13,7 @@ do
     for filename in $f/*.csv
     do
     if [[ $filename == *"$result"* ]]; then
+    echo "filename is $result"
     else
       mv $filename ${filename%.csv}_$result.csv; 
     fi   

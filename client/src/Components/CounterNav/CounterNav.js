@@ -13,7 +13,6 @@ class CounterNav extends React.Component {
         this.state = {
             drugs: 0,
             patients: 0,
-            models: 0,
             datasets: 8,
             tissues: 0
         }
@@ -23,10 +22,9 @@ class CounterNav extends React.Component {
         axios.get(`http://localhost:5000/api/v1/counter`)
             .then(response => {
                 this.setState({
-                   drugs: response.data.data[0]['drug'],
-                   patients: response.data.data[0]['patient'],
-                   models: response.data.data[0]['model'],
-                   tissues: response.data.data[0]['tissue']
+                    tissues: response.data.data[0][0]['tissues'],
+                    drugs: response.data.data[1][0]['drugs'],
+                    patients: response.data.data[2][0]['patients']
                 })
             })
     }

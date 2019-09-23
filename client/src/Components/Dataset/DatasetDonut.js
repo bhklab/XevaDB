@@ -29,7 +29,7 @@ class DatasetDonut extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:5000/api/v1/datasetpatient`)
+        axios.get(`http://localhost:5000/api/v1/dataset/patients`)
             .then((response) => {
                 response = response.data.data.map((element) => {
                     return ({

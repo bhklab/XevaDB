@@ -31,7 +31,6 @@ class HeatMap extends React.Component {
 
 // main heatmap function taking parameters as data, all the patient ids and drugs.
    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
-
     this.node = node
 
     // height and width for the SVG based on the number of drugs and patient/sample ids.
@@ -229,6 +228,7 @@ class HeatMap extends React.Component {
     //let highlight = 
     gskeleton.selectAll('rect.hmap-hlight')
                         .data(function(d,i) {  
+                            console.log(d)
                             //calling the function and passing the data d as parameter.
                             calculate_evaluations(d,i);
                             //this returns the object values to next chaining method.

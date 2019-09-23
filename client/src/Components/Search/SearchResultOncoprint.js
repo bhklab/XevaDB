@@ -49,9 +49,9 @@ class SearchResultOncoprint extends React.Component {
         let gene_param = this.props.gene_param
         let drug_for_onco = this.props.drug_for_onco
         
-        axios.get(`http://localhost:5000/api/v1/mutationgene/?genes=${gene_param}&dataset=${dataset_param}`)
+        axios.get(`http://localhost:5000/api/v1/mutation?genes=${gene_param}&dataset=${dataset_param}`)
             .then(response => {
-                axios.get(`http://localhost:5000/api/v1/respevaldrug/?drug=${drug_for_onco}&dataset=${dataset_param}`)
+                axios.get(`http://localhost:5000/api/v1/response?drug=${drug_for_onco}&dataset=${dataset_param}`)
                 .then(heatmap_patient => {
                     this.updateResults(response.data, heatmap_patient.data);
                 })

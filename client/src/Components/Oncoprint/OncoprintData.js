@@ -18,6 +18,7 @@ class OncoprintData extends React.Component {
     }
 
     updateResults(onco, hmap) {
+        
         const dataset = onco;
         let gene_id = [];
         let patient = [];
@@ -29,12 +30,10 @@ class OncoprintData extends React.Component {
             }
         });
 
-        Object.keys(hmap[0]).forEach(value => {
-            if(value !== 'Drug') {
-                hmap_patients.push(value)
-            }
-        });
-        
+        // grabbing the total patients from hmap.
+        hmap_patients = hmap.pop()
+
+        // genes
         dataset.map((data) => {
             return gene_id.push(data['gene_id']);
         })
@@ -57,7 +56,7 @@ class OncoprintData extends React.Component {
         if(this.state.dataset_param > 0) {
             axios.get(`http://localhost:5000/api/v1/mutation/${this.state.dataset_param}`)
              .then(response => {
-                axios.get(`http://localhost:5000/api/v1/respeval/${this.state.dataset_param}`)
+                axios.get(`http://localhost:5000/api/v1/response/${this.state.dataset_param}`)
                     .then(hmap => {
                         this.updateResults(response.data, hmap.data);
                     })
@@ -65,7 +64,7 @@ class OncoprintData extends React.Component {
         } else {
             axios.get(`http://localhost:5000/api/v1/mutation`)
             .then(response => {
-                axios.get(`http://localhost:5000/api/v1/respeval/`)
+                axios.get(`http://localhost:5000/api/v1/response/`)
                     .then(hmap => {
                         this.updateResults(response.data, hmap.data);
                     })
