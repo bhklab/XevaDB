@@ -12,6 +12,7 @@ class SearchResultHeatMap extends React.Component {
             drug_data : [],
             patient_id_drug : [],
             drug_id : [],
+            dataset_param : 0
         };
         //binding the functions declared.
         this.parseData = this.parseData.bind(this);
@@ -19,6 +20,7 @@ class SearchResultHeatMap extends React.Component {
 
     // this function takes the parsed result and set the states.
     parseData(result) {
+      
         // defining the variables.
         let dataset = []
         let patient = []
