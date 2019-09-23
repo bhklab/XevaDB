@@ -20,23 +20,31 @@ class SearchResultHeatMap extends React.Component {
 
     // this function takes the parsed result and set the states.
     parseData(result) {
+      
+        // defining the variables.
         let dataset = []
         let patient = []
         let drug = []
 
-        Object.keys(result[0]).forEach((value) => {
-            if(value !== 'Drug') {
-                patient.push(value)
-            }
-        })
-
-        dataset = result.map((data) => {
-            drug.push(data.Drug)
-            //removing the Drug entry.
-            delete data.Drug
-            return data
-        })
+        //patient array.
+        patient = result.pop()
         
+        // this function will loop through the elements and
+        // assign empty values in case model information is not available.
+        result.forEach(element => {
+            let data_object = {}
+            drug.push(element.Drug)
+            patient.forEach((patient) => {
+                if(!element[patient]) {
+                    data_object[patient] = ''
+                } else {
+                    data_object[patient] = element[patient]
+                }
+            })
+            dataset.push(data_object)
+        });
+
+        //setting the states using the defined variables.
         this.setState({
             drug_id : drug,
             patient_id_drug : patient,
@@ -48,7 +56,7 @@ class SearchResultHeatMap extends React.Component {
         let drug_param = this.props.drug_param
         let dataset_param = this.props.dataset_param
         
-        axios.get(`http://localhost:5000/api/v1/respevaldrug/?drug=${drug_param}&dataset=${dataset_param}`)
+        axios.get(`http://localhost:5000/api/v1/response?drug=${drug_param}&dataset=${dataset_param}`)
              .then(response => {
                  this.parseData(response.data);
              })
@@ -74,6 +82,7 @@ class SearchResultHeatMap extends React.Component {
                 patient_id = {this.state.patient_id_drug} 
                 dimensions = {this.dimensions}
                 margin = {this.margin}
+                class = "searchedHeatMap"
             />
         )
     }
