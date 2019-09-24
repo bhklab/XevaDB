@@ -125,7 +125,7 @@ class TumorGrowthCurveOld extends React.Component {
     componentDidMount() {
         let patient_param = this.getParams().drugid_param
         let drugid_param = this.getParams().patient_param
-        axios.get(`http://localhost:5000/api/v1/treatment?drug=${patient_param}&patient=${drugid_param}`)
+        axios.get(`/api/v1/treatment?drug=${patient_param}&patient=${drugid_param}`)
              .then(response => {
                 //this.batchToggle('plot', patient_param);
                 this.dataParse(response.data);

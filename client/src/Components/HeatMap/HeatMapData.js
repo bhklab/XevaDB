@@ -57,12 +57,12 @@ class HeatMapData extends React.Component {
 
     componentDidMount() {
         if(this.state.dataset_param > 0) {
-            axios.get(`http://localhost:5000/api/v1/response/${this.state.dataset_param}`)
+            axios.get(`/api/v1/response/${this.state.dataset_param}`)
              .then(response => {
                  this.parseData(response.data);
              })
         } else {
-            axios.get(`http://localhost:5000/api/v1/respeval`)
+            axios.get(`/api/v1/respeval`)
             .then(response => {
                 this.parseData(response.data);
             })

@@ -21,7 +21,7 @@ class DrugTable extends React.Component {
     }
 
     componentDidMount() {
-      axios.get(`http://localhost:5000/api/v1/drugs`)
+      axios.get(`/api/v1/drugs`)
             .then(response => {
                 this.setState ({
                   data: response.data
