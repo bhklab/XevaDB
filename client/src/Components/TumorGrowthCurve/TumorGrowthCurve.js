@@ -149,7 +149,7 @@ class TumorGrowthCurve extends React.Component {
     componentDidUpdate() {
         const node = this.node;
         let plotId = 'plot'
-        if (this.state.data.length != 0) {
+        if (this.state.data.length !== 0) {
             this.makeTumorGrowthCurve(this.state.data, plotId, node)
             d3.select(".no-graph").remove()
         } else {
@@ -570,7 +570,7 @@ class TumorGrowthCurve extends React.Component {
                     .attr('class', 'mean-dot ' + batch)
                     .attr('r', 4)
                     .attr('fill',function() {
-                        if (exp_types[n] == 'control') {
+                        if (exp_types[n] === 'control') {
                             return '#cd5686'; 
                         } else {
                             return '#5974c4';
@@ -605,7 +605,7 @@ class TumorGrowthCurve extends React.Component {
                     .attr('fill', 'none')
                     .style('opacity', 0.2)
                     .attr('stroke', function() {
-                        if (exp_types[n] == 'control') {
+                        if (exp_types[n] === 'control') {
                             return '#cd5686'; 
                         } else {
                             return '#5974c4';

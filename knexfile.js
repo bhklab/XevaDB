@@ -6,14 +6,14 @@ module.exports = {
   development: {
     client: 'mysql',
     connection: {
-      host: 'localhost',
-      user: 'root',
-      password: 'Divya@24',
-      database: 'xevadb_latest'
-      //host : 'xevadb-database.mysql.database.azure.com',
-      //user : 'bhklab@xevadb-database',
-      //password : 'canada@24',
-      //database : 'xevadb_latest_13_aug'
+      // host: 'localhost',
+      // user: 'root',
+      // password: 'Divya@24',
+      // database: 'xevadb_latest1'
+      host : 'xevadb-database.mysql.database.azure.com',
+      user : 'bhklab@xevadb-database',
+      password : 'canada@24',
+      database : 'xevadb'
     },
     migrations: {
       directory: __dirname + '/db/migrations',
