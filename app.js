@@ -10,7 +10,7 @@ const router = require('./routes/router.js');
 //Bodyparser Middleware
 app.use(bodyParser.json());
 
-app.use(cors({origin: 'http://localhost:3000'}));
+// app.use(cors({origin: 'http://localhost:3000'}));
 
 //this will set/use our api to initial path of /api.
 app.use('/api', router);
