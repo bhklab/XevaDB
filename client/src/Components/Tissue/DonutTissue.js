@@ -33,7 +33,7 @@ class DonutTissue extends React.Component {
 
     componentDidMount() {
         let new_values = []
-        axios.get(`http://localhost:5000/api/v1/tissue/patients`)
+        axios.get(`/api/v1/tissue/patients`)
              .then((response) => {
                  response.data.data.forEach((data) => {
                      let value = {}

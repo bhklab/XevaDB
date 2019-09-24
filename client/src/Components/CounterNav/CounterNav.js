@@ -19,7 +19,7 @@ class CounterNav extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:5000/api/v1/counter`)
+        axios.get(`/api/v1/counter`)
             .then(response => {
                 this.setState({
                     tissues: response.data.data[0][0]['tissues'],

@@ -54,17 +54,17 @@ class OncoprintData extends React.Component {
 
     componentDidMount() {
         if(this.state.dataset_param > 0) {
-            axios.get(`http://localhost:5000/api/v1/mutation/${this.state.dataset_param}`)
+            axios.get(`/api/v1/mutation/${this.state.dataset_param}`)
              .then(response => {
-                axios.get(`http://localhost:5000/api/v1/response/${this.state.dataset_param}`)
+                axios.get(`/api/v1/response/${this.state.dataset_param}`)
                     .then(hmap => {
                         this.updateResults(response.data, hmap.data);
                     })
             })
         } else {
-            axios.get(`http://localhost:5000/api/v1/mutation`)
+            axios.get(`/api/v1/mutation`)
             .then(response => {
-                axios.get(`http://localhost:5000/api/v1/response/`)
+                axios.get(`/api/v1/response/`)
                     .then(hmap => {
                         this.updateResults(response.data, hmap.data);
                     })

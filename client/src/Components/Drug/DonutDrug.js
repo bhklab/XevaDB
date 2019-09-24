@@ -33,7 +33,7 @@ class DonutDrug extends React.Component {
 
     componentDidMount() {
         let new_values = []
-        axios.get(`http://localhost:5000/api/v1/drug/class`)
+        axios.get(`/api/v1/drug/class`)
              .then((response) => {
                  response.data.data.forEach((data) => {
                      let value = {}

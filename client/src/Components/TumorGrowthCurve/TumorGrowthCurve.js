@@ -131,7 +131,7 @@ class TumorGrowthCurve extends React.Component {
     componentDidMount() {
         let drugid_param = this.getParams().drugid_param
         let patient_param = this.getParams().patient_param
-        axios.get(`http://localhost:5000/api/v1/treatment?drug=${drugid_param}&patient=${patient_param}`)
+        axios.get(`/api/v1/treatment?drug=${drugid_param}&patient=${patient_param}`)
              .then(response => {
                 function unique(value, index, self) { 
                     return self.indexOf(value) === index;

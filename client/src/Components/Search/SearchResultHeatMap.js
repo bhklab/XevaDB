@@ -56,7 +56,7 @@ class SearchResultHeatMap extends React.Component {
         let drug_param = this.props.drug_param
         let dataset_param = this.props.dataset_param
         
-        axios.get(`http://localhost:5000/api/v1/response?drug=${drug_param}&dataset=${dataset_param}`)
+        axios.get(`/api/v1/response?drug=${drug_param}&dataset=${dataset_param}`)
              .then(response => {
                  this.parseData(response.data);
              })

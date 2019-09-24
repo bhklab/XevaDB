@@ -14,9 +14,9 @@ class DonutPatient extends React.Component {
 
     componentDidMount() {
         let new_values = []
-        const promise1 = axios.get(`http://localhost:5000/api/v1/getinboth`);
-        const promise2 = axios.get(`http://localhost:5000/api/v1/getonlydrug`);
-        const promise3 = axios.get(`http://localhost:5000/api/v1/getonlysequencing`);
+        const promise1 = axios.get(`/api/v1/getinboth`);
+        const promise2 = axios.get(`/api/v1/getonlydrug`);
+        const promise3 = axios.get(`/api/v1/getonlysequencing`);
 
         Promise.all([promise1, promise2, promise3])
              .then((response) => {
