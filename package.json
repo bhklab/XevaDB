@@ -2,10 +2,10 @@
   "name": "nodekb",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "nodemon server.js",
+    "start": "nodemon app.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
