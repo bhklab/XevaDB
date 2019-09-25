@@ -93,7 +93,6 @@ class Search extends React.Component {
         let initial = 1;
         axios.post(`/api/v1/drugpatient/dataset`, {label}, this.axiosConfig)
              .then((response) => {
-                console.log(response)
                 const data = response.data.data[0].map(item => ({
                     value: initial++,
                     label: item.drug

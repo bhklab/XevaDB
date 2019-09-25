@@ -42,9 +42,9 @@ const LinkStyle = styled.div`
         margin-left : 200px;
     }
 
-    @media screen and (max-width: 1500px) {
+    @media screen and (max-width: 1700px) {
         a {
-            font-size: 21px;
+            font-size: 20px;
         }
 
         a:nth-child(1) {
