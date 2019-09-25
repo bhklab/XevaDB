@@ -75,7 +75,7 @@ const StyleBar = styled.div`
       font-size: 36px;
     }    
 
-   @media screen and (max-width: 1500px) {
+   @media screen and (max-width: 1700px) {
         h1 {
             font-size: 28px;
         }

@@ -228,7 +228,7 @@ class HeatMap extends React.Component {
     //let highlight = 
     gskeleton.selectAll('rect.hmap-hlight')
                         .data(function(d,i) {  
-                            console.log(d)
+                            //console.log(d)
                             //calling the function and passing the data d as parameter.
                             calculate_evaluations(d,i);
                             //this returns the object values to next chaining method.
