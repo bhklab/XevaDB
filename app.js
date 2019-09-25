@@ -10,7 +10,7 @@ const router = require('./routes/router.js');
 //Bodyparser Middleware
 app.use(bodyParser.json());
 
-// app.use(cors({origin: 'http://localhost:3000'}));
+//app.use(cors({origin: 'http://localhost:3000'}));
 
 //this will set/use our api to initial path of /api.
 app.use('/api', router);
@@ -18,7 +18,6 @@ app.use('/api', router);
 
 //use 5000 port no. for server.
 const port = process.env.PORT || 5000;
-
 
 // build to serve static files.
 app.use(express.static(path.join(__dirname, 'client/build')))
