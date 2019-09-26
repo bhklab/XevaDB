@@ -7,8 +7,7 @@ let MultiStream = require('multistream')
 const file_reader = require('./file_reader')
 
 //folder from where the files will be read.
-const file_folder = "/Initial_Csv_File/sequencing_data/"
-const file_final = (file_folder.split("/"))[2]
+const file_folder = ["/Initial_Csv_File/RNASeq_data/", "/Initial_Csv_File/mutation_data/"]
 
 //this array is required to store the lines read from the input csv file.
 const results = [];
@@ -19,10 +18,15 @@ var csvStream = csv.createWriteStream({headers: ["gene_id", "gene_name"]});
 var writableStream = fs.createWriteStream(`../Final_Csv_File/genes_final.csv`);
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
-let files = fs.readdirSync(`..${file_folder}`);
+let files = []
+file_folder.forEach(folder => {
+    fs.readdirSync(`..${folder}`).forEach(file => {
+        files.push(file)
+    })
+})
+
 let total_files = files.length;
 let id = 1;
-
 
 // reads the input file.
 function outputData() {

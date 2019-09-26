@@ -9,7 +9,7 @@ const file_iterator = require('./file_iterator')
 const file_reader = require('./file_reader')
 
 //folder from where the files will be read.
-const file_folder = "/Initial_Csv_File/sequencing_data/"
+const file_folder = "/Initial_Csv_File/mutation_data/"
 //const file_final = (file_folder.split("/"))[2]
 const file_final = "mutation"
 
