@@ -1,2 +1,2 @@
 **Servers**
-* Beta Server: <beta.xevadb.ca>
+* Beta Server: <http://beta.xevadb.ca>
