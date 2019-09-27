@@ -14,6 +14,7 @@ const modelInformation = require('./api/model_information_api')
 const modelResponse = require('./api/model_response_api')
 const mutation = require('./api/mutation_api')
 const drugScreening = require('./api/drug_screening')
+const rnasequencing = require('./api/rnaseq_api')
 
 
 
@@ -57,6 +58,10 @@ router.get('/v1/mutation', mutation.getMutationBasedPerDatasetBasedOnDrugs)
 
 // APIs related to drug screening table.
 router.get('/v1/treatment', drugScreening.getDrugScreening);
+
+// APIs related to rnasequencing table.
+router.get('/v1/rnaseq/:dataset', rnasequencing.getRnaSeqBasedOnDataset)
+
 
 
 module.exports = router;
