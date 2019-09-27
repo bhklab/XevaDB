@@ -45,6 +45,10 @@ const postDrugandPatientBasedOnDataset = function(req,res) {
                 status: 'success',
                 data: data
             }))
+            .catch((error) => response.status(500).json({
+                status: 'could not find data from model_information table, postDrugandPatientBasedOnDataset',
+                data: error
+            }))
 }
 
 

@@ -92,6 +92,11 @@ const getModelResponseBasedOnDataset = function(request,response) {
                     //sending the response.
                     response.send(data)
                 })
+                .catch((error) => response.status(500).json({
+                    status: 'could not find data from model_response table, getModelResponseBasedOnDataset',
+                    data: error
+                }))
+                
 }
 
 
@@ -185,6 +190,10 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function(request, response) 
                     //sending the response.
                     response.send(data)
                 })
+                .catch((error) => response.status(500).json({
+                    status: 'could not find data from model_response table, getModelResponseBasedPerDatasetBasedOnDrugs',
+                    data: error
+                }))
 }
 
 
