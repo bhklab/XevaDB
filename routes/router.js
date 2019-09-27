@@ -53,14 +53,15 @@ router.get('/v1/response/:dataset', modelResponse.getModelResponseBasedOnDataset
 router.get('/v1/response', modelResponse.getModelResponseBasedPerDatasetBasedOnDrugs)
 
 // APIs related to mutation table.
-router.get('/v1/mutation/:dataset', mutation.isValidId, mutation.getMutationBasedOnDataset);
+router.get('/v1/mutation/:dataset', mixed.isValidId, mutation.getMutationBasedOnDataset);
 router.get('/v1/mutation', mutation.getMutationBasedPerDatasetBasedOnDrugs)
 
 // APIs related to drug screening table.
 router.get('/v1/treatment', drugScreening.getDrugScreening);
 
 // APIs related to rnasequencing table.
-router.get('/v1/rnaseq/:dataset', rnasequencing.getRnaSeqBasedOnDataset)
+router.get('/v1/rnaseq/:dataset', mixed.isValidId, rnasequencing.getRnaSeqBasedOnDataset)
+router.get('/v1/rnaseq', rnasequencing.getRnaSeqBasedPerDatasetBasedOnDrugs)
 
 
 
