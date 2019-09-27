@@ -24,7 +24,15 @@ const getCounter = function(request, response) {
 }
 
 
+// checks the validity of the dataset id.
+const isValidId = function (request, response, next) {
+    if(!isNaN(request.params.dataset)) return next();
+    next(new Error('Invalid Id, Please enter a valid integer Id'));
+}
+
+
 
 module.exports = {
-    getCounter
+    getCounter,
+    isValidId
 }
