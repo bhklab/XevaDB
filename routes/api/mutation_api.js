@@ -1,13 +1,6 @@
 const knex = require('../../db/knex1');
 
 
-// checks the validity of the dataset id.
-const isValidId = function (request, response, next) {
-    if(!isNaN(request.params.dataset)) return next();
-    next(new Error('Invalid Id'));
-}
-
-
 // This will get the mutation for the selected dataset id.
 const getMutationBasedOnDataset = function(request, response) {
         let param_dataset = request.params.dataset
@@ -144,7 +137,6 @@ const getMutationBasedPerDatasetBasedOnDrugs = function(request, response) {
 
 
 module.exports = {
-    isValidId,
     getMutationBasedOnDataset,
     getMutationBasedPerDatasetBasedOnDrugs
 }
