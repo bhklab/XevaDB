@@ -60,7 +60,11 @@ const getMutationBasedOnDataset = function(request, response) {
                                 })
                                 response.send(data)
                             })
-                    })   
+                    })
+                    .catch((error) => response.status(500).json({
+                        status: 'could not find data from mutation table, getMutationBasedOnDataset',
+                        data: error
+                    }))
 }
 
 
@@ -112,7 +116,6 @@ const getMutationBasedPerDatasetBasedOnDrugs = function(request, response) {
                         .whereIn('mutation.sequencing_uid', distinctPatient)
                         .whereIn('mutation.gene_id', value)
                         .then((mutation_data) => {
-                            console.log(mutation_data)
                             let gene_id = ''
                             let data = []
                             let i = 0
@@ -130,7 +133,11 @@ const getMutationBasedPerDatasetBasedOnDrugs = function(request, response) {
                             })
                             response.send(data)
                         })
-                    })   
+                    })
+                    .catch((error) => response.status(500).json({
+                        status: 'could not find data from mutation table, getMutationBasedPerDatasetBasedOnDrugs',
+                        data: error
+                    }))
 }
 
 
