@@ -17,8 +17,7 @@ class OncoprintData extends React.Component {
         this.updateResults = this.updateResults.bind(this);
     }
 
-    updateResults(onco, hmap) {
-        
+    updateResults(onco) {
         const dataset = onco;
         let gene_id = [];
         let patient = [];
@@ -31,7 +30,7 @@ class OncoprintData extends React.Component {
         });
 
         // grabbing the total patients from hmap.
-        hmap_patients = hmap.pop()
+        hmap_patients = dataset.pop()
 
         // genes
         dataset.map((data) => {
@@ -44,6 +43,7 @@ class OncoprintData extends React.Component {
             patient_id : patient,
             hmap_patients : hmap_patients
         })
+        console.log(hmap_patients)
     }
 
     componentWillMount() {
@@ -55,22 +55,15 @@ class OncoprintData extends React.Component {
     componentDidMount() {
         if(this.state.dataset_param > 0) {
             axios.get(`/api/v1/mutation/${this.state.dataset_param}`)
-             .then(response => {
-                axios.get(`/api/v1/response/${this.state.dataset_param}`)
-                    .then(hmap => {
-                        this.updateResults(response.data, hmap.data);
-                    })
-            })
-        } else {
+                .then(response => {
+                    this.updateResults(response.data);  
+                })
+        } else { // this is basically useless else statement.
             axios.get(`/api/v1/mutation`)
-            .then(response => {
-                axios.get(`/api/v1/response/`)
-                    .then(hmap => {
-                        this.updateResults(response.data, hmap.data);
-                    })
-            })
+                .then(response => {
+                    this.updateResults(response.data);
+                })
         }
-        
     }
 
     dimensions = {
@@ -87,12 +80,12 @@ class OncoprintData extends React.Component {
 
     render() {
         return (
-            <div className="wrapper" style={{margin:"auto", fontSize:"0"}}>
+            <div className='wrapper' style={{margin:'auto', fontSize:'0'}}>
                 <Oncoprint 
                     data = {this.state.data} 
                     patient_id = {this.state.patient_id}
                     hmap_patients = {this.state.hmap_patients}
-                    className = "oprint"
+                    className = 'oprint'
                     genes = {this.state.genes} 
                     dimensions = {this.dimensions}
                     margin = {this.margin}
