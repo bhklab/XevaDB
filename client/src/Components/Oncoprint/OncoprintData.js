@@ -5,7 +5,6 @@ import axios from 'axios'
 class OncoprintData extends React.Component {
 
     constructor(props) {
-        //console.log(this.props)
         super(props)
         this.state = {
             data : [],
@@ -43,7 +42,6 @@ class OncoprintData extends React.Component {
             patient_id : patient,
             hmap_patients : hmap_patients
         })
-        console.log(hmap_patients)
     }
 
     componentWillMount() {
