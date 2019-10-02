@@ -63,7 +63,7 @@ const getRnaSeqBasedOnDataset = function(request, response) {
 
 // this will get the rna sequencing data based on
 // dataset and drug query parameters.
-const getRnaSeqBasedPerDatasetBasedOnDrugs = function(request, response) {
+const getRnaSeqBasedPerDatasetBasedOnGenes = function(request, response) {
     let param_gene = request.query.genes
     let param_dataset = request.query.dataset
     let genes = param_gene.split(',')
@@ -136,5 +136,5 @@ const getRnaSeqBasedPerDatasetBasedOnDrugs = function(request, response) {
 
 module.exports = {
     getRnaSeqBasedOnDataset,
-    getRnaSeqBasedPerDatasetBasedOnDrugs
+    getRnaSeqBasedPerDatasetBasedOnGenes
 }

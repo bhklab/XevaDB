@@ -86,7 +86,7 @@ const getMutationBasedOnDataset = function(request, response) {
 
 // this will get the mutation based on
 // dataset and drug query parameters.
-const getMutationBasedPerDatasetBasedOnDrugs = function(request, response) {
+const getMutationBasedPerDatasetBasedOnGenes = function(request, response) {
     let param_gene = request.query.genes
     let param_dataset = request.query.dataset
     let genes = param_gene.split(',')
@@ -184,5 +184,5 @@ const getMutationBasedPerDatasetBasedOnDrugs = function(request, response) {
 
 module.exports = {
     getMutationBasedOnDataset,
-    getMutationBasedPerDatasetBasedOnDrugs
+    getMutationBasedPerDatasetBasedOnGenes
 }
