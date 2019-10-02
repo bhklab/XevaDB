@@ -5,6 +5,20 @@ const knex = require('../../db/knex1');
 const getMutationBasedOnDataset = function(request, response) {
         let param_dataset = request.params.dataset
 
+        // get the distinct patients or total patients from model information table.
+        // as some patient ids are missing from oncoprint because data is not available for that patient/model.
+        let modelInformationDistinctPatient = knex('model_information')
+                                                    .distinct('patients.patient')
+                                                    .from('model_information')
+                                                    .leftJoin(
+                                                        'patients',
+                                                        'model_information.patient_id',
+                                                        'patients.patient_id'
+                                                    )
+                                                    .where({
+                                                        dataset_id: param_dataset
+                                                    })
+
         // to get the number of distinct patient ids.
         const distinctPatient = knex.distinct('modelid_moleculardata_mapping.sequencing_uid')
                                     .from('model_information')
@@ -17,9 +31,10 @@ const getMutationBasedOnDataset = function(request, response) {
                                 .andWhere('modelid_moleculardata_mapping.mDataType', 'mutation')                  
 
         // mutation data.
-        distinctPatient                      
+        Promise.all([modelInformationDistinctPatient, distinctPatient])                   
                     .then((total) => {
-                        let value = JSON.parse(JSON.stringify(total))
+                        let patientRows = JSON.parse(JSON.stringify(total[0]))
+                        let data = []
                         // grabbing the mutation data based on patients and limiting genes to 1-30.
                         knex.select('genes.gene_name', 'sequencing.sequencing_id', 'mutation.value')
                             .from('mutation')
@@ -37,7 +52,6 @@ const getMutationBasedOnDataset = function(request, response) {
                             .andWhereBetween('mutation.gene_id', [1,30])
                             .then((mutation_data) => {
                                 let gene_id = ''
-                                let data = []
                                 let i = 0
                                 usersRows = JSON.parse(JSON.stringify(mutation_data));
                                 usersRows.map((element) => {
@@ -51,6 +65,14 @@ const getMutationBasedOnDataset = function(request, response) {
                                         data[i-1][element.sequencing_id] = element.value
                                     }
                                 })
+
+                                //array of all the patients belonging to a particular dataset.
+                                patient = patientRows.map(element => {
+                                    return element.patient
+                                })
+                                data.push(patient)
+
+                                //sending the response.
                                 response.send(data)
                             })
                     })

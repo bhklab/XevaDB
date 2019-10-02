@@ -55,7 +55,6 @@ const getModelResponseBasedOnDataset = function(request,response) {
 
         Promise.all([promise1, promise2])
                 .then((row) => {
-                    console.log(row)
                     let drug = ''
                     let data = []
                     let untreated = {Drug:'untreated'}
