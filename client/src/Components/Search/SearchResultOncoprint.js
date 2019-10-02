@@ -19,7 +19,7 @@ class SearchResultOncoprint extends React.Component {
         this.updateResults = this.updateResults.bind(this);
     }
 
-    updateResults(result, heatmap) {
+    updateResults(result) {
         console.log('result is here', result)
         const datasets = result;
         let gene = [];
@@ -29,8 +29,7 @@ class SearchResultOncoprint extends React.Component {
         patient = Object.keys(datasets[0]);
         patient.shift();
 
-        heatmap_patients = Object.keys(heatmap[0]);
-        heatmap_patients.shift();
+        heatmap_patients = datasets.pop()
 
         datasets.map((data) => {
             return gene.push(data['gene_id']);
@@ -47,15 +46,19 @@ class SearchResultOncoprint extends React.Component {
     componentDidMount() {
         let dataset_param = this.props.dataset_param
         let gene_param = this.props.gene_param
-        let drug_for_onco = this.props.drug_for_onco
+        //let drug_for_onco = this.props.drug_for_onco
         
         axios.get(`/api/v1/mutation?genes=${gene_param}&dataset=${dataset_param}`)
-            .then(response => {
-                axios.get(`/api/v1/response?drug=${drug_for_onco}&dataset=${dataset_param}`)
-                .then(heatmap_patient => {
-                    this.updateResults(response.data, heatmap_patient.data);
-                })
-            })
+             .then(response => {
+                 console.log(response)
+                this.updateResults(response.data)
+             })
+            //.then(response => {
+                //axios.get(`/api/v1/response?drug=${drug_for_onco}&dataset=${dataset_param}`)
+                //.then(heatmap_patient => {
+                    //this.updateResults(response.data, heatmap_patient.data);
+                //})
+            //})
     }
 
     dimensions = {
