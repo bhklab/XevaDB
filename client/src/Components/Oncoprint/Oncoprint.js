@@ -249,7 +249,7 @@ class Oncoprint extends React.Component {
 
         let xrange_gene = d3.scaleLinear()
                             .domain([0, d3.max([maxGAmp, maxGMut, maxGHomdel])])
-                            .range([0,40]);
+                            .range([0,50]);
 
         
         let gene_alter = svg.append('g')
@@ -258,72 +258,80 @@ class Oncoprint extends React.Component {
 
         let stroke_width = 1; // this will set the stroke width of the outer rectangle 
 
-            // setting the outer rectangle.
-            gene_alter.append('rect')
-                        .attr('class', 'patient_eval_rect')
-                        .attr('x', 0)
-                        .attr('y', 0)
-                        .attr('height', (rect_height) *(genes.length))
-                        .attr('width', xrange_gene(max_width))
-                        .attr('fill', 'white')
-                        .style('stroke', 'black')
-                        .style('stroke-width', stroke_width)
-    
-            for (let i = 0; i < genes.length; i++) {
+        // setting the outer rectangle.
+        gene_alter.append('rect')
+                    .attr('class', 'patient_eval_rect')
+                    .attr('x', 0)
+                    .attr('y', 0)
+                    .attr('height', (rect_height) * (genes.length) - 6)
+                    .attr('width', xrange_gene(max_width))
+                    .attr('fill', 'white')
+                    .style('stroke', 'black')
+                    .style('stroke-width', stroke_width)
+
+
+        // function to caculate alterations.
+        let geneAlterationReactangle = (iterator) => {
+            // variables.
+            let gene_class = ['mut', 'amp', 'del']
+            let i = iterator
+            let x_range = stroke_width/2
+            // loops through each type for each of the genes.
+            gene_class.forEach((type) => {
+                // color setting.
+                let color = ''
+                if (type === 'mut') {
+                    color = '#e41a1c'
+                } else if (type === 'amp') {
+                    color = '#1a9850'
+                    x_range = x_range + xrange_gene(gene_alterations[genes[i]]['mut'])
+                } else if (type === 'del') {
+                    color = '#0033CC'
+                    x_range = x_range + xrange_gene(gene_alterations[genes[i]]['amp'])
+                }
+                // rectangle coloring.
                 gene_alter.append('rect')
-                            .attr('class', 'gene-rect mut')
-                            .attr('height', rect_height - 2)
-                            .attr('width', xrange_gene(gene_alterations[genes[i]]['mut']))
-                            .attr('fill', '#e41a1c')
-                            .attr('y', (i * (rect_height)))
-                            .attr('x', stroke_width/2)
-    
-                gene_alter.append('rect')
-                            .attr('class', 'gene-rect amp')
-                            .attr('height', rect_height - 2)
-                            .attr('width', xrange_gene(gene_alterations[genes[i]]['amp']))
-                            .attr('fill', '#1a9850')
-                            .attr('y', i * (rect_height) ) 
-                            .attr('x', xrange_gene(gene_alterations[genes[i]]['mut']) + stroke_width/2)
-                            
-                
-                gene_alter.append('rect')
-                            .attr('class', 'gene-rect del')
-                            .attr('height', rect_height - 2)
-                            .attr('width', xrange_gene(gene_alterations[genes[i]]['del']))
-                            .attr('fill', '#0033CC')
-                            .attr('y', i * (rect_height)) 
-                            .attr('x', xrange_gene(gene_alterations[genes[i]]['amp']) + xrange_gene(gene_alterations[genes[i]]['mut']) + stroke_width/2)
-                
-            }
+                        .attr('class', `gene-rect ${type}`)
+                        .attr('height', rect_height - 6)
+                        .attr('width', xrange_gene(gene_alterations[genes[i]][type]))
+                        .attr('fill', color)
+                        .attr('y', (i * (rect_height)))
+                        .attr('x', x_range)
+            })
+        }
+
+        // calculate alterations for each row.
+        for (let i = 0; i < genes.length; i++) {
+            geneAlterationReactangle(i)
+        }
             
-            // This will set the axis and scale.
-            let xrange_axis = d3.scaleLinear() 
-                                .domain([0, max_width])
-                                .range([0, xrange_gene(max_width)]);
-    
-            let x_axis = d3.axisTop()
-                            .scale(xrange_axis)
-                            .ticks(4)
-                            .tickSize(3)
-                            .tickFormat(d3.format('.0f'));
-    
-                svg.append('g')
-                    .attr('class', 'x_axis')
-                    .attr('fill', 'none')
-                    .attr('stroke', 'black')
-                    .attr('stroke-width', 1)
-                    .attr('transform', 'translate(' + (hmap_patients.length * rect_width + 20) + ' -0 )')
-                    .call(x_axis)
-                    .selectAll('text')
-                    .attr('fill', 'black')
-                    .style('font-size', 8)
-                    .attr('stroke', 'none');
-            
-                    svg.selectAll('.tick')
-                        .select('text')
-                        .attr('fill', 'black')
-                        .attr('stroke', 'none')
+        // This will set the axis and scale.
+        let xrange_scale = d3.scaleLinear() 
+                            .domain([0, max_width])
+                            .range([0, xrange_gene(max_width)]);
+
+        let x_axis = d3.axisTop()
+                        .scale(xrange_scale)
+                        .ticks(4)
+                        .tickSize(3)
+                        .tickFormat(d3.format('.0f'));
+
+        svg.append('g')
+            .attr('class', 'x_axis')
+            .attr('fill', 'none')
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .attr('transform', 'translate(' + (hmap_patients.length * rect_width + 20) + ' -0 )')
+            .call(x_axis)
+            .selectAll('text')
+            .attr('fill', 'black')
+            .style('font-size', 8)
+            .attr('stroke', 'none');
+        
+        svg.selectAll('.tick')
+            .select('text')
+            .attr('fill', 'black')
+            .attr('stroke', 'none')
 
             
                                                          /** Horizontal Graph **/
