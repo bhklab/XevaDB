@@ -17,7 +17,7 @@ class OncoprintData extends React.Component {
     }
 
     updateResults(onco) {
-        const dataset = onco;
+        const dataset = onco[0].data;
         let gene_id = [];
         let patient = [];
         let hmap_patients = [];
@@ -35,9 +35,13 @@ class OncoprintData extends React.Component {
         dataset.map((data) => {
             return gene_id.push(data['gene_id']);
         })
-        
+
+        let data = onco.map(value => {
+            return value.data
+        })
+
         this.setState({
-            data : dataset,
+            data : data,
             genes : gene_id,
             patient_id : patient,
             hmap_patients : hmap_patients
@@ -52,10 +56,14 @@ class OncoprintData extends React.Component {
 
     componentDidMount() {
         if(this.state.dataset_param > 0) {
-            axios.get(`/api/v1/mutation/${this.state.dataset_param}`)
-                .then(response => {
-                    this.updateResults(response.data);  
-                })
+            let mutation_data = axios.get(`/api/v1/mutation/${this.state.dataset_param}`)
+            let rnaseq_data = axios.get(`/api/v1/rnaseq/${this.state.dataset_param}`)
+            
+            Promise.all([mutation_data, rnaseq_data])
+                    .then(response => {
+                        console.log(response)
+                        this.updateResults(response);  
+                    })
         } else { // this is basically useless else statement.
             axios.get(`/api/v1/mutation`)
                 .then(response => {
