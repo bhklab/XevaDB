@@ -31,6 +31,8 @@ class Oncoprint extends React.Component {
 
     makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin) {
         let data = dataset[0]
+        let rnaseq_data = dataset[1]
+
         this.node = node
         // height and width for the SVG based on the number of genes and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
@@ -70,7 +72,7 @@ class Oncoprint extends React.Component {
         let skeleton = svg.append('g')
                           .attr('id', 'skeleton')
 
-                          
+
         
                                                             /**  Gene Names on Y-Axis **/
         // gene names on the y axis
@@ -127,8 +129,7 @@ class Oncoprint extends React.Component {
         let diff = hmap_patients.filter(x => !patient_id.includes(x))
 
 
-
-                                                            /** Coloring the rectangles **/
+                                                            /** Coloring the rectangles based on mutation data **/
 
         // this will take four parameters and color the rectangle accordingly
         let colorReactangles = (value, color, i, j) => {
@@ -139,13 +140,24 @@ class Oncoprint extends React.Component {
                 gene_alterations[genes[i]][value]++;
                 patient_alterations[j][value]++;
             }
-            alterations.append('rect')
-                        .attr('class', `alter-rect ${value}`)
-                        .attr('width', rect_width - 2)
-                        .attr('height', rect_height - 2 - (2 * a))
-                        .attr('fill', color)
-                        .attr('x', j * (rect_width)) 
-                        .attr('y', i * (rect_height) + 2 * a/2)
+            // this is for mutation data and rnaseq.
+            let rect = alterations.append('rect')
+                                    .attr('class', `alter-rect ${value}`)
+                                    .attr('width', rect_width - 6)
+                                    .attr('height', rect_height - 6 - (2 * a))
+                                    .attr('fill', color)
+                                    
+                                    .attr('x', j * (rect_width)) 
+                                    .attr('y', i * (rect_height) + 2 * a/2)
+                                    
+            // setting the boder high-rna and low-rna.
+            if(value === 'highrna') {
+                rect.attr('stroke', 'red')   
+                   
+            } else if (value === 'lowrna') {
+                rect.attr('stroke', 'blue')
+                
+            }            
         }
 
 
@@ -156,8 +168,8 @@ class Oncoprint extends React.Component {
                     // if not sequenced, make it white with a border
                     alterations.append('rect')
                                 .attr('class', 'alter-rect del')
-                                .attr('width', rect_width - 4)
-                                .attr('height', rect_height - 4)
+                                .attr('width', rect_width - 6)
+                                .attr('height', rect_height - 6)
                                 .attr('fill', 'white')
                                 .attr('stroke', 'lightgray')
                                 .attr('stroke-width', '1px')
@@ -180,6 +192,21 @@ class Oncoprint extends React.Component {
             }
         }   
 
+
+                                                            /** Coloring the rectangles borders based on rna sequencing data **/
+        for(let i = 0; i < genes.length - 2; i++) {
+            for(let j = 0; j < hmap_patients.length; j++) {
+                //only if the element is not included 
+                if(diff.indexOf(hmap_patients[j]) === -1) {
+                    if (Number(rnaseq_data[i][hmap_patients[j]]) > 2) {
+                        colorReactangles('highrna', 'none', i, j)
+                    } else if (Number(rnaseq_data[i][hmap_patients[j]]) < 1) {
+                        colorReactangles('lowrna', 'none', i, j)
+                    }
+                }
+            }
+        }
+    
 
                                                     /** Setting Maxes for the alterations **/
     
