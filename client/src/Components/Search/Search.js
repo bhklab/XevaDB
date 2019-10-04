@@ -18,12 +18,14 @@ class Search extends React.Component {
             selectedDrugs: [],
             selectedDataset: '' ,
             genomics: ['Mutation', 'CNV', 'RNASeq'],
+            selectedGenomics: [],
             allDrugs: []
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleDatasetChange = this.handleDatasetChange.bind(this)
         this.handleGeneListChange = this.handleGeneListChange.bind(this)
         this.handleGeneSearchChange = this.handleGeneSearchChange.bind(this)
+        this.handleExpressionChange = this.handleExpressionChange.bind(this)
         this.handleKeyPress = this.handleKeyPress.bind(this)
         this.redirectUser = this.redirectUser.bind(this)
     } 
@@ -70,20 +72,23 @@ class Search extends React.Component {
 
 
     handleDrugChange = (selectedOption, action) => {
-        if(selectedOption[0].value === 'all') {
-            this.setState ({
-                selectedDrugs : this.state.allDrugs
-            })
-        }
-        else if (selectedOption !== null && selectedOption.length > 0) {
-            const label = selectedOption.map((value) => {
-                return (value.label).replace(/\s/g,'').replace('+','_');
-            })
-            this.setState ({
-                selectedDrugs : label
-            })
+        if (selectedOption !== null && selectedOption.length > 0)  {
+            if (selectedOption[0].value === 'all') {
+                this.setState ({
+                    selectedDrugs : this.state.allDrugs
+                })
+            }
+            else {
+                const label = selectedOption.map((value) => {
+                    return (value.label).replace(/\s/g,'').replace('+','_');
+                })
+                this.setState ({
+                    selectedDrugs : label
+                })
+            }
         }
     }
+
 
     handleDatasetChange = selectedOption => {
         this.setState({
@@ -129,18 +134,33 @@ class Search extends React.Component {
         })
     }
 
+
+    handleExpressionChange = selectedOption => {
+        if (selectedOption !== null && selectedOption.length > 0) {
+            const genomics_value = selectedOption.map(value => {
+                return value.label
+            })
+            this.setState({
+                selectedGenomics : genomics_value
+            })
+        }
+    }
+
+
     handleKeyPress = (event) => {
         if(event.key === 'Enter'){
            this.redirectUser()
         }
     }
 
+
     redirectUser = () => {
         if((this.state.selectedDataset !== '') && (this.state.selectedDrugs.length > 0) && (this.state.selectedGeneSearch[0] !== 'Enter Gene Symbol(s)')) {
             const { history } = this.props
-            history.push(`/search/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}&genes=${this.state.selectedGeneSearch}`)
+            history.push(`/search/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}&genes=${this.state.selectedGeneSearch}&genomics=${this.state.selectedGenomics}`)
         }
     }
+
 
     render() {
         return (
@@ -175,6 +195,9 @@ class Search extends React.Component {
                                 options={this.state.genomics} 
                                 styles={customStyles}
                                 placeholder={'Genomics'}
+                                onChange={this.handleExpressionChange}
+                                isMulti
+                                isClearable
                             />
                         </div>
 
