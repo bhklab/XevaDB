@@ -25,14 +25,15 @@ class Oncoprint extends React.Component {
         let dimensions = this.props.dimensions;
         let patient_id = this.props.patient_id;
         let hmap_patients = this.props.hmap_patients;
-        this.makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin)
+        let genes_rna = this.props.genes_rna;
+        this.makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin, genes_rna)
     }
 
 
-    makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin) {
+    makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin, genes_rna) {
         let data = dataset[0]
         let rnaseq_data = dataset[1]
-
+       
         this.node = node
         // height and width for the SVG based on the number of genes and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
@@ -148,16 +149,17 @@ class Oncoprint extends React.Component {
                                     .attr('width', rect_width - 6)
                                     .attr('height', rect_height - 6 - (2 * a))
                                     .attr('fill', color)
-                                    
                                     .attr('x', j * (rect_width)) 
                                     .attr('y', i * (rect_height) + 2 * a/2)
                                     
             // setting the boder high-rna and low-rna.
             if(value === 'highrna') {
                 rect.attr('stroke', 'red')   
+                    .style('opacity', 0.6)
                    
             } else if (value === 'lowrna') {
                 rect.attr('stroke', 'blue')
+                    .style('opacity', 0.6)
                 
             }            
         }
@@ -194,21 +196,25 @@ class Oncoprint extends React.Component {
             }
         }   
 
+                                                          /** Coloring the rectangles borders based on rna sequencing data **/
 
-                                                            /** Coloring the rectangles borders based on rna sequencing data **/
-        for(let i = 0; i < genes.length - 2; i++) {
-            for(let j = 0; j < hmap_patients.length; j++) {
-                //only if the element is not included 
-                if(diff.indexOf(hmap_patients[j]) === -1) {
-                    if (Number(rnaseq_data[i][hmap_patients[j]]) > 2) {
-                        colorReactangles('highrna', 'none', i, j)
-                    } else if (Number(rnaseq_data[i][hmap_patients[j]]) < 1) {
-                        colorReactangles('lowrna', 'none', i, j)
+        // variable for taking care of rnaseq data sequence.
+        let z = 0;
+        for(let i = 0; i < genes.length ; i++) {
+            if (genes_rna.includes(genes[i])) {
+                for(let j = 0; j < hmap_patients.length; j++) {
+                    //only if the element is not included 
+                    if(diff.indexOf(hmap_patients[j]) === -1) {
+                        if (Number(rnaseq_data[z][hmap_patients[j]]) > 5) {
+                            colorReactangles('highrna', 'none', i, j)
+                        } else if (Number(rnaseq_data[z][hmap_patients[j]]) < -5) {
+                            colorReactangles('lowrna', 'none', i, j)
+                        }
                     }
                 }
+                z++;
             }
         }
-    
 
                                                     /** Setting Maxes for the alterations **/
     

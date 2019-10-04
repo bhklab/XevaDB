@@ -9,6 +9,7 @@ class OncoprintData extends React.Component {
         this.state = {
             data : [],
             genes : [],
+            genes_rna : [],
             patient_id : [],
             hmap_patients: [],
             dataset_param : 0
@@ -18,7 +19,6 @@ class OncoprintData extends React.Component {
 
     updateResults(onco) {
         const dataset = onco[0].data;
-        let gene_id = [];
         let patient = [];
         let hmap_patients = [];
 
@@ -31,9 +31,14 @@ class OncoprintData extends React.Component {
         // grabbing the total patients from hmap.
         hmap_patients = dataset.pop()
 
-        // genes
-        dataset.map((data) => {
-            return gene_id.push(data['gene_id']);
+        // genes for mutation/cnv for now.
+        let gene_id = dataset.map((data) => {
+            return data['gene_id'];
+        })
+
+        // genes for rnaseq
+        let gene_id_rna = onco[1].data.map((data) => {
+            return data['gene_id']
         })
 
         let data = onco.map(value => {
@@ -44,7 +49,8 @@ class OncoprintData extends React.Component {
             data : data,
             genes : gene_id,
             patient_id : patient,
-            hmap_patients : hmap_patients
+            hmap_patients : hmap_patients,
+            genes_rna : gene_id_rna
         })
     }
 
@@ -94,6 +100,7 @@ class OncoprintData extends React.Component {
                     genes = {this.state.genes} 
                     dimensions = {this.dimensions}
                     margin = {this.margin}
+                    genes_rna = {this.state.genes_rna}
                 />   
             </div>    
         )
