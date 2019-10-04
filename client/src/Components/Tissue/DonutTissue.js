@@ -71,7 +71,7 @@ class DonutTissue extends React.Component {
         return (
             <Fragment>
                 <Wrapper>
-                    <div className="donut-wrapper">
+                    <div className='donut-wrapper'>
                         <h1> Number of Model IDs Per Tissue Type </h1>
                         <DonutChart 
                             dimensions={this.dimensions} margin={this.margin} 

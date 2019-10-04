@@ -7,8 +7,8 @@ class TopNav extends React.Component {
     render() {
         return (
             <HeaderStyle>
-                <Link to="/">
-                    <LogoStyle src={logo} alt="logo" />
+                <Link to='/'>
+                    <LogoStyle src={logo} alt='logo' />
                 </Link>
                 <LinkStyle>
                     <Link to='/'> Home </Link>

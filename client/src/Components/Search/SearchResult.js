@@ -33,7 +33,7 @@ class SearchResult extends React.Component {
     render() {
         return (
             <Fragment>
-                <div className="wrapper" style={{margin:"auto", fontSize:"0"}}>
+                <div className='wrapper' style={{margin:'auto', fontSize:'0'}}>
                     <SearchResultHeatMap 
                         drug_param = {this.state.drug_param} 
                         dataset_param = {this.state.dataset_param}

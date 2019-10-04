@@ -83,7 +83,7 @@ class DrugTable extends React.Component {
               <ReactTable
                 data = {data}
                 columns = {columns}
-                className = "-highlight"
+                className = '-highlight'
                 defaultPageSize = {10}
                 filterable
               /> 

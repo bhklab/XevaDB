@@ -184,8 +184,8 @@ class HeatMap extends React.Component {
                                     return querystring_value(d,i)
                                 })
                                 .append('rect')
-                                .attr("class", function(d,i) {
-                                    return "hmap-rect heatmap-" + rectKeys[i]
+                                .attr('class', function(d,i) {
+                                    return 'hmap-rect heatmap-' + rectKeys[i]
                                 })
                                 .attr('width', rect_width - 2)
                                 .attr('height', rect_height - 2)
@@ -250,44 +250,44 @@ class HeatMap extends React.Component {
                             return querystring_value(d,i)
                         })
                         .append('rect')
-                        .attr("class", function(d, i) {
+                        .attr('class', function(d, i) {
                             let drug_class = drug[p_count].replace(/\s/g,'').replace(/[+]/,'-')
                             if (i === (patient.length - 1)) {
                                 p_count++
                             }
-                            return "hmap-hlight-" + rectKeys[i] + " hmap-hlight-" + drug_class
+                            return 'hmap-hlight-' + rectKeys[i] + ' hmap-hlight-' + drug_class
                         })
                         .attr('width', rect_width - 2)
                         .attr('height', rect_height - 2)
                         .attr('x', function(d,i) {
                             return i * rect_width ;  
                         })
-                        .attr("fill", "rgb(0,0,0)")
+                        .attr('fill', 'rgb(0,0,0)')
                         .attr('y', rect_height)
-                        .style("opacity", 0)
-                        .on("mouseover", function(d,i) {
-                            let drug_class = d3.select(this).attr("class").split(" ")[1]
-                            d3.selectAll(".hmap-hlight-" + rectKeys[i])
-                                .style("opacity", 0.2)
-                            d3.selectAll(".oprint-hlight-" + rectKeys[i])
-                                .style("opacity", 0.2)
-                            d3.selectAll(".hlight-space-" + rectKeys[i])
-                                .style("opacity", 0.2)
+                        .style('opacity', 0)
+                        .on('mouseover', function(d,i) {
+                            let drug_class = d3.select(this).attr('class').split(' ')[1]
+                            d3.selectAll('.hmap-hlight-' + rectKeys[i])
+                                .style('opacity', 0.2)
+                            d3.selectAll('.oprint-hlight-' + rectKeys[i])
+                                .style('opacity', 0.2)
+                            d3.selectAll('.hlight-space-' + rectKeys[i])
+                                .style('opacity', 0.2)
                         
                         })
-                        .on("mouseout", function(d,i) {
-                            let drug_class = d3.select(this).attr("class").split(" ")[1]
-                            d3.selectAll(".hmap-hlight-" + rectKeys[i])
-                                .style("opacity", 0)
-                            d3.selectAll(".oprint-hlight-" + rectKeys[i])
-                                .style("opacity", 0)
-                            d3.selectAll(".hlight-space-" + rectKeys[i])
-                                .style("opacity", 0)
+                        .on('mouseout', function(d,i) {
+                            let drug_class = d3.select(this).attr('class').split(' ')[1]
+                            d3.selectAll('.hmap-hlight-' + rectKeys[i])
+                                .style('opacity', 0)
+                            d3.selectAll('.oprint-hlight-' + rectKeys[i])
+                                .style('opacity', 0)
+                            d3.selectAll('.hlight-space-' + rectKeys[i])
+                                .style('opacity', 0)
                         })
 
     //Creating lines.
-    let lines = svg.append("g")
-                    .attr("id", "lines")
+    let lines = svg.append('g')
+                    .attr('id', 'lines')
                     .attr('transform', function(d,i) {
                         return `translate(2,${height-62})`
                     })
@@ -295,39 +295,39 @@ class HeatMap extends React.Component {
     const temp = patient.slice(0)
     temp.push("")
 
-                lines.selectAll("line.dashed-line")
+                lines.selectAll('line.dashed-line')
                         .data(temp)
                         .enter()
-                            .append("line")
-                            .attr("class", "dashed-line")
-                            .attr("x1", function(d,i) {
+                            .append('line')
+                            .attr('class', 'dashed-line')
+                            .attr('x1', function(d,i) {
                                 return i * (rect_width) - 3;  
                             })
-                            .attr("x2", function(d,i) {
+                            .attr('x2', function(d,i) {
                                 return i * (rect_width) - 3;  
                             })
-                            .attr("y1", 2)
-                            .attr("y2", 200)
-                            .attr("stroke", "black")
-                            .attr("stroke-width", 1)
-                            .style("stroke-dasharray", "3 2")
-                            .style("opacity", .2)
+                            .attr('y1', 2)
+                            .attr('y2', 200)
+                            .attr('stroke', 'black')
+                            .attr('stroke-width', 1)
+                            .style('stroke-dasharray', '3 2')
+                            .style('opacity', .2)
 
-                lines.selectAll("rect.hlight-space")
+                lines.selectAll('rect.hlight-space')
                         .data(patient)
                         .enter()
                         .append('rect')
-                        .attr("class", function(d) {
-                            return "hlight-space-" + d
+                        .attr('class', function(d) {
+                            return 'hlight-space-' + d
                         })
                         .attr('width', rect_width - 2)
                         .attr('height', 200)
                         .attr('x', function(d,i) {
                             return i * rect_width - 2;  
                         })
-                        .attr("fill", "rgb(0,0,0)")
+                        .attr('fill', 'rgb(0,0,0)')
                         .attr('y', 0)
-                        .style("opacity", 0)    
+                        .style('opacity', 0)    
 
                             /** X-AXIS AND Y-AXIS FOR THE SKELETON **/
                                                                         
@@ -339,20 +339,20 @@ class HeatMap extends React.Component {
                             .style('font-size', '12px')
                             .attr('font-weight', '500')
                             .call(yAxis)
-                            .selectAll("text")
+                            .selectAll('text')
                             .attr('fill', function(d) {
                                 if(d === 'untreated') {return '#3453b0'}
                                 else return 'black'
                             })
-                            .on("mouseover", function() {
+                            .on('mouseover', function() {
                             let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[+]/,'-')
-                            d3.selectAll(".hmap-hlight-" + drug_class)
-                                        .style("opacity", 0.2)    
+                            d3.selectAll('.hmap-hlight-' + drug_class)
+                                        .style('opacity', 0.2)    
                             })
-                            .on("mouseout", function() {
+                            .on('mouseout', function() {
                             let drug_class = d3.select(this).text().replace(/\s/g,'').replace(/[+]/,'-')
-                            d3.selectAll(".hmap-hlight-" + drug_class)
-                                        .style("opacity", 0)
+                            d3.selectAll('.hmap-hlight-' + drug_class)
+                                        .style('opacity', 0)
                             });
 
     // calling the x-axis to set the axis and we have also transformed the text.
@@ -593,7 +593,7 @@ class HeatMap extends React.Component {
 
     render() {
         return (
-            <div ref = {node => this.node = node} className="heatmap-wrapper">
+            <div ref = {node => this.node = node} className='heatmap-wrapper'>
             </div>
         )
     }

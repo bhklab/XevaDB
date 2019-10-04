@@ -67,7 +67,7 @@ class DatasetDonut extends React.Component {
         return (
             <Fragment>
                 <Wrapper>
-                    <div className="donut-wrapper">
+                    <div className='donut-wrapper'>
                         <h1> Number of Patient IDs Per Dataset </h1>
                         <DonutChart 
                             dimensions = {this.dimensions} 

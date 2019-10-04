@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 const StyleBar = styled.div`
     margin-top: 30vh;
-    font-family: "Raleway", sans-serif;
+    font-family: 'Raleway', sans-serif;
     display:flex;
     margin:auto;
     
@@ -117,7 +117,7 @@ const StyleButton = styled.button`
     text-decoration: none;
     display: inline-block;
     font-size: 32px;
-    font-family: "Raleway", sans-serif; 
+    font-family: 'Raleway', sans-serif; 
     font-weight:700;
     margin: auto;
     transition: .3s;
