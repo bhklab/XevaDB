@@ -48,7 +48,9 @@ class Oncoprint extends React.Component {
             { value: 'Amplification', color: '#1a9850' },
             { value: 'Mutation', color: '#e41a1c'},
             { value: 'Wild Type', color: 'lightgray'},
-            { value: 'Not Available', color: 'none'}   
+            { value: 'Not Available', color: 'none'},
+            { value: 'mRNA High', color: 'none'},
+            { value: 'mRNA Low', color: 'none'}
         ]
        
 
@@ -351,62 +353,72 @@ class Oncoprint extends React.Component {
         let yrange_patient = d3.scaleLinear() // #TODO: scale.linear
                                 .domain([0, d3.max([maxPAmp, maxPMut, maxPHomdel])])
                                 .range([35, 0]);
-                        
-            for (let i = 0; i < patient_alterations.length; i++) {
-                patient_alter.append('rect')
-                            .attr('class', 'patient-rect mut')
-                            .attr('width', rect_width - 5)
-                            .attr('height', 35 - yrange_patient(patient_alterations[i]['mut']))
-                            .attr('fill', '#e41a1c')
-                            .attr('x', i * 20 + 1) 
-                            .attr('y', yrange_patient(patient_alterations[i]['mut']))
-                            .attr('transform', 'translate(0,-40)')
-    
-                patient_alter.append('rect')
-                            .attr('class', 'patient-rect amp')
-                            .attr('width', rect_width - 5)
-                            .attr('height', 35 - yrange_patient(patient_alterations[i]['amp']))
-                            .attr('fill', '#1a9850')
-                            .attr('x', i * 20 + 1) 
-                            .attr('y', yrange_patient(patient_alterations[i]['amp']) - (35 - yrange_patient(patient_alterations[i]['mut'])))
-                            .attr('transform', 'translate(0,-40)')
-                        
-                patient_alter.append('rect')
-                            .attr('class', 'patient-rect del')
-                            .attr('width', rect_width - 5)
-                            .attr('height', 35 - yrange_patient(patient_alterations[i]['del']))
-                            .attr('fill', '#0033CC')
-                            .attr('x', i * 20 + 1) 
-                            .attr('y', yrange_patient(patient_alterations[i]['del']) - (35 - yrange_patient(patient_alterations[i]['mut'])) - (35 - yrange_patient(patient_alterations[i]['amp'])))
-                            .attr('transform', 'translate(0,-40)')
+
+
+         // function to caculate alterations.
+         let patientAlterationReactangle = (iterator) => {
+            // variables.
+            let patient_class = ['mut', 'amp', 'del']
+            let i = iterator
+            let y_range = 0
+
+            // loops through each type for each of the genes.
+            patient_class.forEach((type, j) => {
+                // set value to 1 if j is greater than 1.
+                j = j > 1 ? j / j : j
+                // setting y range.
+                y_range = (yrange_patient(patient_alterations[i][type])) - ((35 * j) - y_range)
+                // color setting.
+                let color = ''
+                if (type === 'mut') {
+                    color = '#e41a1c'
+                } else if (type === 'amp') {
+                    color = '#1a9850'
+                } else if (type === 'del') {
+                    color = '#0033CC'
                 }
+                // rectangle coloring.
+                patient_alter.append('rect')
+                        .attr('class', `patient-rect${type}`)
+                        .attr('height', 35 - yrange_patient(patient_alterations[i][type]))
+                        .attr('width', rect_width - 5)
+                        .attr('fill', color)
+                        .attr('y', y_range)
+                        .attr('x', i * 20 + 1)
+                        .attr('transform', 'translate(0,-40)')
+            })
+        }
+                        
+        for (let i = 0; i < patient_alterations.length; i++) {
+            patientAlterationReactangle(i)
+        }
+
+        let yrange_axis = d3.scaleLinear() 
+                            .domain([0, max_height])
+                            .range([35 - yrange_patient(max_height), 0]).nice();
+
+        let y_axis = d3.axisLeft()
+                        .scale(yrange_axis)
+                        .ticks(4)
+                        .tickSize(3)
+                        .tickFormat(d3.format('.0f'));
     
-            let yrange_axis = d3.scaleLinear() 
-                                .domain([0, max_height])
-                                .range([35 - yrange_patient(max_height), 0]).nice();
+        svg.append('g')
+            .attr('class', 'y_axis')
+            .attr('fill', 'none')
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .attr('transform', 'translate(-10,' + (-(35 - yrange_patient(max_height))-5) + ')')
+            .call(y_axis)
+            .selectAll('text')
+            .attr('fill', 'black')
+            .style('font-size', 8)
+            .attr('stroke', 'none');
     
-            let y_axis = d3.axisLeft()
-                            .scale(yrange_axis)
-                            .ticks(4)
-                            .tickSize(3)
-                            .tickFormat(d3.format('.0f'));
-    
-                svg.append('g')
-                    .attr('class', 'y_axis')
-                    .attr('fill', 'none')
-                    .attr('stroke', 'black')
-                    .attr('stroke-width', 1)
-                    .attr('transform', 'translate(-10,' + (-(35 - yrange_patient(max_height))-5) + ')')
-                    .call(y_axis)
-                    .selectAll('text')
-                    .attr('fill', 'black')
-                    .style('font-size', 8)
-                    .attr('stroke', 'none');
-            
-                    svg.selectAll('.tick')
-                        .select('text')
-                        .attr('fill', 'black')
-                        .attr('stroke', 'none')
+        svg.selectAll('.tick')
+                .select('text')
+                .attr('fill', 'black')
+                .attr('stroke', 'none')
     
         // removing the 0 tick
         svg.selectAll('.y_axis .tick')
@@ -461,6 +473,7 @@ class Oncoprint extends React.Component {
 
                                                                                          /** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint **/
         // This will create four rectangles on right side for alterations.
+        // legends
         let target_rect = skeleton.append('g')
                                     .attr('id', 'small_rectangle')
 
@@ -477,13 +490,24 @@ class Oncoprint extends React.Component {
                                     .attr('fill', function(d) {
                                         if (d.color === 'none') {
                                             d3.select(this).attr('stroke','lightgray')
-                                                        .attr('transform', 'translate(1,1)')
-                                                        .attr('width', 14)
-                                                        .attr('height', 14)
+                                                            .attr('transform', 'translate(1,1)')
+                                                            .attr('width', 14)
+                                                            .attr('height', 14)
                                             return 'white'
                                         }
                                         return d.color;
                                     })
+                                    .attr('stroke', d => {
+                                        console.log(d)
+                                        if(d.value === 'mRNA High') {
+                                            return 'red'
+                                        } else if (d.value === 'mRNA Low') {
+                                            return 'blue'
+                                        } else if (d.value === 'Not Available') {
+                                            return 'lightgray'
+                                        }
+                                    })
+                                    .attr('stroke-width', '.5px')
 
                         target_rect.selectAll('text')
                                     .data(rect_alterations)
@@ -529,7 +553,7 @@ class Oncoprint extends React.Component {
                         })
             }
         }                           
-                            
+                           
     }
 
     render() {
