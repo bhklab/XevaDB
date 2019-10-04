@@ -73,7 +73,7 @@ class DonutDrug extends React.Component {
         return (
             <Fragment>
                 <Wrapper>
-                    <div className="donut-wrapper">
+                    <div className='donut-wrapper'>
                         <h1> Number of Model IDs Per Drug class </h1>
                         <DonutChart 
                             dimensions = {this.dimensions} 
@@ -83,7 +83,7 @@ class DonutDrug extends React.Component {
                             arc = {this.arc}
                         />
                     </div>
-                    <div className="donut-wrapper">
+                    <div className='donut-wrapper'>
                         <DrugTable/>
                     </div>
                 </Wrapper>

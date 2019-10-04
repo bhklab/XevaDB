@@ -39,7 +39,7 @@ class Search extends React.Component {
 
     componentWillMount() {
         const genes = GeneList.map(item => ({
-            value: item.split('=')[1].replace(/\s/g, ","),
+            value: item.split('=')[1].replace(/\s/g, ','),
             label: item.split('=')[0]
         }))
         this.setState ({
@@ -213,7 +213,7 @@ class Search extends React.Component {
                         <div className='div-gene-enter'>
                             <form>
                                 <input
-                                    type="text" 
+                                    type='text' 
                                     value={this.state.selectedGeneSearch} 
                                     onChange={this.handleGeneSearchChange}
                                 />
