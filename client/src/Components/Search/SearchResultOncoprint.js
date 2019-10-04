@@ -10,55 +10,67 @@ class SearchResultOncoprint extends React.Component {
         super(props)
         //setting the states for the data.
         this.state = {
+            data : [],
+            genes : [],
             patient_id : [],
-            gene_id: [],
-            gene_data: [],
-            heatmap_patients: [],
+            hmap_patients: [],
         };
         //binding the functions declared.
         this.updateResults = this.updateResults.bind(this);
     }
 
     updateResults(result) {
-        console.log('result is here', result)
-        const datasets = result;
-        let gene = [];
+        const dataset = result[0].data;
+        let gene_id = [];
         let patient = [];
-        let heatmap_patients = [];
-        
-        patient = Object.keys(datasets[0]);
-        patient.shift();
+        let hmap_patients = [];
 
-        heatmap_patients = datasets.pop()
+        Object.keys(dataset[0]).forEach(value => {
+            if(value !== 'gene_id') {
+                patient.push(value)
+            }
+        });
 
-        datasets.map((data) => {
-            return gene.push(data['gene_id']);
+        // grabbing the total patients from hmap.
+        hmap_patients = dataset.pop()
+
+        // genes
+        dataset.map((data) => {
+            return gene_id.push(data['gene_id']);
         })
-        
+
+        let data = result.map(value => {
+            return value.data
+        })
+
         this.setState({
-            gene_data : datasets,
-            gene_id : gene,
+            data : data,
+            genes : gene_id,
             patient_id : patient,
-            heatmap_patients : heatmap_patients
+            hmap_patients : hmap_patients
         })
+        
     }
 
     componentDidMount() {
         let dataset_param = this.props.dataset_param
         let gene_param = this.props.gene_param
-        //let drug_for_onco = this.props.drug_for_onco
+        let genomics_param = this.props.genomics_param
+        let query_data = []
+
+        // making get requests based on the genomics parameters.
+        // sequence is important (first cnv or mutation) then rnaseq has to be pushed.
+        if (genomics_param.includes('CNV') || genomics_param.includes('Mutation')) {
+            query_data.push(axios.get(`/api/v1/mutation?genes=${gene_param}&dataset=${dataset_param}`))
+        }
+        if (genomics_param.includes('RNASeq')) {
+            query_data.push(axios.get(`/api/v1/rnaseq?genes=${gene_param}&dataset=${dataset_param}`))
+        } 
         
-        axios.get(`/api/v1/mutation?genes=${gene_param}&dataset=${dataset_param}`)
-             .then(response => {
-                 console.log(response)
-                this.updateResults(response.data)
-             })
-            //.then(response => {
-                //axios.get(`/api/v1/response?drug=${drug_for_onco}&dataset=${dataset_param}`)
-                //.then(heatmap_patient => {
-                    //this.updateResults(response.data, heatmap_patient.data);
-                //})
-            //})
+        Promise.all([...query_data])
+                .then(response => {
+                    this.updateResults(response)
+                })
     }
 
     dimensions = {
@@ -76,12 +88,13 @@ class SearchResultOncoprint extends React.Component {
     render() {
         return (
             <Oncoprint 
-                data = {this.state.gene_data}
-                patient_id = {this.state.patient_id}
-                genes = {this.state.gene_id} 
-                dimensions = {this.dimensions}
-                margin = {this.margin}
-                hmap_patients = {this.state.heatmap_patients}
+            data = {this.state.data} 
+            patient_id = {this.state.patient_id}
+            hmap_patients = {this.state.hmap_patients}
+            className = 'oprint_result'
+            genes = {this.state.genes} 
+            dimensions = {this.dimensions}
+            margin = {this.margin}
             />
         )
     }
