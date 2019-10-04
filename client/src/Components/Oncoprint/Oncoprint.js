@@ -472,6 +472,7 @@ class Oncoprint extends React.Component {
                     .style('opacity', 0)  
 
                                                                                          /** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint **/
+                                                                                         
         // This will create four rectangles on right side for alterations.
         // legends
         let target_rect = skeleton.append('g')
@@ -498,7 +499,6 @@ class Oncoprint extends React.Component {
                                         return d.color;
                                     })
                                     .attr('stroke', d => {
-                                        console.log(d)
                                         if(d.value === 'mRNA High') {
                                             return 'red'
                                         } else if (d.value === 'mRNA Low') {
@@ -553,7 +553,7 @@ class Oncoprint extends React.Component {
                         })
             }
         }                           
-                           
+
     }
 
     render() {
