@@ -61,7 +61,6 @@ class OncoprintData extends React.Component {
             
             Promise.all([mutation_data, rnaseq_data])
                     .then(response => {
-                        console.log(response)
                         this.updateResults(response);  
                     })
         } else { // this is basically useless else statement.

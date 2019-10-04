@@ -89,7 +89,7 @@ class Search extends React.Component {
         }
     }
 
-
+    // handle the dataset change and sends a post request to grab drugs based on the particular dataset.
     handleDatasetChange = selectedOption => {
         this.setState({
             selectedDataset: selectedOption.value
@@ -114,7 +114,7 @@ class Search extends React.Component {
              })
     }
 
-
+    // sets the value of selected gene search, empty if it's user defined list else the option selected.
     handleGeneListChange = selectedOption => {
         if(selectedOption.value === 'user defined list') {
             this.setState({
@@ -127,14 +127,14 @@ class Search extends React.Component {
         }
     }
 
-
+    // sets the value on event change.
     handleGeneSearchChange = (event) => {
         this.setState({
             selectedGeneSearch: event.target.value
         })
     }
 
-
+    // this adds the value either mutation or cnv or rnaseq.
     handleExpressionChange = selectedOption => {
         if (selectedOption !== null && selectedOption.length > 0) {
             const genomics_value = selectedOption.map(value => {
