@@ -14,6 +14,7 @@ class SearchResultOncoprint extends React.Component {
             genes : [],
             patient_id : [],
             hmap_patients: [],
+            genes_rna : [],
         };
         //binding the functions declared.
         this.updateResults = this.updateResults.bind(this);
@@ -43,11 +44,17 @@ class SearchResultOncoprint extends React.Component {
             return value.data
         })
 
+        // genes for rnaseq
+        let gene_id_rna = result[1].data.map((data) => {
+            return data['gene_id']
+        })
+
         this.setState({
             data : data,
             genes : gene_id,
             patient_id : patient,
-            hmap_patients : hmap_patients
+            hmap_patients : hmap_patients,
+            genes_rna : gene_id_rna
         })
         
     }
@@ -88,13 +95,14 @@ class SearchResultOncoprint extends React.Component {
     render() {
         return (
             <Oncoprint 
-            data = {this.state.data} 
-            patient_id = {this.state.patient_id}
-            hmap_patients = {this.state.hmap_patients}
-            className = 'oprint_result'
-            genes = {this.state.genes} 
-            dimensions = {this.dimensions}
-            margin = {this.margin}
+                data = {this.state.data} 
+                patient_id = {this.state.patient_id}
+                hmap_patients = {this.state.hmap_patients}
+                className = 'oprint_result'
+                genes = {this.state.genes} 
+                dimensions = {this.dimensions}
+                margin = {this.margin}
+                genes_rna = {this.state.genes_rna}
             />
         )
     }
