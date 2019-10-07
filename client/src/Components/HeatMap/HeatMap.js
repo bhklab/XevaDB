@@ -381,7 +381,7 @@ class HeatMap extends React.Component {
                                  .append('rect')
                                  .attr('x', (patient.length * rect_width + 120))
                                  .attr('y', function(d, i) {
-                                    return 100 + i * 25;
+                                    return (drug.length * 10) + i * 25;
                                  })
                                  .attr('height', '15')
                                  .attr('width', '15')
@@ -395,7 +395,7 @@ class HeatMap extends React.Component {
                                  .append('text')
                                  .attr('x', (patient.length * rect_width + 140))
                                  .attr('y', function(d,i) {
-                                     return 112 + i * 25;
+                                     return (drug.length * 10 + 12) + i * 25;
                                  })
                                  .text(function(d) {
                                      return d.value;
@@ -445,46 +445,30 @@ class HeatMap extends React.Component {
                                .style('stroke', 'black')
                                .style('stroke-width', 1)
 
-    for(let i=0; i<drug.length; i++) {
-        drug_eval.append('rect')
-                 .attr('class', 'drug_eval_cr')
-                 .attr('height', 26)
-                 .attr('width', drug_Scale(drug_evaluations[drug[i]]['CR']))
-                 .attr('x',patient.length * rect_width + 20)
-                 .attr('y',  drug_height_Scale(42 + i * 40))
-                 .attr('fill', target_color[0])
-                 .style('stroke', 'black')
-                 .style('stroke-width', stroke_width)
-        
-        drug_eval.append('rect')
-                 .attr('class', 'drug_eval_pr')
-                 .attr('height', 26)
-                 .attr('width', drug_Scale(drug_evaluations[drug[i]]['PR']))
-                 .attr('x',patient.length * rect_width + 20 + drug_Scale(drug_evaluations[drug[i]]['CR']))
-                 .attr('y',  drug_height_Scale(42 + i * 40))
-                 .attr('fill', target_color[1])
-                 .style('stroke', 'black')
-                 .style('stroke-width', stroke_width)
 
-        drug_eval.append('rect')
-                 .attr('class', 'drug_eval_sd')
-                 .attr('height', 26)
-                 .attr('width', drug_Scale(drug_evaluations[drug[i]]['SD']))
-                 .attr('x',patient.length * rect_width + 20 + drug_Scale(drug_evaluations[drug[i]]['CR']) + drug_Scale(drug_evaluations[drug[i]]['PR']))
-                 .attr('y',  drug_height_Scale(42 + i * 40))
-                 .attr('fill', target_color[2])
-                 .style('stroke', 'black')
-                 .style('stroke-width', stroke_width)
+    //rectangle for vertical graph. 
+    let drugEvaluationRectangle = (iterator) => {
+        let response_eval_types = ['CR', 'PR', 'SD', 'PD']
+        let x_range = patient.length * rect_width + 20
+        let width = 0 
+        response_eval_types.forEach((type, j) => {
+            // x range for the rectangles.
+            x_range = x_range + width
+            width = drug_Scale(drug_evaluations[drug[iterator]][type])
+            drug_eval.append('rect')
+                    .attr('class', `drug_eval_${type}`)
+                    .attr('height', 26)
+                    .attr('width', width)
+                    .attr('x', x_range)
+                    .attr('y', drug_height_Scale(42 + iterator * 40))
+                    .attr('fill', target_color[j])
+                    .style('stroke', 'black')
+                    .style('stroke-width', stroke_width)
+        })
+    }
 
-        drug_eval.append('rect')
-                 .attr('class', 'drug_eval_pd')
-                 .attr('height', 26)
-                 .attr('width', drug_Scale(drug_evaluations[drug[i]]['PD']))
-                 .attr('x',patient.length * rect_width + 20 + drug_Scale(drug_evaluations[drug[i]]['CR']) + drug_Scale(drug_evaluations[drug[i]]['PR']) + drug_Scale(drug_evaluations[drug[i]]['SD'])) 
-                 .attr('y', drug_height_Scale(42 + i * 40))
-                 .attr('fill', target_color[3])  
-                 .style('stroke', 'black')
-                 .style('stroke-width', stroke_width)  
+    for(let i=0; i < drug.length; i++) {
+        drugEvaluationRectangle(i)
     }
 
 
@@ -543,51 +527,31 @@ class HeatMap extends React.Component {
                 .call(y_axis)
         }
 
-                    
+        // function to calculate patient evaluations.
+        let patientEvaluationRectangle = (iterator) => {
+            let response_eval_types = ['CR', 'PR', 'SD', 'PD']
+            let height = 0
+            let y_range = -130 + box_height 
+
+            response_eval_types.forEach((type, j) => {
+                height = patient_Scale(patient_evaluations[patient[iterator]][type])
+                y_range = y_range - height
+                patient_eval.append('rect')
+                            .attr('class', 'patient_eval_cr')
+                            .attr('height', height)
+                            .attr('width', 16)
+                            .attr('x', iterator * 20)
+                            .attr('y', y_range)
+                            .attr('fill', target_color[j])
+                            .style('stroke', 'black')
+                            .style('stroke-width', stroke_width)
+            })
+        }
+      
         for(let i=0; i<patient.length; i++) {
-            patient_eval.append('rect')
-                    .attr('class', 'patient_eval_cr')
-                    .attr('height', patient_Scale(patient_evaluations[patient[i]]['CR']))
-                    .attr('width', 16)
-                    .attr('x', i * 20)
-                    .attr('y', -130 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']))
-                    .attr('fill', target_color[0])
-                    .style('stroke', 'black')
-                    .style('stroke-width', stroke_width)
-            
-            patient_eval.append('rect')
-                    .attr('class', 'patient_eval_pr')
-                    .attr('height', patient_Scale(patient_evaluations[patient[i]]['PR']))
-                    .attr('width', 16)
-                    .attr('x', i * 20)
-                    .attr('y', -130 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']) - patient_Scale(patient_evaluations[patient[i]]['PR']))
-                    .attr('fill', target_color[1])
-                    .style('stroke', 'black')
-                    .style('stroke-width', stroke_width)
-
-            patient_eval.append('rect')
-                    .attr('class', 'patient_eval_sd')
-                    .attr('height', patient_Scale(patient_evaluations[patient[i]]['SD']))
-                    .attr('width', 16)
-                    .attr('x', i * 20)
-                    .attr('y', -130 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']) - patient_Scale(patient_evaluations[patient[i]]['PR']) - patient_Scale(patient_evaluations[patient[i]]['SD']))
-                    .attr('fill', target_color[2])
-                    .style('stroke', 'black')
-                    .style('stroke-width', stroke_width)
-
-            patient_eval.append('rect')
-                    .attr('class', 'patient_eval_pd')
-                    .attr('height', patient_Scale(patient_evaluations[patient[i]]['PD']))
-                    .attr('width', 16)
-                    .attr('x', i * 20)
-                    .attr('y', -130 + box_height - patient_Scale(patient_evaluations[patient[i]]['CR']) - patient_Scale(patient_evaluations[patient[i]]['PR']) - patient_Scale(patient_evaluations[patient[i]]['SD']) - patient_Scale(patient_evaluations[patient[i]]['PD']))
-                    .attr('fill', target_color[3])
-                    .style('stroke', 'black')
-                    .style('stroke-width', stroke_width)
+            patientEvaluationRectangle(i)
         }
     }
-
-    
 
 }
 
@@ -608,5 +572,6 @@ HeatMap.propTypes = {
     dimensions: PropTypes.object.isRequired,
     margin: PropTypes.object.isRequired
 }
+
 
 export default HeatMap
