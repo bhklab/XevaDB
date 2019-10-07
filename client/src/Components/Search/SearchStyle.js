@@ -22,7 +22,7 @@ const StyleBar = styled.div`
         width: 45%;
         min-width: 750px;
         margin-top: 0px;
-        max-height: 600px;
+        max-height: 550px;
         display: flex;
         flex-wrap: wrap;
         margin: 35px;
@@ -34,29 +34,50 @@ const StyleBar = styled.div`
             max-width: 49%;
             min-width: 295px;
         }
-        .div-genomics, .div-gene{
+        .div-genomics, .div-gene {
             margin: 10px;
             min-width: 600px;
             max-width: 70%;
         }
 
-        .div-gene-enter{
+        .div-rnaseq {
+            text-align: left;
+            padding-left: 5px;
+            margin: 5px;
+            min-width: 600px;
+            max-width: 70%;
+            font-size: 15px;
+            color: #3453b0;
+            
+            input {
+                color: #3453b0;
+                font-size: 14px;
+                border: 1px solid #3453b0;
+                border-radius: 4px;
+                outline-style: none;
+                padding: 2px;
+                margin-left: 4px;
+            }
+        }
+
+        .div-gene-enter {
             margin: 15px;
             min-width: 620px;
-            min-height: 180px;
-                input {
-                    min-width: 600px;
-                    min-height: 150px;
-                    outline-style: none;
-                    border-radius: 10px;
-                    color: #3453b0;
-                    font-weight: 300;
-                    font-size: 16px;
-                    border: 1px solid #3453b0;
-                    padding: 20px;
-                    box-sizing: border-box;
-                }
+            max-height: 150px;
+            input {
+                min-width: 600px;
+                min-height: 120px;
+                outline-style: none;
+                border-radius: 10px;
+                color: #3453b0;
+                font-weight: 300;
+                font-size: 16px;
+                border: 1px solid #3453b0;
+                padding: 20px;
+                box-sizing: border-box;
+            }
         }
+
     }
 
     .two-col {
@@ -81,7 +102,7 @@ const StyleBar = styled.div`
         }
         .select-component {
             width: 55%;
-            max-height: 400px;
+            max-height: 440px;
         }
         .search-container {
             max-height: 500px;

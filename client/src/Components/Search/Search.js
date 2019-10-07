@@ -19,7 +19,9 @@ class Search extends React.Component {
             selectedDataset: '' ,
             genomics: ['Mutation', 'CNV', 'RNASeq'],
             selectedGenomics: [],
-            allDrugs: []
+            allDrugs: [],
+            threshold: 2,
+            toggleRNA: false
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleDatasetChange = this.handleDatasetChange.bind(this)
@@ -28,6 +30,7 @@ class Search extends React.Component {
         this.handleExpressionChange = this.handleExpressionChange.bind(this)
         this.handleKeyPress = this.handleKeyPress.bind(this)
         this.redirectUser = this.redirectUser.bind(this)
+        this.handleThreshold = this.handleThreshold.bind(this)
     } 
 
     axiosConfig = {
@@ -143,7 +146,28 @@ class Search extends React.Component {
             this.setState({
                 selectedGenomics : genomics_value
             })
+
+            if(genomics_value.includes('RNASeq')) {
+                this.setState({
+                    toggleRNA : true
+                })
+            } else {
+                this.setState({
+                    toggleRNA : false
+                })
+            }
+        } else if (selectedOption === null || selectedOption.length === 0) {
+            this.setState({
+                toggleRNA : false
+            })
         }
+    }
+
+    // threshold for rnaseq.
+    handleThreshold = (event) => {
+        this.setState({
+            threshold : event.target.value
+        })
     }
 
 
@@ -199,6 +223,23 @@ class Search extends React.Component {
                                 isMulti
                                 isClearable
                             />
+                        </div>
+
+                        <div className='div-rnaseq'> 
+                        {
+                            this.state.toggleRNA ? 
+                                <div>
+                                    Enter a z-score threshold ±
+                                    <input 
+                                        type='text' 
+                                        name='title' 
+                                        value={this.state.threshold} 
+                                        onChange={this.handleThreshold}
+                                    />
+                                </div>
+                            : null
+                        }
+                            
                         </div>
 
                         <div className='div-gene'>
