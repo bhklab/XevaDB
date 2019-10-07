@@ -490,7 +490,7 @@ class Oncoprint extends React.Component {
                                     .append('rect')
                                     .attr('x', (hmap_patients.length * rect_width + 120))
                                     .attr('y', function(d, i) {
-                                        return 200 + i * 25;
+                                        return (genes.length * 10) + i * 25;
                                     })
                                     .attr('height', '15')
                                     .attr('width', '15')
@@ -521,7 +521,7 @@ class Oncoprint extends React.Component {
                                     .append('text')
                                     .attr('x', (hmap_patients.length * rect_width + 140))
                                     .attr('y', function(d,i) {
-                                        return 212 + i * 25;
+                                        return (genes.length * 10 + 12) + i * 25;
                                     })
                                     .text(function(d) {
                                         return d.value;
