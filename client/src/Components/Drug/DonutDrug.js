@@ -4,7 +4,8 @@ import Footer from '../Footer/Footer'
 import DrugTable from './DrugTable'
 import axios from 'axios'
 import styled from 'styled-components'
-
+import GlobalStyles from '../../GlobalStyles'
+import TopNav from '../TopNav/TopNav'
 
 const Wrapper = styled.div`
     display: flex;
@@ -72,6 +73,8 @@ class DonutDrug extends React.Component {
     render() {
         return (
             <Fragment>
+                <TopNav/>
+                <GlobalStyles/>
                 <Wrapper>
                     <div className='donut-wrapper'>
                         <h1> Number of Model IDs Per Drug class </h1>
