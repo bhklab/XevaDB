@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import HeatMap from './HeatMap'
 import axios from 'axios'
-
+import GlobalStyles from '../../GlobalStyles'
+import TopNav from '../TopNav/TopNav'
 
 class HeatMapData extends React.Component {
 
@@ -85,16 +86,20 @@ class HeatMapData extends React.Component {
     
     render() {
         return (
-            <div className='wrapper' style={{margin:'auto', fontSize:'0'}}>
-                <HeatMap
-                    data = {this.state.data} 
-                    drug_id = {this.state.drug_id} 
-                    className = 'heatmap'
-                    patient_id = {this.state.patient_id} 
-                    dimensions = {this.dimensions}
-                    margin = {this.margin}
-                />
-            </div>
+            <Fragment>
+                <TopNav/>
+                <GlobalStyles/>
+                <div className='wrapper' style={{margin:'auto', fontSize:'0'}}>
+                    <HeatMap
+                        data = {this.state.data} 
+                        drug_id = {this.state.drug_id} 
+                        className = 'heatmap'
+                        patient_id = {this.state.patient_id} 
+                        dimensions = {this.dimensions}
+                        margin = {this.margin}
+                    />
+                </div>
+            </Fragment>
         )
     }
 }

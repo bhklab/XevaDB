@@ -2,7 +2,8 @@ import React, {Fragment} from 'react'
 import * as d3 from 'd3'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-
+import GlobalStyles from '../../GlobalStyles'
+import TopNav from '../TopNav/TopNav'
 
 class TumorGrowthCurve extends React.Component {
 
@@ -952,6 +953,8 @@ class TumorGrowthCurve extends React.Component {
     render() {
         return (
             <Fragment>
+            <TopNav/>
+            <GlobalStyles/>
             <div className="wrapper" style={{margin:"auto", fontSize:"16px"}}>
                 <div className="curve-wrapper" style={{marginTop:"100px"}}>
                     <h1>Drug ID = <span style={{color:"#cd5686"}}>{this.getParams().drugid_param}</span> and Patient ID = <span style={{color:"#cd5686"}}>{this.getParams().patient_param}</span></h1>
@@ -966,14 +969,12 @@ class TumorGrowthCurve extends React.Component {
                 <div className="curve-wrapper" style={{marginTop:"20px", padding:"10px 0px"}}>
                     <Link to='/datasets'> ←&nbsp;&nbsp;Back to Datasets </Link>
                 </div>
-                
-               
             </div>
             </Fragment>
-            
-            
         )
     }
 }
+
+
 
 export default TumorGrowthCurve;

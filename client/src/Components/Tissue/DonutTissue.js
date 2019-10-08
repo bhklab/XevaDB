@@ -3,7 +3,8 @@ import DonutChart from '../DonutChart/DonutChart'
 import Footer from '../Footer/Footer'
 import axios from 'axios'
 import styled from 'styled-components'
-
+import GlobalStyles from '../../GlobalStyles'
+import TopNav from '../TopNav/TopNav'
 
 const Wrapper = styled.div`
     display: flex;
@@ -70,6 +71,8 @@ class DonutTissue extends React.Component {
     render() {
         return (
             <Fragment>
+                <TopNav/>
+                <GlobalStyles/>
                 <Wrapper>
                     <div className='donut-wrapper'>
                         <h1> Number of Model IDs Per Tissue Type </h1>

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import CountUp from 'react-countup'
 import { Link } from 'react-router-dom'
 import DonutNav from './CounterStyle'
 import axios from 'axios'
-
+import GlobalStyles from '../../GlobalStyles'
+import TopNav from '../TopNav/TopNav'
 
 class CounterNav extends React.Component {
 
@@ -32,53 +33,55 @@ class CounterNav extends React.Component {
 
     render() {
         return (
-            <DonutNav>
+            <Fragment>
+                <TopNav/>
+                <GlobalStyles/>
+                <DonutNav>
 
-                <Link>
-                    <CountUp 
-                        start = {0}
-                        end = {this.state.datasets} 
-                        duration = {3}
-                        useEasing={true}
-                    />
-                    <h4> DATASETS </h4>
-                </Link>
-
-
-                <Link to='/tissues'>
-                    <CountUp 
-                        start = {0}
-                        end = {this.state.tissues} 
-                        duration = {3}
-                        useEasing={true}
-                    />
-                    <h4> TISSUES </h4>
-                </Link>
+                    <Link>
+                        <CountUp 
+                            start = {0}
+                            end = {this.state.datasets} 
+                            duration = {3}
+                            useEasing={true}
+                        />
+                        <h4> DATASETS </h4>
+                    </Link>
 
 
-                 <Link>
-                    <CountUp 
-                        start = {0}
-                        end = {this.state.patients} 
-                        duration = {3}
-                        useEasing={true}
-                    />
-                    <h4> PATIENTS </h4> 
-                </Link>
+                    <Link to='/tissues'>
+                        <CountUp 
+                            start = {0}
+                            end = {this.state.tissues} 
+                            duration = {3}
+                            useEasing={true}
+                        />
+                        <h4> TISSUES </h4>
+                    </Link>
 
 
-                <Link to='/drugs'>
-                    <CountUp 
-                        start = {0}
-                        end = {this.state.drugs}
-                        duration = {3}
-                        useEasing={true}
-                    /> 
-                    <h4> DRUGS </h4>
-                </Link>
-                    
+                    <Link>
+                        <CountUp 
+                            start = {0}
+                            end = {this.state.patients} 
+                            duration = {3}
+                            useEasing={true}
+                        />
+                        <h4> PATIENTS </h4> 
+                    </Link>
 
-            </DonutNav>
+
+                    <Link to='/drugs'>
+                        <CountUp 
+                            start = {0}
+                            end = {this.state.drugs}
+                            duration = {3}
+                            useEasing={true}
+                        /> 
+                        <h4> DRUGS </h4>
+                    </Link>
+                </DonutNav>
+            </Fragment>
         )
     }
 

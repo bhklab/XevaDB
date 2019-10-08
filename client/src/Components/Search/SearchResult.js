@@ -1,6 +1,9 @@
 import React, {Fragment} from 'react'
 import SearchResultOncoprint from './SearchResultOncoprint'
 import SearchResultHeatMap from './SearchResultHeatMap'
+import GlobalStyles from '../../GlobalStyles'
+import TopNav from '../TopNav/TopNav'
+
 
 class SearchResult extends React.Component {
     constructor(props) {
@@ -37,6 +40,8 @@ class SearchResult extends React.Component {
     render() {
         return (
             <Fragment>
+                <TopNav/>
+                <GlobalStyles/>
                 <div className='wrapper' style={{margin:'auto', fontSize:'0'}}>
                     <SearchResultHeatMap 
                         drug_param = {this.state.drug_param} 

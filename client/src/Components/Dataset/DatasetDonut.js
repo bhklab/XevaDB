@@ -3,6 +3,8 @@ import DonutChart from '../DonutChart/DonutChart'
 import axios from 'axios';
 import styled from 'styled-components'
 import Footer from '../Footer/Footer'
+import GlobalStyles from '../../GlobalStyles'
+import TopNav from '../TopNav/TopNav'
 
 const Wrapper = styled.div`
     display: flex;
@@ -66,6 +68,8 @@ class DatasetDonut extends React.Component {
     render() {
         return (
             <Fragment>
+                <GlobalStyles/>
+                <TopNav/>
                 <Wrapper>
                     <div className='donut-wrapper'>
                         <h1> Number of Patient IDs Per Dataset </h1>

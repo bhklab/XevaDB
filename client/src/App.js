@@ -9,12 +9,12 @@ import {    CounterNav,
             Footer,
             HeatMapData,
             Home,
+            Login,
             OncoprintData,
             SearchResult,
             TopNav,
             TumorGrowthCurve, } from './Components/index'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import GlobalStyles from './GlobalStyles'
 
 
 
@@ -34,8 +34,6 @@ class App extends React.Component {
     return (
       <Fragment>
         <Router>
-          <GlobalStyles />
-          <TopNav/>
           <Switch>
             <Route path='/' exact component={Home}></Route>
             <Route path='/curve' exact component={TumorGrowthCurve}></Route>
@@ -45,6 +43,7 @@ class App extends React.Component {
             <Route path='/drugs' exact component={DonutDrug}></Route>
             <Route path='/drug/:id' exact component={DrugTable}></Route>
             <Route path='/home' exact component={CounterNav}></Route>
+            <Route path='/login' exact component={Login}></Route>
             <Route path='/maps' exact component={Merge}></Route>
             <Route path='/search' exact component={SearchResult}></Route>
             <Route path='/tissues' exact component={DonutTissue}></Route>

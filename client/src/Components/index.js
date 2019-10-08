@@ -10,6 +10,7 @@ import DrugTable from './Drug/DrugTable'
 import Footer from './Footer/Footer'
 import HeatMapData from './HeatMap/HeatMapData'
 import Home from './Home/Home'
+import Login from './Login/Login'
 import OncoprintData from './Oncoprint/OncoprintData'
 import Search from './Search/Search'
 import SearchResult from './Search/SearchResult'
@@ -33,6 +34,7 @@ export {
     Footer,
     HeatMapData,
     Home,
+    Login,
     OncoprintData,
     Search,
     SearchResult,
