@@ -15,6 +15,7 @@ class SearchResultOncoprint extends React.Component {
             patient_id : [],
             hmap_patients: [],
             genes_rna : [],
+            threshold : 0
         };
         //binding the functions declared.
         this.updateResults = this.updateResults.bind(this);
@@ -54,9 +55,9 @@ class SearchResultOncoprint extends React.Component {
             genes : gene_id,
             patient_id : patient,
             hmap_patients : hmap_patients,
-            genes_rna : gene_id_rna
+            genes_rna : gene_id_rna,
+            threshold : this.props.threshold
         })
-        
     }
 
     componentDidMount() {
@@ -103,6 +104,7 @@ class SearchResultOncoprint extends React.Component {
                 dimensions = {this.dimensions}
                 margin = {this.margin}
                 genes_rna = {this.state.genes_rna}
+                threshold = {this.state.threshold}
             />
         )
     }

@@ -101,6 +101,7 @@ class OncoprintData extends React.Component {
                     dimensions = {this.dimensions}
                     margin = {this.margin}
                     genes_rna = {this.state.genes_rna}
+                    threshold = {2}
                 />   
             </div>    
         )

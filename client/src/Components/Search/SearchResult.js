@@ -10,7 +10,8 @@ class SearchResult extends React.Component {
             dataset_param : '',
             gene_param : '',
           //drug_param_for_onco : '',
-            genomics_param : ''
+            genomics_param : '',
+            threshold : 0
         }
     }
 
@@ -20,13 +21,16 @@ class SearchResult extends React.Component {
         let drug = params.get('drug')
         let dataset = params.get('dataset')
         let gene = params.get('genes')
+        let threshold = params.get('threshold')
         //let drug_for_onco = drug.split(',')[0]
+        console.log(threshold)
         this.setState({
             drug_param : drug,
             dataset_param : dataset,
             gene_param : gene,
             //drug_param_for_onco : drug_for_onco,
-            genomics_param : genomics
+            genomics_param : genomics,
+            threshold : threshold
         })
     }
        
@@ -43,6 +47,7 @@ class SearchResult extends React.Component {
                         dataset_param = {this.state.dataset_param} 
                         //drug_for_onco = {this.state.drug_param_for_onco}
                         genomics_param = {this.state.genomics_param}
+                        threshold = {this.state.threshold}
                     />
                 </div>
             </Fragment>
