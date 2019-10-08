@@ -26,11 +26,12 @@ class Oncoprint extends React.Component {
         let patient_id = this.props.patient_id;
         let hmap_patients = this.props.hmap_patients;
         let genes_rna = this.props.genes_rna;
-        this.makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin, genes_rna)
+        let threshold = this.props.threshold
+        this.makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin, genes_rna, threshold)
     }
 
 
-    makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin, genes_rna) {
+    makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin, genes_rna, threshold) {
         let data = dataset[0]
         let rnaseq_data = dataset[1]
        
@@ -205,9 +206,9 @@ class Oncoprint extends React.Component {
                 for(let j = 0; j < hmap_patients.length; j++) {
                     //only if the element is not included 
                     if(diff.indexOf(hmap_patients[j]) === -1) {
-                        if (Number(rnaseq_data[z][hmap_patients[j]]) > 5) {
+                        if (Number(rnaseq_data[z][hmap_patients[j]]) > threshold) {
                             colorReactangles('highrna', 'none', i, j)
-                        } else if (Number(rnaseq_data[z][hmap_patients[j]]) < -5) {
+                        } else if (Number(rnaseq_data[z][hmap_patients[j]]) < -threshold) {
                             colorReactangles('lowrna', 'none', i, j)
                         }
                     }
