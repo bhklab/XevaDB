@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import {Paper, FormStyle, SubmitStyle} from './LoginStyle'
-
+import {Paper, FormStyle, SubmitStyle, LogoStyle, PaperGradient, LogoBack} from './LoginStyle'
+import logo from '../../images/logo.png';
 
 class Login extends React.Component {
 
@@ -24,7 +24,7 @@ class Login extends React.Component {
 
 
   handleUserChange = (event) => {
-    console.log(event.target.value)
+    //console.log(event.target.value)
     this.setState({
       username: event.target.value
     })
@@ -32,82 +32,92 @@ class Login extends React.Component {
 
 
   handlePasswordChange = (event) => {
-    console.log(event.target.value)
+    //console.log(event.target.value)
     this.setState({
       username: event.target.password
     })
   }
 
   handleSubmit = (event) => {
-    
+    event.preventDefault();
   }
 
 
   render() {
     return (
-      <Container component="main" maxWidth="xs">
-        <Paper>
+      <Fragment>
+        
+        <Link to='/'>
+          <LogoBack>
+            <LogoStyle src={logo} alt='logo' />
+          </LogoBack>
+        </Link>
 
-          <Typography component="h1" variant="h5" style={{color:'#3f51b5'}}>
-            Sign in
-          </Typography>
+        <Container component="main" maxWidth="xs">
+          <PaperGradient>
+          <Paper>
 
-          <FormStyle>
-            <form noValidate>
+            <Typography component="h1" variant="h5" style={{color:'#3f51b5', marginTop: '1.5vh'}}>
+              Sign in
+            </Typography>
 
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Username"
-                name="username"
-                autoFocus
-                onChange={this.handleUserChange}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={this.handlePasswordChange}
-              />
+            <FormStyle>
+              <form onSubmit={this.handleSubmit}>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Username"
+                  name="username"
+                  autoFocus
+                  onChange={this.handleUserChange}
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={this.handlePasswordChange}
+                />
 
-              <SubmitStyle>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-              >
-                Sign In
-              </Button>
-              </SubmitStyle>
-              
-              <Grid container style={{marginTop: '5px'}}>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
+                <SubmitStyle>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                >
+                  Sign In
+                </Button>
+                </SubmitStyle>
+                
+                <Grid container style={{marginTop: '5px'}}>
+                  <Grid item xs>
+                    <Link href="#" variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link href="#" variant="body2">
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
+              </form>
+            </FormStyle>
 
-            </form>
-          </FormStyle>
+          </Paper>
+          </PaperGradient>
+        </Container>
 
-        </Paper>
-      </Container>
+      </Fragment>
     )
   }
 
