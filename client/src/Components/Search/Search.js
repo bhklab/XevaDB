@@ -4,6 +4,7 @@ import {StyleBar, customStyles, StyleButton} from './SearchStyle'
 import Select from 'react-select'
 import axios from 'axios'
 import { GeneList } from './GeneList'
+import { ConnectionBase } from 'mongoose';
 
 
 
@@ -43,8 +44,9 @@ class Search extends React.Component {
     componentWillMount() {
         const genes = GeneList.map(item => ({
             value: item.split('=')[1].replace(/\s/g, ','),
-            label: item.split('=')[0]
+            label: `${item.split('=')[0]} (${item.split('=')[1].split(' ').length})`
         }))
+    
         this.setState ({
             genes: [{value: 'user defined list', label: 'User-Defined List'}, ...genes]
         })
