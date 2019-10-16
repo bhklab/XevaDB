@@ -17,7 +17,7 @@ class Search extends React.Component {
             selectedGeneSearch: ['Enter Gene Symbol(s)'],
             selectedDrugs: [],
             selectedDataset: '' ,
-            genomics: ['Mutation', 'CNV', 'RNASeq'],
+            genomics: ['All', 'Mutation', 'CNV', 'RNASeq'],
             selectedGenomics: [],
             allDrugs: [],
             threshold: 2,
@@ -140,14 +140,22 @@ class Search extends React.Component {
     // this adds the value either mutation or cnv or rnaseq.
     handleExpressionChange = selectedOption => {
         if (selectedOption !== null && selectedOption.length > 0) {
+            // map through the options in order to store the selected value.
             const genomics_value = selectedOption.map(value => {
                 return value.label
             })
-            this.setState({
-                selectedGenomics : genomics_value
-            })
-
-            if(genomics_value.includes('RNASeq')) {
+            // if all then everything will be passed else the selected value.
+            if(genomics_value.includes('All')) {
+                this.setState({
+                    selectedGenomics : ['Mutation', 'CNV', 'RNASeq']
+                })
+            } else {
+                this.setState({
+                    selectedGenomics : genomics_value
+                })
+            }
+            // and if it includes RNASeq or all then toggle should be true.
+            if(genomics_value.includes('RNASeq') || genomics_value.includes('All')) {
                 this.setState({
                     toggleRNA : true
                 })
