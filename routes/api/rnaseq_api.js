@@ -67,7 +67,21 @@ const getRnaSeqBasedPerDatasetBasedOnGenes = function(request, response) {
     let param_gene = request.query.genes
     let param_dataset = request.query.dataset
     let genes = param_gene.split(',')
-    
+
+    // get the distinct patients or total patients from model information table.
+    // as some patient ids are missing from oncoprint because data is not available for that patient/model.
+    let modelInformationDistinctPatient = knex('model_information')
+                                                .distinct('patients.patient')
+                                                .from('model_information')
+                                                .leftJoin(
+                                                    'patients',
+                                                    'model_information.patient_id',
+                                                    'patients.patient_id'
+                                                )
+                                                .where({
+                                                    dataset_id: param_dataset
+                                                })
+
      // to get the number of distinct patient ids.
      const distinctPatient = knex.distinct('modelid_moleculardata_mapping.sequencing_uid')
                                 .from('model_information')
@@ -85,10 +99,13 @@ const getRnaSeqBasedPerDatasetBasedOnGenes = function(request, response) {
                             .whereIn('gene_name', genes)
                  
     // rna_sequencing data.
-            gene_list                    
-                    .then((gene_list) => {
-                       //parsing the gene_list in order to get an array of genes.
-                        let value = JSON.parse(JSON.stringify(gene_list))
+             Promise.all([modelInformationDistinctPatient, distinctPatient, gene_list])            
+                    .then((row) => {
+                        let data = []
+                        //patients
+                        let patientRows = JSON.parse(JSON.stringify(row[0]))
+                        //parsing the gene_list in order to get an array of genes.
+                        let value = JSON.parse(JSON.stringify(row[2]))
                         value = value.map((value) => {
                             return value.gene_id
                         })
@@ -109,7 +126,6 @@ const getRnaSeqBasedPerDatasetBasedOnGenes = function(request, response) {
                         .whereIn('rna_sequencing.gene_id', value)
                         .then((rnasequencing_data) => {
                             let gene_id = ''
-                            let data = []
                             let i = 0
                             usersRows = JSON.parse(JSON.stringify(rnasequencing_data));
                             usersRows.map((element) => {
@@ -123,6 +139,13 @@ const getRnaSeqBasedPerDatasetBasedOnGenes = function(request, response) {
                                     data[i-1][element.sequencing_id] = element.value
                                 }
                             })
+
+                            //array of all the patients belonging to a particular dataset.
+                            patient = patientRows.map(element => {
+                                return element.patient
+                            })
+                            data.push(patient)
+                            //sending the response.
                             response.send(data)
                         })
                     })
