@@ -32,9 +32,10 @@ class Oncoprint extends React.Component {
 
 
     makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin, genes_rna, threshold) {
+      
         let data = dataset[0]
         let rnaseq_data = dataset[1]
-       
+        console.log(data, rnaseq_data, genes, genes_rna)
         this.node = node
         // height and width for the SVG based on the number of genes and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
@@ -110,6 +111,9 @@ class Oncoprint extends React.Component {
         
     
                                                 /** Setting Alterations **/
+        if(data.length > 0) {
+            
+        }
 
         // alterations: mutations are #1a9850 and a third, AMP/del are #e41a1c/#0033CC and full respectively
         let alterations = svg.append('g')

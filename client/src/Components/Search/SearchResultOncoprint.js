@@ -11,52 +11,69 @@ class SearchResultOncoprint extends React.Component {
         //setting the states for the data.
         this.state = {
             data : [],
-            genes : [],
-            patient_id : [],
+            threshold : 0,
             hmap_patients: [],
+            genes_mut : [],
             genes_rna : [],
-            threshold : 0
+            //genes_cnv: [],
+            patient_mut : [],
+            patient_rna : [],
+            //patient_cnv : []
         };
         //binding the functions declared.
         this.updateResults = this.updateResults.bind(this);
     }
 
-    updateResults(result) {
+    updateResults(result, genomics_param) {
+        let genomics = genomics_param.split(',')
+        // temporary solution to remove cnv if everything is selected.
+        if(genomics.includes('Mutation') && genomics.includes('CNV')) {
+            genomics = ['Mutation', 'RNASeq']
+        }
+       
+        // grab the last array(patient array) from result[0]
         const dataset = result[0].data;
-        let gene_id = [];
-        let patient = [];
         let hmap_patients = [];
-
-        Object.keys(dataset[0]).forEach(value => {
-            if(value !== 'gene_id') {
-                patient.push(value)
-            }
-        });
-
         // grabbing the total patients from hmap.
         hmap_patients = dataset.pop()
-
-        // genes
-        dataset.map((data) => {
-            return gene_id.push(data['gene_id']);
-        })
-
+        
+        //data array.
         let data = result.map(value => {
             return value.data
         })
 
-        // genes for rnaseq
-        let gene_id_rna = result[1].data.map((data) => {
-            return data['gene_id']
-        })
+        let patient = {}
+        let genes = {}
 
+        genomics.forEach((value, i) => {
+            let patient_val = `patient_${value.substring(0,3).toLowerCase()}`
+            // setting patients
+            let patient_id = Object.keys(result[i].data[0]).filter(value => {
+                if(value !== 'gene_id') {
+                    //patient.push(value)
+                    return value
+                }
+            });
+            patient[patient_val] = patient_id
+
+            // genes
+            let gene_val = `genes_${value.substring(0,3).toLowerCase()}`
+            let gene_id = result[i].data.map((data) => {
+                return data['gene_id']
+            })
+            genes[gene_val] = gene_id
+        })
+        
         this.setState({
             data : data,
-            genes : gene_id,
-            patient_id : patient,
+            threshold : this.props.threshold,
             hmap_patients : hmap_patients,
-            genes_rna : gene_id_rna,
-            threshold : this.props.threshold
+            patient_mut : patient['patient_mut'],
+            patient_rna : patient['patient_rna'],
+            //patient_cnv : patient['patient_cnv'],
+            genes_mut : genes['genes_mut'],
+            genes_rna : genes['genes_rna'],
+            //genes_cnv : genes['genes_cnv'],
         })
     }
 
@@ -77,7 +94,7 @@ class SearchResultOncoprint extends React.Component {
         
         Promise.all([...query_data])
                 .then(response => {
-                    this.updateResults(response)
+                    this.updateResults(response, genomics_param)
                 })
     }
 
@@ -96,15 +113,15 @@ class SearchResultOncoprint extends React.Component {
     render() {
         return (
             <Oncoprint 
-                data = {this.state.data} 
-                patient_id = {this.state.patient_id}
-                hmap_patients = {this.state.hmap_patients}
                 className = 'oprint_result'
-                genes = {this.state.genes} 
+                data = {this.state.data} 
+                threshold = {this.state.threshold}
+                hmap_patients = {this.state.hmap_patients}
+                patient_id = {this.state.patient_mut}
+                genes = {this.state.genes_mut} 
                 dimensions = {this.dimensions}
                 margin = {this.margin}
                 genes_rna = {this.state.genes_rna}
-                threshold = {this.state.threshold}
             />
         )
     }
