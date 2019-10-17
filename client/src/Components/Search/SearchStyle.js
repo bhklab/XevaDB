@@ -192,11 +192,12 @@ const customStyles = {
         ...provided,
         color: '#3453b0',
         background: '#ffffff',
-        margin: '5px 0px',
+        margin: '0px 0px',
         '&:hover': {
           background: '#fee8c8'
         },
-        fontSize: '14px'
+        fontSize: '14px',
+        textAlign: 'left'
     }),
 
     singleValue: (provided) => ({

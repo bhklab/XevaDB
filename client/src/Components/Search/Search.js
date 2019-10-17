@@ -4,7 +4,6 @@ import {StyleBar, customStyles, StyleButton} from './SearchStyle'
 import Select from 'react-select'
 import axios from 'axios'
 import { GeneList } from './GeneList'
-import { ConnectionBase } from 'mongoose';
 
 
 
@@ -70,17 +69,20 @@ class Search extends React.Component {
                         label: item.dataset_name
                 }))
                 this.setState ({
-                datasets: [...datasets]
+                    datasets: [...datasets]
                 })
             })
     }
 
 
     handleDrugChange = (selectedOption, action) => {
+        // console.log(this.state.allDrugs)
+        // console.log(this.state.data)
         if (selectedOption !== null && selectedOption.length > 0)  {
             if (selectedOption[0].value === 'all') {
                 this.setState ({
-                    selectedDrugs : this.state.allDrugs
+                    selectedDrugs : this.state.allDrugs,
+                    //data : []
                 })
             }
             else {
