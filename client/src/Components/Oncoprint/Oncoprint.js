@@ -18,31 +18,48 @@ class Oncoprint extends React.Component {
 
     Oncoprint() {
         const node = this.node;
-        let dataset = this.props.data;
-        let genes = this.props.genes;
         let plotId = 'plots';
-        let margin = this.props.margin;
         let dimensions = this.props.dimensions;
-        let patient_id = this.props.patient_id;
+        let margin = this.props.margin;
+        let threshold = this.props.threshold;
         let hmap_patients = this.props.hmap_patients;
+        let data_mut = this.props.data_mut;
+        let data_rna = this.props.data_rna
+        let genes_mut = this.props.genes_mut;
         let genes_rna = this.props.genes_rna;
-        let threshold = this.props.threshold
-        this.makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin, genes_rna, threshold)
+        let patient_mut = this.props.patient_mut;
+        let patient_rna = this.props.patient_rna;
+
+        this.makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, genes_mut, genes_rna, patient_mut, patient_rna)
     }
 
 
-    makeOncoprint(dataset, genes, plotId, node, patient_id, hmap_patients, dimensions, margin, genes_rna, threshold) {
-      
-        let data = dataset[0]
-        let rnaseq_data = dataset[1]
-        console.log(data, rnaseq_data, genes, genes_rna)
+    makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, genes_mut, genes_rna, patient_mut, patient_rna) {
+
+        // to merge two arrays and give the unique values.
+        Array.prototype.unique = function() {
+            let a = this.concat();
+            for(let i=0; i<a.length; ++i) {
+                for(let j=i+1; j<a.length; ++j) {
+                    if(a[i] === a[j])
+                        a.splice(j--, 1);
+                }
+            }
+            return a;
+        };
+        let genes = genes_mut.concat(genes_rna).unique(); 
+        
+        console.log(genes)
+        console.log(threshold, hmap_patients, data_mut, data_rna, genes_mut, genes_rna, patient_mut, patient_rna)
         this.node = node
-        // height and width for the SVG based on the number of genes and patient/sample ids.
+
+        // height and width for the SVG based on the number of genes_mut and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
         let rect_height = dimensions.height;
         let rect_width = dimensions.width;
+
         // this height and width is used for setting the body.
-        let height = genes.length * rect_height + 100;
+        let height = genes_mut.length * rect_height + 100;
         let width = hmap_patients.length * rect_width + 100;
 
         // adding this for rectangles on right side of oncoprint.
@@ -111,9 +128,6 @@ class Oncoprint extends React.Component {
         
     
                                                 /** Setting Alterations **/
-        if(data.length > 0) {
-            
-        }
 
         // alterations: mutations are #1a9850 and a third, AMP/del are #e41a1c/#0033CC and full respectively
         let alterations = svg.append('g')
@@ -122,19 +136,28 @@ class Oncoprint extends React.Component {
         let highlight = svg.append('g')
                            .attr('id', 'highlight')
     
+
         // collect info about alterations per gene/patient for plotting later
         let gene_alterations = {}
-        for (let i = 0; i < genes.length; i++) {
-            gene_alterations[genes[i]] = {'mut':0,'amp':0,'del':0}
-        } 
-
         let patient_alterations = []
-        for (let i = 0; i < hmap_patients.length; i++) {
-            patient_alterations.push({'mut':0,'amp':0,'del':0})
+        if(genes_mut.length > 0) {
+            for (let i = 0; i < genes_mut.length; i++) {
+                gene_alterations[genes_mut[i]] = {'mut':0,'amp':0,'del':0}
+            } 
+            
+            for (let i = 0; i < hmap_patients.length; i++) {
+                patient_alterations.push({'mut':0,'amp':0,'del':0})
+            }
         }
-
-        // take the difference of patient_id from hmap_patients
-        let diff = hmap_patients.filter(x => !patient_id.includes(x))
+       
+        // take the difference of patient_mut from hmap_patients
+        let diff = []
+        if(patient_mut.length > 0) {
+            diff = hmap_patients.filter(x => !patient_mut.includes(x))
+        } else {
+            diff = hmap_patients.filter(x => !patient_rna.includes(x))
+        }
+        
 
 
                                                             /** Coloring the rectangles based on mutation data **/
@@ -144,8 +167,8 @@ class Oncoprint extends React.Component {
             // setting a = 12 if value is mut
             let a = value === 'mut' ? 12 : 0    
             // setting the color based on value param.
-            if(value !== 'empty') {
-                gene_alterations[genes[i]][value]++;
+            if(value !== 'empty' && value !== 'highrna' && value !== 'lowrna') {
+                gene_alterations[genes_mut[i]][value]++;
                 patient_alterations[j][value]++;
             }
             // this is for mutation data and rnaseq.
@@ -170,31 +193,37 @@ class Oncoprint extends React.Component {
         }
 
 
+        // stroke for not sequenced patients.
+        let colorNotSequenced = (i, j) => {
+            alterations.append('rect')
+                        .attr('class', 'alter-rect nseq')
+                        .attr('width', rect_width - 6)
+                        .attr('height', rect_height - 6)
+                        .attr('fill', 'white')
+                        .attr('stroke', 'lightgray')
+                        .attr('stroke-width', '1px')
+                        .attr('x', j * (rect_width) + 1) 
+                        .attr('y', i * (rect_height) + 1)
+        }
+
+
         // coloring the rectangles.
-        for (let i = 0; i < genes.length; i++) {
+        for (let i = 0; i < genes_mut.length; i++) {
             for (let j = 0; j < hmap_patients.length; j++) {
                 if (diff.indexOf(hmap_patients[j]) !== -1) {
                     // if not sequenced, make it white with a border
-                    alterations.append('rect')
-                                .attr('class', 'alter-rect del')
-                                .attr('width', rect_width - 6)
-                                .attr('height', rect_height - 6)
-                                .attr('fill', 'white')
-                                .attr('stroke', 'lightgray')
-                                .attr('stroke-width', '1px')
-                                .attr('x', j * (rect_width)+1) 
-                                .attr('y', i * (rect_height)+1)
+                    colorNotSequenced(i ,j)
                 } else {
                     // complete layer of lightgrey rectangles.
                     colorReactangles('empty', 'lightgrey', i, j)
                     // based on the data gives different colors to the rectangle.
-                    if (data[i][hmap_patients[j]].includes('Del0.8') || data[i][hmap_patients[j]].includes('Deletion')) {
+                    if (data_mut[i][hmap_patients[j]].includes('Del0.8') || data_mut[i][hmap_patients[j]].includes('Deletion')) {
                         colorReactangles('del', '#0033CC', i, j)
                     }
-                    if (data[i][hmap_patients[j]].includes('Amp') || data[i][hmap_patients[j]].includes('Amplification')) {
+                    if (data_mut[i][hmap_patients[j]].includes('Amp') || data_mut[i][hmap_patients[j]].includes('Amplification')) {
                         colorReactangles('amp', '#1a9850', i, j)
                     }
-                    if (data[i][hmap_patients[j]].includes('MutNovel') || data[i][hmap_patients[j]].includes('mutation') || data[i][hmap_patients[j]].includes('MutKnownFunctional')) {
+                    if (data_mut[i][hmap_patients[j]].includes('MutNovel') || data_mut[i][hmap_patients[j]].includes('mutation') || data_mut[i][hmap_patients[j]].includes('MutKnownFunctional')) {
                         colorReactangles('mut', '#e41a1c', i, j)
                     }
                 }
@@ -208,11 +237,13 @@ class Oncoprint extends React.Component {
         for(let i = 0; i < genes.length ; i++) {
             if (genes_rna.includes(genes[i])) {
                 for(let j = 0; j < hmap_patients.length; j++) {
-                    //only if the element is not included 
-                    if(diff.indexOf(hmap_patients[j]) === -1) {
-                        if (Number(rnaseq_data[z][hmap_patients[j]]) > threshold) {
+                    if (diff.indexOf(hmap_patients[j]) !== -1) {
+                        // if not sequenced, make it white with a border
+                        colorNotSequenced(i ,j)
+                    } else { //only if the element is not included 
+                        if (Number(data_rna[z][hmap_patients[j]]) > threshold) {
                             colorReactangles('highrna', 'none', i, j)
-                        } else if (Number(rnaseq_data[z][hmap_patients[j]]) < -threshold) {
+                        } else if (Number(data_rna[z][hmap_patients[j]]) < -threshold) {
                             colorReactangles('lowrna', 'none', i, j)
                         }
                     }
@@ -227,261 +258,273 @@ class Oncoprint extends React.Component {
         let maxPAmp = []; 
         let maxPMut = []; 
         let maxPHomdel = [];
-        for (let i = 0; i < patient_alterations.length; i++) {
-            maxPAmp.push(patient_alterations[i]['amp'])
-            maxPHomdel.push(patient_alterations[i]['del'])
-            maxPMut.push(patient_alterations[i]['mut'])
+
+        if(genes_mut.length > 0) {
+            for (let i = 0; i < patient_alterations.length; i++) {
+                maxPAmp.push(patient_alterations[i]['amp'])
+                maxPHomdel.push(patient_alterations[i]['del'])
+                maxPMut.push(patient_alterations[i]['mut'])
+            }
+            maxPAmp = d3.max(maxPAmp)
+            maxPHomdel = d3.max(maxPHomdel)
+            maxPMut = d3.max(maxPMut)
         }
-        maxPAmp = d3.max(maxPAmp)
-        maxPHomdel = d3.max(maxPHomdel)
-        maxPMut = d3.max(maxPMut)
-    
+       
         // getting the maxes
         let maxGAmp = []; 
         let maxGMut = []; 
         let maxGHomdel = [];
-        for (let i = 0; i < genes.length; i++) {
-            maxGAmp.push(gene_alterations[genes[i]]['amp'])
-            maxGHomdel.push(gene_alterations[genes[i]]['del'])
-            maxGMut.push(gene_alterations[genes[i]]['mut'])
+
+        if(genes_mut.length > 0) {
+            for (let i = 0; i < genes_mut.length; i++) {
+                maxGAmp.push(gene_alterations[genes_mut[i]]['amp'])
+                maxGHomdel.push(gene_alterations[genes_mut[i]]['del'])
+                maxGMut.push(gene_alterations[genes_mut[i]]['mut'])
+            }
+            maxGAmp = d3.max(maxGAmp)
+            maxGHomdel = d3.max(maxGHomdel)
+            maxGMut = d3.max(maxGMut)
         }
-        maxGAmp = d3.max(maxGAmp)
-        maxGHomdel = d3.max(maxGHomdel)
-        maxGMut = d3.max(maxGMut)
-    
+        
                                                         /** ALTERATION GRAPHS **/
         
                                                           /** Vertical Graph **/
-        // calculating max width
-        let max_width_arr = []
-        for (let i = 0; i < genes.length; i++) { 
-            max_width_arr.push(gene_alterations[genes[i]]['mut'] + gene_alterations[genes[i]]['amp'] + gene_alterations[genes[i]]['del'])
-        }
-    
-        let max_width = d3.max(max_width_arr)
 
-        let xrange_gene = d3.scaleLinear()
-                            .domain([0, d3.max([maxGAmp, maxGMut, maxGHomdel])])
-                            .range([0,50]);
-
+        if(genes_mut.length > 0) {
+             // calculating max width
+            let max_width_arr = []
+            for (let i = 0; i < genes_mut.length; i++) { 
+                max_width_arr.push(gene_alterations[genes_mut[i]]['mut'] + gene_alterations[genes_mut[i]]['amp'] + gene_alterations[genes_mut[i]]['del'])
+            }
         
-        let gene_alter = svg.append('g')
-                            .attr('id', 'gene-alter')
-                            .attr('transform', 'translate(' + (hmap_patients.length * rect_width + 20) + ',0)')
+            let max_width = d3.max(max_width_arr)
 
-        let stroke_width = 1; // this will set the stroke width of the outer rectangle 
+            let xrange_gene = d3.scaleLinear()
+                                .domain([0, d3.max([maxGAmp, maxGMut, maxGHomdel])])
+                                .range([0,50]);
 
-        // setting the outer rectangle.
-        gene_alter.append('rect')
-                    .attr('class', 'patient_eval_rect')
-                    .attr('x', 0)
-                    .attr('y', 0)
-                    .attr('height', (rect_height) * (genes.length) - 6)
-                    .attr('width', xrange_gene(max_width))
-                    .attr('fill', 'white')
-                    .style('stroke', 'black')
-                    .style('stroke-width', stroke_width)
-
-
-        // function to caculate alterations.
-        let geneAlterationReactangle = (iterator) => {
-            // variables.
-            let gene_class = ['mut', 'amp', 'del']
-            let i = iterator
-            let x_range = stroke_width/2
-            // loops through each type for each of the genes.
-            gene_class.forEach((type) => {
-                // color setting.
-                let color = ''
-                if (type === 'mut') {
-                    color = '#e41a1c'
-                } else if (type === 'amp') {
-                    color = '#1a9850'
-                    x_range = x_range + xrange_gene(gene_alterations[genes[i]]['mut'])
-                } else if (type === 'del') {
-                    color = '#0033CC'
-                    x_range = x_range + xrange_gene(gene_alterations[genes[i]]['amp'])
-                }
-                // rectangle coloring.
-                gene_alter.append('rect')
-                        .attr('class', `gene-rect ${type}`)
-                        .attr('height', rect_height - 6)
-                        .attr('width', xrange_gene(gene_alterations[genes[i]][type]))
-                        .attr('fill', color)
-                        .attr('y', (i * (rect_height)))
-                        .attr('x', x_range)
-            })
-        }
-
-        // calculate alterations for each row.
-        for (let i = 0; i < genes.length; i++) {
-            geneAlterationReactangle(i)
-        }
             
-        // This will set the axis and scale.
-        let xrange_scale = d3.scaleLinear() 
-                            .domain([0, max_width])
-                            .range([0, xrange_gene(max_width)]);
+            let gene_alter = svg.append('g')
+                                .attr('id', 'gene-alter')
+                                .attr('transform', 'translate(' + (hmap_patients.length * rect_width + 20) + ',0)')
 
-        let x_axis = d3.axisTop()
-                        .scale(xrange_scale)
-                        .ticks(4)
-                        .tickSize(3)
-                        .tickFormat(d3.format('.0f'));
+            let stroke_width = 1; // this will set the stroke width of the outer rectangle 
 
-        svg.append('g')
-            .attr('class', 'x_axis')
-            .attr('fill', 'none')
-            .attr('stroke', 'black')
-            .attr('stroke-width', 1)
-            .attr('transform', 'translate(' + (hmap_patients.length * rect_width + 20) + ' -0 )')
-            .call(x_axis)
-            .selectAll('text')
-            .attr('fill', 'black')
-            .style('font-size', 8)
-            .attr('stroke', 'none');
-        
-        svg.selectAll('.tick')
-            .select('text')
-            .attr('fill', 'black')
-            .attr('stroke', 'none')
+            // setting the outer rectangle.
+            gene_alter.append('rect')
+                        .attr('class', 'patient_eval_rect')
+                        .attr('x', 0)
+                        .attr('y', 0)
+                        .attr('height', (rect_height) * (genes.length) - 6)
+                        .attr('width', xrange_gene(max_width))
+                        .attr('fill', 'white')
+                        .style('stroke', 'black')
+                        .style('stroke-width', stroke_width)
+
+
+            // function to caculate alterations.
+            let geneAlterationReactangle = (iterator) => {
+                // variables.
+                let gene_class = ['mut', 'amp', 'del']
+                let i = iterator
+                let x_range = stroke_width/2
+                // loops through each type for each of the genes_mut.
+                gene_class.forEach((type) => {
+                    // color setting.
+                    let color = ''
+                    if (type === 'mut') {
+                        color = '#e41a1c'
+                    } else if (type === 'amp') {
+                        color = '#1a9850'
+                        x_range = x_range + xrange_gene(gene_alterations[genes_mut[i]]['mut'])
+                    } else if (type === 'del') {
+                        color = '#0033CC'
+                        x_range = x_range + xrange_gene(gene_alterations[genes_mut[i]]['amp'])
+                    }
+                    // rectangle coloring.
+                    gene_alter.append('rect')
+                            .attr('class', `gene-rect ${type}`)
+                            .attr('height', rect_height - 6)
+                            .attr('width', xrange_gene(gene_alterations[genes_mut[i]][type]))
+                            .attr('fill', color)
+                            .attr('y', (i * (rect_height)))
+                            .attr('x', x_range)
+                })
+            }
+
+            // calculate alterations for each row.
+            for (let i = 0; i < genes_mut.length; i++) {
+                geneAlterationReactangle(i)
+            }
+                
+            // This will set the axis and scale.
+            let xrange_scale = d3.scaleLinear() 
+                                .domain([0, max_width])
+                                .range([0, xrange_gene(max_width)]);
+
+            let x_axis = d3.axisTop()
+                            .scale(xrange_scale)
+                            .ticks(4)
+                            .tickSize(3)
+                            .tickFormat(d3.format('.0f'));
+
+            svg.append('g')
+                .attr('class', 'x_axis')
+                .attr('fill', 'none')
+                .attr('stroke', 'black')
+                .attr('stroke-width', 1)
+                .attr('transform', 'translate(' + (hmap_patients.length * rect_width + 20) + ' -0 )')
+                .call(x_axis)
+                .selectAll('text')
+                .attr('fill', 'black')
+                .style('font-size', 8)
+                .attr('stroke', 'none');
+            
+            svg.selectAll('.tick')
+                .select('text')
+                .attr('fill', 'black')
+                .attr('stroke', 'none')
+        }
+       
 
             
                                                          /** Horizontal Graph **/
 
                                                          // calculating max height
 
-        let max_height_arr = []
-        for (let i = 0; i < patient_alterations.length; i++) { 
-            max_height_arr.push(patient_alterations[i]['mut'] + patient_alterations[i]['amp'] + patient_alterations[i]['del'])
-        }
-    
-        let max_height = d3.max(max_height_arr)
+        if(genes_mut.length > 0) {
 
-        let patient_alter = svg.append('g')
-                                .attr('id', 'patient-alter')
-    
-        let yrange_patient = d3.scaleLinear() // #TODO: scale.linear
-                                .domain([0, d3.max([maxPAmp, maxPMut, maxPHomdel])])
-                                .range([35, 0]);
+            let max_height_arr = []
+            for (let i = 0; i < patient_alterations.length; i++) { 
+                max_height_arr.push(patient_alterations[i]['mut'] + patient_alterations[i]['amp'] + patient_alterations[i]['del'])
+            }
+        
+            let max_height = d3.max(max_height_arr)
+
+            let patient_alter = svg.append('g')
+                                    .attr('id', 'patient-alter')
+        
+            let yrange_patient = d3.scaleLinear() // #TODO: scale.linear
+                                    .domain([0, d3.max([maxPAmp, maxPMut, maxPHomdel])])
+                                    .range([35, 0]);
 
 
-         // function to caculate alterations.
-         let patientAlterationReactangle = (iterator) => {
-            // variables.
-            let patient_class = ['mut', 'amp', 'del']
-            let i = iterator
-            let y_range = 0
+            // function to caculate alterations.
+            let patientAlterationReactangle = (iterator) => {
+                // variables.
+                let patient_class = ['mut', 'amp', 'del']
+                let i = iterator
+                let y_range = 0
 
-            // loops through each type for each of the genes.
-            patient_class.forEach((type, j) => {
-                // set value to 1 if j is greater than 1.
-                j = j > 1 ? j / j : j
-                // setting y range.
-                y_range = (yrange_patient(patient_alterations[i][type])) - ((35 * j) - y_range)
-                // color setting.
-                let color = ''
-                if (type === 'mut') {
-                    color = '#e41a1c'
-                } else if (type === 'amp') {
-                    color = '#1a9850'
-                } else if (type === 'del') {
-                    color = '#0033CC'
-                }
-                // rectangle coloring.
-                patient_alter.append('rect')
-                        .attr('class', `patient-rect${type}`)
-                        .attr('height', 35 - yrange_patient(patient_alterations[i][type]))
-                        .attr('width', rect_width - 5)
-                        .attr('fill', color)
-                        .attr('y', y_range)
-                        .attr('x', i * 20 + 1)
-                        .attr('transform', 'translate(0,-40)')
-            })
-        }
-                        
-        for (let i = 0; i < patient_alterations.length; i++) {
-            patientAlterationReactangle(i)
-        }
+                // loops through each type for each of the genes_mut.
+                patient_class.forEach((type, j) => {
+                    // set value to 1 if j is greater than 1.
+                    j = j > 1 ? j / j : j
+                    // setting y range.
+                    y_range = (yrange_patient(patient_alterations[i][type])) - ((35 * j) - y_range)
+                    // color setting.
+                    let color = ''
+                    if (type === 'mut') {
+                        color = '#e41a1c'
+                    } else if (type === 'amp') {
+                        color = '#1a9850'
+                    } else if (type === 'del') {
+                        color = '#0033CC'
+                    }
+                    // rectangle coloring.
+                    patient_alter.append('rect')
+                            .attr('class', `patient-rect${type}`)
+                            .attr('height', 35 - yrange_patient(patient_alterations[i][type]))
+                            .attr('width', rect_width - 5)
+                            .attr('fill', color)
+                            .attr('y', y_range)
+                            .attr('x', i * 20 + 1)
+                            .attr('transform', 'translate(0,-40)')
+                })
+            }
+                            
+            for (let i = 0; i < patient_alterations.length; i++) {
+                patientAlterationReactangle(i)
+            }
 
-        let yrange_axis = d3.scaleLinear() 
-                            .domain([0, max_height])
-                            .range([35 - yrange_patient(max_height), 0]).nice();
+            let yrange_axis = d3.scaleLinear() 
+                                .domain([0, max_height])
+                                .range([35 - yrange_patient(max_height), 0]).nice();
 
-        let y_axis = d3.axisLeft()
-                        .scale(yrange_axis)
-                        .ticks(4)
-                        .tickSize(3)
-                        .tickFormat(d3.format('.0f'));
-    
-        svg.append('g')
-            .attr('class', 'y_axis')
-            .attr('fill', 'none')
-            .attr('stroke', 'black')
-            .attr('stroke-width', 1)
-            .attr('transform', 'translate(-10,' + (-(35 - yrange_patient(max_height))-5) + ')')
-            .call(y_axis)
-            .selectAll('text')
-            .attr('fill', 'black')
-            .style('font-size', 8)
-            .attr('stroke', 'none');
-    
-        svg.selectAll('.tick')
-                .select('text')
+            let y_axis = d3.axisLeft()
+                            .scale(yrange_axis)
+                            .ticks(4)
+                            .tickSize(3)
+                            .tickFormat(d3.format('.0f'));
+        
+            svg.append('g')
+                .attr('class', 'y_axis')
+                .attr('fill', 'none')
+                .attr('stroke', 'black')
+                .attr('stroke-width', 1)
+                .attr('transform', 'translate(-10,' + (-(35 - yrange_patient(max_height))-5) + ')')
+                .call(y_axis)
+                .selectAll('text')
                 .attr('fill', 'black')
-                .attr('stroke', 'none')
-    
-        // removing the 0 tick
-        svg.selectAll('.y_axis .tick')
-            .each(function (d) {
-                if ( d === 0 ) {
-                    this.remove();
-                }
-        });
+                .style('font-size', 8)
+                .attr('stroke', 'none');
+        
+            svg.selectAll('.tick')
+                    .select('text')
+                    .attr('fill', 'black')
+                    .attr('stroke', 'none')
+        
+            // removing the 0 tick
+            svg.selectAll('.y_axis .tick')
+                .each(function (d) {
+                    if ( d === 0 ) {
+                        this.remove();
+                    }
+            });
+        }    
+            // dotted lines.
+            let lines = svg.append('g')
+                            .attr('id', 'lines')
+                            .attr('transform', function(d,i) {
+                                return `translate(2,-200)`
+                            })
+            const temp = hmap_patients.slice(0)
+            temp.push('')
 
-        // dotted lines.
-        let lines = svg.append('g')
-                        .attr('id', 'lines')
-                        .attr('transform', function(d,i) {
-                            return `translate(2,-200)`
-                        })
-        const temp = hmap_patients.slice(0)
-        temp.push('')
-
-        lines.selectAll('line.dashed-line')
-                .data(temp)
-                .enter()
-                    .append('line')
-                    .attr('class', 'dashed-line')
-                    .attr('x1', function(d,i) {
-                        return i * (rect_width) - 3;  
-                    })
-                    .attr('x2', function(d,i) {
-                        return i * (rect_width) - 3;  
-                    })
-                    .attr('y1', 0)
-                    .attr('y2', 200)
-                    .attr('stroke', 'black')
-                    .attr('stroke-width', 1)
-                    .style('stroke-dasharray', '3 2')
-                    .style('opacity', 0.2)
-
-        lines.selectAll('rect.hlight-space')
-                    .data(hmap_patients)
+            lines.selectAll('line.dashed-line')
+                    .data(temp)
                     .enter()
-                    .append('rect')
-                    .attr('class', function(d) {
-                        return 'hlight-space-' + d
-                    })
-                    .attr('width', rect_width - 2)
-                    .attr('height', 200)
-                    .attr('x', function(d,i) {
-                        return i * rect_width - 2;  
-                    })
-                    .attr('fill', 'rgb(0,0,0)')
-                    .attr('y', 0)
-                    .style('opacity', 0)  
+                        .append('line')
+                        .attr('class', 'dashed-line')
+                        .attr('x1', function(d,i) {
+                            return i * (rect_width) - 3;  
+                        })
+                        .attr('x2', function(d,i) {
+                            return i * (rect_width) - 3;  
+                        })
+                        .attr('y1', 0)
+                        .attr('y2', 200)
+                        .attr('stroke', 'black')
+                        .attr('stroke-width', 1)
+                        .style('stroke-dasharray', '3 2')
+                        .style('opacity', 0.2)
 
+            lines.selectAll('rect.hlight-space')
+                        .data(hmap_patients)
+                        .enter()
+                        .append('rect')
+                        .attr('class', function(d) {
+                            return 'hlight-space-' + d
+                        })
+                        .attr('width', rect_width - 2)
+                        .attr('height', 200)
+                        .attr('x', function(d,i) {
+                            return i * rect_width - 2;  
+                        })
+                        .attr('fill', 'rgb(0,0,0)')
+                        .attr('y', 0)
+                        .style('opacity', 0)  
+        //}
                                                                                          /** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint **/
                                                                                          
         // This will create four rectangles on right side for alterations.
@@ -495,7 +538,7 @@ class Oncoprint extends React.Component {
                                     .append('rect')
                                     .attr('x', (hmap_patients.length * rect_width + 120))
                                     .attr('y', function(d, i) {
-                                        return (genes.length * 10) + i * 25;
+                                        return (genes_mut.length * 10) + i * 25;
                                     })
                                     .attr('height', '15')
                                     .attr('width', '15')
@@ -526,7 +569,7 @@ class Oncoprint extends React.Component {
                                     .append('text')
                                     .attr('x', (hmap_patients.length * rect_width + 140))
                                     .attr('y', function(d,i) {
-                                        return (genes.length * 10 + 12) + i * 25;
+                                        return (genes_mut.length * 10 + 12) + i * 25;
                                     })
                                     .text(function(d) {
                                         return d.value;
@@ -577,8 +620,8 @@ class Oncoprint extends React.Component {
 
 
 Oncoprint.propTypes = {
-    genes: PropTypes.array.isRequired,
-    patient_id: PropTypes.array.isRequired,
+    genes_mut: PropTypes.array.isRequired,
+    patient_mut: PropTypes.array.isRequired,
     hmap_patients: PropTypes.array.isRequired,
     data: PropTypes.array.isRequired
 }
