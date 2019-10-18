@@ -7,50 +7,62 @@ class OncoprintData extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            data : [],
-            genes : [],
-            genes_rna : [],
-            patient_id : [],
+            dataset_param : 0,
+            threshold : 2,
             hmap_patients: [],
-            dataset_param : 0
+            genes_mut : [],
+            genes_rna : [],
+            patient_mut : [],
+            patient_rna : [],
+            data_mut : [],
+            data_rna : []
         };
         this.updateResults = this.updateResults.bind(this);
     }
 
     updateResults(onco) {
+        // total patients.
         const dataset = onco[0].data;
-        let patient = [];
         let hmap_patients = [];
-
-        Object.keys(dataset[0]).forEach(value => {
-            if(value !== 'gene_id') {
-                patient.push(value)
-            }
-        });
-
         // grabbing the total patients from hmap.
         hmap_patients = dataset.pop()
 
-        // genes for mutation/cnv for now.
-        let gene_id = dataset.map((data) => {
-            return data['gene_id'];
+        //setting patients genes and data for each of mutation, cnv and rna (given they are present)
+        let patient = {}
+        let genes = {}
+        let data = {}
+        let genomics = ['Mutation', 'RNASeq']
+
+        genomics.forEach((value, i) => {
+            let val = value.substring(0,3).toLowerCase()
+
+            // setting patients
+            let patient_id = Object.keys(onco[i].data[0]).filter(value => {
+                if(value !== 'gene_id') {
+                    return value
+                }
+            });
+            patient[`patient_${val}`] = patient_id
+
+            // genes
+            let gene_id = onco[i].data.map((data) => {
+                return data['gene_id']
+            })
+            genes[`genes_${val}`] = gene_id
+
+            //data
+            data[`data_${val}`] = onco[i].data
         })
 
-        // genes for rnaseq
-        let gene_id_rna = onco[1].data.map((data) => {
-            return data['gene_id']
-        })
-
-        let data = onco.map(value => {
-            return value.data
-        })
 
         this.setState({
-            data : data,
-            genes : gene_id,
-            patient_id : patient,
             hmap_patients : hmap_patients,
-            genes_rna : gene_id_rna
+            patient_mut : patient['patient_mut'],
+            patient_rna : patient['patient_rna'],
+            genes_mut : genes['genes_mut'],
+            genes_rna : genes['genes_rna'],
+            data_mut : data['data_mut'],
+            data_rna : data['data_rna'],
         })
     }
 
@@ -93,15 +105,17 @@ class OncoprintData extends React.Component {
         return (
             <div className='wrapper' style={{margin:'auto', fontSize:'0'}}>
                 <Oncoprint 
-                    data = {this.state.data} 
-                    patient_id = {this.state.patient_id}
-                    hmap_patients = {this.state.hmap_patients}
                     className = 'oprint'
-                    genes = {this.state.genes} 
                     dimensions = {this.dimensions}
                     margin = {this.margin}
+                    threshold = {this.state.threshold}
+                    hmap_patients = {this.state.hmap_patients}
+                    genes_mut = {this.state.genes_mut} 
                     genes_rna = {this.state.genes_rna}
-                    threshold = {2}
+                    patient_mut = {this.state.patient_mut}
+                    patient_rna = {this.state.patient_rna}
+                    data_mut = {this.state.data_mut} 
+                    data_rna = {this.state.data_rna}
                 />   
             </div>    
         )
