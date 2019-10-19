@@ -50,8 +50,6 @@ class Oncoprint extends React.Component {
         };
         let genes = genes_mut.concat(genes_rna).unique(); 
         
-        console.log(genes)
-        console.log(threshold, hmap_patients, data_mut, data_rna, genes_mut, genes_rna, patient_mut, patient_rna)
         this.node = node
 
         // height and width for the SVG based on the number of genes_mut and patient/sample ids.
@@ -60,18 +58,33 @@ class Oncoprint extends React.Component {
         let rect_width = dimensions.width;
 
         // this height and width is used for setting the body.
-        let height = genes_mut.length * rect_height + 100;
+        let height = genes.length * rect_height + 100;
         let width = hmap_patients.length * rect_width + 100;
 
         // adding this for rectangles on right side of oncoprint.
+        // only if the mutation data is present.
+        let rect_alterations_mut = []
+        if(data_mut.length > 0) {
+            rect_alterations_mut = [
+                { value: 'Mutation', color: '#e41a1c'},
+                { value : 'Deep Deletion', color: '#0033CC' },
+                { value: 'Amplification', color: '#1a9850' },
+            ]
+        }
+        // only if rnaseq data is available.
+        let rect_alterations_rna = []
+        if(data_rna.length > 0) {
+            rect_alterations_rna = [
+                { value: 'mRNA High', color: 'none'},
+                { value: 'mRNA Low', color: 'none'},
+            ]
+        }
+        
         let rect_alterations = [
-            { value : 'Deep Deletion', color: '#0033CC' },
-            { value: 'Amplification', color: '#1a9850' },
-            { value: 'Mutation', color: '#e41a1c'},
+            ...rect_alterations_mut,
+            ...rect_alterations_rna,
             { value: 'Wild Type', color: 'lightgray'},
-            { value: 'Not Available', color: 'none'},
-            { value: 'mRNA High', color: 'none'},
-            { value: 'mRNA Low', color: 'none'}
+            { value: 'Not Available', color: 'none'}
         ]
        
 
@@ -242,6 +255,10 @@ class Oncoprint extends React.Component {
                         // if not sequenced, make it white with a border
                         colorNotSequenced(i ,j)
                     } else { //only if the element is not included 
+                        // complete layer of lightgrey rectangles only if mutation data is not available.
+                        if(data_mut.length === 0) {
+                            colorReactangles('empty', 'lightgrey', i, j)
+                        }
                         if (Number(data_rna[z][hmap_patients[j]]) > threshold) {
                             colorReactangles('highrna', 'none', i, j)
                         } else if (Number(data_rna[z][hmap_patients[j]]) < -threshold) {
@@ -528,7 +545,7 @@ class Oncoprint extends React.Component {
         //}
                                                                                          /** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint **/
                                                                                          
-        // This will create four rectangles on right side for alterations.
+        // This will create rectangles on right side for alterations.
         // legends
         let target_rect = skeleton.append('g')
                                     .attr('id', 'small_rectangle')
@@ -539,7 +556,7 @@ class Oncoprint extends React.Component {
                                     .append('rect')
                                     .attr('x', (hmap_patients.length * rect_width + 120))
                                     .attr('y', function(d, i) {
-                                        return (genes_mut.length * 10) + i * 25;
+                                        return (genes.length * 10) + i * 25;
                                     })
                                     .attr('height', '15')
                                     .attr('width', '15')
@@ -570,7 +587,7 @@ class Oncoprint extends React.Component {
                                     .append('text')
                                     .attr('x', (hmap_patients.length * rect_width + 140))
                                     .attr('y', function(d,i) {
-                                        return (genes_mut.length * 10 + 12) + i * 25;
+                                        return (genes.length * 10 + 12) + i * 25;
                                     })
                                     .text(function(d) {
                                         return d.value;
