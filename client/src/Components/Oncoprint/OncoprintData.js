@@ -38,10 +38,13 @@ class OncoprintData extends React.Component {
 
             // setting patients
             let patient_id = Object.keys(onco[i].data[0]).filter(value => {
+                let return_value = ''
                 if(value !== 'gene_id') {
-                    return value
+                    return_value = value
                 }
+                return return_value
             });
+            console.log(patient_id)
             patient[`patient_${val}`] = patient_id
 
             // genes
