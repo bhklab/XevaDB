@@ -9,7 +9,7 @@ module.exports = {
       database : 'xevadb_latest'
       // host: 'localhost',
       // user: 'root',
-      // password: '',
+      // password: '-----',
       // database: 'xevadb_latest1'
     },
     migrations: {
