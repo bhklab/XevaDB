@@ -26,7 +26,8 @@ const StyleBar = styled.div`
         display: flex;
         flex-wrap: wrap;
         margin: 35px;
-        padding: 15px 25px 50px 25px;
+        padding: 10px 25px 50px 25px;
+        
         justify-content: space-around;
         border-radius: 20px;
 
@@ -98,11 +99,12 @@ const StyleBar = styled.div`
 
    @media screen and (max-width: 1700px) {
         h1 {
-            font-size: 28px;
+            font-size: 22px;
         }
         .select-component {
             width: 55%;
-            max-height: 440px;
+            max-height: 395px;
+            min-width: 650px;
         }
         .search-container {
             max-height: 500px;
@@ -131,7 +133,7 @@ const StyleBar = styled.div`
 const StyleButton = styled.button`
     background-color: #3453b0;
     border: none;
-    border-radius:6px;
+    border-radius: 6px;
     color: #ffffff;
     padding: 10px 20px;
     text-align: center;
@@ -143,7 +145,7 @@ const StyleButton = styled.button`
     margin: auto;
     transition: .3s;
     outline-style: none;
-    margin-top: 10px;
+    margin-top: 0px;
     &:hover {
         opacity: 1;
         cursor: pointer;
