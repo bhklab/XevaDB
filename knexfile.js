@@ -7,6 +7,10 @@ module.exports = {
       user : 'bhklab@xevadb-database',
       password : 'canada@24',
       database : 'xevadb_latest'
+      // host: 'localhost',
+      // user: 'root',
+      // password: '',
+      // database: 'xevadb_latest1'
     },
     migrations: {
       directory: __dirname + '/db/migrations',
