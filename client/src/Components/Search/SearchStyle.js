@@ -206,7 +206,7 @@ const customStyles = {
     singleValue: (provided) => ({
         ...provided,
         color: '#3453b0',
-        fontSize: '16px'
+        fontSize: '15px'
     }),
 
     input: (provided) => ({

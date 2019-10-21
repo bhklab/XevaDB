@@ -108,7 +108,7 @@ class Search extends React.Component {
                     label: item.drug
                 }))
                 this.setState ({
-                    data: [ {value: 'all', label:'All'}, ...data]
+                    data: [ {value: 'all', label:`All (${data.length})`}, ...data]
                 })
                 const drug = response.data.data[0].map(item => {
                     return (item.drug).replace(/\s/g,'').replace('+','_');
