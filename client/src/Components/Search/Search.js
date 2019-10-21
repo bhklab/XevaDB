@@ -121,6 +121,7 @@ class Search extends React.Component {
 
     // sets the value of selected gene search, empty if it's user defined list else the option selected.
     handleGeneListChange = selectedOption => {
+        
         if(selectedOption.value === 'user defined list') {
             this.setState({
                 selectedGeneSearch: ''
@@ -263,7 +264,7 @@ class Search extends React.Component {
 
                         <div className='div-gene-enter'>
                             <form>
-                                <input
+                                <textarea
                                     type='text' 
                                     value={this.state.selectedGeneSearch} 
                                     onChange={this.handleGeneSearchChange}
