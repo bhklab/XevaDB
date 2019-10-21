@@ -44,7 +44,7 @@ class OncoprintData extends React.Component {
                 }
                 return return_value
             });
-            console.log(patient_id)
+            
             patient[`patient_${val}`] = patient_id
 
             // genes

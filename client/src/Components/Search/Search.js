@@ -76,8 +76,6 @@ class Search extends React.Component {
 
 
     handleDrugChange = (selectedOption, action) => {
-        // console.log(this.state.allDrugs)
-        // console.log(this.state.data)
         if (selectedOption !== null && selectedOption.length > 0)  {
             if (selectedOption[0].value === 'all') {
                 this.setState ({

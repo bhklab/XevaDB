@@ -26,7 +26,7 @@ class SearchResult extends React.Component {
         let gene = params.get('genes')
         let threshold = params.get('threshold')
         //let drug_for_onco = drug.split(',')[0]
-        console.log(threshold)
+        
         this.setState({
             drug_param : drug,
             dataset_param : dataset,
