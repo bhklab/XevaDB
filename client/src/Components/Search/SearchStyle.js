@@ -65,16 +65,17 @@ const StyleBar = styled.div`
             margin: 15px;
             min-width: 620px;
             max-height: 150px;
-            input {
+            textarea {
                 min-width: 600px;
                 min-height: 120px;
                 outline-style: none;
                 border-radius: 10px;
                 color: #3453b0;
                 font-weight: 300;
-                font-size: 16px;
+                font-size: 15px;
                 border: 1px solid #3453b0;
-                padding: 20px;
+                padding: 10px;
+                overflow-wrap: break-word;
                 box-sizing: border-box;
             }
         }
@@ -103,7 +104,7 @@ const StyleBar = styled.div`
         }
         .select-component {
             width: 55%;
-            max-height: 395px;
+            max-height: 400px;
             min-width: 650px;
         }
         .search-container {
@@ -112,7 +113,7 @@ const StyleBar = styled.div`
         .div-gene-enter {
             min-height: 100px !important;
             margin: 10px !important;
-            input {
+            textarea {
                 min-height: 100px !important;
                 max-height: 100px;
             }
