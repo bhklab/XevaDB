@@ -11,7 +11,7 @@ var h1Style = {
 }
 
 class DrugTable extends React.Component {
-
+  
     constructor(props) {
       super(props) 
       //setting the states for the data.
@@ -33,7 +33,7 @@ class DrugTable extends React.Component {
       const data = this.state.data
 
       // adding image to each of the object in array.
-      data.map(val => {
+      data.forEach(val => {
           val['img'] = pubchem
       })
 
@@ -66,7 +66,7 @@ class DrugTable extends React.Component {
           Cell: val => {
             return (
               <div>
-                <img height={38} src={val.original.img} />
+                <img height={38} src={val.original.img} alt = "pubchem links"/>
               </div>
             );
           },

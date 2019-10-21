@@ -25,7 +25,7 @@ class HeatMap extends React.Component {
         let patient_id = this.props.patient_id;
         let dimensions = this.props.dimensions;
         let margin = this.props.margin;
-        let plotId = 'plots';
+        let plotId = this.props.className;
         this.makeHeatmap(data, patient_id, drug, plotId, dimensions, margin, node)
     }
 
@@ -575,7 +575,8 @@ HeatMap.propTypes = {
     patient_id: PropTypes.array.isRequired,
     data: PropTypes.array.isRequired,
     dimensions: PropTypes.object.isRequired,
-    margin: PropTypes.object.isRequired
+    margin: PropTypes.object.isRequired,
+    className: PropTypes.string.isRequired
 }
 
 
