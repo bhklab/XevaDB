@@ -3,7 +3,7 @@ import axios from 'axios'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import TableWrapper from './DrugTableStyle'
-
+import pubchem from '../../images/pclogo_220.gif';
 
 var h1Style = {
   color: '#3453b0',
@@ -31,7 +31,12 @@ class DrugTable extends React.Component {
 
     render() {
       const data = this.state.data
-      
+
+      // adding image to each of the object in array.
+      data.map(val => {
+          val['img'] = pubchem
+      })
+
       const columns = [
         {
           Header: 'Drug',
@@ -58,24 +63,30 @@ class DrugTable extends React.Component {
         },
         {
           Header: 'Source',
-          accessor: '      row.ImgPath = "https://media4.s-nbcnews.com/j/newscms/2016_36/1685951/ss-160826-twip-05_8cf6d4cb83758449fd400c7c3d71aa1f.nbcnews-ux-2880-1000.jpg"          ',
+          Cell: val => {
+            return (
+              <div>
+                <img height={38} src={val.original.img} />
+              </div>
+            );
+          },
         }
       ]
       
-        return (
-          <Fragment>
-            <h1 style = {h1Style}> Drug Table </h1>
-            <TableWrapper className='wrap'>
-              <ReactTable
-                data = {data}
-                columns = {columns}
-                className = '-highlight'
-                defaultPageSize = {10}
-                filterable
-              /> 
-            </TableWrapper>         
-          </Fragment>
-        )
+      return (
+        <Fragment>
+          <h1 style = {h1Style}> Drug Table </h1>
+          <TableWrapper className='wrap'>
+            <ReactTable
+              data = {data}
+              columns = {columns}
+              className = '-highlight'
+              defaultPageSize = {10}
+              filterable
+            /> 
+          </TableWrapper>         
+        </Fragment>
+      )
     }
 
 }
