@@ -82,7 +82,7 @@ class SearchResultHeatMap extends React.Component {
                 patient_id = {this.state.patient_id_drug} 
                 dimensions = {this.dimensions}
                 margin = {this.margin}
-                class = 'searchedHeatMap'
+                className = 'searchedheatmap'
             />
         )
     }

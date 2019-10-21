@@ -18,7 +18,7 @@ class Oncoprint extends React.Component {
 
     Oncoprint() {
         const node = this.node;
-        let plotId = 'plots';
+        let plotId = this.props.className;
         let dimensions = this.props.dimensions;
         let margin = this.props.margin;
         let threshold = this.props.threshold;
