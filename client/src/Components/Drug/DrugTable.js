@@ -31,11 +31,11 @@ class DrugTable extends React.Component {
 
     render() {
       const data = this.state.data
-
+      
       const columns = [
         {
           Header: 'Drug',
-          accessor: 'drug_id',
+          accessor: 'drug_name',
           minWidth: 180,
           //Cell: props => props.value.toUpperCase(),
           sortable: true
@@ -45,34 +45,20 @@ class DrugTable extends React.Component {
         //  accessor: 'standard_name',
         //  minWidth: 180,
         //  Cell: props => props.value.toUpperCase()
-        //}, 
+        //},
         {
-          Header: 'TreatmentType',
-          accessor: 'treatment_type',
+          Header: 'Targets',
+          accessor: 'class',
           minWidth: 150
         },
-        //{
-        //  Header: 'PubchemID',
-        //  accessor: 'pubchemId',
-        //},
-        //{
-        //  Header: 'Class',
-        //  accessor: 'class',
-        //  minWidth: 230
-        //},
         {
           Header: 'Class',
           accessor: 'class_name',
           minWidth: 230
         },
         {
-          Header: 'Targets',
-          accessor: 'targets',
-          minWidth: 150
-        },
-        {
           Header: 'Source',
-          accessor: 'source',
+          accessor: '      row.ImgPath = "https://media4.s-nbcnews.com/j/newscms/2016_36/1685951/ss-160826-twip-05_8cf6d4cb83758449fd400c7c3d71aa1f.nbcnews-ux-2880-1000.jpg"          ',
         }
       ]
       
