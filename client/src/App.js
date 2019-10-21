@@ -12,7 +12,6 @@ import {    CounterNav,
             Login,
             OncoprintData,
             SearchResult,
-            TopNav,
             TumorGrowthCurve, } from './Components/index'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 

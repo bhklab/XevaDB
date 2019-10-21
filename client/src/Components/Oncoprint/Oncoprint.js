@@ -638,10 +638,17 @@ class Oncoprint extends React.Component {
 
 
 Oncoprint.propTypes = {
-    genes_mut: PropTypes.array.isRequired,
-    patient_mut: PropTypes.array.isRequired,
-    hmap_patients: PropTypes.array.isRequired,
-    data: PropTypes.array.isRequired
+    className : PropTypes.string.isRequired,
+    dimensions : PropTypes.object.isRequired,
+    margin : PropTypes.object.isRequired,
+    threshold : PropTypes.number.isRequired,
+    hmap_patients : PropTypes.array.isRequired,
+    genes_mut : PropTypes.array.isRequired,
+    genes_rna : PropTypes.array.isRequired,
+    patient_mut : PropTypes.array.isRequired,
+    patient_rna : PropTypes.array.isRequired,
+    data_mut : PropTypes.array.isRequired,
+    data_rna : PropTypes.array.isRequired,
 }
 
 

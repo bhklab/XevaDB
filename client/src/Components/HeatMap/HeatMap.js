@@ -169,15 +169,16 @@ class HeatMap extends React.Component {
                                     rectKeys = Object.keys(d);
                                     const rectValue = Object.values(d,i)
                                                             .map((value) => {
-                                                                // console.log(value, 'length is' ,value.length)                                
+                                                                let val = ''                            
                                                                 if (value.length === 2) {
-                                                                    return value
+                                                                    val = value
                                                                 } else if (value.length === 0) {
-                                                                    return value = 'empty'
+                                                                    val = 'empty'
                                                                 }
+                                                                return val
                                                             })
                                     return rectValue;
-                                    })
+                                })
                                 .enter()
                                 .append('a')
                                 .attr('xlink:href', function(d,i) {
@@ -235,15 +236,16 @@ class HeatMap extends React.Component {
                             rectKeys = Object.keys(d);
                             const rectValue = Object.values(d,i)
                                                     .map((value) => {
-                                                        // console.log(value, 'length is' ,value.length)                                
+                                                        let val = ''                            
                                                         if (value.length === 2) {
-                                                            return value
+                                                            val = value
                                                         } else if (value.length === 0) {
-                                                            return value = 'empty'
+                                                            val = 'empty'
                                                         }
+                                                        return val
                                                     })
                             return rectValue;
-                            })
+                        })
                         .enter()
                         .append('a')
                         .attr('xlink:href', function(d,i) {
@@ -273,6 +275,8 @@ class HeatMap extends React.Component {
                                 .style('opacity', 0.2)
                             d3.selectAll('.hlight-space-' + rectKeys[i])
                                 .style('opacity', 0.2)
+
+                            return drug_class
                         
                         })
                         .on('mouseout', function(d,i) {
@@ -283,6 +287,8 @@ class HeatMap extends React.Component {
                                 .style('opacity', 0)
                             d3.selectAll('.hlight-space-' + rectKeys[i])
                                 .style('opacity', 0)
+
+                            return drug_class
                         })
 
     //Creating lines.
@@ -435,7 +441,7 @@ class HeatMap extends React.Component {
                                .domain([0, (44 + (drug.length - 1) * 40)])
                                .range([0, (rect_height * drug.length) + 10])
 
-                            drug_eval.append('rect')
+                      drug_eval.append('rect')
                                .attr('class', 'drug_eval_rect')
                                .attr('x', patient.length * rect_width + 20)
                                .attr('y', 35)
@@ -491,7 +497,6 @@ class HeatMap extends React.Component {
         // appending 'g' element to the SVG.
         let patient_eval = svg.append('g')
                                 .attr('id', 'patient_eval')
-
 
         // setting the outer rectangle.
         patient_eval.append('rect')
