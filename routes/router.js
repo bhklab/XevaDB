@@ -15,7 +15,7 @@ const modelResponse = require('./api/model_response_api')
 const mutation = require('./api/mutation_api')
 const drugScreening = require('./api/drug_screening')
 const rnasequencing = require('./api/rnaseq_api')
-
+const awtauthentication = require('./api/auth')
 
 
 // APIs related to dataset table.
@@ -63,6 +63,10 @@ router.get('/v1/treatment', drugScreening.getDrugScreening);
 router.get('/v1/rnaseq/:dataset', mixed.isValidId, rnasequencing.getRnaSeqBasedOnDataset)
 router.get('/v1/rnaseq', rnasequencing.getRnaSeqBasedPerDatasetBasedOnGenes)
 
+// Authorization APIs.
+router.post('/v1/login', awtauthentication.createLogin)
+router.post('/v1/posts', awtauthentication.verifyToken, awtauthentication.createPosts)
+router.post('/v1/register', awtauthentication.createRegister)
 
 
 module.exports = router;
