@@ -14,7 +14,7 @@ class CounterNav extends React.Component {
         this.state = {
             drugs: 0,
             patients: 0,
-            datasets: 8,
+            datasets: 6,
             tissues: 0
         }
     }

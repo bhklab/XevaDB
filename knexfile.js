@@ -1,12 +1,15 @@
+const dotenv = require('dotenv')
+dotenv.config()
+
 // Update with your config settings.
 module.exports = {
   development: {
     client: 'mysql',
     connection: {
-      host : 'xevadb-database.mysql.database.azure.com',
-      user : 'bhklab@xevadb-database',
-      password : 'canada@24',
-      database : 'xevadb_latest'
+      host : process.env.DB_HOST,
+      user : process.env.DB_USER,
+      password : process.env.DB_PWD,
+      database : process.env.DB_NAME
       // host: 'localhost',
       // user: 'root',
       // password: '-----',
@@ -22,10 +25,10 @@ module.exports = {
   production: {
     client: 'mysql',
     connection: {
-      host : 'xevadb-database.mysql.database.azure.com',
-      user : 'bhklab@xevadb-database',
-      password : 'canada@24',
-      database : 'xevadb_latest'
+      host : process.env.DB_HOST,
+      user : process.env.DB_USER,
+      password : process.env.DB_PWD,
+      database : process.env.DB_NAME
     },
     migrations: {
       directory: __dirname + '/db/migrations',
