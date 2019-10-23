@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
-const cors = require('cors');
+//const cors = require('cors');
 
 // setting the path of the router file to variable so that we can use all the routes from it.
 const router = require('./routes/router.js');

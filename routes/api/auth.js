@@ -1,6 +1,6 @@
 const knex = require('../../db/knex1');
 const jwt = require('jsonwebtoken')
-
+const bcrypt = require('bcryptjs')
 
 const createPosts = function(request, response) {
     // verify a token symmetric
@@ -48,11 +48,60 @@ const verifyToken = function(request, response, next) {
 }
 
 
+//VALIDATION
+const Joi = require('@hapi/joi');
+const schema = Joi.object({
+    username: Joi.string().min(6).required(),
+    password: Joi.string().min(6).required()
+})
+
 //register user
-const createRegister = function(request, response) {
-    response.json({
-        message: 'register it'
-    });
+const createRegister = async (request, response) => {
+    const username = request.body.username
+    const password = request.body.password
+
+    //validate a user.
+    const {error} = schema.validate({username: username, password: password})
+    if(error) return response.status(400).send(error.details[0].message)
+
+    // hash the password.
+    async() => {
+        
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(request.body.password, salt)
+
+    //checking if the user is already in there.
+    knex.select()
+        .from('users')
+        .where('user_name', username)
+        .then(data => {
+            if(JSON.parse(JSON.stringify(data)).length > 0) {
+                return response.status(400).send('Username Exists.')
+            } else {
+                // create a new user.
+                knex('users')
+                    .insert({
+                        user_name: username,
+                        user_pwd: password
+                    })
+                    .then((data) => {
+                        knex.select()
+                            .from('users')
+                            .where({
+                                user_id: data[0]
+                            })
+                            .then((data) => response.status(200).json({
+                                status: 'success',
+                                data: data
+                            }))
+                    })
+                    .catch((error) => response.status(500).json({
+                        status: 'could not find data from batch table, getBatches',
+                        data: error
+                    }))
+            }
+        })
 }
 
 
