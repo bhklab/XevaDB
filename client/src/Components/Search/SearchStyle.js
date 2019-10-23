@@ -77,6 +77,7 @@ const StyleBar = styled.div`
                 padding: 10px;
                 overflow-wrap: break-word;
                 box-sizing: border-box;
+                resize: none
             }
         }
 
