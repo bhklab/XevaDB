@@ -17,7 +17,7 @@ const createPosts = function(request, response) {
 }
 
 
-const createLogin = function(request, response) {
+const createLogin1 = function(request, response) {
     // Mock User
     const user = {
         username: 'bhklab'
@@ -47,6 +47,7 @@ const verifyToken = function(request, response, next) {
     }
 }
 
+//------------------------------------------------------------------------------------------------------------------------//
 
 //VALIDATION
 const Joi = require('@hapi/joi');
@@ -65,11 +66,13 @@ const createRegister = async (request, response) => {
     if(error) return response.status(400).send(error.details[0].message)
 
     // hash the password.
-    async() => {
-        
+    let salt = ''
+    let hashPassword = ''
+    async function hashpass() {
+        salt = await bcrypt.genSalt(10);
+        hashPassword = await bcrypt.hash(request.body.password, salt)
     }
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(request.body.password, salt)
+    hashpass()
 
     //checking if the user is already in there.
     knex.select()
@@ -79,14 +82,15 @@ const createRegister = async (request, response) => {
             if(JSON.parse(JSON.stringify(data)).length > 0) {
                 return response.status(400).send('Username Exists.')
             } else {
+                console.log(hashPassword)
                 // create a new user.
                 knex('users')
                     .insert({
                         user_name: username,
-                        user_pwd: password
+                        user_pwd: hashPassword
                     })
                     .then((data) => {
-                        knex.select()
+                        knex.select('user_id')
                             .from('users')
                             .where({
                                 user_id: data[0]
@@ -105,9 +109,41 @@ const createRegister = async (request, response) => {
 }
 
 
+
+const createLogin = function(request, response) {
+    const username = request.body.username
+    const password = request.body.password
+    
+    //validate a user.
+    const {error} = schema.validate({username: username, password: password})
+    if(error) return response.status(400).send(error.details[0].message)
+
+    //checking if the user is already in there.
+    knex.select()
+        .from('users')
+        .where('user_name', username)
+        .then(data => {
+            if(!(JSON.parse(JSON.stringify(data)).length > 0)) {
+                return response.status(400).send('Username or Password is incorrect')
+            } else {
+                //validate password
+                //console.log(JSON.parse(JSON.stringify(data))[0]['user_pwd'])
+                let validPass = ''
+                async function checkValidPass() {
+                   validPass = await bcrypt.compare(request.body.password, data[0].user_pwd)
+                   if(!validPass) return response.status(400).send('Invalid password')
+                }
+                checkValidPass()
+
+                //Create and assign token.
+                const token = jwt.sign({username: data[0].user_id}, 'secretkey')
+                response.header('auth-token', token).send(token)
+            }
+        })
+}
+
+
 module.exports = {
     createLogin,
-    createPosts,
-    verifyToken,
     createRegister
 }
