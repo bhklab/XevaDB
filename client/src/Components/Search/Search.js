@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
 import {StyleBar, customStyles, StyleButton} from './SearchStyle'
 import Select from 'react-select'
 import axios from 'axios'
