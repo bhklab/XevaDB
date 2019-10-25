@@ -22,11 +22,6 @@ width: 500px;
 border-radius: 5px;
 `
 
-const FormStyle = styled.form`
-width: 100%;
-margin-top: 2.5vh;
-`
-
 const SubmitStyle = styled.div`
 margin-top: 2vh;
 `
@@ -51,7 +46,6 @@ background-image: linear-gradient(
 
 export {
     Paper,
-    FormStyle,
     SubmitStyle,
     LogoStyle,
     PaperGradient,
