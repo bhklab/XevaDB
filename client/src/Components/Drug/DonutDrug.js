@@ -34,7 +34,8 @@ class DonutDrug extends React.Component {
 
     componentDidMount() {
         let new_values = []
-        axios.get(`/api/v1/drug/class`)
+        //passing on token as the header to the api call.
+        axios.get(`/api/v1/drug/class`, { headers: { Authorization: localStorage.getItem('user') } })
              .then((response) => {
                  response.data.data.forEach((data) => {
                      let value = {}
