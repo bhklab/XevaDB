@@ -49,8 +49,8 @@ class TopNav extends React.Component {
                         >
                             {this.state.isLogged}
                         </Button>
-                    </Link>
-                </LinkStyle>         
+                    </Link> 
+                </LinkStyle>  
             </HeaderStyle>
         )
     }
