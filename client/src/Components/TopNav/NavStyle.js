@@ -37,22 +37,26 @@ const LinkStyle = styled.div`
         }
     }
 
-    a:nth-child(6) {
-        margin-left : 40px;
-        margin-right : -100px;
-    }
-
+    
     a:nth-child(1) {
-        margin-left : 200px;
+        margin-left : 600px;
     }
 
-    @media screen and (max-width: 1700px) {
+    a:nth-child(6) {
+        margin-right : -200px;
+    }
+
+    @media screen and (max-width: 2100px) {
         a {
             font-size: 20px;
         }
 
         a:nth-child(1) {
             margin-left : 100px;
+        }
+
+        a:nth-child(6) {
+        margin-right : -100px;
         }
     }
 
