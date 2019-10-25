@@ -18,7 +18,7 @@ const getDrugs = function(request,response) {
 
 // this will get the patients/model ids grouped by class.
 const getDrugGroupedByClass = function(request, response) {
-    console.log(response.locals.user, 'this is user')
+    //console.log(response.locals.user, 'this is user')
     knex('model_information')
         .count('model_information.patient_id as model_ids')
         .leftJoin(
