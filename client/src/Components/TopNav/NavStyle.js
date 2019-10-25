@@ -6,7 +6,6 @@ const HeaderStyle = styled.header`
         padding: 0px;
         box-sizing: border-box;
     }
-
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -36,6 +35,11 @@ const LinkStyle = styled.div`
             color: #e5ac11;
             cursor:pointer;
         }
+    }
+
+    a:nth-child(6) {
+        margin-left : 40px;
+        margin-right : -100px;
     }
 
     a:nth-child(1) {
