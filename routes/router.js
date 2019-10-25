@@ -16,7 +16,7 @@ const mutation = require('./api/mutation_api')
 const drugScreening = require('./api/drug_screening')
 const rnasequencing = require('./api/rnaseq_api')
 const awtauthentication = require('./api/auth_api')
-
+const verifytoken = require('./api/verify_token_api')
 
 // APIs related to dataset table.
 router.get('/v1/datasets', datasets.getDatasets)
@@ -24,7 +24,7 @@ router.get('/v1/dataset/patients', datasets.getPatientsGroupedByDataset)
 
 // APIs related to drugs table.
 router.get('/v1/drugs', drugs.getDrugs)
-router.get('/v1/drug/class', drugs.getDrugGroupedByClass)
+router.get('/v1/drug/class', verifytoken, drugs.getDrugGroupedByClass)
 
 // APIs related to tissues table.
 router.get('/v1/tissues', tissues.getTissues)

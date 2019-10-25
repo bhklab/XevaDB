@@ -132,12 +132,13 @@ const createLogin = function(request, response) {
                 async function checkValidPass() {
                    validPass = await bcrypt.compare(request.body.password, data[0].user_pwd)
                    if(!validPass) return response.status(400).send('Invalid password')
+                   else {
+                        //Create and assign token.
+                        const token = jwt.sign({username: data[0].user_id}, 'secretkey')
+                        response.header('auth-token', token).send(token)
+                   }
                 }
                 checkValidPass()
-
-                //Create and assign token.
-                const token = jwt.sign({username: data[0].user_id}, 'secretkey')
-                response.header('auth-token', token).send(token)
             }
         })
 }
