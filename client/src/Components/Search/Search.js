@@ -17,11 +17,12 @@ class Search extends React.Component {
             selectedGeneSearch: ['Enter Gene Symbol(s)'],
             selectedDrugs: [],
             selectedDataset: '' ,
-            genomics: ['All', 'Mutation', 'CNV', 'RNASeq'],
+            genomicsValue: ['All', 'Mutation', 'CNV', 'RNASeq'],
             selectedGenomics: [],
             allDrugs: [],
             threshold: 2,
-            toggleRNA: false
+            toggleRNA: false,
+            genomics: []
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleDatasetChange = this.handleDatasetChange.bind(this)
@@ -50,14 +51,14 @@ class Search extends React.Component {
             genes: [{value: 'user defined list', label: 'User-Defined List'}, ...genes]
         })
         
-        const genomic = this.state.genomics.map((item, i) => {
+        const genomic = this.state.genomicsValue.map((item, i) => {
             return ({
                 label: item,
                 value: i
             })
         })
         this.setState({
-            genomics: [...genomic]
+            genomicsValue: [...genomic]
         })
     }
 
@@ -121,7 +122,6 @@ class Search extends React.Component {
 
     // sets the value of selected gene search, empty if it's user defined list else the option selected.
     handleGeneListChange = selectedOption => {
-        
         if(selectedOption.value === 'user defined list') {
             this.setState({
                 selectedGeneSearch: ''
@@ -149,12 +149,20 @@ class Search extends React.Component {
             })
             // if all then everything will be passed else the selected value.
             if(genomics_value.includes('All')) {
-                this.setState({
-                    selectedGenomics : ['Mutation', 'CNV', 'RNASeq']
+                const genomic = this.state.genomicsValue.filter((item, i) => {
+                    if(i !== 0) {
+                        return ({
+                            label: item,
+                            value: i
+                        })
+                    }
                 })
-            } else {
                 this.setState({
-                    selectedGenomics : genomics_value
+                    genomics : genomic
+                })
+            } else { 
+                this.setState({
+                    genomics : selectedOption
                 })
             }
             // and if it includes RNASeq or all then toggle should be true.
@@ -169,7 +177,8 @@ class Search extends React.Component {
             }
         } else if (selectedOption === null || selectedOption.length === 0) {
             this.setState({
-                toggleRNA : false
+                toggleRNA : false,
+                genomics : []
             })
         }
     }
@@ -227,12 +236,13 @@ class Search extends React.Component {
                         
                         <div className='div-genomics'> 
                             <Select 
-                                options={this.state.genomics} 
+                                options={this.state.genomicsValue} 
                                 styles={customStyles}
                                 placeholder={'Genomics'}
                                 onChange={this.handleExpressionChange}
                                 isMulti
                                 isClearable
+                                value={this.state.genomics}
                             />
                         </div>
 
