@@ -210,6 +210,12 @@ const customStyles = {
         fontSize: '15px'
     }),
 
+    multiValue: (provided) => ({
+        ...provided,
+        color: '#3453b0',
+        fontSize: '15px',
+    }),
+
     input: (provided) => ({
         ...provided,
         color: '#3453b0',
@@ -221,6 +227,15 @@ const customStyles = {
         '&:hover': {
           color: '#3453b0',
         }
+    }),
+
+    valueContainer: (provided) => ({
+        ...provided,
+        minHeight: '10px',
+        height: '40px',
+        paddingTop: '0',
+        paddingBottom: '0',
+        overflow: 'auto'
     })
 }
 
