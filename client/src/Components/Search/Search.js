@@ -11,7 +11,7 @@ class Search extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            data : [],
+            drugs : [],
             datasets: [],
             genes: [],
             selectedGeneSearch: ['Enter Gene Symbol(s)'],
@@ -22,7 +22,8 @@ class Search extends React.Component {
             allDrugs: [],
             threshold: 2,
             toggleRNA: false,
-            genomics: []
+            genomics: [],
+            drugValue: []
         }
         this.handleDrugChange = this.handleDrugChange.bind(this)
         this.handleDatasetChange = this.handleDatasetChange.bind(this)
@@ -78,20 +79,35 @@ class Search extends React.Component {
 
     handleDrugChange = (selectedOption, action) => {
         if (selectedOption !== null && selectedOption.length > 0)  {
+            // if all is selected then everything except all is in the value for select.
             if (selectedOption[0].value === 'all') {
+                const data = this.state.drugs.filter((item, value) => {
+                    if(value !== 0) {
+                        return ({
+                            value: value,
+                            label: item.drug
+                        })
+                    }
+                })
                 this.setState ({
                     selectedDrugs : this.state.allDrugs,
-                    //data : []
+                    drugValue : data
                 })
-            }
+            } // else the selected option and label the array of drugs.
             else {
                 const label = selectedOption.map((value) => {
                     return (value.label).replace(/\s/g,'').replace('+','_');
                 })
                 this.setState ({
-                    selectedDrugs : label
+                    selectedDrugs : label,
+                    drugValue : selectedOption
                 })
             }
+        } //if it's empty or null put the drugValue to be an empty array.
+        else if (selectedOption === null || selectedOption.length === 0) {
+            this.setState({
+                drugValue : []
+            })
         }
     }
 
@@ -109,7 +125,7 @@ class Search extends React.Component {
                     label: item.drug
                 }))
                 this.setState ({
-                    data: [ {value: 'all', label:`All (${data.length})`}, ...data]
+                    drugs: [ {value: 'all', label:`All (${data.length})`}, ...data]
                 })
                 const drug = response.data.data[0].map(item => {
                     return (item.drug).replace(/\s/g,'').replace('+','_');
@@ -229,13 +245,14 @@ class Search extends React.Component {
                             </div>
                             <div className='div-drug'>
                                 <Select 
-                                    options={this.state.data} 
+                                    options={this.state.drugs} 
                                     styles={customStyles}
                                     placeholder={'Search for Drug (eg. CLR457)'}
                                     onChange={this.handleDrugChange}
                                     isMulti
                                     isSearchable
                                     isClearable
+                                    value={this.state.drugValue}
                                 />
                             </div>
                         </div>

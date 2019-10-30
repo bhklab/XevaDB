@@ -21,7 +21,7 @@ class Oncoprint extends React.Component {
         let plotId = this.props.className;
         let dimensions = this.props.dimensions;
         let margin = this.props.margin;
-        let threshold = this.props.threshold;
+        let threshold = Number(this.props.threshold);
         let hmap_patients = this.props.hmap_patients;
         let data_mut = this.props.data_mut;
         let data_rna = this.props.data_rna
@@ -35,7 +35,7 @@ class Oncoprint extends React.Component {
 
 
     makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, genes_mut, genes_rna, patient_mut, patient_rna) {
-
+        
         // to merge two arrays and give the unique values.
         // eslint-disable-next-line no-extend-native
         Array.prototype.unique = function() {
