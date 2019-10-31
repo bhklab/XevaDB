@@ -12,10 +12,10 @@ module.exports = {
       database : process.env.DB_NAME
     },
     migrations: {
-      directory: __dirname + '/db/migrations',
+      directory: `${__dirname}/db/migrations`,
     },
     seeds: {
-      directory: __dirname + '/db/seeds',
+      directory: `${__dirname}/db/seeds`,
     },
   },
   production: {
@@ -27,10 +27,10 @@ module.exports = {
       database : process.env.DB_NAME
     },
     migrations: {
-      directory: __dirname + '/db/migrations',
+      directory: `${__dirname}/db/migrations`,
     },
     seeds: {
-      directory: __dirname + '/db/seeds',
+      directory: `${__dirname}/db/seeds`,
     },
   }
  };
