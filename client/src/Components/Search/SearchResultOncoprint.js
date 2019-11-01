@@ -14,25 +14,29 @@ class SearchResultOncoprint extends React.Component {
             hmap_patients: [],
             genes_mut : [],
             genes_rna : [],
-            //genes_cnv: [],
+            genes_cnv: [],
             patient_mut : [],
             patient_rna : [],
-            //patient_cnv : []
+            patient_cnv : [],
             data_mut : [],
-            data_rna : []
-            //data_cnv : []
+            data_rna : [],
+            data_cnv : []
         };
         //binding the functions declared.
         this.updateResults = this.updateResults.bind(this);
     }
 
     updateResults(result, genomics_param) {
-        let genomics = genomics_param.split(',')
-   
+        let genomics_value = genomics_param.split(',')
+        let genomics = []
+
         // temporary solution to remove cnv if everything is selected.
-        if(genomics.includes('Mutation') && genomics.includes('CNV')) {
-            genomics = ['Mutation', 'RNASeq']
-        }
+        if((genomics_value.includes('Mutation') || genomics_value.includes('CNV'))) {
+            genomics.push('Mutation')
+        } 
+        if (genomics_value.includes('RNASeq')){
+            genomics.push('RNASeq')
+        } 
        
         // grab the last array(patient array) from result[0]
         const dataset = result[0].data;
@@ -56,7 +60,7 @@ class SearchResultOncoprint extends React.Component {
 
         genomics.forEach((value, i) => {
             let val = value.substring(0,3).toLowerCase()
-
+           
             // setting patients
             let patient_id = Object.keys(result[i].data[0]).filter(value => {
                 let return_value = ''
@@ -82,12 +86,13 @@ class SearchResultOncoprint extends React.Component {
             hmap_patients : hmap_patients,
             patient_mut : patient['patient_mut'] === undefined ? this.state.patient_mut : patient['patient_mut'],
             patient_rna : patient['patient_rna'] === undefined ? this.state.patient_rna : patient['patient_rna'],
-            //patient_cnv : patient['patient_cnv'],
+            patient_cnv : patient['patient_cnv'] === undefined ? this.state.patient_cnv : patient['patient_cnv'],
             genes_mut : genes['genes_mut'] === undefined ? this.state.genes_mut : genes['genes_mut'],
             genes_rna : genes['genes_rna'] === undefined ? this.state.genes_rna : genes['genes_rna'],
-            //genes_cnv : genes['genes_cnv'],
+            genes_cnv : genes['genes_cnv'] === undefined ? this.state.genes_cnv : genes['genes_cnv'],
             data_mut : data['data_mut'] === undefined ? this.state.data_mut : data['data_mut'],
             data_rna : data['data_rna'] === undefined ? this.state.data_rna : data['data_rna'],
+            data_cnv : data['data_cnv'] === undefined ? this.state.data_cnv : data['data_cnv']
         })
     }
 
@@ -121,7 +126,7 @@ class SearchResultOncoprint extends React.Component {
         top: 50,
         right: 200,
         bottom: 100,
-        left: 250
+        left: 250,
     }
 
     render() {
@@ -130,13 +135,13 @@ class SearchResultOncoprint extends React.Component {
                 className = 'oprint_result'
                 dimensions = {this.dimensions}
                 margin = {this.margin}
-                threshold = {this.state.threshold}
+                threshold = {Number(this.state.threshold)}
                 hmap_patients = {this.state.hmap_patients}
-                genes_mut = {this.state.genes_mut} 
+                genes_mut = {Boolean(this.state.genes_mut.length) ? this.state.genes_mut : this.state.genes_cnv} 
                 genes_rna = {this.state.genes_rna}
-                patient_mut = {this.state.patient_mut}
+                patient_mut = {Boolean(this.state.patient_mut.length) ? this.state.patient_mut : this.state.patient_cnv}
                 patient_rna = {this.state.patient_rna}
-                data_mut = {this.state.data_mut} 
+                data_mut = {Boolean(this.state.data_mut.length) ? this.state.data_mut : this.state.data_cnv} 
                 data_rna = {this.state.data_rna}
             />
         )
