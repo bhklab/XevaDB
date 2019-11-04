@@ -1,322 +1,343 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
-import {StyleBar, customStyles, StyleButton} from './SearchStyle'
-import Select from 'react-select'
-import axios from 'axios'
-import { GeneList } from './GeneList'
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable react/jsx-indent */
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-plusplus */
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
+/* eslint-disable react/no-deprecated */
 
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import Select from 'react-select';
+import axios from 'axios';
+import { StyleBar, customStyles, StyleButton } from './SearchStyle';
+import { GeneList } from './GeneList';
 
 
 class Search extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            drugs : [],
+            drugs: [],
             datasets: [],
             genes: [],
             selectedGeneSearch: ['Enter Gene Symbol(s)'],
             selectedDrugs: [],
-            selectedDataset: '' ,
+            selectedDataset: '',
             genomicsValue: ['All', 'Mutation', 'CNV', 'RNASeq'],
             selectedGenomics: [],
             allDrugs: [],
             threshold: 2,
             toggleRNA: false,
             genomics: [],
-            drugValue: []
-        }
-        this.handleDrugChange = this.handleDrugChange.bind(this)
-        this.handleDatasetChange = this.handleDatasetChange.bind(this)
-        this.handleGeneListChange = this.handleGeneListChange.bind(this)
-        this.handleGeneSearchChange = this.handleGeneSearchChange.bind(this)
-        this.handleExpressionChange = this.handleExpressionChange.bind(this)
-        this.handleKeyPress = this.handleKeyPress.bind(this)
-        this.redirectUser = this.redirectUser.bind(this)
-        this.handleThreshold = this.handleThreshold.bind(this)
-    } 
+            drugValue: [],
+            axiosConfig: {},
+        };
+        this.handleDrugChange = this.handleDrugChange.bind(this);
+        this.handleDatasetChange = this.handleDatasetChange.bind(this);
+        this.handleGeneListChange = this.handleGeneListChange.bind(this);
+        this.handleGeneSearchChange = this.handleGeneSearchChange.bind(this);
+        this.handleExpressionChange = this.handleExpressionChange.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.redirectUser = this.redirectUser.bind(this);
+        this.handleThreshold = this.handleThreshold.bind(this);
+    }
 
-    axiosConfig = {
-        headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
-            'Accept': 'application/json'
-        }
-    };
 
     componentWillMount() {
-        const genes = GeneList.map(item => ({
+        const { genomicsValue } = this.state;
+        const genes = GeneList.map((item) => ({
             value: item.split('=')[1].replace(/\s/g, ','),
-            label: `${item.split('=')[0]} (${item.split('=')[1].split(' ').length})`
-        }))
-    
-        this.setState ({
-            genes: [{value: 'user defined list', label: 'User-Defined List'}, ...genes]
-        })
-        
-        const genomic = this.state.genomicsValue.map((item, i) => {
-            return ({
-                label: item,
-                value: i
-            })
-        })
+            label: `${item.split('=')[0]} (${item.split('=')[1].split(' ').length})`,
+        }));
+
         this.setState({
-            genomicsValue: [...genomic]
-        })
+            genes: [{ value: 'user defined list', label: 'User-Defined List' }, ...genes],
+        });
+
+        const genomic = genomicsValue.map((item, i) => ({
+            label: item,
+            value: i,
+        }));
+        this.setState({
+            genomicsValue: [...genomic],
+            axiosConfig: {
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    Accept: 'application/json',
+                },
+            },
+        });
     }
 
     componentDidMount() {
-        axios.get(`/api/v1/datasets`)
+        axios.get('/api/v1/datasets')
             .then((response) => {
-                const datasets = response.data.data.map(item => ({
-                        value: item.dataset_id,
-                        label: item.dataset_name
-                }))
-                this.setState ({
-                    datasets: [...datasets]
-                })
-            })
+                const datasets = response.data.data.map((item) => ({
+                    value: item.dataset_id,
+                    label: item.dataset_name,
+                }));
+                this.setState({
+                    datasets: [...datasets],
+                });
+            });
     }
 
 
-    handleDrugChange = (selectedOption, action) => {
-        if (selectedOption !== null && selectedOption.length > 0)  {
+    handleDrugChange(selectedOption) {
+        if (selectedOption !== null && selectedOption.length > 0) {
+            const { drugs, allDrugs } = this.state;
+
             // if all is selected then everything except all is in the value for select.
             if (selectedOption[0].value === 'all') {
-                const data = this.state.drugs.filter((item, value) => {
-                    if(value !== 0) {
+                const data = drugs.filter((item, value) => {
+                    if (value !== 0) {
                         return ({
-                            value: value,
-                            label: item.drug
-                        })
+                            value,
+                            label: item.drug,
+                        });
                     }
-                })
-                this.setState ({
-                    selectedDrugs : this.state.allDrugs,
-                    drugValue : data
-                })
-            } // else the selected option and label the array of drugs.
-            else {
-                const label = selectedOption.map((value) => {
-                    return (value.label).replace(/\s/g,'').replace('+','_');
-                })
-                this.setState ({
-                    selectedDrugs : label,
-                    drugValue : selectedOption
-                })
-            }
-        } //if it's empty or null put the drugValue to be an empty array.
-        else if (selectedOption === null || selectedOption.length === 0) {
+                });
+                this.setState({
+                    selectedDrugs: allDrugs,
+                    drugValue: data,
+                });
+            } else { // else the selected option and label the array of drugs.
+                const label = selectedOption.map((value) => (value.label).replace(/\s/g, '').replace('+', '_'));
+                this.setState({
+                    selectedDrugs: label,
+                    drugValue: selectedOption,
+                });
+            } // if it's empty or null put the drugValue to be an empty array.
+        } else if (selectedOption === null || selectedOption.length === 0) {
             this.setState({
-                drugValue : []
-            })
+                drugValue: [],
+            });
         }
     }
 
-    // handle the dataset change and sends a post request to grab drugs based on the particular dataset.
-    handleDatasetChange = selectedOption => {
+    // handle the dataset change and sends a post
+    // request to grab drugs based on the particular dataset.
+    handleDatasetChange(selectedOption) {
+        const { axiosConfig } = this.state;
         this.setState({
-            selectedDataset: selectedOption.value
-        })
-        const label = selectedOption.value
+            selectedDataset: selectedOption.value,
+        });
+        const label = selectedOption.value;
         let initial = 1;
-        axios.post(`/api/v1/drugpatient/dataset`, {label}, this.axiosConfig)
-             .then((response) => {
-                const data = response.data.data[0].map(item => ({
+        axios.post('/api/v1/drugpatient/dataset', { label }, axiosConfig.headers)
+            .then((response) => {
+                const data = response.data.data[0].map((item) => ({
                     value: initial++,
-                    label: item.drug
-                }))
-                this.setState ({
-                    drugs: [ {value: 'all', label:`All (${data.length})`}, ...data]
-                })
-                const drug = response.data.data[0].map(item => {
-                    return (item.drug).replace(/\s/g,'').replace('+','_');
-                })
-                this.setState ({
-                    allDrugs: [...drug]
-                })
-             })
+                    label: item.drug,
+                }));
+                this.setState({
+                    drugs: [{ value: 'all', label: `All (${data.length})` }, ...data],
+                });
+                const drug = response.data.data[0].map((item) => (item.drug).replace(/\s/g, '').replace('+', '_'));
+                this.setState({
+                    allDrugs: [...drug],
+                });
+            });
     }
 
-    // sets the value of selected gene search, empty if it's user defined list else the option selected.
-    handleGeneListChange = selectedOption => {
-        if(selectedOption.value === 'user defined list') {
+    // sets the value of selected gene search,
+    // empty if it's user defined list else the option selected.
+    handleGeneListChange(selectedOption) {
+        if (selectedOption.value === 'user defined list') {
             this.setState({
-                selectedGeneSearch: ''
-            })
+                selectedGeneSearch: '',
+            });
         } else {
             this.setState({
-                selectedGeneSearch: selectedOption.value
-            })
+                selectedGeneSearch: selectedOption.value,
+            });
         }
     }
 
     // sets the value on event change.
-    handleGeneSearchChange = (event) => {
+    handleGeneSearchChange(event) {
         this.setState({
-            selectedGeneSearch: event.target.value
-        })
+            selectedGeneSearch: event.target.value,
+        });
     }
 
     // this adds the value either mutation or cnv or rnaseq.
-    handleExpressionChange = selectedOption => {
+    handleExpressionChange(selectedOption) {
+        const { genomicsValue } = this.state;
         if (selectedOption !== null && selectedOption.length > 0) {
-
             // map through the options in order to store the selected value.
-            const genomics_value = selectedOption.map(value => {
-                return value.label
-            })
+            const genomicsCurrentValue = selectedOption.map((value) => value.label);
 
             // if all then everything will be passed else the selected value.
-            if(genomics_value.includes('All')) {
-                const genomic = this.state.genomicsValue.filter((item, i) => {
-                    if(i !== 0) {
+            if (genomicsCurrentValue.includes('All')) {
+                const genomic = genomicsValue.filter((item, i) => {
+                    if (i !== 0) {
                         return ({
                             label: item,
-                            value: i
-                        })
+                            value: i,
+                        });
                     }
-                })
+                });
                 this.setState({
-                    genomics : genomic,
-                    selectedGenomics : ['Mutation', 'CNV', 'RNASeq']
-                })
-            } else { 
+                    genomics: genomic,
+                    selectedGenomics: ['Mutation', 'CNV', 'RNASeq'],
+                });
+            } else {
                 this.setState({
-                    genomics : selectedOption,
-                    selectedGenomics : genomics_value
-                })
+                    genomics: selectedOption,
+                    selectedGenomics: genomicsCurrentValue,
+                });
             }
 
             // and if it includes RNASeq or all then toggle should be true.
-            if(genomics_value.includes('RNASeq') || genomics_value.includes('All')) {
+            if (genomicsCurrentValue.includes('RNASeq') || genomicsCurrentValue.includes('All')) {
                 this.setState({
-                    toggleRNA : true
-                })
+                    toggleRNA: true,
+                });
             } else {
                 this.setState({
-                    toggleRNA : false
-                })
+                    toggleRNA: false,
+                });
             }
-        } 
-        else if (selectedOption === null || selectedOption.length === 0) {
+        } else if (selectedOption === null || selectedOption.length === 0) {
             this.setState({
-                toggleRNA : false,
-                genomics : []
-            })
+                toggleRNA: false,
+                genomics: [],
+            });
         }
     }
 
     // threshold for rnaseq.
-    handleThreshold = (event) => {
+    handleThreshold(event) {
         this.setState({
-            threshold : event.target.value
-        })
+            threshold: event.target.value,
+        });
     }
 
 
-    handleKeyPress = (event) => {
-        if(event.key === 'Enter'){
-           this.redirectUser()
+    handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            this.redirectUser();
         }
     }
 
 
-    redirectUser = () => {
-        if((this.state.selectedDataset !== '') && (this.state.selectedDrugs.length > 0) && (this.state.selectedGeneSearch[0] !== 'Enter Gene Symbol(s)')) {
-            const { history } = this.props
-            history.push(`/search/?drug=${this.state.selectedDrugs}&dataset=${this.state.selectedDataset}&genes=${this.state.selectedGeneSearch}&genomics=${this.state.selectedGenomics}&threshold=${this.state.threshold}`)
+    redirectUser() {
+        const {
+            selectedDataset, selectedDrugs, selectedGeneSearch, selectedGenomics, threshold,
+        } = this.state;
+        if ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)')) {
+            const { history } = this.props;
+            history.push(`/search/?drug=${selectedDrugs}&dataset=${selectedDataset}&genes=${selectedGeneSearch}&genomics=${selectedGenomics}&threshold=${threshold}`);
         }
     }
 
 
     render() {
+        const {
+            datasets, drugs, drugValue, genomicsValue, genomics,
+            threshold, toggleRNA, genes, selectedGeneSearch,
+        } = this.state;
         return (
-            <StyleBar className='wrapper'>
-                <div className='search-container'>
-                    <div className='select-component' onKeyPress={this.handleKeyPress}>
-                        <h1> <span>XevaDB:</span> A Database For PDX Pharmacogenomic Data </h1>
-                        <div className='two-col'>
-                            <div className='div-dataset'>
-                                <Select 
-                                    options={this.state.datasets} 
+
+            <StyleBar className="wrapper">
+                <div className="search-container">
+                    <div className="select-component" onKeyPress={this.handleKeyPress}>
+                        <h1>
+                            {' '}
+                            <span>XevaDB:</span>
+                            {' '}
+A Database For PDX Pharmacogenomic Data
+                            {' '}
+                        </h1>
+                        <div className="two-col">
+                            <div className="div-dataset">
+                                <Select
+                                    options={datasets}
                                     styles={customStyles}
-                                    placeholder={'Select the datasets'}
+                                    placeholder="Select the datasets"
                                     onChange={this.handleDatasetChange}
                                 />
                             </div>
-                            <div className='div-drug'>
-                                <Select 
-                                    options={this.state.drugs} 
+                            <div className="div-drug">
+                                <Select
+                                    options={drugs}
                                     styles={customStyles}
-                                    placeholder={'Search for Drug (eg. CLR457)'}
+                                    placeholder="Search for Drug (eg. CLR457)"
                                     onChange={this.handleDrugChange}
                                     isMulti
                                     isSearchable
                                     isClearable
-                                    value={this.state.drugValue}
+                                    value={drugValue}
                                 />
                             </div>
                         </div>
-                        
-                        <div className='div-genomics'> 
-                            <Select 
-                                options={this.state.genomicsValue} 
+
+                        <div className="div-genomics">
+                            <Select
+                                options={genomicsValue}
                                 styles={customStyles}
-                                placeholder={'Genomics'}
+                                placeholder="Genomics"
                                 onChange={this.handleExpressionChange}
                                 isMulti
                                 isClearable
-                                value={this.state.genomics}
+                                value={genomics}
                             />
                         </div>
 
-                        <div className='div-rnaseq'> 
-                        {
-                            this.state.toggleRNA ? 
-                                <div>
+                        <div className="div-rnaseq">
+                            {
+                                toggleRNA
+                                    ? (
+                                        <div>
                                     Enter a z-score threshold ±
-                                    <input 
-                                        type='text' 
-                                        name='title' 
-                                        value={this.state.threshold} 
-                                        onChange={this.handleThreshold}
-                                    />
-                                </div>
-                            : null
-                        }
-                            
+                                            <input
+                                                type="text"
+                                                name="title"
+                                                value={threshold}
+                                                onChange={this.handleThreshold}
+                                            />
+                                        </div>
+                                    )
+                                    : null
+                            }
+
                         </div>
 
-                        <div className='div-gene'>
-                            <Select 
-                                options={this.state.genes} 
+                        <div className="div-gene">
+                            <Select
+                                options={genes}
                                 styles={customStyles}
-                                placeholder={'User Defined List'}
+                                placeholder="User Defined List"
                                 onChange={this.handleGeneListChange}
                             />
                         </div>
 
-                        <div className='div-gene-enter'>
+                        <div className="div-gene-enter">
                             <form>
                                 <textarea
-                                    type='text' 
-                                    value={this.state.selectedGeneSearch} 
+                                    type="text"
+                                    value={selectedGeneSearch}
                                     onChange={this.handleGeneSearchChange}
                                 />
                             </form>
                         </div>
                         <div>
-                            <StyleButton onClick={this.redirectUser} type='button'> 
+                            <StyleButton onClick={this.redirectUser} type="button">
                                 <span>
                                     Search
                                 </span>
                             </StyleButton>
-                        </div>       
+                        </div>
                     </div>
                 </div>
             </StyleBar>
-        )
+        );
     }
 }
 
 
-export default withRouter(Search)
+export default withRouter(Search);
