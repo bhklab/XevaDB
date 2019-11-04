@@ -20,7 +20,9 @@ class SearchResultOncoprint extends React.Component {
             patient_cnv : [],
             data_mut : [],
             data_rna : [],
-            data_cnv : []
+            data_cnv : [],
+            dimensions: {},
+            margin: {},
         };
         //binding the functions declared.
         this.updateResults = this.updateResults.bind(this);
@@ -92,7 +94,11 @@ class SearchResultOncoprint extends React.Component {
             genes_cnv : genes['genes_cnv'] === undefined ? this.state.genes_cnv : genes['genes_cnv'],
             data_mut : data['data_mut'] === undefined ? this.state.data_mut : data['data_mut'],
             data_rna : data['data_rna'] === undefined ? this.state.data_rna : data['data_rna'],
-            data_cnv : data['data_cnv'] === undefined ? this.state.data_cnv : data['data_cnv']
+            data_cnv : data['data_cnv'] === undefined ? this.state.data_cnv : data['data_cnv'],
+            dimensions: { height: 35, width: 20 },
+            margin: {
+                top: 50, right: 200, bottom: 100, left: 250,
+            },
         })
     }
 
@@ -117,11 +123,6 @@ class SearchResultOncoprint extends React.Component {
                 })
     }
 
-    dimensions = {
-        height: 35,
-        width: 20,
-    }
-
     margin = {
         top: 50,
         right: 200,
@@ -133,8 +134,8 @@ class SearchResultOncoprint extends React.Component {
         return (
             <Oncoprint 
                 className = 'oprint_result'
-                dimensions = {this.dimensions}
-                margin = {this.margin}
+                dimensions = {this.state.dimensions}
+                margin = {this.state.margin}
                 threshold = {Number(this.state.threshold)}
                 hmap_patients = {this.state.hmap_patients}
                 genes_mut = {Boolean(this.state.genes_mut.length) ? this.state.genes_mut : this.state.genes_cnv} 
