@@ -148,10 +148,10 @@ class SearchResultOncoprint extends React.Component {
 
 
 SearchResultOncoprint.propTypes = {
-    datasetParam: PropTypes.number.isRequired,
-    geneParam: PropTypes.number.isRequired,
-    genomicsParam: PropTypes.number.isRequired,
-    threshold: PropTypes.number.isRequired,
+    datasetParam: PropTypes.string.isRequired,
+    geneParam: PropTypes.string.isRequired,
+    genomicsParam: PropTypes.string.isRequired,
+    threshold: PropTypes.string.isRequired,
 };
 
 

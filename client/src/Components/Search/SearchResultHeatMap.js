@@ -1,95 +1,96 @@
-import React from 'react'
-import HeatMap from '../HeatMap/HeatMap'
-import axios from 'axios'
-
+/* eslint-disable no-shadow */
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable react/jsx-indent */
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
+import axios from 'axios';
+import PropTypes from 'prop-types';
+import HeatMap from '../HeatMap/HeatMap';
 
 class SearchResultHeatMap extends React.Component {
-
     constructor(props) {
-        super(props)
-        //setting the states for the data.
+        super(props);
+        // setting the states for the data.
         this.state = {
-            drug_data : [],
-            patient_id_drug : [],
-            drug_id : [],
-            datasetParam : 0,
+            drugData: [],
+            patientIdDrug: [],
+            drugId: [],
             dimensions: {},
             margin: {},
         };
-        //binding the functions declared.
+        // binding the functions declared.
         this.parseData = this.parseData.bind(this);
+    }
+
+    componentDidMount() {
+        const { drugParam } = this.props;
+        const { datasetParam } = this.props;
+
+        axios.get(`/api/v1/response?drug=${drugParam}&dataset=${datasetParam}`)
+            .then((response) => {
+                this.parseData(response.data);
+            });
     }
 
     // this function takes the parsed result and set the states.
     parseData(result) {
-      
         // defining the variables.
-        let dataset = []
-        let patient = []
-        let drug = []
+        const dataset = [];
+        let patient = [];
+        const drug = [];
 
-        //patient array.
-        patient = result.pop()
-        
+        // patient array.
+        patient = result.pop();
+
         // this function will loop through the elements and
         // assign empty values in case model information is not available.
-        result.forEach(element => {
-            let data_object = {}
-            drug.push(element.Drug)
+        result.forEach((element) => {
+            const dataObject = {};
+            drug.push(element.Drug);
             patient.forEach((patient) => {
-                if(!element[patient]) {
-                    data_object[patient] = ''
+                if (!element[patient]) {
+                    dataObject[patient] = '';
                 } else {
-                    data_object[patient] = element[patient]
+                    dataObject[patient] = element[patient];
                 }
-            })
-            dataset.push(data_object)
+            });
+            dataset.push(dataObject);
         });
 
-        //setting the states using the defined variables.
+        // setting the states using the defined variables.
         this.setState({
-            drug_id : drug,
-            patient_id_drug : patient,
-            drug_data: dataset
-        })
-    }
-
-    componentDidMount() {
-        let drugParam = this.props.drugParam
-        let datasetParam = this.props.datasetParam
-        
-        axios.get(`/api/v1/response?drug=${drugParam}&dataset=${datasetParam}`)
-             .then(response => {
-                 this.parseData(response.data);
-             })
-    }
-
-    dimensions = {
-        height: 35,
-        width: 20,
-    }
-
-    margin = {
-        top: 300,
-        right: 200,
-        bottom: 0,
-        left: 250
+            drugId: drug,
+            patientIdDrug: patient,
+            drugData: dataset,
+            dimensions: { height: 35, width: 20 },
+            margin: {
+                top: 300, right: 200, bottom: 0, left: 250,
+            },
+        });
     }
 
     render() {
+        const {
+            drugData, drugId,
+            patientIdDrug, dimensions,
+            margin,
+        } = this.state;
         return (
             <HeatMap
-                data = {this.state.drug_data} 
-                drug_id = {this.state.drug_id} 
-                patient_id = {this.state.patient_id_drug} 
-                dimensions = {this.dimensions}
-                margin = {this.margin}
-                className = 'searchedheatmap'
+                data={drugData}
+                drug_id={drugId}
+                patient_id={patientIdDrug}
+                dimensions={dimensions}
+                margin={margin}
+                className="searchedheatmap"
             />
-        )
+        );
     }
 }
 
-
+SearchResultHeatMap.propTypes = {
+    datasetParam: PropTypes.string.isRequired,
+    drugParam: PropTypes.string.isRequired,
+};
 
 export default SearchResultHeatMap;
