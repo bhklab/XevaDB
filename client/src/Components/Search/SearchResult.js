@@ -1,65 +1,70 @@
-import React, {Fragment} from 'react'
-import SearchResultOncoprint from './SearchResultOncoprint'
-import SearchResultHeatMap from './SearchResultHeatMap'
-import GlobalStyles from '../../GlobalStyles'
-import TopNav from '../TopNav/TopNav'
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable react/no-deprecated */
+/* eslint-disable react/jsx-indent */
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
+import SearchResultHeatMap from './SearchResultHeatMap';
+import SearchResultOncoprint from './SearchResultOncoprint';
+import GlobalStyles from '../../GlobalStyles';
+import TopNav from '../TopNav/TopNav';
 
 
 class SearchResult extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            drug_param : '',
-            dataset_param : '',
-            gene_param : '',
-          //drug_param_for_onco : '',
-            genomics_param : '',
-            threshold : 0
-        }
+            drugParam: '',
+            datasetParam: '',
+            geneParam: '',
+            genomicsParam: '',
+            threshold: 0,
+        };
     }
 
     componentWillMount() {
-        let params = new URLSearchParams(this.props.location.search);
-        let genomics = params.get('genomics')
-        let drug = params.get('drug')
-        let dataset = params.get('dataset')
-        let gene = params.get('genes')
-        let threshold = params.get('threshold')
-        //let drug_for_onco = drug.split(',')[0]
-        
+        // eslint-disable-next-line react/prop-types
+        const { location } = this.props;
+        // eslint-disable-next-line react/prop-types
+        const params = new URLSearchParams(location.search);
+        const genomics = params.get('genomics');
+        const drug = params.get('drug');
+        const dataset = params.get('dataset');
+        const gene = params.get('genes');
+        const threshold = params.get('threshold');
+
         this.setState({
-            drug_param : drug,
-            dataset_param : dataset,
-            gene_param : gene,
-            //drug_param_for_onco : drug_for_onco,
-            genomics_param : genomics,
-            threshold : threshold
-        })
+            drugParam: drug,
+            datasetParam: dataset,
+            geneParam: gene,
+            genomicsParam: genomics,
+            threshold,
+        });
     }
-       
+
     render() {
+        const {
+            drugParam, datasetParam, geneParam, genomicsParam, threshold,
+        } = this.state;
         return (
-            <Fragment>
-                <TopNav/>
-                <GlobalStyles/>
-                <div className='wrapper' style={{margin:'auto', fontSize:'0'}}>
-                    <SearchResultHeatMap 
-                        drug_param = {this.state.drug_param} 
-                        dataset_param = {this.state.dataset_param}
+            <div>
+                <TopNav />
+                <GlobalStyles />
+                <div className="wrapper" style={{ margin: 'auto', fontSize: '0' }}>
+                    <SearchResultHeatMap
+                        drugParam={drugParam}
+                        datasetParam={datasetParam}
                     />
-                    <SearchResultOncoprint 
-                        gene_param = {this.state.gene_param} 
-                        dataset_param = {this.state.dataset_param} 
-                        //drug_for_onco = {this.state.drug_param_for_onco}
-                        genomics_param = {this.state.genomics_param}
-                        threshold = {this.state.threshold}
+                    <SearchResultOncoprint
+                        geneParam={geneParam}
+                        datasetParam={datasetParam}
+                        genomicsParam={genomicsParam}
+                        threshold={threshold}
                     />
                 </div>
-            </Fragment>
-        )
+            </div>
+        );
     }
 }
 
 
-
-export default SearchResult
+export default SearchResult;

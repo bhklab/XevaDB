@@ -12,7 +12,9 @@ class SearchResultHeatMap extends React.Component {
             drug_data : [],
             patient_id_drug : [],
             drug_id : [],
-            dataset_param : 0
+            datasetParam : 0,
+            dimensions: {},
+            margin: {},
         };
         //binding the functions declared.
         this.parseData = this.parseData.bind(this);
@@ -53,10 +55,10 @@ class SearchResultHeatMap extends React.Component {
     }
 
     componentDidMount() {
-        let drug_param = this.props.drug_param
-        let dataset_param = this.props.dataset_param
+        let drugParam = this.props.drugParam
+        let datasetParam = this.props.datasetParam
         
-        axios.get(`/api/v1/response?drug=${drug_param}&dataset=${dataset_param}`)
+        axios.get(`/api/v1/response?drug=${drugParam}&dataset=${datasetParam}`)
              .then(response => {
                  this.parseData(response.data);
              })
@@ -90,4 +92,4 @@ class SearchResultHeatMap extends React.Component {
 
 
 
-export default SearchResultHeatMap
+export default SearchResultHeatMap;
