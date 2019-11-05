@@ -8,7 +8,7 @@ const getDrugScreening = function (req, res) {
     const { patient } = req.query;
     // this will remove the spaces in the drug name and replace
     // it with ' + '. example BKM120   LDE225 => BKM120 + LDE225
-    drug = drug.replace(/\s\s\s/, ' + ');
+    drug = drug.replace(/\s\s\s/g, ' + ');
     knex.select('drug_screening.time', 'drug_screening.volume', 'drug_screening.volume_normal',
         'drugs.drug_name as drug', 'patients.patient as patient_id',
         'batch_information.type', 'batches.batch', 'models.model as model_id')
