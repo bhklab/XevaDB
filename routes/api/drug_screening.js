@@ -4,10 +4,14 @@ const knex = require('../../db/knex1');
 
 // this will get the drug screening data based on drug and patient id.
 const getDrugScreening = function (req, res) {
-    const { drug } = req.query;
+    let { drug } = req.query;
     const { patient } = req.query;
-
-    knex.select('drug_screening.time', 'drug_screening.volume', 'drug_screening.volume_normal', 'drugs.drug_name as drug', 'patients.patient as patient_id', 'batch_information.type', 'batches.batch', 'models.model as model_id')
+    // this will remove the spaces in the drug name and replace
+    // it with ' + '. example BKM120   LDE225 => BKM120 + LDE225
+    drug = drug.replace(/\s\s\s/, ' + ');
+    knex.select('drug_screening.time', 'drug_screening.volume', 'drug_screening.volume_normal',
+        'drugs.drug_name as drug', 'patients.patient as patient_id',
+        'batch_information.type', 'batches.batch', 'models.model as model_id')
         .from('drug_screening')
         .rightJoin(
             'model_information',
