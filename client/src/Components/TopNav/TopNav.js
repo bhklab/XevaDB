@@ -17,13 +17,14 @@ class TopNav extends React.Component {
             isLogged: 'Login',
             isLink: '/login',
         };
+        this.isLoggedIn = this.isLoggedIn.bind(this);
     }
 
     componentWillMount() {
         localStorage.getItem('user') ? this.setState({ isLogged: 'Logout', isLink: '/' }) : this.setState({ isLogged: 'Login' });
     }
 
-    isLoggedIn = () => {
+    isLoggedIn() {
         const { isLogged } = this.state;
         if (isLogged === 'Logout') {
             localStorage.removeItem('user');
