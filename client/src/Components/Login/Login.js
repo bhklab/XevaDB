@@ -79,7 +79,6 @@ class Login extends React.Component {
             </LogoBack>
           </Link>
 
-          <Container component="main" maxWidth="xs">
             <PaperGradient>
             <Paper>
 
@@ -138,7 +137,7 @@ class Login extends React.Component {
 
             </Paper>
             </PaperGradient>
-          </Container>
+       
         </Fragment>
       )}
       </Fragment>
