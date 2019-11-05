@@ -78,8 +78,8 @@ class SearchResultHeatMap extends React.Component {
         return (
             <HeatMap
                 data={drugData}
-                drug_id={drugId}
-                patient_id={patientIdDrug}
+                drugId={drugId}
+                patientId={patientIdDrug}
                 dimensions={dimensions}
                 margin={margin}
                 className="searchedheatmap"
