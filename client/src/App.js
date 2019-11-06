@@ -1,58 +1,58 @@
-import React, {Fragment} from 'react'
-import {    CounterNav,
-            Dataset,
-            DatasetDonut,
-            Documentation,
-            DonutDrug,
-            DonutTissue,
-            DrugTable,
-            Footer,
-            HeatMapData,
-            Home,
-            Login,
-            OncoprintData,
-            SearchResult,
-            TumorGrowthCurve, } from './Components/index'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+/* eslint-disable react/prefer-stateless-function */
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+    CounterNav,
+    Dataset,
+    DatasetDonut,
+    Documentation,
+    DonutDrug,
+    DonutTissue,
+    DrugTable,
+    Footer,
+    HeatMapData,
+    Home,
+    Login,
+    OncoprintData,
+    SearchResult,
+    TumorGrowthCurve,
+} from './Components/index';
 
 
-
-const Merge = () => {
-    return (
-      <Fragment>
-        <HeatMapData/>
-        <OncoprintData/>
-        <Footer/>
-      </Fragment>
-    )
-}
+const Merge = () => (
+    <div>
+        <HeatMapData />
+        <OncoprintData />
+        <Footer />
+    </div>
+);
 
 
 class App extends React.Component {
-  render() {
-    return (
-      <Fragment>
-        <Router>
-          <Switch>
-            <Route path='/' exact component={Home}></Route>
-            <Route path='/curve' exact component={TumorGrowthCurve}></Route>
-            <Route path='/datasets' exact component={DatasetDonut}></Route>
-            <Route path='/dataset/:id' exact component={Dataset}></Route>
-            <Route path='/doc' exact component={Documentation}></Route>
-            <Route path='/drugs' exact component={DonutDrug}></Route>
-            <Route path='/drug/:id' exact component={DrugTable}></Route>
-            <Route path='/home' exact component={CounterNav}></Route>
-            <Route path='/login' exact component={Login}></Route>
-            <Route path='/maps' exact component={Merge}></Route>
-            <Route path='/search' exact component={SearchResult}></Route>
-            <Route path='/tissues' exact component={DonutTissue}></Route>
-            <Route render = { () => <h1> 404 Error </h1> } />
-          </Switch>
-        </Router>
-      </Fragment>
-    )
-  }
+    render() {
+        return (
+            <div>
+                <Router>
+                    <Switch>
+                        <Route path="/" exact component={Home} />
+                        <Route path="/curve" exact component={TumorGrowthCurve} />
+                        <Route path="/datasets" exact component={DatasetDonut} />
+                        <Route path="/dataset/:id" exact component={Dataset} />
+                        <Route path="/doc" exact component={Documentation} />
+                        <Route path="/drugs" exact component={DonutDrug} />
+                        <Route path="/drug/:id" exact component={DrugTable} />
+                        <Route path="/home" exact component={CounterNav} />
+                        <Route path="/login" exact component={Login} />
+                        <Route path="/maps" exact component={Merge} />
+                        <Route path="/search" exact component={SearchResult} />
+                        <Route path="/tissues" exact component={DonutTissue} />
+                        <Route render={() => <h1> 404 Error </h1>} />
+                    </Switch>
+                </Router>
+            </div>
+        );
+    }
 }
 
 
-export default App
+export default App;
