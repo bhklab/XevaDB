@@ -1,7 +1,4 @@
 /* eslint-disable no-shadow */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-filename-extension */
-/* eslint-disable react/jsx-indent */
 /* eslint-disable camelcase */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/no-deprecated */
