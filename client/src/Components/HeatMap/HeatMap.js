@@ -1,6 +1,4 @@
 /* eslint-disable no-param-reassign */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable react/jsx-filename-extension */
 /* eslint-disable no-shadow */
 /* eslint-disable no-plusplus */
 import React from 'react';
@@ -104,7 +102,7 @@ class HeatMap extends React.Component {
                 drugIndex++;
             }
             if (d.length === 2 || d.length === 'empty') {
-                return `/curve?patient=${patientUse[i]}&drug_id=${drugUse}`;
+                return `/curve?patient=${patientUse[i]}&drug=${drugUse}`;
             }
         }
 

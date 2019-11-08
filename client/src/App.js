@@ -10,6 +10,7 @@ import {
     DonutTissue,
     DrugTable,
     Footer,
+    GrowthCurveData,
     HeatMapData,
     Home,
     Login,
@@ -35,7 +36,7 @@ class App extends React.Component {
                 <Router>
                     <Switch>
                         <Route path="/" exact component={Home} />
-                        <Route path="/curve" exact component={TumorGrowthCurve} />
+                        <Route path="/curve" exact component={GrowthCurveData} />
                         <Route path="/datasets" exact component={DatasetDonut} />
                         <Route path="/dataset/:id" exact component={Dataset} />
                         <Route path="/doc" exact component={Documentation} />

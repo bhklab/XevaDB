@@ -8,6 +8,7 @@ import DonutPatient from './DonutChart/DonutPatient';
 import DonutTissue from './Tissue/DonutTissue';
 import DrugTable from './Drug/DrugTable';
 import Footer from './Footer/Footer';
+import GrowthCurveData from './TumorGrowthCurve/GrowthCurveData';
 import HeatMapData from './HeatMap/HeatMapData';
 import Home from './Home/Home';
 import Login from './Login/Login';
@@ -29,6 +30,7 @@ export {
     DonutTissue,
     DrugTable,
     Footer,
+    GrowthCurveData,
     HeatMapData,
     Home,
     Login,
