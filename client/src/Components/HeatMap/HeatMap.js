@@ -101,7 +101,7 @@ class HeatMap extends React.Component {
                 drugUse = drug[drugIndex];
                 drugIndex++;
             }
-            if (d.length === 2 || d.length === 'empty') {
+            if (d.length === 2 && d !== 'NA') {
                 return `/curve?patient=${patientUse[i]}&drug=${drugUse}`;
             }
         }
