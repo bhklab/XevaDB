@@ -65,11 +65,6 @@ class TumorGrowthCurve extends React.Component {
         for (let i = 0; i < data.length; i++) {
             batches.push(data[i].batch);
             if (data[i].batch === batch_select) {
-                // let exp_type = ''
-                // //this is used to set the value of exp_type to control or treatment.
-                // if(data[i]['drug'] === 'untreated') { exp_type = 'control' }
-                // else { exp_type = 'treatment' }
-
                 if (data[i].time === 0) {
                     const new_datapt = {
                         exp_type: data[i].type,
@@ -110,15 +105,6 @@ class TumorGrowthCurve extends React.Component {
             }
         }
 
-        // normalizing
-        // for (var i = 0; i < data_formatted.length; i++) {
-        //     var item = data_formatted[i]
-        //     var first = item.pdx_points[0].volumes[0]
-        //     for (var j = 0; j < item.pdx_points[0].volumes.length; j++) {
-        //         data_formatted[i].pdx_points[0].volumes[j] = this.norm(item.pdx_points[0].volumes[j], first)
-        //         data_formatted[i].pdx_json[j].volume = item.pdx_points[0].volumes[j]
-        //     }
-        // }
         console.log(data_formatted);
         this.setState({ data: data_formatted });
     }
@@ -166,10 +152,8 @@ class TumorGrowthCurve extends React.Component {
         function getUnionOfTimepoints(data) {
             let control = [];
             let treatment = [];
-            // var c_ind = data[0].exp_type == "control" ? 0 : 1
-            // var t_ind = data[0].exp_type == "treatment" ? 0 : 1
-            let minControl; let
-                minTreatment;
+            let minControl; 
+            let minTreatment;
             for (var i = 0; i < data.length; i++) {
                 if (data[i].exp_type === 'control') {
                     minControl = data[i].pdx_points[0].times[data[i].pdx_points[0].times.length - 1];
@@ -182,7 +166,6 @@ class TumorGrowthCurve extends React.Component {
                     break;
                 }
             }
-
 
             // merging time point arrays, and then unique
             for (var i = 0; i < data.length; i++) {
@@ -209,8 +192,6 @@ class TumorGrowthCurve extends React.Component {
 
 
         function tumorCurve(data, plotId, node) {
-            // let drug = data[0]['drug']
-
             // calculating max time, min/max volumes of all data
             const maxTimeArray = [];
             const minVolArray = [];
@@ -767,11 +748,7 @@ class TumorGrowthCurve extends React.Component {
 
         // toggle to show each model
         function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm, plotId) {
-            // var nest = d3.nest()
-            //     .key(function(d) {return d;})
-            //     .entries([''])
-
-            // nest.forEach(function(d,i) {
+            
 
 
             const volRaw = svg.append('rect')
