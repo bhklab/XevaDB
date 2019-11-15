@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
+import StatTable from './StatTable';
 
 class TumorGrowthCurve extends React.Component {
     constructor(props) {
@@ -152,7 +153,7 @@ class TumorGrowthCurve extends React.Component {
         function getUnionOfTimepoints(data) {
             let control = [];
             let treatment = [];
-            let minControl; 
+            let minControl;
             let minTreatment;
             for (var i = 0; i < data.length; i++) {
                 if (data[i].exp_type === 'control') {
@@ -748,9 +749,6 @@ class TumorGrowthCurve extends React.Component {
 
         // toggle to show each model
         function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm, plotId) {
-            
-
-
             const volRaw = svg.append('rect')
                 .attr('x', width + 25)
                 .attr('y', height / 2 + 50)

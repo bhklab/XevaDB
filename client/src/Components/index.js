@@ -15,6 +15,7 @@ import Login from './Login/Login';
 import OncoprintData from './Oncoprint/OncoprintData';
 import Search from './Search/Search';
 import SearchResult from './Search/SearchResult';
+import StatTable from './TumorGrowthCurve/StatTable';
 import TopNav from './TopNav/TopNav';
 import TumorGrowthCurve from './TumorGrowthCurve/TumorGrowthCurve';
 
@@ -37,6 +38,7 @@ export {
     OncoprintData,
     Search,
     SearchResult,
+    StatTable,
     TopNav,
     TumorGrowthCurve,
 };
