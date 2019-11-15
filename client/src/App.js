@@ -16,6 +16,7 @@ import {
     Login,
     OncoprintData,
     SearchResult,
+    StatTable,
     TumorGrowthCurve,
 } from './Components/index';
 
@@ -47,6 +48,7 @@ class App extends React.Component {
                         <Route path="/maps" exact component={Merge} />
                         <Route path="/search" exact component={SearchResult} />
                         <Route path="/tissues" exact component={DonutTissue} />
+                        <Route path="/stat" exact component={StatTable} />
                         <Route render={() => <h1> 404 Error </h1>} />
                     </Switch>
                 </Router>
