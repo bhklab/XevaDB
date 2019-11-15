@@ -1,7 +1,7 @@
+/* eslint-disable camelcase */
 /* eslint-disable class-methods-use-this */
-/* eslint-disable react/no-deprecated */
 import React from 'react';
-import * as d3 from 'd3';
+import axios from 'axios';
 
 class StatTable extends React.Component {
     constructor(props) {
@@ -9,87 +9,66 @@ class StatTable extends React.Component {
         // data for the table.
         this.state = {
             data: [],
+            tableHeader: ['Response Type', 'Value', 'Drug', 'Model', 'Patient'],
         };
         this.createTable = this.createTable.bind(this);
+        this.createTableHeader = this.createTableHeader.bind(this);
+        this.parseData = this.parseData.bind(this);
     }
 
     componentDidMount() {
-        this.createTable();
+        axios.get('/api/v1/stats?patient=X-1004&drug=BGJ398')
+            .then((response) => {
+                this.parseData(response);
+            });
+    }
+
+    parseData(response) {
+        this.setState({
+            data: response.data,
+        });
     }
 
     createTable() {
-        const { node } = this;
-        console.log(node);
-        const dimensions = { height: 500, width: 500 };
-        const margin = {
-            top: 200, right: 200, bottom: 20, left: 250,
-        };
+        const { data } = this.state;
+        const table = data.map((eachdata) => {
+            const {
+                response_type, value, drug_name, model, patient,
+            } = eachdata;
+            return (
+                <tr>
+                    <td>{response_type}</td>
+                    <td>{value}</td>
+                    <td>{drug_name}</td>
+                    <td>{model}</td>
+                    <td>{patient}</td>
+                </tr>
+            );
+        });
+        return table;
+    }
 
-        const dataset = [
-            {
-                rank: 1,
-                country: 'xyz',
-                company: 'wao',
-                sales: 4,
-            },
-            {
-                rank: 2,
-                country: 'aaxyz',
-                company: 'aawao',
-                sales: 44,
-            },
-        ];
-
-        // make the SVG element.
-        const svg = d3.select(node)
-            .append('svg')
-            .attr('id', 'data-table')
-            .attr('xmlns', 'http://wwww.w3.org/2000/svg')
-            .attr('xmlns:xlink', 'http://wwww.w3.org/1999/xlink')
-            .attr('height', dimensions.height + margin.bottom + margin.top)
-            .attr('width', dimensions.width + margin.left + margin.right);
-
-
-        const table = svg.append('table');
-
-        const thead = table.append('thead');
-
-        const tbody = table.append('tbody');
-
-        const date = ['rank', 'country', 'company', 'sale'];
-
-        // append the header row.
-        thead.append('tr')
-            .selectAll('th')
-            .data(date)
-            .enter()
-            .append('th')
-            .text((d) => d)
-            .attr('fill', 'red');
-
-        // create row for each object.
-        const rows = tbody.selectAll('tr')
-            .data(dataset)
-            .enter()
-            .append('tr');
-
-        // create cell for each row.
-        const cells = rows.selectAll('td')
-            .data((d) => dataset.map((col) => ({
-                column: col,
-                value: d[col],
-            })))
-            .enter()
-            .append('td')
-            .text((d) => d.value);
+    createTableHeader() {
+        // create the header for the table.
+        const { tableHeader } = this.state;
+        const header = tableHeader.map((key) => <th>{key.toUpperCase()}</th>);
+        return header;
     }
 
     render() {
         return (
-            // eslint-disable-next-line no-return-assign
-            <div ref={(node) => this.node = node} className="stat-table" />
+            <div>
+                <h1 id="title">Statistics (Response Evaluation)</h1>
+                <table id="students">
+                    <tbody>
+                        <tr>{this.createTableHeader()}</tr>
+                        {this.createTable()}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }
+
 
 export default StatTable;
