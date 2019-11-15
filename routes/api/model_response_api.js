@@ -213,6 +213,11 @@ const getModelResponseStats = function (request, response) {
             'model_information.drug_id',
             'drugs.drug_id',
         )
+        .leftJoin(
+            'models',
+            'model_information.model_id',
+            'models.model_id',
+        )
         .where('patients.patient', paramPatient)
         .andWhere('drugs.drug_name', paramDrug)
         .then((data) => {

@@ -17,7 +17,6 @@ import {
     OncoprintData,
     SearchResult,
     StatTable,
-    TumorGrowthCurve,
 } from './Components/index';
 
 
