@@ -63,6 +63,7 @@ router.post('/v1/drugpatient/dataset', modelInformation.postDrugandPatientBasedO
 // APIs for model response table.
 router.get('/v1/response/:dataset', modelResponse.getModelResponseBasedOnDataset);
 router.get('/v1/response', modelResponse.getModelResponseBasedPerDatasetBasedOnDrugs);
+router.get('/v1/stats', modelResponse.getModelResponseStats);
 
 
 // APIs related to mutation table.

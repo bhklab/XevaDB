@@ -16,7 +16,7 @@ const getDrugs = function (request, response) {
 };
 
 
-// this will get the patients/model ids grouped by class.
+// this will get the drugs grouped by class.
 const getDrugGroupedByClass = function (request, response) {
     // console.log(response.locals.user, 'this is user')
     knex('model_information')

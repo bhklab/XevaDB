@@ -189,7 +189,44 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
 };
 
 
+// get the stats like AUC, Slope etc
+// based on drug and patient (model_id).
+const getModelResponseStats = function (request, response) {
+    // grabbing the drug parameters and dataset parameters.
+    const paramDrug = request.query.drug;
+    const paramPatient = request.query.patient;
+
+    knex.select()
+        .from('model_response')
+        .leftJoin(
+            'model_information',
+            'model_response.model_id',
+            'model_information.model_id',
+        )
+        .leftJoin(
+            'patients',
+            'model_information.patient_id',
+            'patients.patient_id',
+        )
+        .leftJoin(
+            'drugs',
+            'model_information.drug_id',
+            'drugs.drug_id',
+        )
+        .where('patients.patient', paramPatient)
+        .andWhere('drugs.drug_name', paramDrug)
+        .then((data) => {
+            response.send(data);
+        })
+        .catch((error) => response.status(500).json({
+            status: 'an error has occured in stats route at getModelResponseStats',
+            data: error,
+        }));
+};
+
+
 module.exports = {
     getModelResponseBasedOnDataset,
     getModelResponseBasedPerDatasetBasedOnDrugs,
+    getModelResponseStats,
 };
