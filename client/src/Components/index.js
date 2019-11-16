@@ -15,7 +15,7 @@ import Login from './Login/Login';
 import OncoprintData from './Oncoprint/OncoprintData';
 import Search from './Search/Search';
 import SearchResult from './Search/SearchResult';
-import StatTable from './TumorGrowthCurve/StatTable';
+import StatTable from './ModelResponseStat/ModelResponseStatTable';
 import TopNav from './TopNav/TopNav';
 import TumorGrowthCurve from './TumorGrowthCurve/TumorGrowthCurve';
 

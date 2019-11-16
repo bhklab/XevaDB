@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 
 const TableWrapper = styled.div`
@@ -38,7 +38,7 @@ const TableWrapper = styled.div`
     .ReactTable .-pagination .-pageJump input{
         color: #3453b0;
     }
-`
+`;
 
 
-export default TableWrapper
+export default TableWrapper;
