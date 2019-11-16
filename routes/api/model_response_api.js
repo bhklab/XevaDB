@@ -219,7 +219,11 @@ const getModelResponseStats = function (request, response) {
             'models.model_id',
         )
         .where('patients.patient', paramPatient)
-        .andWhere('drugs.drug_name', paramDrug)
+        .andWhere(function () {
+            this.where('drugs.drug_name', paramDrug)
+                .orWhere('drugs.drug_name', 'water')
+                .orWhere('drugs.drug_name', 'untreated');
+        })
         .then((data) => {
             response.send(data);
         })
