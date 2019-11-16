@@ -106,7 +106,6 @@ class TumorGrowthCurve extends React.Component {
             }
         }
 
-        console.log(data_formatted);
         this.setState({ data: data_formatted });
     }
 
@@ -880,6 +879,7 @@ class TumorGrowthCurve extends React.Component {
     }
 
     render() {
+        const { patientParam, drugParam } = this.props;
         return (
             <div>
                 <TopNav />
@@ -902,7 +902,7 @@ and Patient ID =
 
 
                     </div>
-                    <StatTable />
+                    <StatTable patientParam={patientParam} drugParam={drugParam} />
                     <div className="curve-wrapper" style={{ marginTop: '20px', padding: '10px 0px' }}>
                         <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
                     </div>
