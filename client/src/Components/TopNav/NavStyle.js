@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const HeaderStyle = styled.header`
     *{
@@ -89,7 +89,7 @@ const LinkStyle = styled.div`
             margin-left : 0px;
         }
     }
-`
+`;
 
 const LogoStyle = styled.img`
     width:calc(5em + 2vw);
@@ -101,5 +101,5 @@ const LogoStyle = styled.img`
 export {
     HeaderStyle,
     LogoStyle,
-    LinkStyle
-}
+    LinkStyle,
+};

@@ -4,39 +4,7 @@
 /* eslint-disable class-methods-use-this */
 import React from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
-
-const StyleTable = styled.div`
-
-    table, th, td {
-        border: 1px solid #999999;
-    }
-
-    #stats-table {
-        text-align: left;
-        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-        border-collapse: collapse;
-        width: 800px;
-    }
-
-    th {
-        color: #5974c4;
-        text-align: left;
-        font-family: arial, sans-serif;
-        padding: 10px;
-        height: 40px;
-        background-color: #ddd;
-    }
-
-    td {
-        color: #cd5686;
-        padding: 12px;
-    }
-
-    tr:hover {
-        background-color: #f5f5f5;
-    }
-`;
+import StyleTable from './ModelResponseStyle';
 
 class StatTable extends React.Component {
     constructor(props) {
@@ -73,7 +41,7 @@ class StatTable extends React.Component {
             } = eachdata;
             return (
                 <tr key={index}>
-                    <td>{response_type}</td>
+                    <td>{response_type === 'best.average.response' ? 'Best Average Response' : response_type}</td>
                     <td>{value}</td>
                     <td>{drug_name}</td>
                     <td>{model}</td>
@@ -93,7 +61,7 @@ class StatTable extends React.Component {
 
     render() {
         return (
-            <div className="curve-wrapper" style={{ marginTop: '10px', padding: '50px 0px' }}>
+            <div className="curve-wrapper" style={{ marginTop: '0px', padding: '60px 0px' }}>
                 <h1 id="title">Statistics (Response Evaluation)</h1>
                 <StyleTable>
                     <table id="stats-table">
