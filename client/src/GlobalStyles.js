@@ -1,6 +1,5 @@
-import bgImg from './images/bgImg7.png';
 import { createGlobalStyle } from 'styled-components';
-
+import bgImg from './images/bgImg7.png';
 
 
 const GlobalStyles = createGlobalStyle`
@@ -89,7 +88,7 @@ const GlobalStyles = createGlobalStyle`
       padding:50px;
     }
   }
-`
+`;
 
 
 export default GlobalStyles;

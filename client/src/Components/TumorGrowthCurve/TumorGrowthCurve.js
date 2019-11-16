@@ -902,9 +902,11 @@ and Patient ID =
 
 
                     </div>
+                    <StatTable />
                     <div className="curve-wrapper" style={{ marginTop: '20px', padding: '10px 0px' }}>
                         <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
                     </div>
+
                 </div>
             </div>
         );

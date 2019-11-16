@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const StyleBar = styled.div`
     margin-top: 30vh;
@@ -160,10 +160,10 @@ const StyleButton = styled.button`
 
 const customStyles = {
     placeholder: (provided) => ({
-          ...provided,
-          color: '#3453b0',
-          fontWeight:'400',
-          fontSize: '15px'
+        ...provided,
+        color: '#3453b0',
+        fontWeight: '400',
+        fontSize: '15px',
     }),
 
     control: (provided) => ({
@@ -179,17 +179,17 @@ const customStyles = {
     indicatorSeparator: (provided) => ({
         ...provided,
         background: '#3453b0',
-        '&:hover': { background: '#3453b0'},
-        height: '30px'
-    }), 
-    
-    dropdownIndicator: (provided ) => ({
+        '&:hover': { background: '#3453b0' },
+        height: '30px',
+    }),
+
+    dropdownIndicator: (provided) => ({
         ...provided,
         color: '#3453b0',
         '&:hover': {
-          color: '#3453b0',
-          cursor: 'pointer'
-        }
+            color: '#3453b0',
+            cursor: 'pointer',
+        },
     }),
 
     option: (provided) => ({
@@ -198,16 +198,16 @@ const customStyles = {
         background: '#ffffff',
         margin: '0px 0px',
         '&:hover': {
-          background: '#fee8c8'
+            background: '#fee8c8',
         },
         fontSize: '14px',
-        textAlign: 'left'
+        textAlign: 'left',
     }),
 
     singleValue: (provided) => ({
         ...provided,
         color: '#3453b0',
-        fontSize: '15px'
+        fontSize: '15px',
     }),
 
     multiValue: (provided) => ({
@@ -225,8 +225,8 @@ const customStyles = {
         ...provided,
         color: '#3453b0',
         '&:hover': {
-          color: '#3453b0',
-        }
+            color: '#3453b0',
+        },
     }),
 
     valueContainer: (provided) => ({
@@ -235,14 +235,13 @@ const customStyles = {
         height: '40px',
         paddingTop: '0',
         paddingBottom: '0',
-        overflow: 'auto'
-    })
-}
-
+        overflow: 'auto',
+    }),
+};
 
 
 export {
     StyleBar,
     customStyles,
-    StyleButton
-}
+    StyleButton,
+};
