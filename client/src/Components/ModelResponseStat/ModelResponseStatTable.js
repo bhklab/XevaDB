@@ -20,7 +20,8 @@ class StatTable extends React.Component {
     }
 
     componentWillMount() {
-        axios.get('/api/v1/stats?patient=X-1004&drug=BGJ398')
+        const { drugParam, patientParam } = this.props;
+        axios.get(`/api/v1/stats?patient=${patientParam}&drug=${drugParam}`)
             .then((response) => {
                 this.parseData(response);
             });
