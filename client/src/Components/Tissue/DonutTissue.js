@@ -75,7 +75,7 @@ class DonutTissue extends React.Component {
                 <GlobalStyles/>
                 <Wrapper>
                     <div className='donut-wrapper'>
-                        <h1> Number of Model IDs Per Tissue Type </h1>
+                        <h1> Number of Models Per Tissue Type </h1>
                         <DonutChart 
                             dimensions={this.dimensions} margin={this.margin} 
                             chartId={this.chartId} data={this.state.data}
