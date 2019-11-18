@@ -1,7 +1,4 @@
-/* eslint-disable react/jsx-indent-props */
 /* eslint-disable react/no-deprecated */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import SearchResultHeatMap from './SearchResultHeatMap';
 import SearchResultOncoprint from './SearchResultOncoprint';

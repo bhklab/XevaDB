@@ -20,14 +20,16 @@ class DonutChart extends React.Component {
     }
 
     DonutChart() {
+        const { dimensions } = this.props;
+        const { margin } = this.props;
         const { node } = this;
         const { data } = this.props;
-        const { height } = this.props.dimensions;
-        const { width } = this.props.dimensions;
-        const { left } = this.props.margin;
-        const { top } = this.props.margin;
-        const { bottom } = this.props.margin;
-        const { right } = this.props.margin;
+        const { height } = dimensions;
+        const { width } = dimensions;
+        const { left } = margin;
+        const { top } = margin;
+        const { bottom } = margin;
+        const { right } = margin;
         this.makeDonutChart(node, data, height, width, left, top, bottom, right);
     }
 
@@ -41,7 +43,7 @@ class DonutChart extends React.Component {
         // make the SVG element.
         const svg = d3.select(node)
             .append('svg')
-            .attr('id', `donutchart-${this.props.chartId}`)
+            .attr('id', `donutchart-${chartId}`)
             .attr('xmlns', 'http://wwww.w3.org/2000/svg')
             .attr('xmlns:xlink', 'http://wwww.w3.org/1999/xlink')
             .attr('height', height + top + bottom)
@@ -83,16 +85,16 @@ class DonutChart extends React.Component {
 
 
         /* Arc for the main pie chart and label arc */
-
+        const { arcRadius } = this.props;
         // arc generator
         const arc = d3.arc()
-            .outerRadius(this.props.arc.outerRadius)
-            .innerRadius(this.props.arc.innerRadius);
+            .outerRadius(arcRadius.outerRadius)
+            .innerRadius(arcRadius.innerRadius);
 
         // this is used to set the labels
         const labelArc = d3.arc()
-            .outerRadius(this.props.arc.outerRadius - 20)
-            .innerRadius(this.props.arc.innerRadius + 10);
+            .outerRadius(arcRadius.outerRadius - 20)
+            .innerRadius(arcRadius.innerRadius + 10);
 
         /* Pie/Donut chart layout */
 
@@ -162,7 +164,8 @@ class DonutChart extends React.Component {
                 .duration(300)
                 .style('opacity', 0.4)
                 .style('cursor', 'pointer');
-            // tooltip grabbing event.pageX and event.pageY and set color according to the ordinal scale.
+            // tooltip grabbing event.pageX and event.pageY
+            // and set color according to the ordinal scale.
             const value = ` (${d.data.value})`;
             tooltip
                 .text([d.data.id + value])
@@ -189,7 +192,7 @@ class DonutChart extends React.Component {
         piearc.on('mouseover', (d) => {
             mouseover(d);
         })
-            .on('mousemove', (d, i) => {
+            .on('mousemove', (d) => {
                 mousemove(d);
             })
             .on('mouseout', (d) => {
@@ -199,7 +202,7 @@ class DonutChart extends React.Component {
         /* Label with event listeners */
 
         // append the text labels.
-        if (this.props.chartId !== 'donut_drugs' && this.props.chartId !== 'donut_datasets' && this.props.chartId !== 'donut_tissues') {
+        if (chartId !== 'donut_drugs' && chartId !== 'donut_datasets' && chartId !== 'donut_tissues') {
             arcs.append('text')
                 .attr('transform', (d) => `translate(${labelArc.centroid(d)})`)
                 .attr('dy', '0.35em')
@@ -227,11 +230,11 @@ class DonutChart extends React.Component {
         /**   Legends for the Donut Chart * */
 
         // small side rectangles or legends for the donut chart.
-        const donut_rect = svg.append('g')
+        const donutRect = svg.append('g')
             .attr('id', 'donut_small_rect');
 
 
-        donut_rect.selectAll('rect')
+        donutRect.selectAll('rect')
             .data(data)
             .enter()
             .append('rect')
@@ -241,7 +244,7 @@ class DonutChart extends React.Component {
             .attr('height', 20)
             .attr('fill', (d) => color(d.value));
 
-        donut_rect.selectAll('text')
+        donutRect.selectAll('text')
             .data(data)
             .enter()
             .append('text')
@@ -275,7 +278,10 @@ DonutChart.propTypes = {
     }).isRequired,
     chartId: PropTypes.string.isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
-    arc: PropTypes.object.isRequired,
+    arc: PropTypes.shape({
+        innerRadius: PropTypes.number,
+        outerRadius: PropTypes.number,
+    }).isRequired,
 };
 
 export default DonutChart;

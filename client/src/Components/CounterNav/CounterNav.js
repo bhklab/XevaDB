@@ -39,7 +39,7 @@ class CounterNav extends React.Component {
                 <TopNav />
                 <GlobalStyles />
                 <DonutNav>
-                    <Link to="/">
+                    <Link to="/datasets">
                         <CountUp
                             start={0}
                             end={datasets}
