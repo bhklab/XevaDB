@@ -1,11 +1,11 @@
-import React, {Fragment} from 'react'
-import DonutChart from '../DonutChart/DonutChart'
+import React from 'react';
 import axios from 'axios';
-import styled from 'styled-components'
-import Footer from '../Footer/Footer'
-import GlobalStyles from '../../GlobalStyles'
-import TopNav from '../TopNav/TopNav'
-import DatasetTable from './DatasetTable'
+import styled from 'styled-components';
+import DonutChart from '../DonutChart/DonutChart';
+import Footer from '../Footer/Footer';
+import GlobalStyles from '../../GlobalStyles';
+import TopNav from '../TopNav/TopNav';
+import DatasetTable from './DatasetTable';
 
 const Wrapper = styled.div`
     display: flex;
@@ -21,76 +21,67 @@ const Wrapper = styled.div`
         font-weight:700;
         text-align:center;
     }
-`
+`;
 
 class DatasetDonut extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            data : []
-        }
+            data: [],
+            dimensions: {},
+            margin: {},
+            arc: {},
+        };
     }
 
     componentDidMount() {
-        axios.get(`/api/v1/dataset/patients`)
+        axios.get('/api/v1/dataset/patients')
             .then((response) => {
-                response = response.data.data.map((element) => {
-                    return ({
-                        id: element.dataset_name,
-                        value: element.patient_id,
-                        parameter: element.dataset_id
-                    })
-                })
+                const data = response.data.data.map((element) => ({
+                    id: element.dataset_name,
+                    value: element.patient_id,
+                    parameter: element.dataset_id,
+                }));
                 this.setState({
-                    data: response
-                })
-            })
+                    data,
+                    dimensions: { width: 650, height: 250 },
+                    margin: {
+                        top: 320, right: 100, bottom: 100, left: 380,
+                    },
+                    arc: { outerRadius: 260, innerRadius: 150 },
+                });
+            });
     }
-
-    dimensions = {
-        width: 650,
-        height: 250
-    }
-
-    margin = {
-        top: 320,
-        right: 100,
-        bottom: 100,
-        left: 380
-    }
-
-    arc = {
-        outerRadius: 260,
-        innerRadius: 150
-    }
-
-    chartId = 'donut_datasets'
 
     render() {
+        const {
+            data, arc,
+            dimensions, margin,
+        } = this.state;
         return (
-            <Fragment>
-                <TopNav/>
-                <GlobalStyles/>
+            <div>
+                <TopNav />
+                <GlobalStyles />
                 <Wrapper>
-                    <div className='donut-wrapper'>
+                    <div className="donut-wrapper">
                         <h1> Number of Patients Per Dataset </h1>
-                        <DonutChart 
-                            dimensions = {this.dimensions} 
-                            margin = {this.margin} 
-                            chartId = {this.chartId} 
-                            data = {this.state.data}
-                            arc = {this.arc}
+                        <DonutChart
+                            dimensions={dimensions}
+                            margin={margin}
+                            data={data}
+                            arc={arc}
+                            chartId="donut_datasets"
                         />
                     </div>
-                    <div className='donut-wrapper'>
-                        <DatasetTable/>
+                    <div className="donut-wrapper">
+                        <DatasetTable />
                     </div>
                 </Wrapper>
-                <Footer/>
-            </Fragment>
-        )
+                <Footer />
+            </div>
+        );
     }
 }
 
 
-export default DatasetDonut
+export default DatasetDonut;
