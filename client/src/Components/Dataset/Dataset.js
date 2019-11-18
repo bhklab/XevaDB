@@ -1,38 +1,38 @@
-import React, {Fragment} from 'react'
-import HeatMapData from '../HeatMap/HeatMapData'
-import OncoprintData from '../Oncoprint/OncoprintData'
-import Footer from '../Footer/Footer'
+import React from 'react';
+import HeatMapData from '../HeatMap/HeatMapData';
+import OncoprintData from '../Oncoprint/OncoprintData';
+import Footer from '../Footer/Footer';
 
 class Dataset extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            dataset : 0
-        }
+            dataset: 0,
+        };
     }
 
     componentWillMount() {
-        let dataset_param = this.props.match.params.id
-        this.setState ({
-            dataset: dataset_param
-        })
+        const dataset_param = this.props.match.params.id;
+        this.setState({
+            dataset: dataset_param,
+        });
     }
 
     render() {
+        const { dataset } = this.state;
         return (
-            <Fragment>
-                <HeatMapData  
-                    dataset = {this.state.dataset}
+            <div>
+                <HeatMapData
+                    dataset={dataset}
                 />
                 <OncoprintData
-                    dataset = {this.state.dataset}
+                    dataset={dataset}
                 />
-                <Footer/>
-            </Fragment>
-        )
+                <Footer />
+            </div>
+        );
     }
 }
 
 
-
-export default Dataset
+export default Dataset;
