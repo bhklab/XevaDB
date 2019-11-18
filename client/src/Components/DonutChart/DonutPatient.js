@@ -2,7 +2,7 @@ import React from 'react'
 import DonutChart from './DonutChart'
 import axios from 'axios'
 
-                                                    // This code is not being used anywhere for now //
+// ************ This code is not being used anywhere for now  ************//
 class DonutPatient extends React.Component {
 
     constructor(props) {
