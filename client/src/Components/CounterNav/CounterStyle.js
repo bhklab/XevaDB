@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 
 const DonutNav = styled.div`
@@ -76,4 +76,4 @@ const DonutNav = styled.div`
 `;
 
 
-export default DonutNav
+export default DonutNav;
