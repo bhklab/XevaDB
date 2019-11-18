@@ -12,9 +12,10 @@ class Dataset extends React.Component {
     }
 
     componentWillMount() {
-        const dataset_param = this.props.match.params.id;
+        const { match } = this.props;
+        const datasetParam = match.params.id;
         this.setState({
-            dataset: dataset_param,
+            dataset: datasetParam,
         });
     }
 
