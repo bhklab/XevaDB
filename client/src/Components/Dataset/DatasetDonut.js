@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import Footer from '../Footer/Footer'
 import GlobalStyles from '../../GlobalStyles'
 import TopNav from '../TopNav/TopNav'
+import DatasetTable from './DatasetTable'
 
 const Wrapper = styled.div`
     display: flex;
@@ -68,11 +69,11 @@ class DatasetDonut extends React.Component {
     render() {
         return (
             <Fragment>
-                <GlobalStyles/>
                 <TopNav/>
+                <GlobalStyles/>
                 <Wrapper>
                     <div className='donut-wrapper'>
-                        <h1> Number of Patient IDs Per Dataset </h1>
+                        <h1> Number of Patients Per Dataset </h1>
                         <DonutChart 
                             dimensions = {this.dimensions} 
                             margin = {this.margin} 
@@ -80,6 +81,9 @@ class DatasetDonut extends React.Component {
                             data = {this.state.data}
                             arc = {this.arc}
                         />
+                    </div>
+                    <div className='donut-wrapper'>
+                        <DatasetTable/>
                     </div>
                 </Wrapper>
                 <Footer/>
