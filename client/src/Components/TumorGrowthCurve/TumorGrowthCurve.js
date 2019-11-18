@@ -1,3 +1,8 @@
+/* eslint-disable func-names */
+/* eslint-disable no-extend-native */
+/* eslint-disable no-shadow */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable radix */
 /* eslint-disable no-plusplus */
 import React from 'react';
 import * as d3 from 'd3';
@@ -40,8 +45,9 @@ class TumorGrowthCurve extends React.Component {
     componentDidUpdate() {
         const { node } = this;
         const plotId = 'plot';
-        if (this.state.data.length !== 0) {
-            this.makeTumorGrowthCurve(this.state.data, plotId, node);
+        const { data } = this.state;
+        if (data.length !== 0) {
+            this.makeTumorGrowthCurve(data, plotId, node);
             d3.select('.no-graph').remove();
         } else {
             d3.select('svg').remove();
@@ -55,8 +61,8 @@ class TumorGrowthCurve extends React.Component {
 
     // filters by batch - comment out the batch lines for full data
     // call this command to create a curve!!!
-    dataParse(data, batch_select) {
-        const data_formatted = [];
+    dataParse(data, batchSelect) {
+        const dataFormatted = [];
         const batches = [];
         String.prototype.replaceAll = String.prototype.replaceAll || function (s, r) {
             return this.replace(new RegExp(s, 'g'), r);
@@ -65,9 +71,9 @@ class TumorGrowthCurve extends React.Component {
         // loop throuth the data and set the values in the variable.
         for (let i = 0; i < data.length; i++) {
             batches.push(data[i].batch);
-            if (data[i].batch === batch_select) {
+            if (data[i].batch === batchSelect) {
                 if (data[i].time === 0) {
-                    const new_datapt = {
+                    const newDatapt = {
                         exp_type: data[i].type,
                         batch: data[i].patient_id,
                         model: data[i].model_id,
@@ -87,12 +93,15 @@ class TumorGrowthCurve extends React.Component {
                         }],
 
                     };
-                    data_formatted.push(new_datapt);
+                    dataFormatted.push(newDatapt);
                 } else if (data[i].time <= 200) {
-                    data_formatted[data_formatted.length - 1].pdx_points[0].times.push(parseInt(data[i].time));
-                    data_formatted[data_formatted.length - 1].pdx_points[0].volumes.push(parseFloat(data[i].volume));
-                    data_formatted[data_formatted.length - 1].pdx_points[0].volume_normals.push(parseFloat(data[i].volume_normal));
-                    data_formatted[data_formatted.length - 1].pdx_json.push(
+                    dataFormatted[dataFormatted.length - 1].pdx_points[0]
+                        .times.push(parseInt(data[i].time));
+                    dataFormatted[dataFormatted.length - 1].pdx_points[0]
+                        .volumes.push(parseFloat(data[i].volume));
+                    dataFormatted[dataFormatted.length - 1].pdx_points[0]
+                        .volume_normals.push(parseFloat(data[i].volume_normal));
+                    dataFormatted[dataFormatted.length - 1].pdx_json.push(
                         {
                             model: data[i].model_id,
                             batch: data[i].patient_id,
@@ -106,7 +115,7 @@ class TumorGrowthCurve extends React.Component {
             }
         }
 
-        this.setState({ data: data_formatted });
+        this.setState({ data: dataFormatted });
     }
 
     // toggle if batches present
@@ -141,7 +150,7 @@ class TumorGrowthCurve extends React.Component {
         };
 
         // unique function
-        // usage: var a = [1,2,3,4]; unique = a.filter(unique);
+        // usage: let a = [1,2,3,4]; unique = a.filter(unique);
         function unique(value, index, self) {
             return self.indexOf(value) === index;
         }
@@ -154,28 +163,32 @@ class TumorGrowthCurve extends React.Component {
             let treatment = [];
             let minControl;
             let minTreatment;
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 if (data[i].exp_type === 'control') {
-                    minControl = data[i].pdx_points[0].times[data[i].pdx_points[0].times.length - 1];
+                    minControl = data[i].pdx_points[0]
+                        .times[data[i].pdx_points[0].times.length - 1];
                     break;
                 }
             }
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 if (data[i].exp_type === 'treatment') {
-                    minTreatment = data[i].pdx_points[0].times[data[i].pdx_points[0].times.length - 1];
+                    minTreatment = data[i].pdx_points[0]
+                        .times[data[i].pdx_points[0].times.length - 1];
                     break;
                 }
             }
 
             // merging time point arrays, and then unique
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 const temp = data[i].pdx_points[0].times;
                 if (data[i].exp_type === 'control') {
                     control = control.concat(temp);
-                    minControl = temp[temp.length - 1] < minControl ? temp[temp.length - 1] : minControl;
+                    minControl = temp[temp.length - 1] < minControl
+                        ? temp[temp.length - 1] : minControl;
                 } else {
                     treatment = treatment.concat(data[i].pdx_points[0].times);
-                    minTreatment = temp[temp.length - 1] < minTreatment ? temp[temp.length - 1] : minTreatment;
+                    minTreatment = temp[temp.length - 1] < minTreatment
+                        ? temp[temp.length - 1] : minTreatment;
                 }
             }
             // unique, sort, and cut off at the last timepoint of shortest graph
@@ -209,7 +222,7 @@ class TumorGrowthCurve extends React.Component {
             const maxVolume = Math.max.apply(null, maxVolArray);
             const maxVolNorm = Math.max.apply(null, maxVolNormArray);
 
-            const exp_types = ['control', 'treatment'];
+            const expTypes = ['control', 'treatment'];
 
             // positioning variables
             const width = 970;
@@ -233,15 +246,15 @@ class TumorGrowthCurve extends React.Component {
 
             // legend
             const legend = svg.selectAll('.legend')
-                .data(exp_types)
+                .data(expTypes)
                 .enter();
 
             legend.append('circle')
-                .attr('id', (d, i) => `legend-dot-${exp_types[i]}`)
+                .attr('id', (d, i) => `legend-dot-${expTypes[i]}`)
                 .attr('class', 'legend')
                 .attr('r', 5)
                 .attr('fill', (d, i) => {
-                    if (exp_types[i] === 'control') {
+                    if (expTypes[i] === 'control') {
                         return '#cd5686';
                     }
                     return '#5974c4';
@@ -250,13 +263,13 @@ class TumorGrowthCurve extends React.Component {
                 .attr('cy', (d, i) => height / 2 - 50 + (i * 50));
 
             legend.append('text')
-                .attr('id', (d, i) => `legend-text-${exp_types[i]}`)
+                .attr('id', (d, i) => `legend-text-${expTypes[i]}`)
                 .attr('class', 'legend')
                 .attr('fill', 'black')
                 .style('font-size', '16px')
                 .attr('x', width + 40)
                 .attr('y', (d, i) => height / 2 - 45 + (i * 50))
-                .text((d, i) => exp_types[i]);
+                .text((d, i) => expTypes[i]);
 
 
             // set domain and range scaling
@@ -320,7 +333,8 @@ class TumorGrowthCurve extends React.Component {
                 .attr('id', 'curves');
             // plot each model
             plotBatch(data, graph, xrange, yrange, width, height, false);
-            volumeToggle(data, svg, xrange, yrange, yAxis, yAxisAdd, width, height, maxVolume, maxVolNorm, plotId);
+            volumeToggle(data, svg, xrange, yrange, yAxis, yAxisAdd,
+                width, height, maxVolume, maxVolNorm, plotId);
         }
 
         function plotBatch(data, graph, xrange, yrange, width, height, norm) {
@@ -339,17 +353,18 @@ class TumorGrowthCurve extends React.Component {
                 .enter();
 
             const paths = graph.selectAll('.model-path')
-                .data((d) => data)
+                .data(() => data)
                 .enter();
 
             // making tooltips
-            // var tooltips = models.selectAll('.tooltip-dot')
+            // let tooltips = models.selectAll('.tooltip-dot')
             //     .data(function(d) {return d.pdx_json})
             //     .enter();
 
             //     // timepoint
             //     tooltips.append('text')
-            //         .attr('id', function(d,i) { return 'tooltip-t-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i})
+            //         .attr('id', function(d,i) { return 'tooltip-t-' + d.model.replace(/\./g,' ')
+            //              .replaceAll(' ', '-') + '-' + d.exp_type + i})
             //         .attr('class', 'tooltip-dot')
             //         .attr('dx', width+20)
             //         .attr('dy', height/2 + 30)
@@ -360,7 +375,8 @@ class TumorGrowthCurve extends React.Component {
 
             //     // volume
             //     tooltips.append('text')
-            //         .attr('id', function(d,i) { return 'tooltip-v-' + d.model.replace(/\./g,' ').replaceAll(' ', '-') + '-' + d.exp_type + i})
+            //         .attr('id', function(d,i) { return 'tooltip-v-' + d.model.replace(/\./g,' ')
+            //              .replaceAll(' ', '-') + '-' + d.exp_type + i})
             //         .attr('class', 'tooltip-dot')
             //         .attr('dx', width+20)
             //         .attr('dy', height/2 + 45)
@@ -383,7 +399,7 @@ class TumorGrowthCurve extends React.Component {
                     d.model.replace(/\./g, ' ').replaceAll(' ', '-')} ${
                     d.batch}`)
                 .attr('r', 4)
-                .attr('fill', (d, i) => {
+                .attr('fill', (d) => {
                     if (d.exp_type === 'control') {
                         return '#cd5686';
                     }
@@ -435,56 +451,56 @@ class TumorGrowthCurve extends React.Component {
         // plot the mean of each experiment type (control, treatment)
         function plotMeans(data, svg, xrange, yrange, width, height) {
             const timeUnion = getUnionOfTimepoints(data);
-            let exp_types = [];
+            let expTypes = [];
 
             // if there is no control
             if (timeUnion[0].length === 0) {
-                exp_types = ['treatment'];
+                expTypes = ['treatment'];
                 timeUnion.shift();
             } else if (timeUnion[1].length === 0) { // no treatment
-                exp_types = ['control'];
+                expTypes = ['control'];
                 timeUnion.pop();
             } else {
-                exp_types = ['control', 'treatment'];
+                expTypes = ['control', 'treatment'];
             }
 
 
-            let ypoint_arr = []; // un-yranged
-            let all_ypoint = []; // for std devs
+            let ypointArr = []; // un-yranged
+            let allYpoint = []; // for std devs
 
             // TODO: fix the batch, it's the first one rn
             const { batch } = data[0];
 
-            for (var n = 0; n < exp_types.length; n++) {
-                var exp = exp_types[n];
-                var times = timeUnion[n];
-                const selection = d3.selectAll(`.model-path.${exp_types[n]}`)._groups;
+            for (let n = 0; n < expTypes.length; n++) {
+                const exp = expTypes[n];
+                const times = timeUnion[n];
+                const selection = d3.selectAll(`.model-path.${expTypes[n]}`)._groups;
                 // for each timepoint
                 for (let i = 0; i < timeUnion[n].length; i++) {
-                    const temp_ycoord = [];
+                    const tempYcoord = [];
 
                     // for each path, get ycoord for each timepoint in union
                     for (let j = 0; j < selection.length; j++) {
                         const path = selection[j][0];
                         const ycoord = findY(path, xrange(timeUnion[n][i]));
-                        temp_ycoord.push(yrange.invert(ycoord));
+                        tempYcoord.push(yrange.invert(ycoord));
                     }
 
-                    // append array to all_ypoint for std devs
-                    all_ypoint.push(temp_ycoord);
-                    // append mean to ypoint_arr
-                    ypoint_arr.push(mean(temp_ycoord));
+                    // append array to allYpoint for std devs
+                    allYpoint.push(tempYcoord);
+                    // append mean to ypointArr
+                    ypointArr.push(mean(tempYcoord));
                 }
                 // plot error bars
-                // plotErrorBars(data, exp, times, all_ypoint, ypoint_arr, svg, xrange, yrange)
+                // plotErrorBars(data, exp, times, allYpoint, ypointArr, svg, xrange, yrange)
 
                 // mean svg
-                const mean_svg = svg.append('g')
-                    .attr('id', `mean_${exp_types[n]}`);
+                const meanSvg = svg.append('g')
+                    .attr('id', `mean_${expTypes[n]}`);
 
                 // tooltips
                 const tooltips = svg.selectAll(`.tooltip-mean-dot${exp}`)
-                    .data(ypoint_arr)
+                    .data(ypointArr)
                     .enter();
 
                 // timepoint
@@ -507,23 +523,23 @@ class TumorGrowthCurve extends React.Component {
                     .attr('font-size', '14px')
                     .style('opacity', 0)
                     .attr('fill', 'black')
-                    .html((d, i) => `Volume: ${d3.format('.2f')(ypoint_arr[i])} mm³`);
+                    .html((i) => `Volume: ${d3.format('.2f')(ypointArr[i])} mm³`);
 
-                const mean_dots = mean_svg.selectAll('.mean-dot')
-                    .data(ypoint_arr)
+                const meanDots = meanSvg.selectAll('.mean-dot')
+                    .data(ypointArr)
                     .enter();
-                mean_dots.append('circle')
-                    .attr('id', (d, i) => `mean-dot-${exp_types[n]}-${batch}`)
+                meanDots.append('circle')
+                    .attr('id', (d, i) => `mean-dot-${expTypes[n]}-${batch}`)
                     .attr('class', `mean-dot ${batch}`)
                     .attr('r', 4)
                     .attr('fill', () => {
-                        if (exp_types[n] === 'control') {
+                        if (expTypes[n] === 'control') {
                             return '#cd5686';
                         }
                         return '#5974c4';
                     })
-                    .attr('cx', (d, i) => xrange(timeUnion[n][i]))
-                    .attr('cy', (d, i) => yrange(ypoint_arr[i]))
+                    .attr('cx', (i) => xrange(timeUnion[n][i]))
+                    .attr('cy', (i) => yrange(ypointArr[i]))
                     .on({
                         mouseover(d, i) {
                             d3.select(`#tooltip-mean-t-${batch}-${exp}${i}`).transition().duration(300).style('opacity', 1);
@@ -535,23 +551,23 @@ class TumorGrowthCurve extends React.Component {
                         },
                     });
 
-                const mean_path = mean_svg.selectAll('.mean-path')
-                    .data(ypoint_arr)
+                const meanPath = meanSvg.selectAll('.mean-path')
+                    .data(ypointArr)
                     .enter();
 
 
-                var linepath = d3.line()
+                const linepath = d3.line()
                     .x((d, i) => xrange(timeUnion[n][i]))
-                    .y((d, i) => yrange(ypoint_arr[i]));
+                    .y((d, i) => yrange(ypointArr[i]));
 
-                mean_path.append('path')
-                    .attr('id', `mean-path-${exp_types[n]}-${batch}`)
+                meanPath.append('path')
+                    .attr('id', `mean-path-${expTypes[n]}-${batch}`)
                     .attr('class', `mean-path ${batch}`)
-                    .attr('d', (d) => linepath(ypoint_arr))
+                    .attr('d', (d) => linepath(ypointArr))
                     .attr('fill', 'none')
                     .style('opacity', 0.2)
                     .attr('stroke', () => {
-                        if (exp_types[n] === 'control') {
+                        if (expTypes[n] === 'control') {
                             return '#cd5686';
                         }
                         return '#5974c4';
@@ -560,8 +576,8 @@ class TumorGrowthCurve extends React.Component {
 
 
                 // reset y arrs
-                all_ypoint = [];
-                ypoint_arr = [];
+                allYpoint = [];
+                ypointArr = [];
             }
         }
 
@@ -685,8 +701,8 @@ class TumorGrowthCurve extends React.Component {
             return stdDevs;
         }
 
-        function plotErrorBars(data, exp, times, all_ypoint, ypoint_arr, svg, xrange, yrange) {
-            const stdDevs = stdDev(all_ypoint, ypoint_arr);
+        function plotErrorBars(data, exp, times, allYpoint, ypointArr, svg, xrange, yrange) {
+            const stdDevs = stdDev(allYpoint, ypointArr);
 
             const errorBars = svg.append('g')
                 .attr('id', 'errorBars');
@@ -706,8 +722,8 @@ class TumorGrowthCurve extends React.Component {
                 .attr('stroke-width', 2)
                 .attr('x1', (d, i) => xrange(times[i]))
                 .attr('x2', (d, i) => xrange(times[i]))
-                .attr('y1', (d, i) => yrange(ypoint_arr[i] + stdDevs[i]))
-                .attr('y2', (d, i) => yrange(ypoint_arr[i] - stdDevs[i]));
+                .attr('y1', (d, i) => yrange(ypointArr[i] + stdDevs[i]))
+                .attr('y2', (d, i) => yrange(ypointArr[i] - stdDevs[i]));
 
             const errorTopBar = errorBars.selectAll('line.errorTop')
                 .data(stdDevs);
@@ -724,8 +740,8 @@ class TumorGrowthCurve extends React.Component {
                 .attr('stroke-width', 2)
                 .attr('x1', (d, i) => xrange(times[i]) - 3)
                 .attr('x2', (d, i) => xrange(times[i]) + 3)
-                .attr('y1', (d, i) => yrange(ypoint_arr[i] + stdDevs[i]))
-                .attr('y2', (d, i) => yrange(ypoint_arr[i] + stdDevs[i]));
+                .attr('y1', (d, i) => yrange(ypointArr[i] + stdDevs[i]))
+                .attr('y2', (d, i) => yrange(ypointArr[i] + stdDevs[i]));
 
             const errorBotBar = errorBars.selectAll('line.errorBot')
                 .data(stdDevs);
@@ -742,8 +758,8 @@ class TumorGrowthCurve extends React.Component {
                 .attr('stroke-width', 2)
                 .attr('x1', (d, i) => xrange(times[i]) - 3)
                 .attr('x2', (d, i) => xrange(times[i]) + 3)
-                .attr('y1', (d, i) => yrange(ypoint_arr[i] - stdDevs[i]))
-                .attr('y2', (d, i) => yrange(ypoint_arr[i] - stdDevs[i]));
+                .attr('y1', (d, i) => yrange(ypointArr[i] - stdDevs[i]))
+                .attr('y2', (d, i) => yrange(ypointArr[i] - stdDevs[i]));
         }
 
         // toggle to show each model
@@ -889,11 +905,11 @@ class TumorGrowthCurve extends React.Component {
                         <h1>
 Drug ID =
                             {' '}
-                            <span style={{ color: '#cd5686' }}>{this.props.drugParam}</span>
+                            <span style={{ color: '#cd5686' }}>{drugParam.replace(/\s\s\s/g, ' + ')}</span>
                             {' '}
 and Patient ID =
                             {' '}
-                            <span style={{ color: '#cd5686' }}>{this.props.patientParam}</span>
+                            <span style={{ color: '#cd5686' }}>{patientParam}</span>
                         </h1>
 
                         <svg ref={(node) => this.node = node} width={1300} height={620} />

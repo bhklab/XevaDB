@@ -193,8 +193,12 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
 // based on drug and patient (model_id).
 const getModelResponseStats = function (request, response) {
     // grabbing the drug parameters and dataset parameters.
-    const paramDrug = request.query.drug;
+    let paramDrug = request.query.drug;
     const paramPatient = request.query.patient;
+
+    // this will remove the spaces in the drug name and replace
+    // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
+    paramDrug = paramDrug.replace(/\s\s\s/g, ' + ');
 
     knex.select()
         .from('model_response')
