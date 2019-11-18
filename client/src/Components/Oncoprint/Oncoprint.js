@@ -1,7 +1,5 @@
 /* eslint-disable func-names */
 /* eslint-disable no-plusplus */
-/* eslint-disable react/jsx-indent */
-/* eslint-disable react/jsx-filename-extension */
 /* eslint-disable max-len */
 /* eslint-disable camelcase */
 import React from 'react';

@@ -69,7 +69,7 @@ class DatasetDonut extends React.Component {
                             dimensions={dimensions}
                             margin={margin}
                             data={data}
-                            arc={arc}
+                            arcRadius={arc}
                             chartId="donut_datasets"
                         />
                     </div>

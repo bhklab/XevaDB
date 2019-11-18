@@ -1,7 +1,4 @@
 /* eslint-disable no-shadow */
-/* eslint-disable react/jsx-filename-extension */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-indent */
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
