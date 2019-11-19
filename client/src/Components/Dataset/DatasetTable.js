@@ -10,17 +10,22 @@ const h1Style = {
 
 const DatasetTable = (props) => {
     const { data } = props;
-
+    console.log(data);
     const columns = [
         {
             Header: 'Dataset Name',
             accessor: 'id',
-            minWidth: 150,
+            minWidth: 180,
         },
         {
             Header: 'Patients',
             accessor: 'value',
-            minWidth: 150,
+            minWidth: 120,
+        },
+        {
+            Header: 'Models',
+            accessor: 'totalModels',
+            minWidth: 120,
         },
     ];
 
