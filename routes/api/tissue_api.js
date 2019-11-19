@@ -18,7 +18,7 @@ const getTissues = function (request, response) {
 
 
 // this is grouping different modelids based on the different tissues.
-const getPatientsGroupedByTissue = function (request, response) {
+const getModelsGroupedByTissue = function (request, response) {
     knex.select('model_information.tissue_id', 'tissues.tissue_name')
         .count('model_information.patient_id as total')
         .groupBy('model_information.tissue_id')
@@ -42,5 +42,5 @@ const getPatientsGroupedByTissue = function (request, response) {
 
 module.exports = {
     getTissues,
-    getPatientsGroupedByTissue,
+    getModelsGroupedByTissue,
 };
