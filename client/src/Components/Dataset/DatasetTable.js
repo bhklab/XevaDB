@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import TableWrapper from '../Drug/DrugTableStyle';
@@ -9,56 +8,36 @@ const h1Style = {
     margin: '50px',
 };
 
-class DatasetTable extends React.Component {
-    constructor(props) {
-        super(props);
-        // setting the states for the data.
-        this.state = {
-            data: [],
-        };
-    }
+const DatasetTable = (props) => {
+    const { data } = props;
 
-    componentWillMount() {
-        axios.get('/api/v1/datasets')
-            .then((response) => {
-                this.setState({
-                    data: response.data.data,
-                });
-            });
-    }
+    const columns = [
+        {
+            Header: 'Dataset Name',
+            accessor: 'id',
+            minWidth: 150,
+        },
+        {
+            Header: 'Patients',
+            accessor: 'value',
+            minWidth: 150,
+        },
+    ];
 
-    render() {
-        const { data } = this.state;
-
-        const columns = [
-            {
-                Header: 'ID',
-                accessor: 'dataset_id',
-                minWidth: 180,
-                sortable: true,
-            },
-            {
-                Header: 'Dataset Name',
-                accessor: 'dataset_name',
-                minWidth: 150,
-            },
-        ];
-
-        return (
-            <div>
-                <h1 style={h1Style}> Datasets </h1>
-                <TableWrapper className="wrap">
-                    <ReactTable
-                        data={data}
-                        columns={columns}
-                        className="-highlight"
-                        defaultPageSize={10}
-                        filterable
-                    />
-                </TableWrapper>
-            </div>
-        );
-    }
-}
+    return (
+        <div>
+            <h1 style={h1Style}> Datasets </h1>
+            <TableWrapper className="wrap">
+                <ReactTable
+                    data={data}
+                    columns={columns}
+                    className="datasetTable"
+                    defaultPageSize={10}
+                    filterable
+                />
+            </TableWrapper>
+        </div>
+    );
+};
 
 export default DatasetTable;

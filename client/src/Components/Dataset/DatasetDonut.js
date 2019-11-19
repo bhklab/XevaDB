@@ -74,7 +74,9 @@ class DatasetDonut extends React.Component {
                         />
                     </div>
                     <div className="donut-wrapper">
-                        <DatasetTable />
+                        <DatasetTable
+                            data={data}
+                        />
                     </div>
                 </Wrapper>
                 <Footer />

@@ -17,7 +17,7 @@ const getTissues = function (request, response) {
 };
 
 
-// this is grouping different patientids based on the different tissues.
+// this is grouping different modelids based on the different tissues.
 const getPatientsGroupedByTissue = function (request, response) {
     knex.select('model_information.tissue_id', 'tissues.tissue_name')
         .count('model_information.patient_id as total')
