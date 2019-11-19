@@ -251,7 +251,8 @@ class HeatMap extends React.Component {
             .attr('xlink:href', (d, i) => querystringValue(d, i))
             .append('rect')
             .attr('class', (d, i) => {
-                const drugClass = drug[pCount].replace(/\s/g, '').replace(/[+]/, '-');
+                const drugClass = drug[pCount].replace(/\s/g, '').replace(/[.]/g, '')
+                    .replace(/[+]/g, '-');
                 if (i === (patient.length - 1)) {
                     pCount++;
                 }
@@ -339,13 +340,15 @@ class HeatMap extends React.Component {
             })
             // eslint-disable-next-line func-names
             .on('mouseover', function () {
-                const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[+]/, '-');
+                const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[.]/g, '')
+                    .replace(/[+]/g, '-');
                 d3.selectAll(`.hmap-hlight-${drugClass}`)
                     .style('opacity', 0.2);
             })
             // eslint-disable-next-line func-names
             .on('mouseout', function () {
-                const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[+]/, '-');
+                const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[.]/g, '')
+                    .replace(/[+]/g, '-');
                 d3.selectAll(`.hmap-hlight-${drugClass}`)
                     .style('opacity', 0);
             });
