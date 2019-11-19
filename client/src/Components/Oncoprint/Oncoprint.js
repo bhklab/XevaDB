@@ -315,7 +315,7 @@ class Oncoprint extends React.Component {
 
             const xrange_gene = d3.scaleLinear()
                 .domain([0, d3.max([maxGAmp, maxGMut, maxGHomdel])])
-                .range([0, 50]);
+                .range([0, 70]);
 
 
             const gene_alter = svg.append('g')
