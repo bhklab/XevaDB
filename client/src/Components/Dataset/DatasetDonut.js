@@ -35,12 +35,13 @@ class DatasetDonut extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/v1/dataset/patients')
+        axios.get('/api/v1/dataset/models')
             .then((response) => {
                 const data = response.data.data.map((element) => ({
                     id: element.dataset_name,
                     value: element.patient_id,
                     parameter: element.dataset_id,
+                    totalModels: element.totalModels,
                 }));
                 this.setState({
                     data,

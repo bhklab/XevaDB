@@ -40,11 +40,12 @@ const getPatientsGroupedByDataset = function (request, response) {
 };
 
 
-// get all the count of distinct model ids grouped by datasets,
+// get all the count of distinct model ids and patient ids grouped by datasets,
 // this uses the modelinformation table.
-const getModelsGroupedByDataset = function (request, response) {
-    knex.count('* as totalModel')
-        .select('datasets.dataset_name')
+const getModelsPatientsGroupedByDataset = function (request, response) {
+    knex.countDistinct('model_response.model_id as totalModels')
+        .countDistinct('model_information.patient_id as patient_id')
+        .select('datasets.dataset_name', 'datasets.dataset_id')
         .from('model_response')
         .leftJoin(
             'models',
@@ -76,5 +77,5 @@ const getModelsGroupedByDataset = function (request, response) {
 module.exports = {
     getDatasets,
     getPatientsGroupedByDataset,
-    getModelsGroupedByDataset,
+    getModelsPatientsGroupedByDataset,
 };
