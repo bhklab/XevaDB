@@ -278,7 +278,7 @@ DonutChart.propTypes = {
     }).isRequired,
     chartId: PropTypes.string.isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
-    arc: PropTypes.shape({
+    arcRadius: PropTypes.shape({
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
     }).isRequired,
