@@ -31,7 +31,7 @@ const TableWrapper = styled.div`
     }
 
     .-previous, .-next, .-btn {
-      background: #3453b0;
+      background: #5676db;
       color:white !important;
     }
 
