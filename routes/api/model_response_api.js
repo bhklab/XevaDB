@@ -108,6 +108,8 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
     let drug = param_drug.split(',');
     drug = drug.map((value) => value.replace('_', ' + '));
 
+    // to always include untreated/water (control)
+    drug.push('untreated');
 
     const distinct_patients = knex('model_information')
         .distinct('patients.patient')

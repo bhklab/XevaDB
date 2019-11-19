@@ -403,7 +403,7 @@ class HeatMap extends React.Component {
 
         const drugScale = d3.scaleLinear()
             .domain([0, maxDrug])
-            .range([0, 80]);
+            .range([0, 70]);
 
         // This will set an x-axis for the vertical graph.
         const xAxisVertical = d3.axisTop()
