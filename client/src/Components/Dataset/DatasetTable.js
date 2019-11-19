@@ -10,7 +10,7 @@ const h1Style = {
 
 const DatasetTable = (props) => {
     const { data } = props;
-    console.log(data);
+
     const columns = [
         {
             Header: 'Dataset Name',
