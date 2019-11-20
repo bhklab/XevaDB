@@ -240,7 +240,7 @@ class Search extends React.Component {
         const {
             selectedDataset, selectedDrugs, selectedGeneSearch, selectedGenomics, threshold,
         } = this.state;
-        if ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)')) {
+        if ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '')) {
             const { history } = this.props;
             history.push(`/search/?drug=${selectedDrugs}&dataset=${selectedDataset}&genes=${selectedGeneSearch}&genomics=${selectedGenomics}&threshold=${threshold}`);
         }
