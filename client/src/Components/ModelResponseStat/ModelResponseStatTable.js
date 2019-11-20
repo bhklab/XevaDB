@@ -5,7 +5,6 @@
 /* eslint-disable class-methods-use-this */
 import React from 'react';
 import axios from 'axios';
-import { each } from 'bluebird';
 import StyleTable from './ModelResponseStyle';
 
 class StatTable extends React.Component {
