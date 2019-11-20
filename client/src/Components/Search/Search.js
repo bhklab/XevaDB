@@ -84,10 +84,26 @@ class Search extends React.Component {
 
     handleDrugChange(selectedOption) {
         if (selectedOption !== null && selectedOption.length > 0) {
+            // destructuring the state.
             const { drugs, allDrugs } = this.state;
 
+            // loop through the label to give the array of selectedOptions.
+            const label = selectedOption.map((value) => (value.label).replace(/\s/g, '').replace('+', '_'));
+
+            // function to check if label array contains the All string.
+            const doesItContain = (labelVal) => {
+                let truth = false;
+                const regex = RegExp('All');
+                labelVal.map((val) => {
+                    if (regex.test(val)) {
+                        truth = true;
+                    }
+                });
+                return truth;
+            };
+
             // if all is selected then everything except all is in the value for select.
-            if (selectedOption[0].value === 'all') {
+            if (doesItContain(label)) {
                 const data = drugs.filter((item, value) => {
                     if (value !== 0) {
                         return ({
@@ -101,7 +117,6 @@ class Search extends React.Component {
                     drugValue: data,
                 });
             } else { // else the selected option and label the array of drugs.
-                const label = selectedOption.map((value) => (value.label).replace(/\s/g, '').replace('+', '_'));
                 this.setState({
                     selectedDrugs: label,
                     drugValue: selectedOption,
