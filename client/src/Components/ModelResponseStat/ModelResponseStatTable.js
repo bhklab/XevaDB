@@ -1,9 +1,11 @@
+/* eslint-disable max-len */
 /* eslint-disable react/no-deprecated */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable camelcase */
 /* eslint-disable class-methods-use-this */
 import React from 'react';
 import axios from 'axios';
+import { each } from 'bluebird';
 import StyleTable from './ModelResponseStyle';
 
 class StatTable extends React.Component {
@@ -12,7 +14,7 @@ class StatTable extends React.Component {
         // data for the table.
         this.state = {
             data: [],
-            tableHeader: ['Response Type', 'Value', 'Drug', 'Model', 'Patient'],
+            tableHeader: ['Patient', 'Model', 'Drug', 'mRECIST', 'Slope', 'AUC', 'Best Average Response'],
         };
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
@@ -36,17 +38,39 @@ class StatTable extends React.Component {
     createTable() {
         // this will create the table data (each row for corresponding data).
         const { data } = this.state;
-        const table = data.map((eachdata, index) => {
+
+        // this will create newData array of objects for the table.
+        const newData = [];
+        let total = 0;
+        let drugValue = '';
+        let modelValue = '';
+
+        data.forEach((eachdata) => {
+            if (newData.length === 0 || drugValue !== eachdata.drug_name || modelValue !== eachdata.model) {
+                newData.push({});
+                drugValue = eachdata.drug_name;
+                modelValue = eachdata.model;
+                newData[total].model = modelValue;
+                newData[total].drug = drugValue;
+                newData[total].patient = eachdata.patient;
+                total += 1;
+            }
+            newData[total - 1][eachdata.response_type === 'best.average.response' ? 'bar' : eachdata.response_type] = eachdata.value;
+        });
+
+        const table = newData.map((eachdata, index) => {
             const {
-                response_type, value, drug_name, model, patient,
+                patient, model, drug, bar, mRECIST, slope, AUC,
             } = eachdata;
             return (
                 <tr key={index}>
-                    <td>{response_type === 'best.average.response' ? 'Best Average Response' : response_type}</td>
-                    <td>{value}</td>
-                    <td>{drug_name}</td>
-                    <td>{model}</td>
                     <td>{patient}</td>
+                    <td>{model}</td>
+                    <td>{drug}</td>
+                    <td>{bar}</td>
+                    <td>{mRECIST}</td>
+                    <td>{slope}</td>
+                    <td>{AUC}</td>
                 </tr>
             );
         });
@@ -56,7 +80,7 @@ class StatTable extends React.Component {
     createTableHeader() {
         // create the header for the table.
         const { tableHeader } = this.state;
-        const header = tableHeader.map((key, index) => <th key={index}>{key.toUpperCase()}</th>);
+        const header = tableHeader.map((key, index) => <th key={index}>{key}</th>);
         return header;
     }
 

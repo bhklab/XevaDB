@@ -8,9 +8,9 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
 import axios from 'axios';
+import Popup from 'reactjs-popup';
 import { StyleBar, customStyles, StyleButton } from './SearchStyle';
 import { GeneList } from './GeneList';
-
 
 class Search extends React.Component {
     constructor(props) {
@@ -337,11 +337,18 @@ A Database For PDX Pharmacogenomic Data
                             </form>
                         </div>
                         <div>
-                            <StyleButton onClick={this.redirectUser} type="button">
-                                <span>
+                            <Popup
+                                trigger={(
+                                    <StyleButton onClick={this.redirectUser} type="button">
+                                        <span>
                                     Search
-                                </span>
-                            </StyleButton>
+                                        </span>
+                                    </StyleButton>
+                                )}
+                                position="right center"
+                            >
+                                <div>Popup content here !!</div>
+                            </Popup>
                         </div>
                     </div>
                 </div>
