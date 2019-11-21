@@ -367,7 +367,12 @@ class Search extends React.Component {
                                             )}
                                             position="right center"
                                         >
-                                            <div>Complete all the fields!!</div>
+                                            <div style={{
+                                                color: '#3453b0', fontFamily: 'Raleway', fontSize: '17px', fontWeight: '500',
+                                            }}
+                                            >
+                                                Complete all the fields!!
+                                            </div>
                                         </Popup>
                                     )
                             }
