@@ -39,6 +39,7 @@ class Search extends React.Component {
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.redirectUser = this.redirectUser.bind(this);
         this.handleThreshold = this.handleThreshold.bind(this);
+        this.checkInput = this.checkInput.bind(this);
     }
 
 
@@ -235,15 +236,24 @@ class Search extends React.Component {
         }
     }
 
-
+    // redirects the user to search page.
     redirectUser() {
         const {
-            selectedDataset, selectedDrugs, selectedGeneSearch, selectedGenomics, threshold,
+            selectedDataset, selectedDrugs, selectedGeneSearch,
+            selectedGenomics, threshold, genomics,
         } = this.state;
-        if ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '')) {
+        if ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') && (genomics.length > 0)) {
             const { history } = this.props;
             history.push(`/search/?drug=${selectedDrugs}&dataset=${selectedDataset}&genes=${selectedGeneSearch}&genomics=${selectedGenomics}&threshold=${threshold}`);
         }
+    }
+
+    // check if all fields are selected.
+    checkInput() {
+        const {
+            selectedDataset, selectedDrugs, selectedGeneSearch, genomics,
+        } = this.state;
+        return ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') && (genomics.length > 0));
     }
 
 
@@ -261,7 +271,7 @@ class Search extends React.Component {
                             {' '}
                             <span>XevaDB:</span>
                             {' '}
-A Database For PDX Pharmacogenomic Data
+                                A Database For PDX Pharmacogenomic Data
                             {' '}
                         </h1>
                         <div className="two-col">
@@ -337,18 +347,30 @@ A Database For PDX Pharmacogenomic Data
                             </form>
                         </div>
                         <div>
-                            <Popup
-                                trigger={(
-                                    <StyleButton onClick={this.redirectUser} type="button">
-                                        <span>
-                                    Search
-                                        </span>
-                                    </StyleButton>
-                                )}
-                                position="right center"
-                            >
-                                <div>Popup content here !!</div>
-                            </Popup>
+                            {
+                                this.checkInput()
+                                    ? (
+                                        <StyleButton onClick={this.redirectUser} type="button">
+                                            <span>
+                                                Search
+                                            </span>
+                                        </StyleButton>
+                                    )
+                                    : (
+                                        <Popup
+                                            trigger={(
+                                                <StyleButton onClick={this.redirectUser} type="button">
+                                                    <span>
+                                                        Search
+                                                    </span>
+                                                </StyleButton>
+                                            )}
+                                            position="right center"
+                                        >
+                                            <div>Complete all the fields!!</div>
+                                        </Popup>
+                                    )
+                            }
                         </div>
                     </div>
                 </div>
