@@ -4,7 +4,7 @@ const fs = require('fs');
 const MultiStream = require('multistream');
 
 // this will take the file_reader function from file_reader file used to loop through the files.
-const file_reader = require('./file_reader');
+const file_reader = require('../file_reader');
 
 // folder from where the files will be read.
 const file_folder = ['/Initial_Csv_File/RNASeq_data/', '/Initial_Csv_File/mutation_data/'];
