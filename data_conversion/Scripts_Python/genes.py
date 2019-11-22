@@ -2,38 +2,33 @@ import csv
 import re
 
 
-files = [   '../Final_Csv_File/models_final.csv', 
-            '../Final_Csv_File/drugs_final.csv'
+files = [   '../Initial_Csv_File/mutation_data/mutation.csv', 
+            '../Initial_Csv_File/RNASeq_data/rna_sequencing.csv'
+            # '../Initial_Csv_File/extrafiles/mutation.csv', 
+            # '../Initial_Csv_File/extrafiles/rna_sequencing.csv'
         ]
 
-input_file = '../../../model_response.csv'
-output_file = '../Final_Csv_File/final_model_response.csv'
-
-mapped_data = {}
-
+output_file = '../Final_Csv_File/genes.csv'
+unique_list = []
+value = 0
 
 for file in files:
     with open(file, 'r') as read_file:
-        for line in read_file:
-            data = line.split(',')
-            mapped_data[data[1].replace('\n', '')] = data[0]
-
-id = 0
-with open(input_file, 'r') as read_file:
-    with open(output_file, 'w') as out_file:
-        csv_writer = csv.writer(out_file, delimiter = ",")
-        csv_writer.writerow(['id', 'drug_id', 'model_id', 'response_type', 'value'])
-        for line in read_file:
-            if(re.search(r'\bmodel_id\b', line)):
+        for row in read_file:
+            #print(row)
+            if(re.search(r'\bgene.id\b', row)):
                     print('not useful')
             else:
-                line = line.split(',')
-                model = mapped_data[line[2]]
-                drug = mapped_data[line[1]]
-                id = id + 1
-                csv_writer.writerow([id, drug, model, line[3], line[4].replace('\n', '')])
+                    row = (row.replace('"','').replace("\n", "")).replace("\r", "")
+                    row = row.split(',')[1]
+                    if row not in unique_list:
+                            unique_list.append(row)
+#print(unique_list)
 
-
-
-
-
+with open(output_file, 'w') as csv_file:
+    csv_writer = csv.writer(csv_file, delimiter = ",")
+    csv_writer.writerow(['gene_id', 'gene_name'])
+    for gene in unique_list:
+        value = value + 1
+        csv_writer.writerow([value, gene])
+        

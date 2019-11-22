@@ -30,7 +30,6 @@ const total_files = files.length;
 
 // reads the input file and streams the data with particular format to the output file.
 function outputData() {
-    console.log('Hey');
     MultiStream(streams).pipe(csv())
         .on('data', (data) => {
             results.push(data);
