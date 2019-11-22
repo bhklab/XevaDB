@@ -8,7 +8,7 @@ files = [   '../Initial_Csv_File/mutation_data/mutation.csv',
             # '../Initial_Csv_File/extrafiles/rna_sequencing.csv'
         ]
 
-output_file = '../Final_Csv_File/genes.csv'
+output_file = '../Final_Csv_File/genes_final.csv'
 unique_list = []
 value = 0
 
