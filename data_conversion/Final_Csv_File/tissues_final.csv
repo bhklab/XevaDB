@@ -1,7 +1,7 @@
-tissue_id,tissue_name,tissue_code
-1,Breast Cancer,BRCA
-2,Cutaneous Melanoma,CM
-3,Non-small Cell Lung Carcinoma,NSCLC
-4,Colorectal Cancer,CRC
-5,Gastric Cancer,GC
-6,Pancreatic Ductal Carcinoma,PDAC
+tissue_id,tissue_name
+1,Gastric Cancer
+2,Colorectal Cancer
+3,Pancreatic Ductal Carcinoma
+4,Breast Cancer
+5,Non-small Cell Lung Carcinoma
+6,Cutaneous Melanoma
