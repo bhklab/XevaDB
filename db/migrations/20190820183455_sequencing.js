@@ -1,13 +1,13 @@
 
-exports.up = function(knex, Promise) {
+exports.up = function (knex, Promise) {
     return knex.schema.createTable('sequencing', (table) => {
         table.increments('sequencing_uid')
-             .primary();
+            .primary();
         table.string('sequencing_id')
-             .notNullable();
-    })
+            .notNullable();
+    });
 };
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
     return knex.schema.dropTable('sequencing');
 };

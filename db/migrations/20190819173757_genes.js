@@ -1,13 +1,13 @@
 
-exports.up = function(knex, Promise) {
+exports.up = function (knex, Promise) {
     return knex.schema.createTable('genes', (table) => {
         table.increments('gene_id')
-             .primary();
+            .primary();
         table.string('gene_name')
-             .notNullable();
-    })
+            .notNullable();
+    });
 };
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
     return knex.schema.dropTable('genes');
 };
