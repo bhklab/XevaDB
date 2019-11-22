@@ -1,13 +1,13 @@
 
-exports.up = function(knex, Promise) {
+exports.up = function (knex, Promise) {
     return knex.schema.createTable('batches', (table) => {
         table.increments('batch_id')
-             .primary();
+            .primary();
         table.string('batch')
-             .notNullable();
-    })
+            .notNullable();
+    });
 };
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
     return knex.schema.dropTable('batches');
 };
