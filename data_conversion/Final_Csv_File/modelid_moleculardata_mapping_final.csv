@@ -3468,7 +3468,7 @@ id,model_id,sequencing_uid,mDataType
 3467,4703,191,RNASeq
 3468,4704,191,RNASeq
 3469,4705,191,RNASeq
-3470,,191,RNASeq
+3470,4706,191,RNASeq
 3471,655,1,mutation
 3472,656,1,mutation
 3473,657,1,mutation
@@ -6938,7 +6938,7 @@ id,model_id,sequencing_uid,mDataType
 6937,4703,191,mutation
 6938,4704,191,mutation
 6939,4705,191,mutation
-6940,,191,mutation
+6940,4706,191,mutation
 6941,655,1,cnv
 6942,656,1,cnv
 6943,657,1,cnv
@@ -10389,4 +10389,4 @@ id,model_id,sequencing_uid,mDataType
 10388,4703,191,cnv
 10389,4704,191,cnv
 10390,4705,191,cnv
-10391,,191,cnv
+10391,4706,191,cnv
