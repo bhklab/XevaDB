@@ -9,6 +9,6 @@ const dataObj = csv.toObject(file);
 
 
 exports.seed = function (knex, Promise) {
-    return knex('model_response').del()
-        .then(() => knex('model_response').insert(dataObj));
+    return knex('batch_response').del()
+        .then(() => knex('batch_response').insert(dataObj));
 };
