@@ -38,7 +38,7 @@ const DatasetTable = (props) => {
                 <ReactTable
                     data={data}
                     columns={columns}
-                    className="datasetTable"
+                    className="-highlight"
                     showPagination={false}
                     pageSize={dataLength > 0 ? dataLength + 1 : 7}
                 />

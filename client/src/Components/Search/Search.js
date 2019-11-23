@@ -269,7 +269,7 @@ class Search extends React.Component {
                     <div className="select-component" onKeyPress={this.handleKeyPress}>
                         <h1>
                             {' '}
-                            <span style={{ color: '#cd5686', fontSize: '26px' }}>XevaDB:</span>
+                            <span style={{ color: '#3453b0', fontSize: '24px' }}>XevaDB:</span>
                             {' '}
                                 A Database For PDX Pharmacogenomic Data
                             {' '}
