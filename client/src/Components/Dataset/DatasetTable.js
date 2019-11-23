@@ -9,36 +9,38 @@ const h1Style = {
 };
 
 const DatasetTable = (props) => {
-    const { data } = props;
+    const { data, dataLength } = props;
 
     const columns = [
         {
             Header: 'Dataset Name',
             accessor: 'id',
             minWidth: 180,
+            search: false,
         },
         {
-            Header: 'Patients',
+            Header: 'Number of Patients',
             accessor: 'value',
             minWidth: 120,
         },
         {
-            Header: 'Models',
+            Header: 'Number of Models',
             accessor: 'totalModels',
             minWidth: 120,
         },
     ];
 
     return (
+
         <div>
-            <h1 style={h1Style}> Datasets </h1>
+            <h1 style={h1Style}> List of Datasets </h1>
             <TableWrapper className="wrap">
                 <ReactTable
                     data={data}
                     columns={columns}
                     className="datasetTable"
-                    defaultPageSize={10}
-                    filterable
+                    showPagination={false}
+                    pageSize={dataLength > 0 ? dataLength + 1 : 7}
                 />
             </TableWrapper>
         </div>
