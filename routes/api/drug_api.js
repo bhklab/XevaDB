@@ -6,6 +6,7 @@ const knex = require('../../db/knex1');
 const getDrugs = function (request, response) {
     knex.select()
         .from('drugs')
+        .orderBy('drug_name', 'asc')
         .then((drug) => {
             response.send(drug);
         })

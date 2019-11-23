@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import ReactTable from 'react-table';
-import 'react-table/react-table.css';
 import TableWrapper from './DrugTableStyle';
 import pubchem from '../../images/pclogo_220.gif';
+import 'react-table/react-table.css';
 
 const h1Style = {
     color: '#3453b0',
@@ -36,29 +36,33 @@ class DrugTable extends React.Component {
             val.img = pubchem;
         });
 
+        // to capitalize first alphabet.
+        const capitalize = (s) => {
+            if (typeof s !== 'string') return '';
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        };
+
         const columns = [
             {
-                Header: 'Drug',
+                Header: 'Drug Name',
                 accessor: 'drug_name',
                 minWidth: 180,
-                // Cell: props => props.value.toUpperCase(),
+                Cell: (props) => capitalize(props.value),
                 sortable: true,
             },
-            // {
-            //  Header: 'StandardName',
-            //  accessor: 'standard_name',
-            //  minWidth: 180,
-            //  Cell: props => props.value.toUpperCase()
-            // },
             {
                 Header: 'Targets',
                 accessor: 'class',
                 minWidth: 150,
+                Cell: (props) => capitalize(props.value),
+                sortable: true,
             },
             {
                 Header: 'Class',
                 accessor: 'class_name',
                 minWidth: 230,
+                Cell: (props) => capitalize(props.value),
+                sortable: true,
             },
             {
                 Header: 'Source',
@@ -67,12 +71,13 @@ class DrugTable extends React.Component {
                         <img height={38} src={val.original.img} alt="pubchem links" />
                     </div>
                 ),
+                sortable: false,
             },
         ];
 
         return (
             <div>
-                <h1 style={h1Style}> Drugs </h1>
+                <h1 style={h1Style}> List of Drugs </h1>
                 <TableWrapper className="wrap">
                     <ReactTable
                         data={data}
