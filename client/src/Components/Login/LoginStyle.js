@@ -2,29 +2,29 @@ import styled from 'styled-components';
 
 
 const Paper = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-height: 300px;
-width: 400px;
-margin: auto;
-margin-top: 20vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 300px;
+    width: 400px;
+    margin: auto;
+    margin-top: 20vh;
 `;
 
 const PaperGradient = styled.div`
-background-image: linear-gradient(
-    to right,
-    #CBC5EA,
-    #EAEAEA
-);
-height: 450px;
-width: 530px;
-border-radius: 5px;
-margin:auto;
+    background-image: linear-gradient(
+        to right,
+        #CBC5EA,
+        #EAEAEA
+    );
+    height: 380px;
+    width: 530px;
+    border-radius: 5px;
+    margin:auto;
 `;
 
 const SubmitStyle = styled.div`
-margin-top: 2vh;
+    margin-top: 2vh;
 `;
 
 const LogoStyle = styled.img`
@@ -36,11 +36,11 @@ const LogoStyle = styled.img`
 `;
 
 const LogoBack = styled.div`
-background-image: linear-gradient(
-    to right,
-    #CBC5EA,
-    #EAEAEA
-);
+    background-image: linear-gradient(
+        to right,
+        #CBC5EA,
+        #EAEAEA
+    );
 `;
 
 
