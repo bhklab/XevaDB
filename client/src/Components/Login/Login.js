@@ -90,7 +90,13 @@ class Login extends React.Component {
                         <PaperGradient>
                             <Paper>
 
-                                <Typography component="h1" variant="h5" style={{ color: '#3f51b5', marginTop: '4.5vh' }}>
+                                <Typography
+                                    component="h1"
+                                    variant="h5"
+                                    style={{
+                                        color: '#3f51b5', marginTop: '4.5vh', fontWeight: '700', fontSize: '30px',
+                                    }}
+                                >
                 Sign in
                                 </Typography>
 
