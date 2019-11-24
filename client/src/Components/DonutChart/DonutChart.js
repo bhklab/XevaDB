@@ -233,13 +233,12 @@ class DonutChart extends React.Component {
         const donutRect = svg.append('g')
             .attr('id', 'donut_small_rect');
 
-
         donutRect.selectAll('rect')
             .data(data)
             .enter()
             .append('rect')
             .attr('x', (width) - 240)
-            .attr('y', (d, i) => (-20 * i + (data.length) * 10) - i * 8)
+            .attr('y', (d, i) => ((30 * i) - (data.length * 15)))
             .attr('width', 20)
             .attr('height', 20)
             .attr('fill', (d) => color(d.value));
@@ -249,9 +248,9 @@ class DonutChart extends React.Component {
             .enter()
             .append('text')
             .attr('x', (width) - 200)
-            .attr('y', (d, i) => (-20 * i + (data.length) * 10) - i * 8 + 15)
+            .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
             .attr('fill', (d) => color(d.value))
-            .text((d) => d.id);
+            .text((d) => d.id.charAt(0).toUpperCase() + d.id.slice(1));
     }
 
     render() {

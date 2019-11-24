@@ -1,16 +1,16 @@
 
-exports.up = function(knex, Promise) {
+exports.up = function (knex, Promise) {
     return knex.schema.createTable('users', (table) => {
         table.increments('user_id')
-             .primary();
+            .primary();
         table.string('user_name')
-             .notNullable();
+            .notNullable();
         table.string('user_pwd')
-             .notNullable();
-    })
+            .notNullable();
+    });
 };
 
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
     return knex.schema.dropTable('users');
 };
