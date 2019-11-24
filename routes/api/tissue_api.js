@@ -29,6 +29,8 @@ const getModelsGroupedByTissue = function (request, response) {
             'tissues.tissue_id',
         )
         .whereNot('model_information.tissue_id', '')
+        .orderBy('tissues.tissue_name', 'asc')
+        // .andWhereNot('model_information.tested', 'false')
         .then((tissue) => response.status(200).json({
             status: 'success',
             data: tissue,

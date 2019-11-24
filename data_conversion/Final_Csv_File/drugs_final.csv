@@ -1,63 +1,63 @@
-drug_id,drug_name,standard_name,targets,treatment_type,pubchemId,class,class_name,source
-1,binimetinib,,,,,(MEK 1/2) inhibitor,Kinase inhibitors,
-2,BKM120,,,,,pan-class I (PI3K) inhibitor,Kinase inhibitors,
-3,BKM120 + encorafenib,,,,,combination,combination,
-4,CGM097,,,,,MDM2 Inhibitor,MDM2 Inhibitor,
-5,CLR457,,,,,pan-PI3K inhibitor,Kinase inhibitors,
-6,dacarbazine,,,,,Alkylating Drug,Chemotherapeutic agents,
-7,encorafenib,,,,,Raf kinase inhibitor,Kinase inhibitors,
-8,encorafenib + binimetinib,,,,,combination,combination,
-9,LDE225,,,,,Smo antagonist,Smo antagonist,
-10,LDK378,,,,,tyrosine kinase receptor inhibitor (TKI),Kinase inhibitors,
-11,LEE011,,,,,cyclin-dependent kinase (CDK) inhibitor,Kinase inhibitors,
-12,LEE011 + binimetinib,,,,,combination,combination,
-13,LEE011 + encorafenib,,,,,combination,combination,
-14,LGW813,,,,,Inhibitor Of Apoptosis inhibitors,Inhibitor Of Apoptosis inhibitors,
-15,TAS266,,,,,DR5 receptor agonist,Growth factor receptor inhibitors,
-16,untreated,,,,,single/unknown,single/unknown,
-17,WNT974,,,,,porcupine (PORCN) inhibitor,Wnt signaling inhibitors,
-18,BGJ398,,,,,pan FGFR inhibitor,Growth factor receptor inhibitors,
-19,BKM120 + binimetinib,,,,,combination,combination,
-20,BYL719,,,,,(PI3K) inhibitor,Kinase inhibitors,
-21,BYL719 + LGH447,,,,,combination,combination,
-22,BYL719 + LJM716,,,,,combination,combination,
-23,cetuximab,,,,,EGFR inihibitor,Growth factor receptor inhibitors,
-24,CKX620,,,,,MAPK - kinase inhibitor,Kinase inhibitors,
-25,erlotinib,,,,,EGFR inhibitor,Growth factor receptor inhibitors,
-26,HDM201,,,,,MDM2 inhibitor,MDM2 inhibitor,
-27,HSP990,,,,,HSP90 inhibitor,HSP90 inhibitor,
-28,INC280,,,,,c-Met (HGFR) inhibitor,Growth factor receptor inhibitors,
-29,LCL161 + paclitaxel,,,,,combination,combination,
-30,LFW527 + binimetinib,,,,,combination,combination,
-31,LGH447,,,,,pan-PIM protein kinase inhibitor,Kinase inhibitors,
-32,LLM871,,,,,FGFR2/4 antibody-drug conjugate,Growth factor receptor inhibitors,
-33,paclitaxel,,,,,Microtubule Inhibitor,Chemotherapeutic agents,
-34,5FU,,,,,Nucleoside Metabolic Inhibitor,Chemotherapy,
-35,BKM120 + LJC049,,,,,combination,combination,
-36,BYL719 + binimetinib,,,,,combination,combination,
-37,BYL719 + cetuximab,,,,,combination,combination,
-38,BYL719 + cetuximab + encorafenib,,,,,combination,combination,
-39,BYL719 + encorafenib,,,,,combination,combination,
-40,cetuximab + encorafenib,,,,,combination,combination,
-41,LJC049,,,,,Wnt signaling,Wnt signaling inhibitors,
-42,LKA136,,,,,Neurotrophic Receptor Tyrosine Kinase inhibitor,Kinase inhibitors,
-43,abraxane,,,,,Microtubule Inhibitor,Chemotherapeutic agents,
-44,binimetinib-3.5mpk,,,,,combination,combination,
-45,BKM120 + LDE225,,,,,combination,combination,
-46,figitumumab,,,,,IGF-1R monoclonal antibody,Growth factor receptor inhibitors,
-47,figitumumab + binimetinib,,,,,combination,combination,
-48,gemcitabine-50mpk,,,,,combination,combination,
-49,INC424,,,,,JAK inhibitor,Kinase inhibitors,
-50,INC424 + binimetinib,,,,,combination,combination,
-51,trametinib,,,,,(MEK 1/2) inhibitor,Kinase inhibitors,
-52,BYL719 + LEE011,,,,,combination,combination,
-53,LEE011 + everolimus,,,,,combination,combination,
-54,LFA102,,,,,prolactin receptor (PRLR),Growth factor receptor inhibitors,
-55,LFW527 + everolimus,,,,,combination,combination,
-56,LJM716,,,,,anti-ERBB3 (HER3) investigational monoclonal antibody,Growth factor receptor inhibitors,
-57,LJM716 + trastuzumab,,,,,combination,combination,
-58,tamoxifen,,,,,selective estrogen receptor modulator (SERM),Growth factor receptor inhibitors,
-59,trastuzumab,,,,,ERBB2 inihibitor,Growth factor receptor inhibitors,
-60,BYL719 + HSP990,,,,,combination,combination,
-61,everolimus,,,,,mTOR inhibitor,Kinase inhibitors,
-62,INC280 + trastuzumab,,,,,combination,combination,
+drug_id,drug_name,standard_name,targets,treatment_type,class,class_name,source
+1,binimetinib,Binimetinib,,,(MEK 1/2) inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/10288191
+2,BKM120,Buparlisib,,,pan-class I (PI3K) inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/16654980
+3,BKM120 + encorafenib,Buparlisib + Encorafenib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/16654980,https://pubchem.ncbi.nlm.nih.gov/compound/50922675"
+4,CGM097,Nvp-cgm097,,,MDM2 Inhibitor,MDM2 Inhibitor,https://pubchem.ncbi.nlm.nih.gov/compound/53240420
+5,CLR457,NA,,,pan-PI3K inhibitor,Kinase inhibitors,NA
+6,dacarbazine,DTIC-Dome,,,Alkylating Drug,Chemotherapeutic agents,https://pubchem.ncbi.nlm.nih.gov/compound/5353562
+7,encorafenib,Encorafenib,,,Raf kinase inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/50922675
+8,encorafenib + binimetinib,Encorafenib + Binimetinib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/50922675,https://pubchem.ncbi.nlm.nih.gov/compound/10288191"
+9,LDE225,Sonidegib,,,Smo antagonist,Smo antagonist,https://pubchem.ncbi.nlm.nih.gov/compound/24775005
+10,LDK378,Ceritinib,,,tyrosine kinase receptor inhibitor (TKI),Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/57379345
+11,LEE011,Ribociclib,,,cyclin-dependent kinase (CDK) inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/44631912
+12,LEE011 + binimetinib,Ribociclib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/44631912,https://pubchem.ncbi.nlm.nih.gov/compound/10288191"
+13,LEE011 + encorafenib,Ribociclib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/44631912,https://pubchem.ncbi.nlm.nih.gov/compound/50922675"
+14,LGW813,NA,,,Inhibitor Of Apoptosis inhibitors,Inhibitor Of Apoptosis inhibitors,NA
+15,TAS266,NA,,,DR5 receptor agonist,Growth factor receptor inhibitors,NA
+16,untreated,,,,single/unknown,single/unknown,NA
+17,WNT974,NA,,,porcupine (PORCN) inhibitor,Wnt signaling inhibitors,https://pubchem.ncbi.nlm.nih.gov/substance/375590111
+18,BGJ398,Infigratinib,,,pan FGFR inhibitor,Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/53235510
+19,BKM120 + binimetinib,Buparlisib + Binimetinib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/16654980https://pubchem.ncbi.nlm.nih.gov/compound/10288191"
+20,BYL719,Alpelisib,,,(PI3K) inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/56649450
+21,BYL719 + LGH447,Alpelisib + LGH447,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/56649450https://pubchem.ncbi.nlm.nih.gov/compound/44814409"
+22,BYL719 + LJM716,Alpelisib + Elgemtumab,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/56649450https://pubchem.ncbi.nlm.nih.gov/substance/252827373"
+23,cetuximab,Cetuximab,,,EGFR inihibitor,Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/85668777
+24,CKX620,NA,,,MAPK - kinase inhibitor,Kinase inhibitors,NA
+25,erlotinib,Erlotinib,,,EGFR inhibitor,Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/176871
+26,HDM201,Siremadlin,,,MDM2 inhibitor,MDM2 inhibitor,https://pubchem.ncbi.nlm.nih.gov/compound/71678098
+27,HSP990,Hsp990 (nvp-hsp990),,,HSP90 inhibitor,HSP90 inhibitor,https://pubchem.ncbi.nlm.nih.gov/compound/46216556
+28,INC280,Capmatinib,,,c-Met (HGFR) inhibitor,Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/25145656
+29,LCL161 + paclitaxel,NA + Paclitaxel,,,combination,combination,"NAhttps://pubchem.ncbi.nlm.nih.gov/compound/36314"
+30,LFW527 + binimetinib,NA + Binimetinib,,,combination,combination,"NAhttps://pubchem.ncbi.nlm.nih.gov/compound/10288191"
+31,LGH447,LGH447,,,pan-PIM protein kinase inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/44814409
+32,LLM871,NA,,,FGFR2/4 antibody-drug conjugate,Growth factor receptor inhibitors,NA
+33,paclitaxel,Paclitaxel,,,Microtubule Inhibitor,Chemotherapeutic agents,https://pubchem.ncbi.nlm.nih.gov/compound/36314
+34,5FU,5-Fluorouracil,,,Nucleoside Metabolic Inhibitor,Chemotherapy,https://pubchem.ncbi.nlm.nih.gov/compound/3385
+35,BKM120 + LJC049,Buparlisib + NA,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/16654980NA"
+36,BYL719 + binimetinib,Alpelisib + Binimetinib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/5664950https://pubchem.ncbi.nlm.nih.gov/compound/10288191"
+37,BYL719 + cetuximab,Alpelisib + Cetuximab,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/5664950https://pubchem.ncbi.nlm.nih.gov/compound/85668777"
+38,BYL719 + cetuximab + encorafenib,Alpelisib + Cetuximab + Encorafenib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/5664950https://pubchem.ncbi.nlm.nih.gov/compound/85668777https://pubchem.ncbi.nlm.nih.gov/compound/50922675"
+39,BYL719 + encorafenib,Alpelisib + Encorafenib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/56649450https://pubchem.ncbi.nlm.nih.gov/compound/50922675"
+40,cetuximab + encorafenib,Cetuximab + Encorafenib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/85668777https://pubchem.ncbi.nlm.nih.gov/compound/50922675"
+41,LJC049,NA,,,Wnt signaling,Wnt signaling inhibitors,NA
+42,LKA136,NA,,,Neurotrophic Receptor Tyrosine Kinase inhibitor,Kinase inhibitors,NA
+43,abraxane,Paclitaxel,,,Microtubule Inhibitor,Chemotherapeutic agents,https://pubchem.ncbi.nlm.nih.gov/compound/36314
+44,binimetinib-3.5mpk,Binimetinib,,,combination,combination,https://pubchem.ncbi.nlm.nih.gov/compound/10288191
+45,BKM120 + LDE225,Buparlisib + Sonidegib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/16654980https://pubchem.ncbi.nlm.nih.gov/compound/24775005"
+46,figitumumab,VE267FC2UB,,,IGF-1R monoclonal antibody,Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/substance/135324791
+47,figitumumab + binimetinib,VE267FC2UB + Binimetinib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/substance/135324791https://pubchem.ncbi.nlm.nih.gov/compound/10288191"
+48,gemcitabine-50mpk,Gemcitabine,,,combination,combination,https://pubchem.ncbi.nlm.nih.gov/compound/60750
+49,INC424,Ruxolitinib,,,JAK inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/25126798
+50,INC424 + binimetinib,Ruxolitinib + Binimetinib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/25126798https://pubchem.ncbi.nlm.nih.gov/compound/10288191"
+51,trametinib,Trametinib,,,(MEK 1/2) inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/11707110
+52,BYL719 + LEE011,Alpelisib + Ribociclib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/56649450https://pubchem.ncbi.nlm.nih.gov/compound/44631912"
+53,LEE011 + everolimus,Ribociclib + Everolimus,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/44631912https://pubchem.ncbi.nlm.nih.gov/compound/6442177"
+54,LFA102,1555716-16-9,,,prolactin receptor (PRLR),Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/substance/381127614
+55,LFW527 + everolimusNA + Everolimus,,,combination,combination,"NAhttps://pubchem.ncbi.nlm.nih.gov/compound/6442177"
+56,LJM716,elgemtumab,,,anti-ERBB3 (HER3) investigational monoclonal antibody,Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/substance/252827373
+57,LJM716 + trastuzumab,Elgemtumab + Trastuzumab,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/substance/252827373https://pubchem.ncbi.nlm.nih.gov/substance/178101775"
+58,tamoxifen,Tamoxifen,,,selective estrogen receptor modulator (SERM),Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/25010734
+59,trastuzumab,trastuzumab,,,ERBB2 inihibitor,Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/substance/178101775
+60,BYL719 + HSP990,Alpelisib + Hsp990 (nvp-hsp990),,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/56649450https://pubchem.ncbi.nlm.nih.gov/compund/46216556"
+61,everolimus,Everolimus,,,mTOR inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/6442177
+62,INC280 + trastuzumab,Capmatinib + Trastuzumab,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compund/25145656https://pubchem.ncbi.nlm.nih.gov/substance/178101775"

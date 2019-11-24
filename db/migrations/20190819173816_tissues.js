@@ -1,15 +1,13 @@
 
-exports.up = function(knex, Promise) {
+exports.up = function (knex, Promise) {
     return knex.schema.createTable('tissues', (table) => {
         table.increments('tissue_id')
-             .primary();
+            .primary();
         table.string('tissue_name')
-             .notNullable();
-        table.string('tissue_code')
-             .notNullable();
-    })
+            .notNullable();
+    });
 };
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
     return knex.schema.dropTable('tissues');
 };

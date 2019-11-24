@@ -269,7 +269,7 @@ class Search extends React.Component {
                     <div className="select-component" onKeyPress={this.handleKeyPress}>
                         <h1>
                             {' '}
-                            <span>XevaDB:</span>
+                            <span style={{ color: '#3453b0', fontSize: '24px' }}>XevaDB:</span>
                             {' '}
                                 A Database For PDX Pharmacogenomic Data
                             {' '}
@@ -279,7 +279,7 @@ class Search extends React.Component {
                                 <Select
                                     options={datasets}
                                     styles={customStyles}
-                                    placeholder="Select the datasets"
+                                    placeholder="Select the Dataset"
                                     onChange={this.handleDatasetChange}
                                 />
                             </div>
@@ -287,7 +287,7 @@ class Search extends React.Component {
                                 <Select
                                     options={drugs}
                                     styles={customStyles}
-                                    placeholder="Search for Drug (eg. CLR457)"
+                                    placeholder="Search for the Drug (eg. CLR457)"
                                     onChange={this.handleDrugChange}
                                     isMulti
                                     isSearchable
@@ -332,7 +332,7 @@ class Search extends React.Component {
                             <Select
                                 options={genes}
                                 styles={customStyles}
-                                placeholder="User Defined List"
+                                placeholder="User Defined or Pre-Defined Gene List"
                                 onChange={this.handleGeneListChange}
                             />
                         </div>
