@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactTable from 'react-table';
-import 'react-table/react-table.css';
 import TableWrapper from '../Drug/DrugTableStyle';
+import Spinner from '../SpinnerUtil/Spinner';
+import 'react-table/react-table.css';
 
 const h1Style = {
     color: '#3453b0',
@@ -10,6 +11,7 @@ const h1Style = {
 
 const DatasetTable = (props) => {
     const { data, dataLength } = props;
+    const loading = !(dataLength > 0);
 
     const columns = [
         {
@@ -31,19 +33,19 @@ const DatasetTable = (props) => {
     ];
 
     return (
-
-        <div>
-            <h1 style={h1Style}> List of Datasets </h1>
-            <TableWrapper className="wrap">
-                <ReactTable
-                    data={data}
-                    columns={columns}
-                    className="-highlight"
-                    showPagination={false}
-                    pageSize={dataLength > 0 ? dataLength + 1 : 7}
-                />
-            </TableWrapper>
-        </div>
+        loading ? (<Spinner loading={loading} />)
+            : (
+                <TableWrapper className="wrap">
+                    <h1 style={h1Style}> List of Datasets </h1>
+                    <ReactTable
+                        data={data}
+                        columns={columns}
+                        className="-highlight"
+                        showPagination={false}
+                        pageSize={dataLength > 0 ? dataLength + 1 : 7}
+                    />
+                </TableWrapper>
+            )
     );
 };
 

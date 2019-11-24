@@ -3,6 +3,7 @@ import axios from 'axios';
 import ReactTable from 'react-table';
 import TableWrapper from './DrugTableStyle';
 import pubchem from '../../images/pclogo_220.gif';
+import Spinner from '../SpinnerUtil/Spinner';
 import 'react-table/react-table.css';
 
 const h1Style = {
@@ -16,6 +17,7 @@ class DrugTable extends React.Component {
         // setting the states for the data.
         this.state = {
             data: [],
+            loading: true,
         };
     }
 
@@ -24,12 +26,13 @@ class DrugTable extends React.Component {
             .then((response) => {
                 this.setState({
                     data: response.data,
+                    loading: false,
                 });
             });
     }
 
     render() {
-        const { data } = this.state;
+        const { data, loading } = this.state;
 
         // adding image to each of the object in array.
         data.forEach((val) => {
@@ -76,18 +79,20 @@ class DrugTable extends React.Component {
         ];
 
         return (
-            <div>
-                <h1 style={h1Style}> List of Drugs </h1>
-                <TableWrapper className="wrap">
-                    <ReactTable
-                        data={data}
-                        columns={columns}
-                        className="-highlight"
-                        defaultPageSize={10}
-                        filterable
-                    />
-                </TableWrapper>
-            </div>
+            loading
+                ? (<Spinner loading={loading} />)
+                : (
+                    <TableWrapper className="wrap">
+                        <h1 style={h1Style}> List of Drugs </h1>
+                        <ReactTable
+                            data={data}
+                            columns={columns}
+                            className="-highlight"
+                            defaultPageSize={10}
+                            filterable
+                        />
+                    </TableWrapper>
+                )
         );
     }
 }
