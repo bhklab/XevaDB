@@ -50,7 +50,7 @@ class DonutTissue extends React.Component {
                     margin: {
                         top: 320, right: 100, bottom: 100, left: 380,
                     },
-                    arc: { outerRadius: 280, innerRadius: 150 },
+                    arc: { outerRadius: 260, innerRadius: 150 },
                 });
             });
     }
