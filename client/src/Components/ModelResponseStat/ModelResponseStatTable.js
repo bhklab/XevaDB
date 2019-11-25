@@ -1,11 +1,11 @@
 /* eslint-disable max-len */
 /* eslint-disable react/no-deprecated */
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable camelcase */
 /* eslint-disable class-methods-use-this */
 import React from 'react';
 import axios from 'axios';
 import StyleTable from './ModelResponseStyle';
+import BatchStatTable from './BatchResponseStatTable';
 
 class StatTable extends React.Component {
     constructor(props) {
@@ -13,7 +13,9 @@ class StatTable extends React.Component {
         // data for the table.
         this.state = {
             data: [],
-            tableHeader: ['Patient', 'Model', 'Drug', 'mRECIST', 'Slope', 'AUC', 'Best Average Response'],
+            batchData: [],
+            tableHeader: ['Patient', 'Model', 'Drug',
+                'mRECIST', 'Slope', 'AUC', 'Best Average Response', 'Survival'],
         };
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
@@ -22,22 +24,24 @@ class StatTable extends React.Component {
 
     componentWillMount() {
         const { drugParam, patientParam } = this.props;
-        axios.get(`/api/v1/stats?patient=${patientParam}&drug=${drugParam}`)
-            .then((response) => {
-                this.parseData(response);
-            });
+        const getModelResponse = axios.get(`/api/v1/stats?patient=${patientParam}&drug=${drugParam}`);
+        const getBatchResponse = axios.get(`/api/v1/batchstat?patient=${patientParam}&drug=${drugParam}`);
+
+        Promise.all([getBatchResponse, getModelResponse]).then((response) => {
+            this.parseData(response);
+        });
     }
 
     parseData(response) {
         this.setState({
-            data: response.data,
+            data: response[1].data,
+            batchData: response[0].data,
         });
     }
 
     createTable() {
         // this will create the table data (each row for corresponding data).
         const { data } = this.state;
-
         // this will create newData array of objects for the table.
         const newData = [];
         let total = 0;
@@ -59,7 +63,8 @@ class StatTable extends React.Component {
 
         const table = newData.map((eachdata, index) => {
             const {
-                patient, model, drug, bar, mRECIST, slope, AUC,
+                patient, model, drug,
+                bar, mRECIST, slope, AUC, survival,
             } = eachdata;
             return (
                 <tr key={index}>
@@ -70,6 +75,7 @@ class StatTable extends React.Component {
                     <td>{mRECIST}</td>
                     <td>{slope}</td>
                     <td>{AUC}</td>
+                    <td>{survival}</td>
                 </tr>
             );
         });
@@ -84,17 +90,21 @@ class StatTable extends React.Component {
     }
 
     render() {
+        const { batchData } = this.state;
         return (
-            <div className="curve-wrapper" style={{ marginTop: '0px', padding: '60px 0px' }}>
-                <h1 id="title">Statistics (Response Evaluation)</h1>
-                <StyleTable>
-                    <table id="stats-table">
-                        <tbody>
-                            <tr>{this.createTableHeader()}</tr>
-                            {this.createTable()}
-                        </tbody>
-                    </table>
-                </StyleTable>
+            <div>
+                <div className="curve-wrapper" style={{ marginTop: '0px', padding: '50px 0px' }}>
+                    <h1 id="title">Statistics (Model Response)</h1>
+                    <StyleTable>
+                        <table id="stats-table">
+                            <tbody>
+                                <tr>{this.createTableHeader()}</tr>
+                                {this.createTable()}
+                            </tbody>
+                        </table>
+                    </StyleTable>
+                </div>
+                <BatchStatTable data={batchData} />
             </div>
         );
     }
