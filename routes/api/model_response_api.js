@@ -48,8 +48,8 @@ const getModelResponseBasedOnDataset = function (request, response) {
             'drugs.drug_id',
         )
         .where('model_information.dataset_id', param_dataset)
-    // .whereIn('model_response.model_id', distinctPatient)
-    // .andWhere('model_response.response_type', 'mRECIST')
+        // .whereIn('model_response.model_id', distinctPatient)
+        // .andWhere('model_response.response_type', 'mRECIST')
         .andWhere(function () {
             this.where('model_response.response_type', 'mRECIST');
             // .orWhereNull('model_response.response_type')
@@ -202,13 +202,9 @@ const getModelResponseStats = function (request, response) {
     // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
     paramDrug = paramDrug.replace(/\s\s\s/g, ' + ');
 
-    knex.select()
-        .from('model_response')
-        .leftJoin(
-            'model_information',
-            'model_response.model_id',
-            'model_information.model_id',
-        )
+    // grabs the batch id based on the patient id and drug param passed.
+    const batchId = knex.select('batch_id')
+        .from('model_information')
         .leftJoin(
             'patients',
             'model_information.patient_id',
@@ -220,23 +216,56 @@ const getModelResponseStats = function (request, response) {
             'drugs.drug_id',
         )
         .leftJoin(
-            'models',
+            'batch_information',
+            'batch_information.model_id',
             'model_information.model_id',
-            'models.model_id',
         )
         .where('patients.patient', paramPatient)
-        .andWhere(function () {
-            this.where('drugs.drug_name', paramDrug)
-                .orWhere('drugs.drug_name', 'water')
-                .orWhere('drugs.drug_name', 'untreated');
-        })
-        .then((data) => {
-            response.send(data);
-        })
-        .catch((error) => response.status(500).json({
-            status: 'an error has occured in stats route at getModelResponseStats',
-            data: error,
-        }));
+        .andWhere('drugs.drug_name', paramDrug);
+
+    batchId.then(() => {
+        knex.select()
+            .from('model_response')
+            .leftJoin(
+                'model_information',
+                'model_response.model_id',
+                'model_information.model_id',
+            )
+            .leftJoin(
+                'patients',
+                'model_information.patient_id',
+                'patients.patient_id',
+            )
+            .leftJoin(
+                'drugs',
+                'model_information.drug_id',
+                'drugs.drug_id',
+            )
+            .leftJoin(
+                'batch_information',
+                'batch_information.model_id',
+                'model_information.model_id',
+            )
+            .leftJoin(
+                'models',
+                'model_information.model_id',
+                'models.model_id',
+            )
+            .where('patients.patient', paramPatient)
+            .andWhere(function () {
+                this.where('drugs.drug_name', paramDrug)
+                    .orWhere('drugs.drug_name', 'water')
+                    .orWhere('drugs.drug_name', 'untreated');
+            })
+            .andWhere('batch_id', batchId)
+            .then((data) => {
+                response.send(data);
+            })
+            .catch((error) => response.status(500).json({
+                status: 'an error has occured in stats route at getModelResponseStats',
+                data: error,
+            }));
+    });
 };
 
 
