@@ -22,7 +22,7 @@ class Search extends React.Component {
             selectedGeneSearch: ['Enter Gene Symbol(s)'],
             selectedDrugs: [],
             selectedDataset: '',
-            genomicsValue: ['All', 'Mutation', 'CNV', 'RNASeq'],
+            genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'],
             selectedGenomics: [],
             allDrugs: [],
             threshold: 2,
