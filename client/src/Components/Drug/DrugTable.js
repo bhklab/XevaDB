@@ -54,6 +54,13 @@ class DrugTable extends React.Component {
                 sortable: true,
             },
             {
+                Header: 'Standard Name',
+                accessor: 'standard_name',
+                minWidth: 150,
+                Cell: (props) => capitalize(props.value),
+                sortable: true,
+            },
+            {
                 Header: 'Targets',
                 accessor: 'class',
                 minWidth: 150,
@@ -63,7 +70,7 @@ class DrugTable extends React.Component {
             {
                 Header: 'Class',
                 accessor: 'class_name',
-                minWidth: 230,
+                minWidth: 220,
                 Cell: (props) => capitalize(props.value),
                 sortable: true,
             },
@@ -71,7 +78,14 @@ class DrugTable extends React.Component {
                 Header: 'Source',
                 Cell: (val) => (
                     <div>
-                        <img height={38} src={val.original.img} alt="pubchem links" />
+                        <a
+                            className="hover"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={`${val.original.source}`}
+                        >
+                            <img height={38} src={val.original.img} alt="pubchem links" />
+                        </a>
                     </div>
                 ),
                 sortable: false,

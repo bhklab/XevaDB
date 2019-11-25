@@ -9,7 +9,7 @@ class BatchStatTable extends React.Component {
         super(props);
         // data for the table.
         this.state = {
-            tableHeader: ['Batch', 'TGI', 'Angle', 'abc'],
+            tableHeader: ['Batch', 'TGI', 'Angle', 'ABC'],
         };
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
