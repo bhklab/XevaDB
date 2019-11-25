@@ -57,7 +57,7 @@ class BatchStatTable extends React.Component {
 
     render() {
         return (
-            <div className="curve-wrapper" style={{ marginTop: '0px', padding: '10px 0px 80px 0px' }}>
+            <div className="curve-wrapper" style={{ marginTop: '0px', padding: '60px 0px 20px 0px' }}>
                 <h1 id="title">Statistics (Batch Response)</h1>
                 <StyleTable>
                     <table id="stats-table">
