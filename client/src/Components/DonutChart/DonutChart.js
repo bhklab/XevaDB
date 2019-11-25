@@ -237,7 +237,7 @@ class DonutChart extends React.Component {
             .data(data)
             .enter()
             .append('rect')
-            .attr('x', (width) - 240)
+            .attr('x', (width) - 290)
             .attr('y', (d, i) => ((30 * i) - (data.length * 15)))
             .attr('width', 20)
             .attr('height', 20)
@@ -247,10 +247,10 @@ class DonutChart extends React.Component {
             .data(data)
             .enter()
             .append('text')
-            .attr('x', (width) - 200)
+            .attr('x', (width) - 250)
             .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
             .attr('fill', (d) => color(d.value))
-            .text((d) => d.id.charAt(0).toUpperCase() + d.id.slice(1));
+            .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)} (${d.value})`);
     }
 
     render() {
