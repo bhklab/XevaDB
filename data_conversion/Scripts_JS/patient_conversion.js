@@ -22,7 +22,7 @@ const writableStream = fs.createWriteStream('../Final_Csv_File/patients_final.cs
 // synch. way of reading through the files and push createReadStream for each file with it's path.
 const files = fs.readdirSync(`..${file_folder}`);
 const total_files = files.length;
-let id = 1;
+let id = 278;
 
 // reads the input file.
 function outputData() {
@@ -34,7 +34,7 @@ function outputData() {
             csvStream.pipe(writableStream);
             const patients = [];
             results.forEach((data) => {
-                if (data[0] !== '' && data[0] !== 'model.id') {
+                if (data[0] !== '' && data[0] !== 'model.id' && data[1] !== 'model.id') {
                     if (!(patients.includes(data[3]))) {
                         patients.push(data[3]);
                     }

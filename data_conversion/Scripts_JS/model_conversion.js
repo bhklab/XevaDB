@@ -18,7 +18,7 @@ const file_final = (file_folder.split('/'))[2];
 // this array is required to store the lines read from the input csv file.
 const results = [];
 const streams = [];
-let id = 1;
+let id = 4707;
 
 // creates a write stream with headers we require in final csv file and creating a writable stream with the final file.
 const csvStream = csv.createWriteStream({ headers: ['model_id', 'model'] });
@@ -38,7 +38,7 @@ function outputData() {
             csvStream.pipe(writableStream);
             const models = [];
             results.forEach((data) => {
-                if (data[0] !== '' && data[0] !== 'model.id') {
+                if (data[0] !== '' && data[0] !== 'model.id' && data[1] !== 'model.id') {
                     if (!(models.includes(data[1]))) {
                         models.push(data[1]);
                     }

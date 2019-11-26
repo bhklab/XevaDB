@@ -42,7 +42,7 @@ function outputData() {
         .on('end', () => {
             csvStream.pipe(writableStream);
             results.forEach((data) => {
-                if ((data[0] === '') || (data[0] === 'batch.id')) {} else {
+                if ((data[0] === '') || (data[0] === 'batch.id' || (data[1] === 'batch.id')) {} else {
                     csvStream.write({
                         id: id++, batch_id: mapped_data[data[1]], response_type: data[2], value: data[3],
                     });

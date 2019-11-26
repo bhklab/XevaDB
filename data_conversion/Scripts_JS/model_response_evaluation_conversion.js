@@ -33,7 +33,7 @@ const writableStream = fs.createWriteStream(`../Final_Csv_File/model_${file_fina
 
 
 // reads the input file.
-let id = 1;
+let id = 23532;
 function outputData() {
     MultiStream(streams).pipe(csv())
         .on('data', (data) => {
@@ -42,7 +42,7 @@ function outputData() {
         .on('end', () => {
             csvStream.pipe(writableStream);
             results.forEach((data) => {
-                if ((data[0] === '') || (data[0] === 'drug')) {} else {
+                if ((data[0] === '') || (data[0] === 'drug') || (data[1] === 'drug')) {} else {
                     csvStream.write({
                         id: id++, drug_id: mapped_data[data[1]], model_id: mapped_data[data[2]], response_type: data[3], value: data[4],
                     });

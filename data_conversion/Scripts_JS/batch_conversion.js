@@ -15,7 +15,7 @@ const file_final = (file_folder.split('/'))[2];
 // this array is required to store the lines read from the input csv file.
 const results = [];
 const streams = [];
-let id = 1;
+let id = 4484;
 
 // creating a writable stream which writes to growthcurve_data csv file.
 const csvStream = csv.createWriteStream({ headers: ['batch_id', 'batch'] });
@@ -35,7 +35,7 @@ function outputData() {
             csvStream.pipe(writableStream);
             batches = [];
             results.forEach((data) => {
-                if (data[0] !== '') {
+                if (data[0] !== '' && data[1] !== 'batch.id') {
                     if (!(batches.includes(data[1]))) {
                         batches.push(data[1]);
                     }
@@ -51,4 +51,3 @@ function outputData() {
 
 // calling function to loop through all the files in folder and gives the output
 file_reader(files, total_files, file_folder, outputData, streams);
-
