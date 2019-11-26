@@ -34,6 +34,7 @@ class TumorGrowthCurve extends React.Component {
                     return self.indexOf(value) === index;
                 }
                 const batches = [];
+
                 for (let i = 0; i < response.data.length; i++) {
                     batches.push(response.data[i].batch);
                 }
@@ -72,7 +73,7 @@ class TumorGrowthCurve extends React.Component {
         for (let i = 0; i < data.length; i++) {
             batches.push(data[i].batch);
             if (data[i].batch === batchSelect) {
-                if (data[i].time === 0) {
+                if (data[i].time === 0 || data[i].time === -39) {
                     const newDatapt = {
                         exp_type: data[i].type,
                         batch: data[i].patient_id,
@@ -94,7 +95,7 @@ class TumorGrowthCurve extends React.Component {
 
                     };
                     dataFormatted.push(newDatapt);
-                } else if (data[i].time <= 200) {
+                } else if (data[i].time <= 500) {
                     dataFormatted[dataFormatted.length - 1].pdx_points[0]
                         .times.push(parseInt(data[i].time));
                     dataFormatted[dataFormatted.length - 1].pdx_points[0]
@@ -905,7 +906,7 @@ class TumorGrowthCurve extends React.Component {
                         <h1>
 Drug ID =
                             {' '}
-                            <span style={{ color: '#cd5686' }}>{drugParam.replace(/\s\s\s/g, ' + ')}</span>
+                            <span style={{ color: '#cd5686' }}>{drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
                             {' '}
 and Patient ID =
                             {' '}
