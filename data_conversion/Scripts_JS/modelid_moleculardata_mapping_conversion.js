@@ -40,7 +40,7 @@ function outputData() {
         .on('end', () => {
             csvStream.pipe(writableStream);
             results.map((data) => {
-                if (data[0] == 'model.id' || data[0] == '') {} else {
+                if (data[0] === 'model.id' || data[0] === '' || data[1] === 'model.id') {} else {
                     csvStream.write({
                         id: id++, model_id: mapped_data[data[1]], sequencing_uid: mapped_data[data[2]], mDataType: data[3],
                     });
