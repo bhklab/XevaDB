@@ -46,6 +46,7 @@ function outputData() {
             });
 
             models.forEach((model) => {
+                // model = model.split('\r')[0];
                 csvStream.write({ model_id: id++, model });
             });
             console.log('Done with the conversion');
