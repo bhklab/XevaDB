@@ -2,11 +2,13 @@ import csv
 import re
 
 
-files = [ '../Initial_Csv_File/mutation_data/mutation.csv' ]
+files = [ '../Initial_Csv_File/mutation_data/mutation.csv',
+            '../Initial_Csv_File/RNASeq_data/rna_sequencing.csv'
+        ]
 
 output_file = '../Final_Csv_File/sequencings_final.csv'
 unique_list = []
-value = 0
+value = 191
 
 for file in files:
     with open(file, 'r') as read_file:

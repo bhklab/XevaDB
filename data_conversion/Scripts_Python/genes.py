@@ -2,10 +2,10 @@ import csv
 import re
 
 
-files = [   '../Initial_Csv_File/mutation_data/mutation.csv', 
+files = [
+            '../Final_Csv_File/genes_final.csv',
+            '../Initial_Csv_File/mutation_data/mutation.csv',
             '../Initial_Csv_File/RNASeq_data/rna_sequencing.csv'
-            # '../Initial_Csv_File/extrafiles/mutation.csv', 
-            # '../Initial_Csv_File/extrafiles/rna_sequencing.csv'
         ]
 
 output_file = '../Final_Csv_File/genes_final.csv'
@@ -14,6 +14,7 @@ value = 0
 
 for file in files:
     with open(file, 'r') as read_file:
+        print(read_file)
         for row in read_file:
             #print(row)
             if(re.search(r'\bgene.id\b', row)):
