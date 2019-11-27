@@ -16,6 +16,7 @@ const modelResponse = require('./api/model_response_api');
 const mutation = require('./api/mutation_api');
 const drugScreening = require('./api/drug_screening');
 const rnasequencing = require('./api/rnaseq_api');
+const copyNumberVariation = require('./api/copy_number_variation_api');
 const awtauthentication = require('./api/auth_api');
 const batchResponse = require('./api/batch_response_api');
 const verifytoken = require('./api/verify_token_api');
@@ -79,6 +80,11 @@ router.get('/v1/treatment', drugScreening.getDrugScreening);
 // APIs related to rnasequencing table.
 router.get('/v1/rnaseq/:dataset', mixed.isValidId, rnasequencing.getRnaSeqBasedOnDataset);
 router.get('/v1/rnaseq', rnasequencing.getRnaSeqBasedPerDatasetBasedOnGenes);
+
+
+// APIs related to copy_number_variation table.
+router.get('/v1/cnv/:dataset', mixed.isValidId, copyNumberVariation.getCopyNumberVariationBasedOnDataset);
+router.get('/v1/cnv', copyNumberVariation.getCopyNumberVariationBasedPerDatasetBasedOnGenes);
 
 
 // Authorization APIs.
