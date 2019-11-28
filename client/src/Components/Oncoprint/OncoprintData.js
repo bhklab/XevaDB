@@ -16,10 +16,13 @@ class OncoprintData extends React.Component {
             hmap_patients: [],
             genes_mut: [],
             genes_rna: [],
+            genes_cnv: [],
             patient_mut: [],
             patient_rna: [],
+            patient_cnv: [],
             data_mut: [],
             data_rna: [],
+            data_cnv: [],
             dimensions: {},
             margin: {},
         };
@@ -36,8 +39,9 @@ class OncoprintData extends React.Component {
         if (this.state.dataset > 0) {
             const mutation_data = axios.get(`/api/v1/mutation/${this.state.dataset}`);
             const rnaseq_data = axios.get(`/api/v1/rnaseq/${this.state.dataset}`);
+            const cnv_data = axios.get(`/api/v1/cnv/${this.state.dataset}`);
 
-            Promise.all([mutation_data, rnaseq_data])
+            Promise.all([mutation_data, rnaseq_data, cnv_data])
                 .then((response) => {
                     this.updateResults(response);
                 });
@@ -52,8 +56,8 @@ class OncoprintData extends React.Component {
     updateResults(onco) {
         // total patients.
         const dataset = onco[0].data;
-        let hmap_patients = [];
         // grabbing the total patients from hmap.
+        let hmap_patients = [];
         hmap_patients = dataset.pop();
 
         // setting patients genes and data for
@@ -61,7 +65,7 @@ class OncoprintData extends React.Component {
         const patient = {};
         const genes = {};
         const data = {};
-        const genomics = ['Mutation', 'RNASeq'];
+        const genomics = ['Mutation', 'RNASeq', 'CNV'];
 
         genomics.forEach((value, i) => {
             const val = value.substring(0, 3).toLowerCase();
@@ -85,15 +89,17 @@ class OncoprintData extends React.Component {
             data[`data_${val}`] = onco[i].data;
         });
 
-
         this.setState({
             hmap_patients,
             patient_mut: patient.patient_mut,
             patient_rna: patient.patient_rna,
+            patient_cnv: patient.patient_cnv,
             genes_mut: genes.genes_mut,
             genes_rna: genes.genes_rna,
+            genes_cnv: genes.genes_cnv,
             data_mut: data.data_mut,
             data_rna: data.data_rna,
+            data_cnv: data.data_cnv,
             dimensions: { height: 35, width: 20 },
             margin: {
                 top: 100, right: 200, bottom: 0, left: 250,
@@ -113,10 +119,13 @@ class OncoprintData extends React.Component {
                     hmap_patients={this.state.hmap_patients}
                     genes_mut={this.state.genes_mut}
                     genes_rna={this.state.genes_rna}
+                    genes_cnv={this.state.genes_cnv}
                     patient_mut={this.state.patient_mut}
                     patient_rna={this.state.patient_rna}
+                    patient_cnv={this.state.patient_cnv}
                     data_mut={this.state.data_mut}
                     data_rna={this.state.data_rna}
+                    data_cnv={this.state.data_cnv}
                 />
             </div>
         );

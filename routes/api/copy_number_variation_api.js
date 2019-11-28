@@ -8,21 +8,6 @@ const knex = require('../../db/knex1');
 const getCopyNumberVariationBasedOnDataset = function (request, response) {
     const param_dataset = request.params.dataset;
 
-    // get the distinct patients or total patients from model information table.
-    // as some patient ids are missing from oncoprint
-    // because data is not available for that patient/model.
-    const modelInformationDistinctPatient = knex('model_information')
-        .distinct('patients.patient')
-        .from('model_information')
-        .leftJoin(
-            'patients',
-            'model_information.patient_id',
-            'patients.patient_id',
-        )
-        .where({
-            dataset_id: param_dataset,
-        });
-
     // to get the number of distinct patient ids.
     const distinctPatient = knex.distinct('modelid_moleculardata_mapping.sequencing_uid')
         .from('model_information')
@@ -35,10 +20,8 @@ const getCopyNumberVariationBasedOnDataset = function (request, response) {
         .andWhere('modelid_moleculardata_mapping.mDataType', 'cnv');
 
     // copy_number_variation data.
-    Promise.all([modelInformationDistinctPatient, distinctPatient])
-        .then((total) => {
-            const patientRows = JSON.parse(JSON.stringify(total[0]));
-            const data = [];
+    distinctPatient
+        .then(() => {
             // grabbing the copy_number_variation data based on patients and limiting genes to 1-30.
             knex.select('genes.gene_name', 'sequencing.sequencing_id', 'copy_number_variation.value')
                 .from('copy_number_variation')
@@ -57,6 +40,7 @@ const getCopyNumberVariationBasedOnDataset = function (request, response) {
                 .then((copy_number_variation_data) => {
                     let gene_id = '';
                     let i = 0;
+                    const data = [];
                     const usersRows = JSON.parse(JSON.stringify(copy_number_variation_data));
                     usersRows.forEach((element) => {
                         if (element.gene_name !== gene_id) {
@@ -69,10 +53,6 @@ const getCopyNumberVariationBasedOnDataset = function (request, response) {
                             data[i - 1][element.sequencing_id] = element.value;
                         }
                     });
-
-                    // array of all the patients belonging to a particular dataset.
-                    const patient = patientRows.map((element) => element.patient);
-                    data.push(patient);
 
                     // sending the response.
                     response.send(data);
