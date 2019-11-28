@@ -29,16 +29,21 @@ class Oncoprint extends React.Component {
         const { hmap_patients } = this.props;
         const { data_mut } = this.props;
         const { data_rna } = this.props;
+        const { data_cnv } = this.props;
         const { genes_mut } = this.props;
         const { genes_rna } = this.props;
+        const { genes_cnv } = this.props;
         const { patient_mut } = this.props;
         const { patient_rna } = this.props;
+        const { patient_cnv } = this.props;
 
-        this.makeOncoprint(node, className, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, genes_mut, genes_rna, patient_mut, patient_rna);
+        this.makeOncoprint(node, className, dimensions, margin, threshold, hmap_patients,
+            data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv);
     }
 
 
-    makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, genes_mut, genes_rna, patient_mut, patient_rna) {
+    makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
+        console.log(data_cnv, genes_cnv, patient_cnv, hmap_patients);
         // to merge two arrays and give the unique values.
         // eslint-disable-next-line no-extend-native
         Array.prototype.unique = function () {
@@ -50,7 +55,7 @@ class Oncoprint extends React.Component {
             }
             return a;
         };
-        const genes = genes_mut.concat(genes_rna).unique();
+        const genes = genes_mut.concat(genes_rna).concat(genes_cnv).unique();
 
         this.node = node;
 
@@ -153,6 +158,7 @@ class Oncoprint extends React.Component {
         // collect info about alterations per gene/patient for plotting later
         const gene_alterations = {};
         const patient_alterations = [];
+        console.log(genes_mut);
         if (genes_mut.length > 0) {
             for (let i = 0; i < genes_mut.length; i++) {
                 gene_alterations[genes_mut[i]] = { mut: 0, amp: 0, del: 0 };
@@ -163,26 +169,33 @@ class Oncoprint extends React.Component {
             }
         }
 
-        // take the difference of patient_mut from hmap_patients
+        // take the difference of patient_mut/cnv/rna from hmap_patients
         let diff = [];
         if (patient_mut.length > 0) {
             diff = hmap_patients.filter((x) => !patient_mut.includes(x));
-        } else {
+        } else if (patient_mut.length === 0 && patient_rna.length > 0) {
             diff = hmap_patients.filter((x) => !patient_rna.includes(x));
+        } else {
+            diff = hmap_patients.filter((x) => !patient_cnv.includes(x));
         }
-
 
         /** Coloring the rectangles based on mutation data * */
 
         // this will take four parameters and color the rectangle accordingly
         const colorReactangles = (value, color, i, j) => {
+            console.log(value, color);
             // setting a = 12 if value is mut
             const a = value === 'mut' ? 12 : 0;
             // setting the color based on value param.
-            if (value !== 'empty' && value !== 'highrna' && value !== 'lowrna') {
+            if (value !== 'empty' && value === 'mut') {
                 gene_alterations[genes_mut[i]][value]++;
                 patient_alterations[j][value]++;
+            } else if (value !== 'empty' && (value === 'amp' || value === 'del')) {
+                gene_alterations[genes_cnv[i]][value]++;
+                patient_alterations[j][value]++;
             }
+
+            // value !== 'highrna' && value !== 'lowrna' && value! == 'amp'
             // this is for mutation data and rnaseq.
             const rect = alterations.append('rect')
                 .attr('class', `alter-rect ${value}`)
@@ -217,7 +230,7 @@ class Oncoprint extends React.Component {
         };
 
 
-        // coloring the rectangles.
+        /** Coloring the rectangles borders based on mutation data * */
         for (let i = 0; i < genes_mut.length; i++) {
             for (let j = 0; j < hmap_patients.length; j++) {
                 if (diff.indexOf(hmap_patients[j]) !== -1) {
@@ -227,12 +240,6 @@ class Oncoprint extends React.Component {
                     // complete layer of lightgrey rectangles.
                     colorReactangles('empty', 'lightgrey', i, j);
                     // based on the data gives different colors to the rectangle.
-                    if (data_mut[i][hmap_patients[j]].includes('Del0.8') || data_mut[i][hmap_patients[j]].includes('Deletion')) {
-                        colorReactangles('del', '#0033CC', i, j);
-                    }
-                    if (data_mut[i][hmap_patients[j]].includes('Amp') || data_mut[i][hmap_patients[j]].includes('Amplification')) {
-                        colorReactangles('amp', '#1a9850', i, j);
-                    }
                     if (data_mut[i][hmap_patients[j]].includes('MutNovel') || data_mut[i][hmap_patients[j]].includes('mutation') || data_mut[i][hmap_patients[j]].includes('MutKnownFunctional')) {
                         colorReactangles('mut', '#e41a1c', i, j);
                     }
@@ -240,8 +247,32 @@ class Oncoprint extends React.Component {
             }
         }
 
-        /** Coloring the rectangles borders based on rna sequencing data * */
 
+        /** Coloring the rectangles borders based on cnv data * */
+        for (let i = 0; i < genes.length; i++) {
+            for (let j = 0; j < hmap_patients.length; j++) {
+                if (genes_cnv.includes(genes[i])) {
+                    if (diff.indexOf(hmap_patients[j]) !== -1) {
+                        // if not sequenced, make it white with a border
+                        colorNotSequenced(i, j);
+                    } else {
+                        // complete layer of lightgrey rectangles only if mutation data is not available.
+                        if (data_mut.length === 0) {
+                            colorReactangles('empty', 'lightgrey', i, j);
+                        }
+                        // based on the data gives different colors to the rectangle.
+                        if (data_cnv[i][hmap_patients[j]].includes('Del0.8') || data_cnv[i][hmap_patients[j]].includes('Deletion')) {
+                            colorReactangles('del', '#0033CC', i, j);
+                        }
+                        if (data_cnv[i][hmap_patients[j]].includes('Amp') || data_cnv[i][hmap_patients[j]].includes('Amplification')) {
+                            colorReactangles('amp', '#1a9850', i, j);
+                        }
+                    }
+                }
+            }
+        }
+
+        /** Coloring the rectangles borders based on rna sequencing data * */
         // variable for taking care of rnaseq data sequence.
         let z = 0;
         for (let i = 0; i < genes.length; i++) {
@@ -252,7 +283,7 @@ class Oncoprint extends React.Component {
                         colorNotSequenced(i, j);
                     } else { // only if the element is not included
                         // complete layer of lightgrey rectangles only if mutation data is not available.
-                        if (data_mut.length === 0) {
+                        if (data_mut.length === 0 && data_cnv.length === 0) {
                             colorReactangles('empty', 'lightgrey', i, j);
                         }
                         if (Number(data_rna[z][hmap_patients[j]]) > threshold) {
@@ -631,10 +662,13 @@ Oncoprint.propTypes = {
     hmap_patients: PropTypes.arrayOf(PropTypes.string).isRequired,
     genes_mut: PropTypes.arrayOf(PropTypes.string).isRequired,
     genes_rna: PropTypes.arrayOf(PropTypes.string).isRequired,
+    genes_cnv: PropTypes.arrayOf(PropTypes.string).isRequired,
     patient_mut: PropTypes.arrayOf(PropTypes.string).isRequired,
     patient_rna: PropTypes.arrayOf(PropTypes.string).isRequired,
+    patient_cnv: PropTypes.arrayOf(PropTypes.string).isRequired,
     data_mut: PropTypes.arrayOf(PropTypes.object).isRequired,
     data_rna: PropTypes.arrayOf(PropTypes.object).isRequired,
+    data_cnv: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 

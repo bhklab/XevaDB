@@ -36,11 +36,14 @@ class SearchResultOncoprint extends React.Component {
 
         // making get requests based on the genomics parameters.
         // sequence is important (first cnv or mutation) then rnaseq has to be pushed.
-        if (genomicsParam.includes('CNV') || genomicsParam.includes('Mutation')) {
+        if (genomicsParam.includes('Mutation')) {
             queryData.push(axios.get(`/api/v1/mutation?genes=${geneParam}&dataset=${datasetParam}`));
         }
-        if (genomicsParam.includes('RNASeq')) {
+        if (genomicsParam.includes('RNASeq') || genomicsParam.includes('Expression')) {
             queryData.push(axios.get(`/api/v1/rnaseq?genes=${geneParam}&dataset=${datasetParam}`));
+        }
+        if (genomicsParam.includes('CNV')) {
+            queryData.push(axios.get(`/api/v1/cnv?genes=${geneParam}&dataset=${datasetParam}`));
         }
 
         Promise.all([...queryData])
@@ -54,11 +57,14 @@ class SearchResultOncoprint extends React.Component {
         const genomics = [];
 
         // temporary solution to remove cnv if everything is selected.
-        if ((genomicsValue.includes('Mutation') || genomicsValue.includes('CNV'))) {
+        if (genomicsValue.includes('Mutation')) {
             genomics.push('Mutation');
         }
-        if (genomicsValue.includes('RNASeq')) {
+        if (genomicsValue.includes('RNASeq') || genomicsParam.includes('Expression')) {
             genomics.push('RNASeq');
+        }
+        if (genomicsParam.includes('CNV')) {
+            genomics.push('CNV');
         }
 
         // grab the last array(patient array) from result[0]
@@ -143,12 +149,15 @@ class SearchResultOncoprint extends React.Component {
                 margin={margin}
                 threshold={Number(threshold)}
                 hmap_patients={hmapPatients}
-                genes_mut={genesMut.length ? genesMut : genesCnv}
+                genes_mut={genesMut}
                 genes_rna={genesRna}
-                patient_mut={patientMut.length ? patientMut : patientCnv}
+                genes_cnv={genesCnv}
+                patient_mut={patientMut}
                 patient_rna={patientRna}
-                data_mut={dataMut.length ? dataMut : dataCnv}
+                patient_cnv={patientCnv}
+                data_mut={dataMut}
                 data_rna={dataRna}
+                data_cnv={dataCnv}
             />
         );
     }
