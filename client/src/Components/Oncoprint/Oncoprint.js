@@ -453,7 +453,7 @@ class Oncoprint extends React.Component {
                 .attr('id', 'patient-alter');
 
             const yrange_patient = d3.scaleLinear() // #TODO: scale.linear
-                .domain([0, d3.max([maxPAmp, maxPMut, maxPHomdel])])
+                .domain([0, max_height])
                 .range([35, 0]);
 
             // function to caculate alterations.
@@ -500,13 +500,11 @@ class Oncoprint extends React.Component {
                 .domain([0, max_height])
                 .range([35 - yrange_patient(max_height), 0]).nice();
 
-            const size = d3.max([maxPAmp, maxPMut, maxPHomdel]);
-            console.log(size, typeof (size));
             const y_axis = d3.axisLeft()
                 .scale(yrange_axis)
-                .ticks(3) // change to dynamic ticks.
+                .ticks(4); // change to dynamic ticks.
                 // .tickSize(2)
-                .tickFormat(d3.format('.0f'));
+                // .tickFormat(d3.format('.0f'));
 
             svg.append('g')
                 .attr('class', 'y_axis')
