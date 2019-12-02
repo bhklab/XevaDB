@@ -10,7 +10,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
-import StatTable from '../ModelResponseStat/ModelResponseStatTable';
+import StatTable from '../ResponseStat/ModelResponseStatTable';
 
 class TumorGrowthCurve extends React.Component {
     constructor(props) {

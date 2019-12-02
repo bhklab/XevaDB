@@ -43,7 +43,6 @@ class Oncoprint extends React.Component {
 
 
     makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
-        console.log(data_cnv, genes_cnv, patient_cnv, hmap_patients);
         // to merge two arrays and give the unique values.
         // eslint-disable-next-line no-extend-native
         Array.prototype.unique = function () {
@@ -74,8 +73,6 @@ class Oncoprint extends React.Component {
         if (data_mut.length > 0) {
             rect_alterations_mut = [
                 { value: 'Mutation', color: '#e41a1c' },
-                { value: 'Deep Deletion', color: '#0033CC' },
-                { value: 'Amplification', color: '#1a9850' },
             ];
         }
         // only if rnaseq data is available.
@@ -86,10 +83,19 @@ class Oncoprint extends React.Component {
                 { value: 'mRNA Low', color: 'none' },
             ];
         }
+        // only if the cnv data is present.
+        let rect_alterations_cnv = [];
+        if (data_cnv.length > 0) {
+            rect_alterations_cnv = [
+                { value: 'Deep Deletion', color: '#0033CC' },
+                { value: 'Amplification', color: '#1a9850' },
+            ];
+        }
 
         const rect_alterations = [
             ...rect_alterations_mut,
             ...rect_alterations_rna,
+            ...rect_alterations_cnv,
             { value: 'Wild Type', color: 'lightgray' },
             { value: 'Not Available', color: 'none' },
         ];
@@ -158,10 +164,10 @@ class Oncoprint extends React.Component {
         // collect info about alterations per gene/patient for plotting later
         const gene_alterations = {};
         const patient_alterations = [];
-        console.log(genes_mut);
-        if (genes_mut.length > 0) {
-            for (let i = 0; i < genes_mut.length; i++) {
-                gene_alterations[genes_mut[i]] = { mut: 0, amp: 0, del: 0 };
+
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
+            for (let i = 0; i < genes.length; i++) {
+                gene_alterations[genes[i]] = { mut: 0, amp: 0, del: 0 };
             }
 
             for (let i = 0; i < hmap_patients.length; i++) {
@@ -183,15 +189,14 @@ class Oncoprint extends React.Component {
 
         // this will take four parameters and color the rectangle accordingly
         const colorReactangles = (value, color, i, j) => {
-            console.log(value, color);
             // setting a = 12 if value is mut
             const a = value === 'mut' ? 12 : 0;
             // setting the color based on value param.
             if (value !== 'empty' && value === 'mut') {
-                gene_alterations[genes_mut[i]][value]++;
+                gene_alterations[genes[i]][value]++;
                 patient_alterations[j][value]++;
             } else if (value !== 'empty' && (value === 'amp' || value === 'del')) {
-                gene_alterations[genes_cnv[i]][value]++;
+                gene_alterations[genes[i]][value]++;
                 patient_alterations[j][value]++;
             }
 
@@ -304,7 +309,7 @@ class Oncoprint extends React.Component {
         let maxPMut = [];
         let maxPHomdel = [];
 
-        if (genes_mut.length > 0) {
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
             for (let i = 0; i < patient_alterations.length; i++) {
                 maxPAmp.push(patient_alterations[i].amp);
                 maxPHomdel.push(patient_alterations[i].del);
@@ -320,11 +325,11 @@ class Oncoprint extends React.Component {
         let maxGMut = [];
         let maxGHomdel = [];
 
-        if (genes_mut.length > 0) {
-            for (let i = 0; i < genes_mut.length; i++) {
-                maxGAmp.push(gene_alterations[genes_mut[i]].amp);
-                maxGHomdel.push(gene_alterations[genes_mut[i]].del);
-                maxGMut.push(gene_alterations[genes_mut[i]].mut);
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
+            for (let i = 0; i < genes.length; i++) {
+                maxGAmp.push(gene_alterations[genes[i]].amp);
+                maxGHomdel.push(gene_alterations[genes[i]].del);
+                maxGMut.push(gene_alterations[genes[i]].mut);
             }
             maxGAmp = d3.max(maxGAmp);
             maxGHomdel = d3.max(maxGHomdel);
@@ -335,11 +340,11 @@ class Oncoprint extends React.Component {
 
         /** Vertical Graph * */
 
-        if (genes_mut.length > 0) {
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
             // calculating max width
             const max_width_arr = [];
-            for (let i = 0; i < genes_mut.length; i++) {
-                max_width_arr.push(gene_alterations[genes_mut[i]].mut + gene_alterations[genes_mut[i]].amp + gene_alterations[genes_mut[i]].del);
+            for (let i = 0; i < genes.length; i++) {
+                max_width_arr.push(gene_alterations[genes[i]].mut + gene_alterations[genes[i]].amp + gene_alterations[genes[i]].del);
             }
 
             const max_width = d3.max(max_width_arr);
@@ -381,16 +386,16 @@ class Oncoprint extends React.Component {
                         color = '#e41a1c';
                     } else if (type === 'amp') {
                         color = '#1a9850';
-                        x_range += xrange_gene(gene_alterations[genes_mut[i]].mut);
+                        x_range += xrange_gene(gene_alterations[genes[i]].mut);
                     } else if (type === 'del') {
                         color = '#0033CC';
-                        x_range += xrange_gene(gene_alterations[genes_mut[i]].amp);
+                        x_range += xrange_gene(gene_alterations[genes[i]].amp);
                     }
                     // rectangle coloring.
                     gene_alter.append('rect')
                         .attr('class', `gene-rect ${type}`)
                         .attr('height', rect_height - 6)
-                        .attr('width', xrange_gene(gene_alterations[genes_mut[i]][type]))
+                        .attr('width', xrange_gene(gene_alterations[genes[i]][type]))
                         .attr('fill', color)
                         .attr('y', (i * (rect_height)))
                         .attr('x', x_range);
@@ -398,7 +403,7 @@ class Oncoprint extends React.Component {
             };
 
             // calculate alterations for each row.
-            for (let i = 0; i < genes_mut.length; i++) {
+            for (let i = 0; i < genes.length; i++) {
                 geneAlterationReactangle(i);
             }
 
@@ -436,7 +441,7 @@ class Oncoprint extends React.Component {
 
         // calculating max height
 
-        if (genes_mut.length > 0) {
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
             const max_height_arr = [];
             for (let i = 0; i < patient_alterations.length; i++) {
                 max_height_arr.push(patient_alterations[i].mut + patient_alterations[i].amp + patient_alterations[i].del);
@@ -451,7 +456,6 @@ class Oncoprint extends React.Component {
                 .domain([0, d3.max([maxPAmp, maxPMut, maxPHomdel])])
                 .range([35, 0]);
 
-
             // function to caculate alterations.
             const patientAlterationReactangle = (iterator) => {
                 // variables.
@@ -463,8 +467,10 @@ class Oncoprint extends React.Component {
                 patient_class.forEach((type, j) => {
                     // set value to 1 if j is greater than 1.
                     j = j > 1 ? j / j : j;
+
                     // setting y range.
                     y_range = (yrange_patient(patient_alterations[i][type])) - ((35 * j) - y_range);
+
                     // color setting.
                     let color = '';
                     if (type === 'mut') {
@@ -494,10 +500,12 @@ class Oncoprint extends React.Component {
                 .domain([0, max_height])
                 .range([35 - yrange_patient(max_height), 0]).nice();
 
+            const size = d3.max([maxPAmp, maxPMut, maxPHomdel]);
+            console.log(size, typeof (size));
             const y_axis = d3.axisLeft()
                 .scale(yrange_axis)
-                .ticks(4)
-                .tickSize(3)
+                .ticks(3) // change to dynamic ticks.
+                // .tickSize(2)
                 .tickFormat(d3.format('.0f'));
 
             svg.append('g')
