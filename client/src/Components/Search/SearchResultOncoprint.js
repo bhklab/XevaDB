@@ -56,7 +56,7 @@ class SearchResultOncoprint extends React.Component {
         const genomicsValue = genomicsParam.split(',');
         const genomics = [];
 
-        // temporary solution to remove cnv if everything is selected.
+        // includes.
         if (genomicsValue.includes('Mutation')) {
             genomics.push('Mutation');
         }
