@@ -245,7 +245,7 @@ class Oncoprint extends React.Component {
                     // complete layer of lightgrey rectangles.
                     colorReactangles('empty', 'lightgrey', i, j);
                     // based on the data gives different colors to the rectangle.
-                    if (data_mut[i][hmap_patients[j]].includes('MutNovel') || data_mut[i][hmap_patients[j]].includes('mutation') || data_mut[i][hmap_patients[j]].includes('MutKnownFunctional')) {
+                    if (data_mut[i][hmap_patients[j]].includes('MutNovel') || data_mut[i][hmap_patients[j]].includes('mutation') || data_mut[i][hmap_patients[j]].includes('MutKnownFunctional') || data_mut[i][hmap_patients[j]].includes('Mutation')) {
                         colorReactangles('mut', '#e41a1c', i, j);
                     }
                 }

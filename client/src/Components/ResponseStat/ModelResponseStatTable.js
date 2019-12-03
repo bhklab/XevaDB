@@ -67,7 +67,7 @@ class StatTable extends React.Component {
                 bar, mRECIST, slope, AUC, survival,
             } = eachdata;
             return (
-                <tr key={index}>
+                <tr key={index} className={`hey${index}`}>
                     <td>{patient}</td>
                     <td>{model}</td>
                     <td>{drug}</td>
@@ -95,7 +95,7 @@ class StatTable extends React.Component {
             <div>
                 <BatchStatTable data={batchData} />
                 <div className="curve-wrapper" style={{ marginTop: '0px', padding: '30px 0px' }}>
-                    <h1 id="title">Statistics (Model Response)</h1>
+                    <h1 id="titlemodel">Statistics (Model Response)</h1>
                     <StyleTable>
                         <table id="stats-table">
                             <tbody>

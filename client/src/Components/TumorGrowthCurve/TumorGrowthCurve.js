@@ -28,6 +28,7 @@ class TumorGrowthCurve extends React.Component {
 
     componentDidMount() {
         const { patientParam, drugParam } = this.props;
+        console.log(this.props);
         axios.get(`/api/v1/treatment?drug=${drugParam}&patient=${patientParam}`)
             .then((response) => {
                 function unique(value, index, self) {
@@ -442,9 +443,17 @@ class TumorGrowthCurve extends React.Component {
                     return '#5974c4';
                 })
                 .attr('stroke-width', 2)
-                .attr('stroke-dasharray', ('3', '3'));
+                .attr('stroke-dasharray', ('3', '3'))
+                .on('mouseover', (d) => {
+                    d3.select('#path-X-3468-BG98').attr('stroke-width', 5);
+                    d3.selectAll('.hey1').selectAll('td').style('color', '#5974c4').style('background', '#fff0f7');
+                })
+                .on('mouseout', (d) => {
+                    d3.select('#path-X-3468-BG98').attr('stroke-width', 2);
+                    d3.selectAll('.hey1').selectAll('td').style('color', '#cd5686').style('background', 'white');
+                });
 
-            plotMeans(data, graph, xrange, yrange, width, height);
+            // plotMeans(data, graph, xrange, yrange, width, height);
             // modelToggle(graph, width, height)
         }
 
