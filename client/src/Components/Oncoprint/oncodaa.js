@@ -45,41 +45,48 @@ class OncoprintData extends React.Component {
                 .then((response) => {
                     this.updateResults(response);
                 });
-        } else { // this is basically useless else statement.
-            axios.get('/api/v1/mutation')
-                .then((response) => {
-                    this.updateResults(response.data);
-                });
         }
     }
 
     updateResults(onco) {
+        const genomics = [];
+        let grabData = 0;
+        // includes.
+        if (onco[0].data.length > 1) {
+            console.log('hey');
+            genomics.push('Mutation');
+            grabData = 0;
+        }
+        if (onco[1].data.length > 1) {
+            console.log('hey1');
+            genomics.push('RNASeq');
+            grabData = 1;
+        }
+        if (onco[2].data.length > 1) {
+            console.log('hey2');
+            genomics.push('CNV');
+            grabData = 2;
+        }
+
+        console.log(onco);
         // total patients.
-        const dataset = onco[0].data;
+        const dataset = onco[grabData].data;
         // grabbing the total patients from hmap.
         let hmap_patients = [];
         hmap_patients = dataset.pop();
+        console.log(dataset);
 
         // setting patients genes and data for
         // each of mutation, cnv and rna (given they are present)
         const patient = {};
         const genes = {};
         const data = {};
-        const genomics = onco[2].data.length > 1 ? ['Mutation', 'RNASeq', 'CNV'] : ['RNASeq'];
 
-        genomics.forEach((value) => {
-            let i = 0;
-            if (value === 'Mutation') {
-                i = 0;
-            } else if (value === 'RNASeq') {
-                i = 1;
-            } else if (value === 'CNV') {
-                i = 2;
-            }
+        genomics.forEach((value, i) => {
             const val = value.substring(0, 3).toLowerCase();
 
             // setting patients
-            const patient_id = Object.keys(onco[i].data[0]).filter((value) => {
+            const patient_id = Object.keys(onco[i].data[1]).filter((value) => {
                 let return_value = '';
                 if (value !== 'gene_id') {
                     return_value = value;
@@ -99,15 +106,15 @@ class OncoprintData extends React.Component {
 
         this.setState({
             hmap_patients,
-            patient_mut: patient.patient_mut === undefined ? [] : patient.patient_mut,
-            patient_rna: patient.patient_rna === undefined ? [] : patient.patient_rna,
-            patient_cnv: patient.patient_cnv === undefined ? [] : patient.patient_cnv,
-            genes_mut: genes.genes_mut === undefined ? [] : genes.genes_mut,
-            genes_rna: genes.genes_rna === undefined ? [] : genes.genes_rna,
-            genes_cnv: genes.genes_cnv === undefined ? [] : genes.genes_cnv,
-            data_mut: data.data_mut === undefined ? [] : data.data_mut,
-            data_rna: data.data_rna === undefined ? [] : data.data_rna,
-            data_cnv: data.data_cnv === undefined ? [] : data.data_cnv,
+            patient_mut: patient.patient_mut,
+            patient_rna: patient.patient_rna,
+            patient_cnv: patient.patient_cnv,
+            genes_mut: genes.genes_mut,
+            genes_rna: genes.genes_rna,
+            genes_cnv: genes.genes_cnv,
+            data_mut: data.data_mut,
+            data_rna: data.data_rna,
+            data_cnv: data.data_cnv,
             dimensions: { height: 35, width: 20 },
             margin: {
                 top: 100, right: 200, bottom: 0, left: 250,

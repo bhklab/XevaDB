@@ -6,10 +6,11 @@ const knex = require('../../db/knex1');
 const getDrugScreening = function (request, response) {
     let { drug } = request.query;
     const { patient } = request.query;
+
     // this will remove the spaces in the drug name and replace
     // it with ' + '. example BKM120   LDE225 => BKM120 + LDE225
-    drug = drug.replace(/\s\s\s/g, ' + ');
-
+    drug = drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
+    console.log(drug);
     // grabs the batch_id based on the drug and patient query param passed on.
     const grabBatchId = knex.select('batch_information.batch_id')
         .from('batch_information')
@@ -70,7 +71,8 @@ const getDrugScreening = function (request, response) {
             .where(function () {
                 this.where('drugs.drug_name', drug)
                     .orWhere('drugs.drug_name', 'water')
-                    .orWhere('drugs.drug_name', 'untreated');
+                    .orWhere('drugs.drug_name', 'untreated')
+                    .orWhere('drugs.drug_name', 'control');
             })
             .andWhere('patients.patient', patient)
             .andWhere('batches.batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)

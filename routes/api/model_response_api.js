@@ -200,7 +200,7 @@ const getModelResponseStats = function (request, response) {
 
     // this will remove the spaces in the drug name and replace
     // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
-    paramDrug = paramDrug.replace(/\s\s\s/g, ' + ');
+    paramDrug = paramDrug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
 
     // grabs the batch id based on the patient id and drug param passed.
     const batchId = knex.select('batch_id')
@@ -255,10 +255,12 @@ const getModelResponseStats = function (request, response) {
             .andWhere(function () {
                 this.where('drugs.drug_name', paramDrug)
                     .orWhere('drugs.drug_name', 'water')
-                    .orWhere('drugs.drug_name', 'untreated');
+                    .orWhere('drugs.drug_name', 'untreated')
+                    .orWhere('drugs.drug_name', 'control');
             })
             .andWhere('batch_id', batchId)
             .then((data) => {
+                console.log(data);
                 response.send(data);
             })
             .catch((error) => response.status(500).json({
