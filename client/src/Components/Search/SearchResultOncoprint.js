@@ -131,7 +131,7 @@ class SearchResultOncoprint extends React.Component {
             dataCnv: data.data_cnv === undefined ? dataCnv : data.data_cnv,
             dimensions: { height: 35, width: 20 },
             margin: {
-                top: 50, right: 200, bottom: 100, left: 250,
+                top: 75, right: 200, bottom: 100, left: 250,
             },
         });
     }
