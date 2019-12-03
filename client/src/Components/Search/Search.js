@@ -22,7 +22,7 @@ class Search extends React.Component {
             selectedGeneSearch: ['Enter Gene Symbol(s)'],
             selectedDrugs: [],
             selectedDataset: '',
-            genomicsValue: ['All', 'Mutation', 'CNV', 'GeneExp'],
+            genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'],
             selectedGenomics: [],
             allDrugs: [],
             threshold: 2,
@@ -176,7 +176,7 @@ class Search extends React.Component {
         });
     }
 
-    // this adds the value either mutation or cnv or GeneExp.
+    // this adds the value either mutation or cnv or RNASeq.
     handleExpressionChange(selectedOption) {
         const { genomicsValue } = this.state;
         if (selectedOption !== null && selectedOption.length > 0) {
@@ -195,7 +195,7 @@ class Search extends React.Component {
                 });
                 this.setState({
                     genomics: genomic,
-                    selectedGenomics: ['Mutation', 'CNV', 'GeneExp'],
+                    selectedGenomics: ['Mutation', 'CNV', 'RNASeq'],
                 });
             } else {
                 this.setState({
@@ -204,8 +204,8 @@ class Search extends React.Component {
                 });
             }
 
-            // and if it includes GeneExp or all then toggle should be true.
-            if (genomicsCurrentValue.includes('GeneExp') || genomicsCurrentValue.includes('All')) {
+            // and if it includes RNASeq or all then toggle should be true.
+            if (genomicsCurrentValue.includes('Gene Expression') || genomicsCurrentValue.includes('All')) {
                 this.setState({
                     toggleRNA: true,
                 });
@@ -222,7 +222,7 @@ class Search extends React.Component {
         }
     }
 
-    // threshold for GeneExp.
+    // threshold for GeneExpression.
     handleThreshold(event) {
         this.setState({
             threshold: event.target.value,

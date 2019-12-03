@@ -60,7 +60,7 @@ class SearchResultOncoprint extends React.Component {
         if (genomicsValue.includes('Mutation')) {
             genomics.push('Mutation');
         }
-        if (genomicsValue.includes('RNASeq') || genomicsParam.includes('Expression')) {
+        if (genomicsValue.includes('RNASeq') || genomicsParam.includes('Gene Expression')) {
             genomics.push('RNASeq');
         }
         if (genomicsParam.includes('CNV')) {
