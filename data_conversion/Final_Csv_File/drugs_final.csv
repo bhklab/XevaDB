@@ -53,7 +53,7 @@ drug_id,drug_name,standard_name,targets,treatment_type,class,class_name,source
 52,BYL719 + LEE011,Alpelisib + Ribociclib,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/56649450https://pubchem.ncbi.nlm.nih.gov/compound/44631912"
 53,LEE011 + everolimus,Ribociclib + Everolimus,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/44631912https://pubchem.ncbi.nlm.nih.gov/compound/6442177"
 54,LFA102,1555716-16-9,,,prolactin receptor (PRLR),Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/substance/381127614
-55,LFW527 + everolimusNA + Everolimus,,,combination,combination,"NAhttps://pubchem.ncbi.nlm.nih.gov/compound/6442177"
+55,LFW527 + everolimus,NA + Everolimus,,,combination,combination,"NAhttps://pubchem.ncbi.nlm.nih.gov/compound/6442177"
 56,LJM716,elgemtumab,,,anti-ERBB3 (HER3) investigational monoclonal antibody,Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/substance/252827373
 57,LJM716 + trastuzumab,Elgemtumab + Trastuzumab,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/substance/252827373https://pubchem.ncbi.nlm.nih.gov/substance/178101775"
 58,tamoxifen,Tamoxifen,,,selective estrogen receptor modulator (SERM),Growth factor receptor inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/25010734
@@ -61,3 +61,23 @@ drug_id,drug_name,standard_name,targets,treatment_type,class,class_name,source
 60,BYL719 + HSP990,Alpelisib + Hsp990 (nvp-hsp990),,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compound/56649450https://pubchem.ncbi.nlm.nih.gov/compund/46216556"
 61,everolimus,Everolimus,,,mTOR inhibitor,Kinase inhibitors,https://pubchem.ncbi.nlm.nih.gov/compound/6442177
 62,INC280 + trastuzumab,Capmatinib + Trastuzumab,,,combination,combination,"https://pubchem.ncbi.nlm.nih.gov/compund/25145656https://pubchem.ncbi.nlm.nih.gov/substance/178101775"
+63,CFI-400945 + ABT263,,,,,,
+64,Control,,,,,,
+65,Cisplatin,,,,,,
+66,Gemcitabine,,,,,,
+67,ABT263,,,,,,
+68,Doxorubicin,,,,,,
+69,ERIBULIN,,,,,,
+70,WATER,,,,,,
+71,CFI-400945,,,,,,
+72,TAXOL,,,,,,
+73,BMN673,,,,,,
+74,CARBOPLATIN,,,,,,
+75,CX5461,,,,,,
+76,CFI-402257,,,,,,
+77,TAXOL + CFI-402257,,,,,,
+78,ANTI-PD1,,,,,,
+79,CFI-400945 + ANTI-PD1,,,,,,
+80,CX5461 VEHICLE,,,,,,
+81,TAXOL VEHICLE,,,,,,
+82,CDX-011,,,,,,
