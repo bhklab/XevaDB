@@ -50,7 +50,12 @@ function outputData() {
             results.map((data) => {
                 if ((data[0] === '') || (data[0] === 'model.id') || (data[1] === 'model.id')) {} else {
                     let dataset = 0;
-                    if (data[2].match(/Breast/g) || data[2].match(/BRCA/g)) {
+                    console.log(data)
+                    if (data[4].match(/SU2C/g) || data[5].match(/SU2C/g)) {
+                        dataset = 8;
+                    } else if (data[4].match(/TNBC/g) || data[5].match(/TNBC/g)) {
+                        dataset = 7;
+                    } else if (data[2].match(/Breast/g) || data[2].match(/BRCA/g)) {
                         dataset = 1;
                     } else if (data[2].match(/Colorectal/g) || data[2].match(/CRC/g)) {
                         dataset = 2;
