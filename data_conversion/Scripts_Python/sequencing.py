@@ -11,7 +11,7 @@ files = [
     '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv'
 ]
 
-output_file = '../Final_Csv_File/sequencings_final.csv'
+output_file = '../Final_csv_file/sequencings_final.csv'
 unique_list = []
 value = 0
 

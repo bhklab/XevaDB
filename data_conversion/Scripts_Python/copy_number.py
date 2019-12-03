@@ -2,15 +2,15 @@ import csv
 import re
 
 
-files = [   '../Final_Csv_File/genes_final.csv', 
-            '../Final_Csv_File/sequencings_final.csv'
+files = [   '../Final_csv_file/genes_final.csv', 
+            '../Final_csv_file/sequencings_final.csv'
         ]
 
 input_file = [
     '../Initial_csv_file/copy_number_variation/copy_number_variation_pdxe.csv',
     '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv'
 ]
-output_file = '../Final_Csv_File/copy_number_variation_final.csv'
+output_file = '../Final_csv_file/copy_number_variation_final.csv'
 
 mapped_data = {}
 

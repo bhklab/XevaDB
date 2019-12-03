@@ -22,14 +22,14 @@ const files = fs.readdirSync(`..${file_folder}`);
 const total_files = files.length;
 
 // These variables are for file_iterator, the mapped variables.
-const file_folder_map = '/Final_Csv_File/';
+const file_folder_map = '/Final_csv_file/';
 const files_map = ['batches_final.csv'];
 const streams_map = [];
 const mapped_data = {};
 
 // creates a write stream with headers we require in final csv file.
 const csvStream = csv.createWriteStream({ headers: ['id', 'batch_id', 'response_type', 'value'] });
-const writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
+const writableStream = fs.createWriteStream(`../Final_csv_file/${file_final}_final.csv`);
 
 
 // reads the input file.

@@ -16,7 +16,7 @@ const streams = [];
 
 // creates a write stream with headers we require in final csv file.
 const csvStream = csv.createWriteStream({ headers: ['tissue_id', 'tissue_name'] });
-const writableStream = fs.createWriteStream('../Final_Csv_File/tissues_final.csv');
+const writableStream = fs.createWriteStream('../Final_csv_file/tissues_final.csv');
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
 const files = fs.readdirSync(`..${file_folder}`);

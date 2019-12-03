@@ -24,14 +24,14 @@ const total_files = files.length;
 
 
 // These variables are for file_iterator, the mapped variables.
-const file_folder_map = '/Final_Csv_File/';
+const file_folder_map = '/Final_csv_file/';
 const files_map = ['models_final.csv', 'batches_final.csv'];
 const streams_map = [];
 const mapped_data = {};
 
 // creating a writable stream which writes to growthcurve_data csv file.
 const csvStream = csv.createWriteStream({ headers: ['id', 'batch_id', 'model_id', 'type'] });
-const writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
+const writableStream = fs.createWriteStream(`../Final_csv_file/${file_final}_final.csv`);
 
 
 // function to create the output data.

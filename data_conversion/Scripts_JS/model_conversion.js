@@ -1,6 +1,6 @@
 // This code will read through each of the files in ./Initial_csv_file/model_information folder
 // and produce the required result in the corresponding
-// file modelinfo_final in Final_Csv_File folder.
+// file modelinfo_final in Final_csv_file folder.
 
 
 // requiring various packages.
@@ -22,7 +22,7 @@ let id = 1;
 
 // creates a write stream with headers we require in final csv file and creating a writable stream with the final file.
 const csvStream = csv.createWriteStream({ headers: ['model_id', 'model'] });
-const writableStream = fs.createWriteStream('../Final_Csv_File/models_final.csv');
+const writableStream = fs.createWriteStream('../Final_csv_file/models_final.csv');
 
 // synch. way of reading through the files and push createReadStream for each file with it's path.
 const files = fs.readdirSync(`..${file_folder}`);

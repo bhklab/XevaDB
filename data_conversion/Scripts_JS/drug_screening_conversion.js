@@ -23,7 +23,7 @@ const files = fs.readdirSync(`..${file_folder}`);
 const total_files = files.length;
 
 // These variables are for file_iterator, the mapped variables.
-const file_folder_map = '/Final_Csv_File/';
+const file_folder_map = '/Final_csv_file/';
 const files_map = ['models_final.csv', 'drugs_final.csv'];
 const streams_map = [];
 const mapped_data = {};
@@ -32,7 +32,7 @@ const mapped_data = {};
 // creating a writable stream which writes to growthcurve_data csv file.
 // let csvStream = csv.createWriteStream({headers: ["model_id", "drug", "time", "volume", "body_weight", "volume_normal", "tissue", "patient_id"]});
 const csvStream = csv.createWriteStream({ headers: ['id', 'model_id', 'drug_id', 'time', 'volume', 'volume_normal'] });
-const writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
+const writableStream = fs.createWriteStream(`../Final_csv_file/${file_final}_final.csv`);
 
 
 // creating a read stream which is used to

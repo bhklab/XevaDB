@@ -13,7 +13,7 @@ files = [
             #'../Initial_csv_file/mutation_data/abc.csv'
         ]
 
-output_file = '../Final_Csv_File/genes_final.csv'
+output_file = '../Final_csv_file/genes_final.csv'
 unique_list = []
 value = 0
 

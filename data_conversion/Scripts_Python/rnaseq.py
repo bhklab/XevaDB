@@ -2,8 +2,8 @@ import csv
 import re
 
 
-files = [   '../Final_Csv_File/genes_final.csv', 
-            '../Final_Csv_File/sequencings_final.csv'
+files = [   '../Final_csv_file/genes_final.csv', 
+            '../Final_csv_file/sequencings_final.csv'
         ]
 
 input_file = [
@@ -11,7 +11,7 @@ input_file = [
     '../Initial_csv_file/rna_sequencing/rna_sequencing_TNBC.csv',
     '../Initial_csv_file/rna_sequencing/rna_sequencing_pdxe.csv',
 ]
-output_file = '../Final_Csv_File/rnasequencing_final.csv'
+output_file = '../Final_csv_file/rnasequencing_final.csv'
 
 mapped_data = {}
 

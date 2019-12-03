@@ -1,5 +1,5 @@
 // This code will read through each of the files in ./Initial_csv_file/model_information folder
-// and produce the required result in the corresponding file modelinfo_final in Final_Csv_File folder.
+// and produce the required result in the corresponding file modelinfo_final in Final_csv_file folder.
 
 
 // requiring various packages.
@@ -26,7 +26,7 @@ const total_files = files.length;
 
 
 // These variables are for file_iterator, the mapped variables.
-const file_folder_map = '/Final_Csv_File/';
+const file_folder_map = '/Final_csv_file/';
 const files_map = ['models_final.csv', 'tissues_final.csv', 'patients_final.csv', 'drugs_final.csv', 'datasets_final.csv'];
 // let files_map = ['dataset_final.csv', 'drug_final.csv']
 const streams_map = [];
@@ -35,7 +35,7 @@ const mapped_data = {};
 
 // creates a write stream with headers we require in final csv file and creating a writable stream with the final file.
 const csvStream = csv.createWriteStream({ headers: ['id', 'model_id', 'tissue_id', 'patient_id', 'drug_id', 'dataset_id'] });
-const writableStream = fs.createWriteStream(`../Final_Csv_File/${file_final}_final.csv`);
+const writableStream = fs.createWriteStream(`../Final_csv_file/${file_final}_final.csv`);
 
 
 // reads the input file and streams the data with particular format to the output file.
