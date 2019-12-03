@@ -9,7 +9,7 @@ const MultiStream = require('multistream');
 const file_reader = require('./file_reader');
 
 // folder from where the files will be read.
-const file_folder = '/Initial_Csv_File/batch_information/';
+const file_folder = '/Initial_csv_file/batch_information/';
 const file_final = (file_folder.split('/'))[2];
 
 // this array is required to store the lines read from the input csv file.
@@ -35,7 +35,7 @@ function outputData() {
             csvStream.pipe(writableStream);
             batches = [];
             results.forEach((data) => {
-                if (data[0] !== '') {
+                if (data[0] !== '' && data[1] !== 'batch.id' && data[0] !== 'batch.id') {
                     if (!(batches.includes(data[1]))) {
                         batches.push(data[1]);
                     }
@@ -51,4 +51,3 @@ function outputData() {
 
 // calling function to loop through all the files in folder and gives the output
 file_reader(files, total_files, file_folder, outputData, streams);
-

@@ -1,8 +1,15 @@
 import csv
 import re
 
-
-files = [ '../Initial_Csv_File/mutation_data/mutation.csv' ]
+files = [ 
+    '../Initial_csv_file/mutation_data/mutation_data_pdxe.csv',
+    '../Initial_csv_file/mutation_data/mutation_data_TNBC.csv',
+    '../Initial_csv_file/rna_sequencing/rna_sequencing_SU2C.csv',
+    '../Initial_csv_file/rna_sequencing/rna_sequencing_TNBC.csv',
+    '../Initial_csv_file/rna_sequencing/rna_sequencing_pdxe.csv',
+    '../Initial_csv_file/copy_number_variation/copy_number_variation_pdxe.csv',
+    '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv'
+]
 
 output_file = '../Final_Csv_File/sequencings_final.csv'
 unique_list = []

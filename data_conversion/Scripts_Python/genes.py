@@ -2,10 +2,15 @@ import csv
 import re
 
 
-files = [   '../Initial_Csv_File/mutation_data/mutation.csv', 
-            '../Initial_Csv_File/RNASeq_data/rna_sequencing.csv'
-            # '../Initial_Csv_File/extrafiles/mutation.csv', 
-            # '../Initial_Csv_File/extrafiles/rna_sequencing.csv'
+files = [ 
+            '../Initial_csv_file/mutation_data/mutation_data_pdxe.csv', 
+            '../Initial_csv_file/mutation_data/mutation_data_TNBC.csv',
+            '../Initial_csv_file/rna_sequencing/rna_sequencing_pdxe.csv',
+            '../Initial_csv_file/rna_sequencing/rna_sequencing_SU2C.csv',
+            '../Initial_csv_file/rna_sequencing/rna_sequencing_TNBC.csv',
+            '../Initial_csv_file/copy_number_variation/copy_number_variation_pdxe.csv',
+            '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv'
+            #'../Initial_csv_file/mutation_data/abc.csv'
         ]
 
 output_file = '../Final_Csv_File/genes_final.csv'
@@ -21,8 +26,8 @@ for file in files:
             else:
                     row = (row.replace('"','').replace("\n", "")).replace("\r", "")
                     row = row.split(',')[1]
-                    if row not in unique_list:
-                            unique_list.append(row)
+                    if (row not in unique_list and row.upper() not in unique_list and row.lower() not in unique_list):
+                            unique_list.append(row.upper())
 #print(unique_list)
 
 with open(output_file, 'w') as csv_file:

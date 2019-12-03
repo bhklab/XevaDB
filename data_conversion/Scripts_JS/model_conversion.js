@@ -1,4 +1,4 @@
-// This code will read through each of the files in ./Initial_Csv_File/model_information folder
+// This code will read through each of the files in ./Initial_csv_file/model_information folder
 // and produce the required result in the corresponding
 // file modelinfo_final in Final_Csv_File folder.
 
@@ -12,7 +12,7 @@ const MultiStream = require('multistream');
 const file_reader = require('./file_reader');
 
 // folder from where the files will be read.
-const file_folder = '/Initial_Csv_File/model_information/';
+const file_folder = '/Initial_csv_file/model_information/';
 const file_final = (file_folder.split('/'))[2];
 
 // this array is required to store the lines read from the input csv file.
@@ -38,7 +38,7 @@ function outputData() {
             csvStream.pipe(writableStream);
             const models = [];
             results.forEach((data) => {
-                if (data[0] !== '' && data[0] !== 'model.id') {
+                if (data[0] !== '' && data[0] !== 'model.id' && data[1] !== 'model.id') {
                     if (!(models.includes(data[1]))) {
                         models.push(data[1]);
                     }

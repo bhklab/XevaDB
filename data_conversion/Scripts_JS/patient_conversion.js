@@ -8,7 +8,7 @@ const MultiStream = require('multistream');
 const file_reader = require('./file_reader');
 
 // folder from where the files will be read.
-const file_folder = '/Initial_Csv_File/model_information/';
+const file_folder = '/Initial_csv_file/model_information/';
 
 // this array is required to store the lines read
 // from the input csv file and other array would store the combined.
@@ -34,7 +34,7 @@ function outputData() {
             csvStream.pipe(writableStream);
             const patients = [];
             results.forEach((data) => {
-                if (data[0] !== '' && data[0] !== 'model.id') {
+                if (data[0] !== '' && data[0] !== 'model.id' && data[1] !== 'model.id') {
                     if (!(patients.includes(data[3]))) {
                         patients.push(data[3]);
                     }

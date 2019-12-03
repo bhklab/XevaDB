@@ -8,7 +8,7 @@ const file_iterator = require('./file_iterator');
 const file_reader = require('./file_reader');
 
 // folder from where the files will be read.
-const file_folder = '/Initial_Csv_File/modelid_moleculardata_mapping/';
+const file_folder = '/Initial_csv_file/modelid_moleculardata_mapping/';
 const file_final = (file_folder.split('/'))[2];
 
 // this array is required to store the lines read from the input csv file.
@@ -40,7 +40,7 @@ function outputData() {
         .on('end', () => {
             csvStream.pipe(writableStream);
             results.map((data) => {
-                if (data[0] == 'model.id' || data[0] == '') {} else {
+                if (data[0] === 'model.id' || data[0] === '' || data[1] === 'model.id') {} else {
                     csvStream.write({
                         id: id++, model_id: mapped_data[data[1]], sequencing_uid: mapped_data[data[2]], mDataType: data[3],
                     });

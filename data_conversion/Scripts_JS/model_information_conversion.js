@@ -1,4 +1,4 @@
-// This code will read through each of the files in ./Initial_Csv_File/model_information folder
+// This code will read through each of the files in ./Initial_csv_file/model_information folder
 // and produce the required result in the corresponding file modelinfo_final in Final_Csv_File folder.
 
 
@@ -13,7 +13,7 @@ const file_iterator = require('./file_iterator');
 const file_reader = require('./file_reader');
 
 // folder from where the files will be read.
-const file_folder = '/Initial_Csv_File/model_information/';
+const file_folder = '/Initial_csv_file/model_information/';
 const file_final = (file_folder.split('/'))[2];
 
 // this array is required to store the lines read from the input csv file.
@@ -48,7 +48,7 @@ function outputData() {
         .on('end', () => {
             csvStream.pipe(writableStream);
             results.map((data) => {
-                if ((data[0] === '') || (data[0] === 'model.id')) {} else {
+                if ((data[0] === '') || (data[0] === 'model.id') || (data[1] === 'model.id')) {} else {
                     let dataset = 0;
                     if (data[2].match(/Breast/g) || data[2].match(/BRCA/g)) {
                         dataset = 1;
@@ -63,8 +63,9 @@ function outputData() {
                     } else if (data[2].match(/Pancreatic/g) || data[2].match(/PDAC/g)) {
                         dataset = 6;
                     }
+                    const drug = mapped_data[data[4]] || mapped_data[data[4].toLowerCase()];
                     csvStream.write({
-                        id: id++, model_id: mapped_data[data[1]], tissue_id: mapped_data[data[2]], patient_id: mapped_data[data[3]], drug_id: mapped_data[data[4]], dataset_id: dataset,
+                        id: id++, model_id: mapped_data[data[1]], tissue_id: mapped_data[data[2]], patient_id: mapped_data[data[3]], drug_id: drug, dataset_id: dataset,
                     });
                 }
             });

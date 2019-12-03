@@ -7,7 +7,7 @@ const MultiStream = require('multistream');
 const file_reader = require('./file_reader');
 
 // folder from where the files will be read.
-const file_folder = '/Initial_Csv_File/model_information/';
+const file_folder = '/Initial_csv_file/model_information/';
 const file_final = (file_folder.split('/'))[2];
 
 // this array is required to store the lines read from the input csv file.

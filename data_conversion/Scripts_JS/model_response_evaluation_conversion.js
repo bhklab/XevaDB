@@ -10,7 +10,7 @@ const file_iterator = require('./file_iterator');
 const file_reader = require('./file_reader');
 
 // folder from where the files will be read.
-const file_folder = '/Initial_Csv_File/response_evaluation/';
+const file_folder = '/Initial_csv_file/model_response/';
 const file_final = (file_folder.split('/'))[2];
 
 // this array is required to store the lines read from the input csv file.
@@ -42,9 +42,10 @@ function outputData() {
         .on('end', () => {
             csvStream.pipe(writableStream);
             results.forEach((data) => {
-                if ((data[0] === '') || (data[0] === 'drug')) {} else {
+                if ((data[0] === '') || (data[0] === 'drug') || (data[1] === 'drug')) {} else {
+                    const drug = mapped_data[data[1]] || mapped_data[data[1].toLowerCase()];
                     csvStream.write({
-                        id: id++, drug_id: mapped_data[data[1]], model_id: mapped_data[data[2]], response_type: data[3], value: data[4],
+                        id: id++, drug_id: drug, model_id: mapped_data[data[2]], response_type: data[3], value: data[4],
                     });
                 }
             });

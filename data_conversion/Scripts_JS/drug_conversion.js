@@ -10,16 +10,16 @@ const MultiStream = require('multistream');
 const file_reader = require('./file_reader');
 
 // folder from where the files will be read.
-const file_folder = '/Initial_Csv_File/drug_screening/';
+const file_folder = '/Initial_csv_file/drug_screening/';
 const file_final = (file_folder.split('/'))[2];
 
 // this array is required to store the lines read from the input csv file.
 const results = [];
 const streams = [];
-let id = 1;
+let id = 63;
 
 // creating a writable stream which writes to growthcurve_data csv file.
-const csvStream = csv.createWriteStream({ headers: ['drug_id', 'drug_name', 'standard_name', 'targets', 'treatment_type', 'pubchemId', 'class', 'class_name', 'source'] });
+const csvStream = csv.createWriteStream({ headers: ['drug_id', 'drug_name', 'standard_name', 'targets', 'treatment_type', 'class', 'class_name', 'source'] });
 const writableStream = fs.createWriteStream('../Final_Csv_File/drugs_final.csv');
 
 
@@ -37,7 +37,7 @@ function outputData() {
             csvStream.pipe(writableStream);
             drugs = [];
             results.forEach((data) => {
-                if (!(data[0] === '') || (data[0] === 'model.id')) {
+                if (!(data[0] === '') || (data[0] === 'model.id') || (data[1] === 'model.id')) {
                     if (!(drugs.includes(data[2]))) {
                         drugs.push(data[2]);
                     }

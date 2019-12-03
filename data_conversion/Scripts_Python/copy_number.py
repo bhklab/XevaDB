@@ -6,7 +6,10 @@ files = [   '../Final_Csv_File/genes_final.csv',
             '../Final_Csv_File/sequencings_final.csv'
         ]
 
-input_file = '../Initial_Csv_File/copy_number_variation/copy_number_variation.csv'
+input_file = [
+    '../Initial_csv_file/copy_number_variation/copy_number_variation_pdxe.csv',
+    '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv'
+]
 output_file = '../Final_Csv_File/copy_number_variation_final.csv'
 
 mapped_data = {}
@@ -20,18 +23,22 @@ for file in files:
 
 
 id = 0
-with open(input_file, 'r') as read_file:
-    with open(output_file, 'w') as out_file:
-        csv_writer = csv.writer(out_file, delimiter = ",")
-        csv_writer.writerow(['id', 'gene_id', 'sequencing_uid', 'value'])
-        for line in read_file:
-            if(re.search(r'\bgene.id\b', line)):
-                    print('not useful')
-            else:
-                line = (line.replace('"','').replace("\n", "")).replace("\r", "")
-                line = line.split(',')
-                gene = mapped_data[line[1]]
-                sequencing = mapped_data[line[2]]
-                id = id + 1
-                csv_writer.writerow([id, gene, sequencing, line[3].replace('\n', '')])
+total = 1
+with open(output_file, 'w') as out_file:
+    csv_writer = csv.writer(out_file, delimiter = ",")
+    csv_writer.writerow(['id', 'gene_id', 'sequencing_uid', 'value'])
+    #print(out_file.closed)
+
+    for file in input_file:
+        with open(file, 'r') as read_file:
+            for line in read_file:
+                if(re.search(r'\bgene.id\b', line)):
+                        print('not useful')
+                else:
+                    line = (line.replace('"','').replace("\n", "")).replace("\r", "")
+                    line = line.split(',')
+                    gene = mapped_data[line[1].upper()]
+                    sequencing = mapped_data[line[2]]
+                    id = id + 1
+                    csv_writer.writerow([id, gene, sequencing, line[3].replace('\n', '')])
 
