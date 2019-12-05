@@ -37,11 +37,6 @@ class HeatMapData extends React.Component {
                 .then((response) => {
                     this.parseData(response.data);
                 });
-        } else {
-            axios.get('/api/v1/respeval')
-                .then((response) => {
-                    this.parseData(response.data);
-                });
         }
     }
 
@@ -68,6 +63,9 @@ class HeatMapData extends React.Component {
             });
             dataset.push(dataObject);
         });
+
+        // patient from one of the object elements to keep it in sync.
+        patient = Object.keys(dataset[0]);
 
         this.setState({
             drugId: drug,

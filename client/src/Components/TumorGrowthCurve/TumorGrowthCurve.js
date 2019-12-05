@@ -28,7 +28,6 @@ class TumorGrowthCurve extends React.Component {
 
     componentDidMount() {
         const { patientParam, drugParam } = this.props;
-        console.log(this.props);
         axios.get(`/api/v1/treatment?drug=${drugParam}&patient=${patientParam}`)
             .then((response) => {
                 function unique(value, index, self) {

@@ -45,15 +45,11 @@ class OncoprintData extends React.Component {
                 .then((response) => {
                     this.updateResults(response);
                 });
-        } else { // this is basically useless else statement.
-            axios.get('/api/v1/mutation')
-                .then((response) => {
-                    this.updateResults(response.data);
-                });
         }
     }
 
     updateResults(onco) {
+        console.log(onco);
         // total patients.
         const dataset = onco[0].data;
         // grabbing the total patients from hmap.
