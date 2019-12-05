@@ -54,6 +54,9 @@ class SearchResultHeatMap extends React.Component {
             dataset.push(dataObject);
         });
 
+        // patient from one of the object elements to keep it in sync.
+        patient = Object.keys(dataset[0]);
+
         // setting the states using the defined variables.
         this.setState({
             drugId: drug,

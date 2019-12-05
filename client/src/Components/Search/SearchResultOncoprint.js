@@ -33,45 +33,35 @@ class SearchResultOncoprint extends React.Component {
         const { geneParam } = this.props;
         const { genomicsParam } = this.props;
         const queryData = [];
+        const genomics = [];
 
         // making get requests based on the genomics parameters.
         // sequence is important (first cnv or mutation) then rnaseq has to be pushed.
         if (genomicsParam.includes('Mutation')) {
             queryData.push(axios.get(`/api/v1/mutation?genes=${geneParam}&dataset=${datasetParam}`));
+            genomics.push('Mutation');
         }
         if (genomicsParam.includes('RNASeq') || genomicsParam.includes('Expression')) {
             queryData.push(axios.get(`/api/v1/rnaseq?genes=${geneParam}&dataset=${datasetParam}`));
+            genomics.push('RNASeq');
         }
         if (genomicsParam.includes('CNV')) {
             queryData.push(axios.get(`/api/v1/cnv?genes=${geneParam}&dataset=${datasetParam}`));
+            genomics.push('CNV');
         }
 
         Promise.all([...queryData])
             .then((response) => {
-                this.updateResults(response, genomicsParam);
+                this.updateResults(response, genomics);
             });
     }
 
-    updateResults(result, genomicsParam) {
-        const genomicsValue = genomicsParam.split(',');
-        const genomics = [];
-
-        // includes.
-        if (genomicsValue.includes('Mutation')) {
-            genomics.push('Mutation');
-        }
-        if (genomicsValue.includes('RNASeq') || genomicsParam.includes('Gene Expression')) {
-            genomics.push('RNASeq');
-        }
-        if (genomicsParam.includes('CNV')) {
-            genomics.push('CNV');
-        }
-
+    updateResults(result, genomics) {
         // grab the last array(patient array) from result[0]
         const dataset = result[0].data;
 
         // grabbing the total patients from hmap.
-        const hmapPatients = dataset.pop();
+        let hmapPatients = dataset.pop();
 
         // removing last element from each array element of result
         if (result.length > 1) {
@@ -81,6 +71,21 @@ class SearchResultOncoprint extends React.Component {
                 }
             });
         }
+
+        // this is according to the object and heatmap sequence.
+        result.forEach((value, i) => { // can't break in forEach use for if wanna break.
+            const dataObject = {};
+            if (value.data.length > 1) {
+                hmapPatients.forEach((patient) => {
+                    if (!result[i].data[0][patient]) {
+                        dataObject[patient] = '';
+                    } else {
+                        dataObject[patient] = result[i].data[0][patient];
+                    }
+                });
+            }
+            hmapPatients = Object.keys(dataObject);
+        });
 
         // setting patients genes and data for each of mutation,
         // cnv and rna (given they are present)
