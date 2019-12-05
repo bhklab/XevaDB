@@ -49,12 +49,25 @@ class OncoprintData extends React.Component {
     }
 
     updateResults(onco) {
-        console.log(onco);
         // total patients.
         const dataset = onco[0].data;
         // grabbing the total patients from hmap.
         let hmap_patients = [];
         hmap_patients = dataset.pop();
+        // this is according to the object and heatmap sequence.
+        onco.forEach((value, i) => { // can't break in forEach use for if wanna break.
+            const dataObject = {};
+            if (value.data.length > 1) {
+                hmap_patients.forEach((patient) => {
+                    if (!onco[i].data[0][patient]) {
+                        dataObject[patient] = '';
+                    } else {
+                        dataObject[patient] = onco[i].data[0][patient];
+                    }
+                });
+            }
+            hmap_patients = Object.keys(dataObject);
+        });
 
         // setting patients genes and data for
         // each of mutation, cnv and rna (given they are present)
