@@ -32,7 +32,7 @@ const getBatchResponseStats = function (request, response) {
         .where('patients.patient', paramPatient)
         .andWhere('drugs.drug_name', paramDrug);
 
-    batchId.then(() => {
+    batchId.then((batch) => {
         knex.select()
             .from('batch_response')
             .leftJoin(
@@ -40,7 +40,7 @@ const getBatchResponseStats = function (request, response) {
                 'batch_response.batch_id',
                 'batches.batch_id',
             )
-            .andWhere('batch_response.batch_id', batchId)
+            .andWhere('batch_response.batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)
             .then((data) => {
                 response.send(data);
             })

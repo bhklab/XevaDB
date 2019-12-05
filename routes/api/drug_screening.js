@@ -10,7 +10,6 @@ const getDrugScreening = function (request, response) {
     // this will remove the spaces in the drug name and replace
     // it with ' + '. example BKM120   LDE225 => BKM120 + LDE225
     drug = drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
-    console.log(drug);
     // grabs the batch_id based on the drug and patient query param passed on.
     const grabBatchId = knex.select('batch_information.batch_id')
         .from('batch_information')

@@ -56,6 +56,7 @@ const getModelResponseBasedOnDataset = function (request, response) {
         })
         .orderBy('drug_name')
         .orderBy('patient');
+        // .limit(50);
 
 
     Promise.all([promise1, promise2])
@@ -81,6 +82,7 @@ const getModelResponseBasedOnDataset = function (request, response) {
                     value += 1;
                 }
             });
+
             if (Object.entries(untreated).length === 1 && untreated.constructor === Object) {}
             else { data.unshift(untreated); }
 
@@ -195,35 +197,35 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
 // based on drug and patient (model_id).
 const getModelResponseStats = function (request, response) {
     // grabbing the drug parameters and dataset parameters.
-    let paramDrug = request.query.drug;
-    const paramPatient = request.query.patient;
+    let { drug } = request.query;
+    const { patient } = request.query;
 
     // this will remove the spaces in the drug name and replace
     // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
-    paramDrug = paramDrug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
+    drug = drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
 
     // grabs the batch id based on the patient id and drug param passed.
-    const batchId = knex.select('batch_id')
-        .from('model_information')
-        .leftJoin(
+    const grabBatchId = knex.select('batch_information.batch_id')
+        .from('batch_information')
+        .rightJoin(
+            'model_information',
+            'batch_information.model_id',
+            'model_information.model_id',
+        )
+        .rightJoin(
             'patients',
             'model_information.patient_id',
             'patients.patient_id',
         )
-        .leftJoin(
+        .rightJoin(
             'drugs',
             'model_information.drug_id',
             'drugs.drug_id',
         )
-        .leftJoin(
-            'batch_information',
-            'batch_information.model_id',
-            'model_information.model_id',
-        )
-        .where('patients.patient', paramPatient)
-        .andWhere('drugs.drug_name', paramDrug);
+        .where('drugs.drug_name', drug)
+        .andWhere('patients.patient', patient);
 
-    batchId.then(() => {
+    grabBatchId.then((batch) => {
         knex.select()
             .from('model_response')
             .leftJoin(
@@ -251,16 +253,15 @@ const getModelResponseStats = function (request, response) {
                 'model_information.model_id',
                 'models.model_id',
             )
-            .where('patients.patient', paramPatient)
+            .where('patients.patient', patient)
             .andWhere(function () {
-                this.where('drugs.drug_name', paramDrug)
+                this.where('drugs.drug_name', drug)
                     .orWhere('drugs.drug_name', 'water')
                     .orWhere('drugs.drug_name', 'untreated')
                     .orWhere('drugs.drug_name', 'control');
             })
-            .andWhere('batch_id', batchId)
+            .andWhere('batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)
             .then((data) => {
-                console.log(data);
                 response.send(data);
             })
             .catch((error) => response.status(500).json({
