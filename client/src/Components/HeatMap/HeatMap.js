@@ -335,8 +335,12 @@ class HeatMap extends React.Component {
             .call(yAxis)
             .selectAll('text')
             .attr('fill', (d) => {
-                if (d === 'untreated') { return '#3453b0'; }
+                if (d === 'untreated' || d === 'WATER' || d === 'Control') { return '#3453b0'; }
                 return 'black';
+            })
+            .attr('font-weight', (d) => {
+                if (d === 'untreated' || d === 'WATER' || d === 'Control') { return '700'; }
+                return '500';
             })
             // eslint-disable-next-line func-names
             .on('mouseover', function () {
