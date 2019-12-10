@@ -67,7 +67,7 @@ class StatTable extends React.Component {
                 bar, mRECIST, slope, AUC, survival,
             } = eachdata;
             return (
-                <tr key={index} className={`hey${index}`}>
+                <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
                     <td>{patient}</td>
                     <td>{model}</td>
                     <td>{drug}</td>
