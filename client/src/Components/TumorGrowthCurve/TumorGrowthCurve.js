@@ -357,40 +357,38 @@ class TumorGrowthCurve extends React.Component {
                 .enter();
 
             // making tooltips
-            // let tooltips = models.selectAll('.tooltip-dot')
-            //     .data(function(d) {return d.pdx_json})
+            // const tooltips = models.selectAll('.tooltip-dot')
+            //     .data((d) => d.pdx_json)
             //     .enter();
 
-            //     // timepoint
-            //     tooltips.append('text')
-            //         .attr('id', function(d,i) { return 'tooltip-t-' + d.model.replace(/\./g,' ')
-            //              .replaceAll(' ', '-') + '-' + d.exp_type + i})
-            //         .attr('class', 'tooltip-dot')
-            //         .attr('dx', width+20)
-            //         .attr('dy', height/2 + 30)
-            //         .attr('font-size', '14px')
-            //         .style('opacity', 0)
-            //         .attr('fill', 'black')
-            //         .html(function(d) {return 'Time: ' + d.time + ' days'})
+            // // timepoint
+            // tooltips.append('text')
+            //     .attr('id', (d, i) => `tooltip-t-${d.model.replace(/\./g, ' ')
+            //         .replaceAll(' ', '-')}-${d.exp_type}${i}`)
+            //     .attr('class', 'tooltip-dot')
+            //     .attr('dx', width + 20)
+            //     .attr('dy', height / 2 + 30)
+            //     .attr('font-size', '14px')
+            //     .style('opacity', 0)
+            //     .attr('fill', 'black')
+            //     .html((d) => `Time: ${d.time} days`);
 
-            //     // volume
-            //     tooltips.append('text')
-            //         .attr('id', function(d,i) { return 'tooltip-v-' + d.model.replace(/\./g,' ')
-            //              .replaceAll(' ', '-') + '-' + d.exp_type + i})
-            //         .attr('class', 'tooltip-dot')
-            //         .attr('dx', width+20)
-            //         .attr('dy', height/2 + 45)
-            //         .attr('font-size', '14px')
-            //         .style('opacity', 0)
-            //         .attr('fill', 'black')
-            //         .html(function(d) {
-            //             if (norm) {
-            //                 return 'Volume: ' + d3.format('.2f')(d.volume_normal) + ' mm³'
-            //             } else {
-            //                 return 'Volume: ' + d3.format('.2f')(d.volume) + ' mm³'
-            //             }
-
-            //         })
+            // // volume
+            // tooltips.append('text')
+            //     .attr('id', (d, i) => `tooltip-v-${d.model.replace(/\./g, ' ')
+            //         .replaceAll(' ', '-')}-${d.exp_type}${i}`)
+            //     .attr('class', 'tooltip-dot')
+            //     .attr('dx', width + 20)
+            //     .attr('dy', height / 2 + 45)
+            //     .attr('font-size', '14px')
+            //     .style('opacity', 0)
+            //     .attr('fill', 'black')
+            //     .html((d) => {
+            //         if (norm) {
+            //             return `Volume: ${d3.format('.2f')(d.volume_normal)} mm³`;
+            //         }
+            //         return `Volume: ${d3.format('.2f')(d.volume)} mm³`;
+            //     });
 
             dots.append('circle')
                 .attr('id', (d, i) => `dot-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}-${
@@ -429,8 +427,8 @@ class TumorGrowthCurve extends React.Component {
             // add line
             paths.append('path')
                 .attr('id', (d) => `path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
-                .attr('class', (d) => `model-path ${d.exp_type} ${
-                    d.model.replace(/\./g, ' ').replaceAll(' ', '-')} ${
+                .attr('class', (d) => `model-path_${d.exp_type}_${
+                    d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${
                     d.batch}`)
                 .attr('d', (d) => linepath(d.pdx_json))
                 .attr('fill', 'none')
@@ -441,17 +439,50 @@ class TumorGrowthCurve extends React.Component {
                     }
                     return '#5974c4';
                 })
-                .attr('stroke-width', 2)
+                .attr('stroke-width', 3)
                 .attr('stroke-dasharray', ('3', '3'))
+                // event listeners.
                 .on('mouseover', (d) => {
-                    d3.select('#path-X-3468-BG98').attr('stroke-width', 5);
-                    d3.selectAll('.hey1').selectAll('td').style('color', '#5974c4').style('background', '#fff0f7');
+                    d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                        .attr('stroke-width', 5)
+                        .style('opacity', 1.0);
+                    d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                        .selectAll('td')
+                        .style('color', '#f5f5f5')
+                        .style('background', '#5974c4');
                 })
                 .on('mouseout', (d) => {
-                    d3.select('#path-X-3468-BG98').attr('stroke-width', 2);
-                    d3.selectAll('.hey1').selectAll('td').style('color', '#cd5686').style('background', 'white');
+                    if (!(d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${d.batch}`).classed('selected'))) {
+                        d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                            .attr('stroke-width', 3)
+                            .style('opacity', 0.6);
+                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                            .selectAll('td')
+                            .style('color', '#cd5686')
+                            .style('background', 'white');
+                    }
+                })
+                .on('click', function (d) {
+                    if (!(d3.select(this).classed('selected'))) {
+                        d3.select(this).classed('selected', true);
+                        d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                            .attr('stroke-width', 5)
+                            .style('opacity', 1.0);
+                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                            .selectAll('td')
+                            .style('color', '#f5f5f5')
+                            .style('background', '#5974c4');
+                    } else if (d3.select(this).classed('selected')) {
+                        d3.select(this).classed('selected', false);
+                        d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                            .attr('stroke-width', 3)
+                            .style('opacity', 0.6);
+                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                            .selectAll('td')
+                            .style('color', '#cd5686')
+                            .style('background', 'white');
+                    }
                 });
-
             // plotMeans(data, graph, xrange, yrange, width, height);
             // modelToggle(graph, width, height)
         }
