@@ -357,38 +357,16 @@ class TumorGrowthCurve extends React.Component {
                 .enter();
 
             // making tooltips
-            // const tooltips = models.selectAll('.tooltip-dot')
-            //     .data((d) => d.pdx_json)
-            //     .enter();
-
-            // // timepoint
-            // tooltips.append('text')
-            //     .attr('id', (d, i) => `tooltip-t-${d.model.replace(/\./g, ' ')
-            //         .replaceAll(' ', '-')}-${d.exp_type}${i}`)
-            //     .attr('class', 'tooltip-dot')
-            //     .attr('dx', width + 20)
-            //     .attr('dy', height / 2 + 30)
-            //     .attr('font-size', '14px')
-            //     .style('opacity', 0)
-            //     .attr('fill', 'black')
-            //     .html((d) => `Time: ${d.time} days`);
-
-            // // volume
-            // tooltips.append('text')
-            //     .attr('id', (d, i) => `tooltip-v-${d.model.replace(/\./g, ' ')
-            //         .replaceAll(' ', '-')}-${d.exp_type}${i}`)
-            //     .attr('class', 'tooltip-dot')
-            //     .attr('dx', width + 20)
-            //     .attr('dy', height / 2 + 45)
-            //     .attr('font-size', '14px')
-            //     .style('opacity', 0)
-            //     .attr('fill', 'black')
-            //     .html((d) => {
-            //         if (norm) {
-            //             return `Volume: ${d3.format('.2f')(d.volume_normal)} mm³`;
-            //         }
-            //         return `Volume: ${d3.format('.2f')(d.volume)} mm³`;
-            //     });
+            const tooltip = d3.select('.wrapper')
+                .append('div')
+                .style('position', 'absolute')
+                .style('visibility', 'hidden')
+                .style('border', 'solid')
+                .style('border-width', '1px')
+                .style('border-radius', '5px')
+                .style('padding', '5px')
+                .attr('top', 10)
+                .attr('left', 20);
 
             dots.append('circle')
                 .attr('id', (d, i) => `dot-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}-${
@@ -443,6 +421,21 @@ class TumorGrowthCurve extends React.Component {
                 .attr('stroke-dasharray', ('3', '3'))
                 // event listeners.
                 .on('mouseover', (d) => {
+                    console.log(d);
+                    // tooltip on mousever setting the div to visible.
+                    tooltip
+                        .style('visibility', 'visible');
+
+                    // tooltip grabbing event.pageX and event.pageY
+                    // and set color according to the ordinal scale.
+                    tooltip
+                        .text([`Batch:${d.batch}`, ` Drug: ${d.drug}`, ` Exp. Type: ${d.exp_type}`, ` Model: ${d.model}`])
+                        .style('left', `${d3.event.pageX + 10}px`)
+                        .style('top', `${d3.event.pageY + 10}px`)
+                        .style('color', '#000000')
+                        .style('background-color', '#ffffff');
+
+                    // changing attributes of the line on mouseover.
                     d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
                         .attr('stroke-width', 5)
                         .style('opacity', 1.0);
@@ -452,6 +445,10 @@ class TumorGrowthCurve extends React.Component {
                         .style('background', '#5974c4');
                 })
                 .on('mouseout', (d) => {
+                    // tooltip on mousever setting the div to hidden.
+                    tooltip
+                        .style('visibility', 'hidden');
+                    // changing attributes back to normal of the line on mouseout.
                     if (!(d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${d.batch}`).classed('selected'))) {
                         d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
                             .attr('stroke-width', 3)
