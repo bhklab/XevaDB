@@ -365,6 +365,8 @@ class TumorGrowthCurve extends React.Component {
                 .style('border-width', '1px')
                 .style('border-radius', '5px')
                 .style('padding', '5px')
+                .style('width', '150px')
+                .style('height', '80px')
                 .attr('top', 10)
                 .attr('left', 20);
 
@@ -421,19 +423,30 @@ class TumorGrowthCurve extends React.Component {
                 .attr('stroke-dasharray', ('3', '3'))
                 // event listeners.
                 .on('mouseover', (d) => {
-                    console.log(d);
                     // tooltip on mousever setting the div to visible.
                     tooltip
                         .style('visibility', 'visible');
 
                     // tooltip grabbing event.pageX and event.pageY
                     // and set color according to the ordinal scale.
-                    tooltip
-                        .text([`Batch:${d.batch}`, ` Drug: ${d.drug}`, ` Exp. Type: ${d.exp_type}`, ` Model: ${d.model}`])
+                    const tooltipDiv = tooltip
                         .style('left', `${d3.event.pageX + 10}px`)
                         .style('top', `${d3.event.pageY + 10}px`)
                         .style('color', '#000000')
                         .style('background-color', '#ffffff');
+
+                    // tooltip data.
+                    const tooltipData = [
+                        `Batch: ${d.batch}`, `Drug: ${d.drug}`, `Exp_Type: ${d.exp_type}`, `Model: ${d.model}`,
+                    ];
+                    tooltipDiv.selectAll('textDiv')
+                        .data(tooltipData)
+                        .enter()
+                        .append('div')
+                        .attr('id', 'tooltiptext')
+                        .text((d) => d)
+                        .attr('x', `${d3.event.pageX + 10}px`)
+                        .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
 
                     // changing attributes of the line on mouseover.
                     d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
@@ -445,9 +458,13 @@ class TumorGrowthCurve extends React.Component {
                         .style('background', '#5974c4');
                 })
                 .on('mouseout', (d) => {
+                    // remove all the divs with id tooltiptext.
+                    d3.selectAll('#tooltiptext').remove();
+
                     // tooltip on mousever setting the div to hidden.
                     tooltip
                         .style('visibility', 'hidden');
+
                     // changing attributes back to normal of the line on mouseout.
                     if (!(d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${d.batch}`).classed('selected'))) {
                         d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
