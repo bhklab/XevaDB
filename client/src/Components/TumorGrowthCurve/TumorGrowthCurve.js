@@ -365,8 +365,8 @@ class TumorGrowthCurve extends React.Component {
                 .style('border-width', '1px')
                 .style('border-radius', '5px')
                 .style('padding', '5px')
-                .style('width', '150px')
-                .style('height', '80px')
+                .style('min-width', '150px')
+                .style('min-height', '80px')
                 .attr('top', 10)
                 .attr('left', 20);
 
@@ -444,7 +444,10 @@ class TumorGrowthCurve extends React.Component {
                         .enter()
                         .append('div')
                         .attr('id', 'tooltiptext')
-                        .text((d) => d)
+                        .html((d) => {
+                            const data = d.split(':');
+                            return `<b>${data[0]}</b>: ${data[1]}`;
+                        })
                         .attr('x', `${d3.event.pageX + 10}px`)
                         .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
 
