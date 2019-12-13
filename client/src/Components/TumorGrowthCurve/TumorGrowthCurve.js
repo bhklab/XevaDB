@@ -26,11 +26,6 @@ class TumorGrowthCurve extends React.Component {
         this.tumorGrowthCurve();
     }
 
-    // unity normalization
-    norm(value, first) {
-        return (value / first) - 1;
-    }
-
     // intiliazing the variables.
     tumorGrowthCurve() {
         const { node } = this;
@@ -43,6 +38,11 @@ class TumorGrowthCurve extends React.Component {
         } else {
             d3.select('svg').remove();
         }
+    }
+
+    // unity normalization
+    norm(value, first) {
+        return (value / first) - 1;
     }
 
     // This is the main function to create Growth curves.
