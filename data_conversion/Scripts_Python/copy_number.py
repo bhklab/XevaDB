@@ -8,7 +8,8 @@ files = [   '../Final_csv_file/genes_final.csv',
 
 input_file = [
     '../Initial_csv_file/copy_number_variation/copy_number_variation_pdxe.csv',
-    '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv'
+    '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv',
+    '../Initial_csv_file/copy_number_variation/copy_number_variation_SU2C.csv'
 ]
 output_file = '../Final_csv_file/copy_number_variation_final.csv'
 
