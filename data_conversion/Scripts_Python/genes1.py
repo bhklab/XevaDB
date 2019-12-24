@@ -3,14 +3,16 @@ import re
 
 
 files = [ 
-            # '../Initial_csv_file/mutation_data/mutation_data_pdxe.csv', 
-            # '../Initial_csv_file/mutation_data/mutation_data_TNBC.csv',
-            # '../Initial_csv_file/rna_sequencing/rna_sequencing_pdxe.csv',
-            # '../Initial_csv_file/rna_sequencing/rna_sequencing_SU2C.csv',
-            # '../Initial_csv_file/rna_sequencing/rna_sequencing_TNBC.csv',
-            # '../Initial_csv_file/copy_number_variation/copy_number_variation_pdxe.csv',
-            # '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv'
-            '../Initial_csv_file/mutation_data/abc.csv'
+            '../Initial_csv_file/mutation_data/mutation_data_pdxe.csv', 
+            '../Initial_csv_file/mutation_data/mutation_data_TNBC.csv',
+            '../Initial_csv_file/rna_sequencing/rna_sequencing_pdxe.csv',
+            '../Initial_csv_file/rna_sequencing/rna_sequencing_SU2C.csv',
+            '../Initial_csv_file/rna_sequencing/rna_sequencing_TNBC.csv',
+            '../Initial_csv_file/copy_number_variation/copy_number_variation_pdxe.csv',
+            '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv',
+            '../Initial_csv_file/copy_number_variation/copy_number_variation_SU2C.csv',
+            '../Initial_csv_file/mutation_data/mutation_data_SU2C.csv',
+            #'../Initial_csv_file/mutation_data/abc.csv'
         ]
 
 output_file = '../Final_csv_file/genes_final_test.csv'
