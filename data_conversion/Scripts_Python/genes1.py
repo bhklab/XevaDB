@@ -12,29 +12,29 @@ files = [
             '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv',
             '../Initial_csv_file/copy_number_variation/copy_number_variation_SU2C.csv',
             '../Initial_csv_file/mutation_data/mutation_data_SU2C.csv',
-            #'../Initial_csv_file/mutation_data/abc.csv'
+            #'../Initial_csv_file/abctest.csv'
         ]
 
-output_file = '../Final_csv_file/genes_final_test.csv'
-gene_list = []
+output_file = '../Final_csv_file/genes_final.csv'
+gene_list = {}
 unique_list = []
 value = 0
+counter = 1
 
 for file in files:
     with open(file, 'r') as read_file:
         for row in read_file:
             #print(row)
-            if(re.search(r'\bgene.id\b', row)):
+            row = (row.replace('"','').replace("\n", "")).replace("\r", "")
+            row = row.split(',')[1].upper()
+            if(re.search(r'\bGENE.ID\b', row)):
                     print('not useful')
-            else:
-                    row = (row.replace('"','').replace("\n", "")).replace("\r", "")
-                    row = row.split(',')[1]
-                    gene_list.append(row.upper())
+            elif(not gene_list.get(row)):
+                    gene_list[row] = counter
+                    counter+=1
 
-                        
-for gene in gene_list:
-    if gene not in unique_list:
-        unique_list.append(gene)
+unique_list = gene_list.keys()
+unique_list.sort()
 
 
 with open(output_file, 'w') as csv_file:
