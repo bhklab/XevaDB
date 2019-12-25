@@ -8,7 +8,9 @@ files = [
     '../Initial_csv_file/rna_sequencing/rna_sequencing_TNBC.csv',
     '../Initial_csv_file/rna_sequencing/rna_sequencing_pdxe.csv',
     '../Initial_csv_file/copy_number_variation/copy_number_variation_pdxe.csv',
-    '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv'
+    '../Initial_csv_file/copy_number_variation/copy_number_variation_TNBC.csv',
+    '../Initial_csv_file/copy_number_variation/copy_number_variation_SU2C.csv',
+    '../Initial_csv_file/mutation_data/mutation_data_SU2C.csv'
 ]
 
 output_file = '../Final_csv_file/sequencings_final.csv'
