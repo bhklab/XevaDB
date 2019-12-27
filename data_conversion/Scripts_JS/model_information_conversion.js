@@ -39,7 +39,7 @@ const writableStream = fs.createWriteStream(`../Final_csv_file/${file_final}_fin
 
 
 // reads the input file and streams the data with particular format to the output file.
-let id = 1;
+let id = 6367;
 function outputData() {
     MultiStream(streams).pipe(csv())
         .on('data', (data) => {
@@ -50,7 +50,7 @@ function outputData() {
             results.map((data) => {
                 if ((data[0] === '') || (data[0] === 'model.id') || (data[1] === 'model.id')) {} else {
                     let dataset = 0;
-                    console.log(data)
+                    console.log(data);
                     if (data[4].match(/SU2C/g) || data[5].match(/SU2C/g)) {
                         dataset = 8;
                     } else if (data[4].match(/TNBC/g) || data[5].match(/TNBC/g)) {
@@ -63,10 +63,12 @@ function outputData() {
                         dataset = 3;
                     } else if (data[2].match(/Gastric/g) || data[2].match(/GC/g)) {
                         dataset = 4;
-                    } else if (data[2].match(/Lung/g) || data[2].match(/NSCLC/g)) {
+                    } else if (data[2].match(/Lung/g) && data[2].match(/Carcinoma/g)) {
                         dataset = 5;
                     } else if (data[2].match(/Pancreatic/g) || data[2].match(/PDAC/g)) {
                         dataset = 6;
+                    } else if (data[2].match(/Lung/g)) {
+                        dataset = 7;
                     }
                     const drug = mapped_data[data[4]] || mapped_data[data[4].toLowerCase()];
                     csvStream.write({

@@ -36,7 +36,7 @@ const writableStream = fs.createWriteStream(`../Final_csv_file/${file_final}_fin
 
 
 // creating a read stream which is used to
-let id = 1;
+let id = 67446;
 function outputData() {
     MultiStream(streams).pipe(csv())
         .on('data', (data) => {

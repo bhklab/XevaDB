@@ -15,7 +15,7 @@ const file_final = (file_folder.split('/'))[2];
 // this array is required to store the lines read from the input csv file.
 const results = [];
 const streams = [];
-let id = 1;
+let id = 4484;
 
 // creating a writable stream which writes to growthcurve_data csv file.
 const csvStream = csv.createWriteStream({ headers: ['batch_id', 'batch'] });

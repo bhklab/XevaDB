@@ -11,6 +11,7 @@ const file_reader = require('./file_reader');
 
 // folder from where the files will be read.
 const file_folder = '/Initial_csv_file/batch_information/';
+
 const file_final = (file_folder.split('/'))[2];
 
 // this array is required to store the lines read from the input csv file.
@@ -25,6 +26,7 @@ const total_files = files.length;
 
 // These variables are for file_iterator, the mapped variables.
 const file_folder_map = '/Final_csv_file/';
+
 const files_map = ['models_final.csv', 'batches_final.csv'];
 const streams_map = [];
 const mapped_data = {};
