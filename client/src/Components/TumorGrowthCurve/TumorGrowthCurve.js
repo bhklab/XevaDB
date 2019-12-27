@@ -6,47 +6,32 @@
 /* eslint-disable no-plusplus */
 import React from 'react';
 import * as d3 from 'd3';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
-import StatTable from '../ModelResponseStat/ModelResponseStatTable';
+import StatTable from '../ResponseStat/ModelResponseStatTable';
 
 class TumorGrowthCurve extends React.Component {
     constructor(props) {
         super(props);
-        // setting states for the data.
-        this.state = {
-            data: [],
-        };
         // binding the functions declared.
-        // this.norm = this.norm.bind(this);
-        this.dataParse = this.dataParse.bind(this);
         this.makeTumorGrowthCurve = this.makeTumorGrowthCurve.bind(this);
-        this.batchToggle = this.batchToggle.bind(this);
     }
 
     componentDidMount() {
-        const { patientParam, drugParam } = this.props;
-        axios.get(`/api/v1/treatment?drug=${drugParam}&patient=${patientParam}`)
-            .then((response) => {
-                function unique(value, index, self) {
-                    return self.indexOf(value) === index;
-                }
-                const batches = [];
-
-                for (let i = 0; i < response.data.length; i++) {
-                    batches.push(response.data[i].batch);
-                }
-                this.batchToggle('plot', batches.filter(unique));
-                this.dataParse(response.data, batches[0]);
-            });
+        // this.tumorGrowthCurve();
     }
 
     componentDidUpdate() {
+        this.tumorGrowthCurve();
+    }
+
+    // intiliazing the variables.
+    tumorGrowthCurve() {
         const { node } = this;
         const plotId = 'plot';
-        const { data } = this.state;
+        const { data } = this.props;
+
         if (data.length !== 0) {
             this.makeTumorGrowthCurve(data, plotId, node);
             d3.select('.no-graph').remove();
@@ -60,90 +45,8 @@ class TumorGrowthCurve extends React.Component {
         return (value / first) - 1;
     }
 
-    // filters by batch - comment out the batch lines for full data
-    // call this command to create a curve!!!
-    dataParse(data, batchSelect) {
-        const dataFormatted = [];
-        const batches = [];
-        String.prototype.replaceAll = String.prototype.replaceAll || function (s, r) {
-            return this.replace(new RegExp(s, 'g'), r);
-        };
-
-        // loop throuth the data and set the values in the variable.
-        for (let i = 0; i < data.length; i++) {
-            batches.push(data[i].batch);
-            if (data[i].batch === batchSelect) {
-                if (data[i].time === 0 || data[i].time === -39) {
-                    const newDatapt = {
-                        exp_type: data[i].type,
-                        batch: data[i].patient_id,
-                        model: data[i].model_id,
-                        drug: data[i].drug,
-                        pdx_points: [{
-                            times: [parseInt(data[i].time)],
-                            volumes: [parseFloat(data[i].volume)],
-                            volume_normals: [parseFloat(data[i].volume_normal)],
-                        }],
-                        pdx_json: [{
-                            model: data[i].model_id.replace(/\./g, ' ').replaceAll(' ', '-'),
-                            batch: data[i].patient_id,
-                            exp_type: data[i].type,
-                            time: parseInt(data[i].time),
-                            volume: parseFloat(data[i].volume),
-                            volume_normal: parseFloat(data[i].volume_normal),
-                        }],
-
-                    };
-                    dataFormatted.push(newDatapt);
-                } else if (data[i].time <= 500) {
-                    dataFormatted[dataFormatted.length - 1].pdx_points[0]
-                        .times.push(parseInt(data[i].time));
-                    dataFormatted[dataFormatted.length - 1].pdx_points[0]
-                        .volumes.push(parseFloat(data[i].volume));
-                    dataFormatted[dataFormatted.length - 1].pdx_points[0]
-                        .volume_normals.push(parseFloat(data[i].volume_normal));
-                    dataFormatted[dataFormatted.length - 1].pdx_json.push(
-                        {
-                            model: data[i].model_id,
-                            batch: data[i].patient_id,
-                            exp_type: data[i].type,
-                            time: parseInt(data[i].time),
-                            volume: parseFloat(data[i].volume),
-                            volume_normal: parseFloat(data[i].volume_normal),
-                        },
-                    );
-                }
-            }
-        }
-
-        this.setState({ data: dataFormatted });
-    }
-
-    // toggle if batches present
-    // currently no batch in the data, so took patient id as the batch.
-    batchToggle(plotId, batches) {
-        const select = d3.select(`#pdx${plotId}`) // TODO: PLOT ID
-            .append('select')
-            .attr('class', 'select')
-            .on('change', onchange);
-
-
-        select.selectAll('option')
-            .data(batches).enter()
-            .append('option')
-            .text((d) => d);
-
-        function onchange() {
-            d3.select('select').property('value');
-            select('#pdxplot').remove();
-        }
-    }
-
-
     // This is the main function to create Growth curves.
-
     makeTumorGrowthCurve(data, plotId, node) {
-        this.node = node;
         tumorCurve(data, plotId, node);
 
         String.prototype.replaceAll = String.prototype.replaceAll || function (s, r) {
@@ -358,40 +261,18 @@ class TumorGrowthCurve extends React.Component {
                 .enter();
 
             // making tooltips
-            // let tooltips = models.selectAll('.tooltip-dot')
-            //     .data(function(d) {return d.pdx_json})
-            //     .enter();
-
-            //     // timepoint
-            //     tooltips.append('text')
-            //         .attr('id', function(d,i) { return 'tooltip-t-' + d.model.replace(/\./g,' ')
-            //              .replaceAll(' ', '-') + '-' + d.exp_type + i})
-            //         .attr('class', 'tooltip-dot')
-            //         .attr('dx', width+20)
-            //         .attr('dy', height/2 + 30)
-            //         .attr('font-size', '14px')
-            //         .style('opacity', 0)
-            //         .attr('fill', 'black')
-            //         .html(function(d) {return 'Time: ' + d.time + ' days'})
-
-            //     // volume
-            //     tooltips.append('text')
-            //         .attr('id', function(d,i) { return 'tooltip-v-' + d.model.replace(/\./g,' ')
-            //              .replaceAll(' ', '-') + '-' + d.exp_type + i})
-            //         .attr('class', 'tooltip-dot')
-            //         .attr('dx', width+20)
-            //         .attr('dy', height/2 + 45)
-            //         .attr('font-size', '14px')
-            //         .style('opacity', 0)
-            //         .attr('fill', 'black')
-            //         .html(function(d) {
-            //             if (norm) {
-            //                 return 'Volume: ' + d3.format('.2f')(d.volume_normal) + ' mm³'
-            //             } else {
-            //                 return 'Volume: ' + d3.format('.2f')(d.volume) + ' mm³'
-            //             }
-
-            //         })
+            const tooltip = d3.select('.wrapper')
+                .append('div')
+                .style('position', 'absolute')
+                .style('visibility', 'hidden')
+                .style('border', 'solid')
+                .style('border-width', '1px')
+                .style('border-radius', '5px')
+                .style('padding', '5px')
+                .style('min-width', '150px')
+                .style('min-height', '80px')
+                .attr('top', 10)
+                .attr('left', 20);
 
             dots.append('circle')
                 .attr('id', (d, i) => `dot-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}-${
@@ -430,8 +311,8 @@ class TumorGrowthCurve extends React.Component {
             // add line
             paths.append('path')
                 .attr('id', (d) => `path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
-                .attr('class', (d) => `model-path ${d.exp_type} ${
-                    d.model.replace(/\./g, ' ').replaceAll(' ', '-')} ${
+                .attr('class', (d) => `model-path_${d.exp_type}_${
+                    d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${
                     d.batch}`)
                 .attr('d', (d) => linepath(d.pdx_json))
                 .attr('fill', 'none')
@@ -442,10 +323,88 @@ class TumorGrowthCurve extends React.Component {
                     }
                     return '#5974c4';
                 })
-                .attr('stroke-width', 2)
-                .attr('stroke-dasharray', ('3', '3'));
+                .attr('stroke-width', 3)
+                .attr('stroke-dasharray', ('3', '3'))
+                // event listeners.
+                .on('mouseover', (d) => {
+                    // tooltip on mousever setting the div to visible.
+                    tooltip
+                        .style('visibility', 'visible');
 
-            plotMeans(data, graph, xrange, yrange, width, height);
+                    // tooltip grabbing event.pageX and event.pageY
+                    // and set color according to the ordinal scale.
+                    const tooltipDiv = tooltip
+                        .style('left', `${d3.event.pageX + 10}px`)
+                        .style('top', `${d3.event.pageY + 10}px`)
+                        .style('color', '#000000')
+                        .style('background-color', '#ffffff');
+
+                    // tooltip data.
+                    const tooltipData = [
+                        `Batch: ${d.batch}`, `Drug: ${d.drug}`, `Exp_Type: ${d.exp_type}`, `Model: ${d.model}`,
+                    ];
+                    tooltipDiv.selectAll('textDiv')
+                        .data(tooltipData)
+                        .enter()
+                        .append('div')
+                        .attr('id', 'tooltiptext')
+                        .html((d) => {
+                            const data = d.split(':');
+                            return `<b>${data[0]}</b>: ${data[1]}`;
+                        })
+                        .attr('x', `${d3.event.pageX + 10}px`)
+                        .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
+
+                    // changing attributes of the line on mouseover.
+                    d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                        .attr('stroke-width', 5)
+                        .style('opacity', 1.0);
+                    d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                        .selectAll('td')
+                        .style('color', '#f5f5f5')
+                        .style('background', '#5974c4');
+                })
+                .on('mouseout', (d) => {
+                    // remove all the divs with id tooltiptext.
+                    d3.selectAll('#tooltiptext').remove();
+
+                    // tooltip on mousever setting the div to hidden.
+                    tooltip
+                        .style('visibility', 'hidden');
+
+                    // changing attributes back to normal of the line on mouseout.
+                    if (!(d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${d.batch}`).classed('selected'))) {
+                        d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                            .attr('stroke-width', 3)
+                            .style('opacity', 0.6);
+                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                            .selectAll('td')
+                            .style('color', '#cd5686')
+                            .style('background', 'white');
+                    }
+                })
+                .on('click', function (d) {
+                    if (!(d3.select(this).classed('selected'))) {
+                        d3.select(this).classed('selected', true);
+                        d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                            .attr('stroke-width', 5)
+                            .style('opacity', 1.0);
+                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                            .selectAll('td')
+                            .style('color', '#f5f5f5')
+                            .style('background', '#5974c4');
+                    } else if (d3.select(this).classed('selected')) {
+                        d3.select(this).classed('selected', false);
+                        d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                            .attr('stroke-width', 3)
+                            .style('opacity', 0.6);
+                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                            .selectAll('td')
+                            .style('color', '#cd5686')
+                            .style('background', 'white');
+                    }
+                });
+            // plotMeans(data, graph, xrange, yrange, width, height);
             // modelToggle(graph, width, height)
         }
 

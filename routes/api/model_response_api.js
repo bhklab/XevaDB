@@ -18,7 +18,7 @@ const getModelResponseBasedOnDataset = function (request, response) {
     //         });
     // }
 
-    const promise1 = knex('model_information')
+    const distinctPatients = knex('model_information')
         .distinct('patients.patient')
         .from('model_information')
         .leftJoin(
@@ -30,7 +30,7 @@ const getModelResponseBasedOnDataset = function (request, response) {
             dataset_id: param_dataset,
         });
 
-    const promise2 = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id')
+    const selectModelResponse = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id')
         .from('model_response')
         .rightJoin(
             'model_information',
@@ -48,8 +48,8 @@ const getModelResponseBasedOnDataset = function (request, response) {
             'drugs.drug_id',
         )
         .where('model_information.dataset_id', param_dataset)
-    // .whereIn('model_response.model_id', distinctPatient)
-    // .andWhere('model_response.response_type', 'mRECIST')
+        // .whereIn('model_response.model_id', distinctPatient)
+        // .andWhere('model_response.response_type', 'mRECIST')
         .andWhere(function () {
             this.where('model_response.response_type', 'mRECIST');
             // .orWhereNull('model_response.response_type')
@@ -58,11 +58,11 @@ const getModelResponseBasedOnDataset = function (request, response) {
         .orderBy('patient');
 
 
-    Promise.all([promise1, promise2])
+    Promise.all([distinctPatients, selectModelResponse])
         .then((row) => {
             let drug = '';
             const data = [];
-            const untreated = { Drug: 'untreated' };
+            const untreated = {};
             let value = 0;
             let patient = [];
 
@@ -71,7 +71,8 @@ const getModelResponseBasedOnDataset = function (request, response) {
             usersRows.forEach((element) => {
                 if (element.drug_name === drug) {
                     data[value - 1][element.patient] = element.value;
-                } else if (element.drug_name === 'untreated') {
+                } else if (element.drug_name === 'untreated' || element.drug_name === 'WATER' || element.drug_name === 'Control') {
+                    untreated.Drug = element.drug_name;
                     untreated[element.patient] = element.value;
                 } else {
                     drug = element.drug_name;
@@ -81,6 +82,7 @@ const getModelResponseBasedOnDataset = function (request, response) {
                     value += 1;
                 }
             });
+
             if (Object.entries(untreated).length === 1 && untreated.constructor === Object) {}
             else { data.unshift(untreated); }
 
@@ -111,7 +113,7 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
     // to always include untreated/water (control)
     drug.push('untreated');
 
-    const distinct_patients = knex('model_information')
+    const distinctPatients = knex('model_information')
         .distinct('patients.patient')
         .from('model_information')
         .leftJoin(
@@ -123,7 +125,7 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
             dataset_id: param_dataset,
         });
 
-    const response_data = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id')
+    const responseData = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id')
         .from('model_response')
         .rightJoin(
             'model_information',
@@ -150,7 +152,7 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
         .orderBy('patient');
 
 
-    Promise.all([distinct_patients, response_data])
+    Promise.all([distinctPatients, responseData])
         .then((row) => {
             let drug = '';
             const data = [];
@@ -163,7 +165,8 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
             usersRows.forEach((element) => {
                 if (element.drug_name === drug) {
                     data[value - 1][element.patient] = element.value;
-                } else if (element.drug_name === 'untreated') {
+                } else if (element.drug_name === 'untreated' || element.drug_name === 'WATER' || element.drug_name === 'Control') {
+                    untreated.Drug = element.drug_name;
                     untreated[element.patient] = element.value;
                 } else {
                     drug = element.drug_name;
@@ -195,48 +198,78 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
 // based on drug and patient (model_id).
 const getModelResponseStats = function (request, response) {
     // grabbing the drug parameters and dataset parameters.
-    let paramDrug = request.query.drug;
-    const paramPatient = request.query.patient;
+    let { drug } = request.query;
+    const { patient } = request.query;
 
     // this will remove the spaces in the drug name and replace
     // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
-    paramDrug = paramDrug.replace(/\s\s\s/g, ' + ');
+    drug = drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
 
-    knex.select()
-        .from('model_response')
-        .leftJoin(
+    // grabs the batch id based on the patient id and drug param passed.
+    const grabBatchId = knex.select('batch_information.batch_id')
+        .from('batch_information')
+        .rightJoin(
             'model_information',
-            'model_response.model_id',
+            'batch_information.model_id',
             'model_information.model_id',
         )
-        .leftJoin(
+        .rightJoin(
             'patients',
             'model_information.patient_id',
             'patients.patient_id',
         )
-        .leftJoin(
+        .rightJoin(
             'drugs',
             'model_information.drug_id',
             'drugs.drug_id',
         )
-        .leftJoin(
-            'models',
-            'model_information.model_id',
-            'models.model_id',
-        )
-        .where('patients.patient', paramPatient)
-        .andWhere(function () {
-            this.where('drugs.drug_name', paramDrug)
-                .orWhere('drugs.drug_name', 'water')
-                .orWhere('drugs.drug_name', 'untreated');
-        })
-        .then((data) => {
-            response.send(data);
-        })
-        .catch((error) => response.status(500).json({
-            status: 'an error has occured in stats route at getModelResponseStats',
-            data: error,
-        }));
+        .where('drugs.drug_name', drug)
+        .andWhere('patients.patient', patient);
+
+    grabBatchId.then((batch) => {
+        knex.select()
+            .from('model_response')
+            .leftJoin(
+                'model_information',
+                'model_response.model_id',
+                'model_information.model_id',
+            )
+            .leftJoin(
+                'patients',
+                'model_information.patient_id',
+                'patients.patient_id',
+            )
+            .leftJoin(
+                'drugs',
+                'model_information.drug_id',
+                'drugs.drug_id',
+            )
+            .leftJoin(
+                'batch_information',
+                'batch_information.model_id',
+                'model_information.model_id',
+            )
+            .leftJoin(
+                'models',
+                'model_information.model_id',
+                'models.model_id',
+            )
+            .where('patients.patient', patient)
+            .andWhere(function () {
+                this.where('drugs.drug_name', drug)
+                    .orWhere('drugs.drug_name', 'water')
+                    .orWhere('drugs.drug_name', 'untreated')
+                    .orWhere('drugs.drug_name', 'control');
+            })
+            .andWhere('batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)
+            .then((data) => {
+                response.send(data);
+            })
+            .catch((error) => response.status(500).json({
+                status: 'an error has occured in stats route at getModelResponseStats',
+                data: error,
+            }));
+    });
 };
 
 

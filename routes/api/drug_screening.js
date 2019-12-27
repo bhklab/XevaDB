@@ -6,6 +6,7 @@ const knex = require('../../db/knex1');
 const getDrugScreening = function (request, response) {
     let { drug } = request.query;
     const { patient } = request.query;
+
     // this will remove the spaces in the drug name and replace
     // it with ' + '. example BKM120   LDE225 => BKM120 + LDE225
     drug = drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');

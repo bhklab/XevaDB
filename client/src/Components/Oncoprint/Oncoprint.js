@@ -29,16 +29,20 @@ class Oncoprint extends React.Component {
         const { hmap_patients } = this.props;
         const { data_mut } = this.props;
         const { data_rna } = this.props;
+        const { data_cnv } = this.props;
         const { genes_mut } = this.props;
         const { genes_rna } = this.props;
+        const { genes_cnv } = this.props;
         const { patient_mut } = this.props;
         const { patient_rna } = this.props;
+        const { patient_cnv } = this.props;
 
-        this.makeOncoprint(node, className, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, genes_mut, genes_rna, patient_mut, patient_rna);
+        this.makeOncoprint(node, className, dimensions, margin, threshold, hmap_patients,
+            data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv);
     }
 
 
-    makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, genes_mut, genes_rna, patient_mut, patient_rna) {
+    makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
         // to merge two arrays and give the unique values.
         // eslint-disable-next-line no-extend-native
         Array.prototype.unique = function () {
@@ -50,7 +54,7 @@ class Oncoprint extends React.Component {
             }
             return a;
         };
-        const genes = genes_mut.concat(genes_rna).unique();
+        const genes = genes_mut.concat(genes_rna).concat(genes_cnv).unique();
 
         this.node = node;
 
@@ -69,8 +73,6 @@ class Oncoprint extends React.Component {
         if (data_mut.length > 0) {
             rect_alterations_mut = [
                 { value: 'Mutation', color: '#e41a1c' },
-                { value: 'Deep Deletion', color: '#0033CC' },
-                { value: 'Amplification', color: '#1a9850' },
             ];
         }
         // only if rnaseq data is available.
@@ -81,10 +83,19 @@ class Oncoprint extends React.Component {
                 { value: 'mRNA Low', color: 'none' },
             ];
         }
+        // only if the cnv data is present.
+        let rect_alterations_cnv = [];
+        if (data_cnv.length > 0) {
+            rect_alterations_cnv = [
+                { value: 'Deep Deletion', color: '#0033CC' },
+                { value: 'Amplification', color: '#1a9850' },
+            ];
+        }
 
         const rect_alterations = [
             ...rect_alterations_mut,
             ...rect_alterations_rna,
+            ...rect_alterations_cnv,
             { value: 'Wild Type', color: 'lightgray' },
             { value: 'Not Available', color: 'none' },
         ];
@@ -153,9 +164,10 @@ class Oncoprint extends React.Component {
         // collect info about alterations per gene/patient for plotting later
         const gene_alterations = {};
         const patient_alterations = [];
-        if (genes_mut.length > 0) {
-            for (let i = 0; i < genes_mut.length; i++) {
-                gene_alterations[genes_mut[i]] = { mut: 0, amp: 0, del: 0 };
+
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
+            for (let i = 0; i < genes.length; i++) {
+                gene_alterations[genes[i]] = { mut: 0, amp: 0, del: 0 };
             }
 
             for (let i = 0; i < hmap_patients.length; i++) {
@@ -163,14 +175,15 @@ class Oncoprint extends React.Component {
             }
         }
 
-        // take the difference of patient_mut from hmap_patients
+        // take the difference of patient_mut/cnv/rna from hmap_patients
         let diff = [];
         if (patient_mut.length > 0) {
             diff = hmap_patients.filter((x) => !patient_mut.includes(x));
-        } else {
+        } else if (patient_mut.length === 0 && patient_rna.length > 0) {
             diff = hmap_patients.filter((x) => !patient_rna.includes(x));
+        } else {
+            diff = hmap_patients.filter((x) => !patient_cnv.includes(x));
         }
-
 
         /** Coloring the rectangles based on mutation data * */
 
@@ -179,10 +192,15 @@ class Oncoprint extends React.Component {
             // setting a = 12 if value is mut
             const a = value === 'mut' ? 12 : 0;
             // setting the color based on value param.
-            if (value !== 'empty' && value !== 'highrna' && value !== 'lowrna') {
-                gene_alterations[genes_mut[i]][value]++;
+            if (value !== 'empty' && value === 'mut') {
+                gene_alterations[genes[i]][value]++;
+                patient_alterations[j][value]++;
+            } else if (value !== 'empty' && (value === 'amp' || value === 'del')) {
+                gene_alterations[genes[i]][value]++;
                 patient_alterations[j][value]++;
             }
+
+            // value !== 'highrna' && value !== 'lowrna' && value! == 'amp'
             // this is for mutation data and rnaseq.
             const rect = alterations.append('rect')
                 .attr('class', `alter-rect ${value}`)
@@ -217,7 +235,7 @@ class Oncoprint extends React.Component {
         };
 
 
-        // coloring the rectangles.
+        /** Coloring the rectangles borders based on mutation data * */
         for (let i = 0; i < genes_mut.length; i++) {
             for (let j = 0; j < hmap_patients.length; j++) {
                 if (diff.indexOf(hmap_patients[j]) !== -1) {
@@ -227,21 +245,39 @@ class Oncoprint extends React.Component {
                     // complete layer of lightgrey rectangles.
                     colorReactangles('empty', 'lightgrey', i, j);
                     // based on the data gives different colors to the rectangle.
-                    if (data_mut[i][hmap_patients[j]].includes('Del0.8') || data_mut[i][hmap_patients[j]].includes('Deletion')) {
-                        colorReactangles('del', '#0033CC', i, j);
-                    }
-                    if (data_mut[i][hmap_patients[j]].includes('Amp') || data_mut[i][hmap_patients[j]].includes('Amplification')) {
-                        colorReactangles('amp', '#1a9850', i, j);
-                    }
-                    if (data_mut[i][hmap_patients[j]].includes('MutNovel') || data_mut[i][hmap_patients[j]].includes('mutation') || data_mut[i][hmap_patients[j]].includes('MutKnownFunctional')) {
+                    if (data_mut[i][hmap_patients[j]].includes('MutNovel') || data_mut[i][hmap_patients[j]].includes('mutation') || data_mut[i][hmap_patients[j]].includes('MutKnownFunctional') || data_mut[i][hmap_patients[j]].includes('Mutation')) {
                         colorReactangles('mut', '#e41a1c', i, j);
                     }
                 }
             }
         }
 
-        /** Coloring the rectangles borders based on rna sequencing data * */
 
+        /** Coloring the rectangles borders based on cnv data * */
+        for (let i = 0; i < genes.length; i++) {
+            for (let j = 0; j < hmap_patients.length; j++) {
+                if (genes_cnv.includes(genes[i])) {
+                    if (diff.indexOf(hmap_patients[j]) !== -1) {
+                        // if not sequenced, make it white with a border
+                        colorNotSequenced(i, j);
+                    } else {
+                        // complete layer of lightgrey rectangles only if mutation data is not available.
+                        if (data_mut.length === 0) {
+                            colorReactangles('empty', 'lightgrey', i, j);
+                        }
+                        // based on the data gives different colors to the rectangle.
+                        if (data_cnv[i][hmap_patients[j]].includes('Del0.8') || data_cnv[i][hmap_patients[j]].includes('Deletion')) {
+                            colorReactangles('del', '#0033CC', i, j);
+                        }
+                        if (data_cnv[i][hmap_patients[j]].includes('Amp') || data_cnv[i][hmap_patients[j]].includes('Amplification')) {
+                            colorReactangles('amp', '#1a9850', i, j);
+                        }
+                    }
+                }
+            }
+        }
+
+        /** Coloring the rectangles borders based on rna sequencing data * */
         // variable for taking care of rnaseq data sequence.
         let z = 0;
         for (let i = 0; i < genes.length; i++) {
@@ -252,7 +288,7 @@ class Oncoprint extends React.Component {
                         colorNotSequenced(i, j);
                     } else { // only if the element is not included
                         // complete layer of lightgrey rectangles only if mutation data is not available.
-                        if (data_mut.length === 0) {
+                        if (data_mut.length === 0 && data_cnv.length === 0) {
                             colorReactangles('empty', 'lightgrey', i, j);
                         }
                         if (Number(data_rna[z][hmap_patients[j]]) > threshold) {
@@ -273,7 +309,7 @@ class Oncoprint extends React.Component {
         let maxPMut = [];
         let maxPHomdel = [];
 
-        if (genes_mut.length > 0) {
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
             for (let i = 0; i < patient_alterations.length; i++) {
                 maxPAmp.push(patient_alterations[i].amp);
                 maxPHomdel.push(patient_alterations[i].del);
@@ -289,11 +325,11 @@ class Oncoprint extends React.Component {
         let maxGMut = [];
         let maxGHomdel = [];
 
-        if (genes_mut.length > 0) {
-            for (let i = 0; i < genes_mut.length; i++) {
-                maxGAmp.push(gene_alterations[genes_mut[i]].amp);
-                maxGHomdel.push(gene_alterations[genes_mut[i]].del);
-                maxGMut.push(gene_alterations[genes_mut[i]].mut);
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
+            for (let i = 0; i < genes.length; i++) {
+                maxGAmp.push(gene_alterations[genes[i]].amp);
+                maxGHomdel.push(gene_alterations[genes[i]].del);
+                maxGMut.push(gene_alterations[genes[i]].mut);
             }
             maxGAmp = d3.max(maxGAmp);
             maxGHomdel = d3.max(maxGHomdel);
@@ -304,11 +340,11 @@ class Oncoprint extends React.Component {
 
         /** Vertical Graph * */
 
-        if (genes_mut.length > 0) {
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
             // calculating max width
             const max_width_arr = [];
-            for (let i = 0; i < genes_mut.length; i++) {
-                max_width_arr.push(gene_alterations[genes_mut[i]].mut + gene_alterations[genes_mut[i]].amp + gene_alterations[genes_mut[i]].del);
+            for (let i = 0; i < genes.length; i++) {
+                max_width_arr.push(gene_alterations[genes[i]].mut + gene_alterations[genes[i]].amp + gene_alterations[genes[i]].del);
             }
 
             const max_width = d3.max(max_width_arr);
@@ -350,16 +386,16 @@ class Oncoprint extends React.Component {
                         color = '#e41a1c';
                     } else if (type === 'amp') {
                         color = '#1a9850';
-                        x_range += xrange_gene(gene_alterations[genes_mut[i]].mut);
+                        x_range += xrange_gene(gene_alterations[genes[i]].mut);
                     } else if (type === 'del') {
                         color = '#0033CC';
-                        x_range += xrange_gene(gene_alterations[genes_mut[i]].amp);
+                        x_range += xrange_gene(gene_alterations[genes[i]].amp);
                     }
                     // rectangle coloring.
                     gene_alter.append('rect')
                         .attr('class', `gene-rect ${type}`)
                         .attr('height', rect_height - 6)
-                        .attr('width', xrange_gene(gene_alterations[genes_mut[i]][type]))
+                        .attr('width', xrange_gene(gene_alterations[genes[i]][type]))
                         .attr('fill', color)
                         .attr('y', (i * (rect_height)))
                         .attr('x', x_range);
@@ -367,7 +403,7 @@ class Oncoprint extends React.Component {
             };
 
             // calculate alterations for each row.
-            for (let i = 0; i < genes_mut.length; i++) {
+            for (let i = 0; i < genes.length; i++) {
                 geneAlterationReactangle(i);
             }
 
@@ -405,7 +441,7 @@ class Oncoprint extends React.Component {
 
         // calculating max height
 
-        if (genes_mut.length > 0) {
+        if (genes_mut.length > 0 || genes_cnv.length > 0) {
             const max_height_arr = [];
             for (let i = 0; i < patient_alterations.length; i++) {
                 max_height_arr.push(patient_alterations[i].mut + patient_alterations[i].amp + patient_alterations[i].del);
@@ -417,9 +453,8 @@ class Oncoprint extends React.Component {
                 .attr('id', 'patient-alter');
 
             const yrange_patient = d3.scaleLinear() // #TODO: scale.linear
-                .domain([0, d3.max([maxPAmp, maxPMut, maxPHomdel])])
+                .domain([0, max_height])
                 .range([35, 0]);
-
 
             // function to caculate alterations.
             const patientAlterationReactangle = (iterator) => {
@@ -432,8 +467,10 @@ class Oncoprint extends React.Component {
                 patient_class.forEach((type, j) => {
                     // set value to 1 if j is greater than 1.
                     j = j > 1 ? j / j : j;
+
                     // setting y range.
                     y_range = (yrange_patient(patient_alterations[i][type])) - ((35 * j) - y_range);
+
                     // color setting.
                     let color = '';
                     if (type === 'mut') {
@@ -465,9 +502,9 @@ class Oncoprint extends React.Component {
 
             const y_axis = d3.axisLeft()
                 .scale(yrange_axis)
-                .ticks(4)
-                .tickSize(3)
-                .tickFormat(d3.format('.0f'));
+                .ticks(4); // change to dynamic ticks.
+                // .tickSize(2)
+                // .tickFormat(d3.format('.0f'));
 
             svg.append('g')
                 .attr('class', 'y_axis')
@@ -631,10 +668,13 @@ Oncoprint.propTypes = {
     hmap_patients: PropTypes.arrayOf(PropTypes.string).isRequired,
     genes_mut: PropTypes.arrayOf(PropTypes.string).isRequired,
     genes_rna: PropTypes.arrayOf(PropTypes.string).isRequired,
+    genes_cnv: PropTypes.arrayOf(PropTypes.string).isRequired,
     patient_mut: PropTypes.arrayOf(PropTypes.string).isRequired,
     patient_rna: PropTypes.arrayOf(PropTypes.string).isRequired,
+    patient_cnv: PropTypes.arrayOf(PropTypes.string).isRequired,
     data_mut: PropTypes.arrayOf(PropTypes.object).isRequired,
     data_rna: PropTypes.arrayOf(PropTypes.object).isRequired,
+    data_cnv: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 

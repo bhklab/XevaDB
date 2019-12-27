@@ -33,39 +33,35 @@ class SearchResultOncoprint extends React.Component {
         const { geneParam } = this.props;
         const { genomicsParam } = this.props;
         const queryData = [];
+        const genomics = [];
 
         // making get requests based on the genomics parameters.
         // sequence is important (first cnv or mutation) then rnaseq has to be pushed.
-        if (genomicsParam.includes('CNV') || genomicsParam.includes('Mutation')) {
+        if (genomicsParam.includes('Mutation')) {
             queryData.push(axios.get(`/api/v1/mutation?genes=${geneParam}&dataset=${datasetParam}`));
+            genomics.push('Mutation');
         }
-        if (genomicsParam.includes('RNASeq')) {
+        if (genomicsParam.includes('RNASeq') || genomicsParam.includes('Expression')) {
             queryData.push(axios.get(`/api/v1/rnaseq?genes=${geneParam}&dataset=${datasetParam}`));
+            genomics.push('RNASeq');
+        }
+        if (genomicsParam.includes('CNV')) {
+            queryData.push(axios.get(`/api/v1/cnv?genes=${geneParam}&dataset=${datasetParam}`));
+            genomics.push('CNV');
         }
 
         Promise.all([...queryData])
             .then((response) => {
-                this.updateResults(response, genomicsParam);
+                this.updateResults(response, genomics);
             });
     }
 
-    updateResults(result, genomicsParam) {
-        const genomicsValue = genomicsParam.split(',');
-        const genomics = [];
-
-        // temporary solution to remove cnv if everything is selected.
-        if ((genomicsValue.includes('Mutation') || genomicsValue.includes('CNV'))) {
-            genomics.push('Mutation');
-        }
-        if (genomicsValue.includes('RNASeq')) {
-            genomics.push('RNASeq');
-        }
-
+    updateResults(result, genomics) {
         // grab the last array(patient array) from result[0]
         const dataset = result[0].data;
 
         // grabbing the total patients from hmap.
-        const hmapPatients = dataset.pop();
+        let hmapPatients = dataset.pop();
 
         // removing last element from each array element of result
         if (result.length > 1) {
@@ -75,6 +71,21 @@ class SearchResultOncoprint extends React.Component {
                 }
             });
         }
+
+        // this is according to the object and heatmap sequence.
+        result.forEach((value, i) => { // can't break in forEach use for if wanna break.
+            const dataObject = {};
+            if (value.data.length > 1) {
+                hmapPatients.forEach((patient) => {
+                    if (!result[i].data[0][patient]) {
+                        dataObject[patient] = '';
+                    } else {
+                        dataObject[patient] = result[i].data[0][patient];
+                    }
+                });
+            }
+            hmapPatients = Object.keys(dataObject);
+        });
 
         // setting patients genes and data for each of mutation,
         // cnv and rna (given they are present)
@@ -114,18 +125,18 @@ class SearchResultOncoprint extends React.Component {
         this.setState({
             threshold,
             hmapPatients,
-            patientMut: patient.patient_mut === undefined ? patientMut : patient.patient_mut,
-            patientRna: patient.patient_rna === undefined ? patientRna : patient.patient_rna,
-            patientCnv: patient.patient_cnv === undefined ? patientCnv : patient.patient_cnv,
-            genesMut: genes.genes_mut === undefined ? genesMut : genes.genes_mut,
-            genesRna: genes.genes_rna === undefined ? genesRna : genes.genes_rna,
-            genesCnv: genes.genes_cnv === undefined ? genesCnv : genes.genes_cnv,
-            dataMut: data.data_mut === undefined ? dataMut : data.data_mut,
-            dataRna: data.data_rna === undefined ? dataRna : data.data_rna,
-            dataCnv: data.data_cnv === undefined ? dataCnv : data.data_cnv,
+            patientMut: patient.patient_mut ? patient.patient_mut : patientMut,
+            patientRna: patient.patient_rna ? patient.patient_rna : patientRna,
+            patientCnv: patient.patient_cnv ? patient.patient_cnv : patientCnv,
+            genesMut: genes.genes_mut ? genes.genes_mut : genesMut,
+            genesRna: genes.genes_rna ? genes.genes_rna : genesRna,
+            genesCnv: genes.genes_cnv ? genes.genes_cnv : genesCnv,
+            dataMut: data.data_mut ? data.data_mut : dataMut,
+            dataRna: data.data_rna ? data.data_rna : dataRna,
+            dataCnv: data.data_cnv ? data.data_cnv : dataCnv,
             dimensions: { height: 35, width: 20 },
             margin: {
-                top: 50, right: 200, bottom: 100, left: 250,
+                top: 75, right: 200, bottom: 100, left: 250,
             },
         });
     }
@@ -143,12 +154,15 @@ class SearchResultOncoprint extends React.Component {
                 margin={margin}
                 threshold={Number(threshold)}
                 hmap_patients={hmapPatients}
-                genes_mut={genesMut.length ? genesMut : genesCnv}
+                genes_mut={genesMut}
                 genes_rna={genesRna}
-                patient_mut={patientMut.length ? patientMut : patientCnv}
+                genes_cnv={genesCnv}
+                patient_mut={patientMut}
                 patient_rna={patientRna}
-                data_mut={dataMut.length ? dataMut : dataCnv}
+                patient_cnv={patientCnv}
+                data_mut={dataMut}
                 data_rna={dataRna}
+                data_cnv={dataCnv}
             />
         );
     }

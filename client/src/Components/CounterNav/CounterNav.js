@@ -15,6 +15,7 @@ class CounterNav extends React.Component {
             patients: 0,
             datasets: 6,
             tissues: 0,
+            models: 0,
         };
     }
 
@@ -25,6 +26,7 @@ class CounterNav extends React.Component {
                     tissues: response.data.data[0][0].tissues,
                     drugs: response.data.data[1][0].drugs,
                     patients: response.data.data[2][0].patients,
+                    models: response.data.data[3][0].models,
                 });
             });
     }
@@ -32,7 +34,7 @@ class CounterNav extends React.Component {
 
     render() {
         const {
-            datasets, tissues, patients, drugs,
+            datasets, tissues, patients, drugs, models,
         } = this.state;
         return (
             <div>
@@ -65,6 +67,15 @@ class CounterNav extends React.Component {
                             useEasing
                         />
                         <h4> PATIENTS </h4>
+                    </Link>
+                    <Link to="/">
+                        <CountUp
+                            start={0}
+                            end={models}
+                            duration={3}
+                            useEasing
+                        />
+                        <h4> MODELS </h4>
                     </Link>
                     <Link to="/drugs">
                         <CountUp

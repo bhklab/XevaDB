@@ -15,7 +15,10 @@ const getCounter = function (request, response) {
     const patients = knex('patients')
         .countDistinct('patient as patients');
 
-    Promise.all([tissues, drugs, patients])
+    const models = knex('models')
+        .countDistinct('model as models');
+
+    Promise.all([tissues, drugs, patients, models])
         .then((data) => response.status(200).json({
             status: 'success',
             data,

@@ -22,7 +22,7 @@ class Search extends React.Component {
             selectedGeneSearch: ['Enter Gene Symbol(s)'],
             selectedDrugs: [],
             selectedDataset: '',
-            genomicsValue: ['All', 'Mutation', 'CNV', 'RNASeq'],
+            genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'],
             selectedGenomics: [],
             allDrugs: [],
             threshold: 2,
@@ -176,7 +176,7 @@ class Search extends React.Component {
         });
     }
 
-    // this adds the value either mutation or cnv or rnaseq.
+    // this adds the value either mutation or cnv or RNASeq.
     handleExpressionChange(selectedOption) {
         const { genomicsValue } = this.state;
         if (selectedOption !== null && selectedOption.length > 0) {
@@ -205,7 +205,7 @@ class Search extends React.Component {
             }
 
             // and if it includes RNASeq or all then toggle should be true.
-            if (genomicsCurrentValue.includes('RNASeq') || genomicsCurrentValue.includes('All')) {
+            if (genomicsCurrentValue.includes('Gene Expression') || genomicsCurrentValue.includes('All')) {
                 this.setState({
                     toggleRNA: true,
                 });
@@ -222,7 +222,7 @@ class Search extends React.Component {
         }
     }
 
-    // threshold for rnaseq.
+    // threshold for GeneExpression.
     handleThreshold(event) {
         this.setState({
             threshold: event.target.value,
@@ -269,7 +269,7 @@ class Search extends React.Component {
                     <div className="select-component" onKeyPress={this.handleKeyPress}>
                         <h1>
                             {' '}
-                            <span style={{ color: '#3453b0' }}>XevaDB:</span>
+                            <span style={{ color: '#cd5686' }}>XevaDB:</span>
                             {' '}
                                 A Database For PDX Pharmacogenomic Data
                             {' '}

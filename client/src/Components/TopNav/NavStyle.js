@@ -32,7 +32,7 @@ const LinkStyle = styled.div`
         font-weight:700;
         font-size: 24px;
         &:hover {
-            color: #e5ac11;
+            color: #cd5686;
             cursor:pointer;
         }
     }
