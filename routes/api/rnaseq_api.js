@@ -140,6 +140,8 @@ const getRnaSeqBasedPerDatasetBasedOnGenes = function (request, response) {
                 )
                 .where('model_information.dataset_id', paramDataset)
                 .whereIn('rna_sequencing.gene_id', value)
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid')
                 .then((rnasequencing_data) => {
                     let gene_id = '';
                     let i = 0;

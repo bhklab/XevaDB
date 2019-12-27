@@ -140,6 +140,8 @@ const getCopyNumberVariationBasedPerDatasetBasedOnGenes = function (request, res
                 )
                 .where('model_information.dataset_id', paramDataset)
                 .whereIn('copy_number_variation.gene_id', value)
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid')
                 .then((copy_number_variation_data) => {
                     let gene_id = '';
                     let i = 0;

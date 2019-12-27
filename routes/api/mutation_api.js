@@ -164,6 +164,8 @@ const getMutationBasedPerDatasetBasedOnGenes = function (request, response) {
                 )
                 .where('model_information.dataset_id', paramDataset)
                 .whereIn('mutation.gene_id', value)
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid')
                 .then((mutation_data) => {
                     let gene_id = '';
                     let i = 0;
