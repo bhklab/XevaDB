@@ -865,7 +865,7 @@ class TumorGrowthCurve extends React.Component {
                         <h1>
 Drug ID =
                             {' '}
-                            <span style={{ color: '#cd5686' }}>{drugParam.replace(/\s\s\s/g, ' + ')}</span>
+                            <span style={{ color: '#cd5686' }}>{drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
                             {' '}
 and Patient ID =
                             {' '}
