@@ -41,6 +41,8 @@ const getCopyNumberVariationBasedOnDataset = function (request, response) {
         )
         .where('model_information.dataset_id', paramDataset)
         .andWhereBetween('copy_number_variation.gene_id', [1, 30])
+        .orderBy('genes.gene_id')
+        .orderBy('sequencing.sequencing_uid')
         .then((copy_number_variation_data) => {
             let gene_id = '';
             let i = 0;
