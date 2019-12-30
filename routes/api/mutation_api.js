@@ -7,7 +7,7 @@ const knex = require('../../db/knex1');
 // This will get the mutation for the selected dataset id.
 const getMutationBasedOnDataset = function (request, response) {
     const paramDataset = request.params.dataset;
-
+    console.log(paramDataset);
     // get the distinct patients or total patients from model information table.
     // as some patient ids are missing from oncoprint
     // because data is not available for that patient/model.
@@ -61,6 +61,8 @@ const getMutationBasedOnDataset = function (request, response) {
                 )
                 .where('model_information.dataset_id', paramDataset)
                 .andWhereBetween('mutation.gene_id', [1, 30])
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid')
                 .then((mutation_data) => {
                     let gene_id = '';
                     let i = 0;
@@ -162,6 +164,8 @@ const getMutationBasedPerDatasetBasedOnGenes = function (request, response) {
                 )
                 .where('model_information.dataset_id', paramDataset)
                 .whereIn('mutation.gene_id', value)
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid')
                 .then((mutation_data) => {
                     let gene_id = '';
                     let i = 0;
