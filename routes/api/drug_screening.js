@@ -74,6 +74,9 @@ const getDrugScreening = function (request, response) {
                     .orWhere('drugs.drug_name', 'control');
             })
             .andWhere('patients.patient', patient)
+            .andWhere(function () {
+                this.where('drug_screening.time', 0).orWhere('drug_screening.time', '>', 0);
+            })
             .andWhere('batches.batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)
             .then((data) => {
                 response.send(data);

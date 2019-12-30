@@ -23,6 +23,7 @@ counter = 1
 
 for file in files:
     with open(file, 'r') as read_file:
+        print(read_file)
         for row in read_file:
             #print(row)
             row = (row.replace('"','').replace("\n", "")).replace("\r", "")

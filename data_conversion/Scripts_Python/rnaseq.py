@@ -43,3 +43,4 @@ with open(output_file, 'w') as out_file:
                     id = id + 1
                     csv_writer.writerow([id, gene, sequencing, line[3].replace('\n', '')])
 
+

@@ -14,8 +14,9 @@ files = [
 ]
 
 output_file = '../Final_csv_file/sequencings_final.csv'
+
 unique_list = []
-value = 0
+value = 191
 
 for file in files:
     with open(file, 'r') as read_file:

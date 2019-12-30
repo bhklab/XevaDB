@@ -34,7 +34,7 @@ function outputData() {
             csvStream.pipe(writableStream);
             const tissues = [];
             results.forEach((data) => {
-                if (!((data[0] === '') || (data[0] === 'model.id'))) {
+                if (!((data[0] === '') || (data[0] === 'model.id') || (data[1] === 'model.id'))) {
                     // tissues should be in data array at index 2 (place 3).
                     if (!(tissues.includes(`${data[2]}`))) {
                         tissues.push(`${data[2]}`);

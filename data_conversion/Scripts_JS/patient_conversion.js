@@ -22,7 +22,7 @@ const writableStream = fs.createWriteStream('../Final_csv_file/patients_final.cs
 // synch. way of reading through the files and push createReadStream for each file with it's path.
 const files = fs.readdirSync(`..${file_folder}`);
 const total_files = files.length;
-let id = 1;
+let id = 278;
 
 // reads the input file.
 function outputData() {

@@ -43,6 +43,8 @@ const getRnaSeqBasedOnDataset = function (request, response) {
         )
         .where('model_information.dataset_id', param_dataset)
         .andWhereBetween('rna_sequencing.gene_id', [1, 30])
+        .orderBy('genes.gene_id')
+        .orderBy('sequencing.sequencing_uid')
         .then((rnaseq_data) => {
             let gene_id = '';
             const data = [];
@@ -138,6 +140,8 @@ const getRnaSeqBasedPerDatasetBasedOnGenes = function (request, response) {
                 )
                 .where('model_information.dataset_id', paramDataset)
                 .whereIn('rna_sequencing.gene_id', value)
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid')
                 .then((rnasequencing_data) => {
                     let gene_id = '';
                     let i = 0;
