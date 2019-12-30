@@ -17,7 +17,7 @@ const PaperGradient = styled.div`
         #CBC5EA,
         #EAEAEA
     );
-    height: 380px;
+    height: 400px;
     width: 530px;
     border-radius: 5px;
     margin:auto;
