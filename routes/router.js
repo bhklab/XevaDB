@@ -25,12 +25,12 @@ const verifytoken = require('./api/verify_token_api');
 // APIs related to dataset table.
 router.get('/v1/datasets', datasets.getDatasets);
 router.get('/v1/dataset/patients', datasets.getPatientsGroupedByDataset);
-router.get('/v1/dataset/models', datasets.getModelsPatientsGroupedByDataset);
+router.get('/v1/dataset/models', verifytoken, datasets.getModelsPatientsGroupedByDataset);
 
 // APIs related to drugs table.
 router.get('/v1/drugs', drugs.getDrugs);
-// router.get('/v1/drug/class', verifytoken, drugs.getDrugGroupedByClass)
-router.get('/v1/drug/class', drugs.getDrugGroupedByClass);
+router.get('/v1/drug/class', verifytoken, drugs.getDrugGroupedByClass);
+// router.get('/v1/drug/class', drugs.getDrugGroupedByClass);
 
 
 // APIs related to tissues table.

@@ -11,9 +11,13 @@ module.exports = function (request, response, next) {
 
     try {
         const verified = jwt.verify(token, 'secretkey');
+        console.log('token is here');
         response.locals.user = verified;
         next();
     } catch (err) {
-        response.status(400).send('Invalid token');
+        console.log('its a bad request!!!');
+        response.locals.user = 'unknown';
+        next();
+        // response.status(400).send('Invalid token');
     }
 };

@@ -35,7 +35,7 @@ class DatasetDonut extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/v1/dataset/models')
+        axios.get('/api/v1/dataset/models', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 const data = response.data.data.map((element) => ({
                     id: element.dataset_name,
