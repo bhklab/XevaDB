@@ -22,7 +22,7 @@ class DrugTable extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/v1/drugs')
+        axios.get('/api/v1/drugs', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 this.setState({
                     data: response.data,
