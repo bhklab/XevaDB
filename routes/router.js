@@ -55,7 +55,7 @@ router.get('/v1/models', models.getModels);
 
 
 // mixed APIs.
-router.get('/v1/counter', mixed.getCounter);
+router.get('/v1/counter', verifytoken, mixed.getCounter);
 
 
 // APIs for the model information table.

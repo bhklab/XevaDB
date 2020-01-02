@@ -13,20 +13,21 @@ class CounterNav extends React.Component {
         this.state = {
             drugs: 0,
             patients: 0,
-            datasets: 6,
+            datasets: 0,
             tissues: 0,
             models: 0,
         };
     }
 
     componentDidMount() {
-        axios.get('/api/v1/counter')
+        axios.get('/api/v1/counter', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 this.setState({
                     tissues: response.data.data[0][0].tissues,
                     drugs: response.data.data[1][0].drugs,
                     patients: response.data.data[2][0].patients,
                     models: response.data.data[3][0].models,
+                    datasets: response.data.data[4][0].datasets,
                 });
             });
     }

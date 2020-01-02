@@ -6,19 +6,30 @@ const knex = require('../../db/knex1');
 
 // this is the function for grabing the total for counter.
 const getCounter = function (request, response) {
-    const tissues = knex('tissues')
-        .countDistinct('tissue_name as tissues');
+    // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
+    const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
+    // count distinct tissues, drugs, datasets, models and patients.
+    const tissues = knex.queryBuilder().countDistinct('tissue_id as tissues')
+        .from('model_information')
+        .whereBetween('dataset_id', datasetArray);
 
-    const drugs = knex('drugs')
-        .countDistinct('drug_name as drugs');
+    const drugs = knex.queryBuilder().countDistinct('drug_id as drugs')
+        .from('model_information')
+        .whereBetween('dataset_id', datasetArray);
 
-    const patients = knex('patients')
-        .countDistinct('patient as patients');
+    const patients = knex.queryBuilder().countDistinct('patient_id as patients')
+        .from('model_information')
+        .whereBetween('dataset_id', datasetArray);
 
-    const models = knex('models')
-        .countDistinct('model as models');
+    const models = knex.queryBuilder().countDistinct('model_id as models')
+        .from('model_information')
+        .whereBetween('dataset_id', datasetArray);
 
-    Promise.all([tissues, drugs, patients, models])
+    const datasets = knex('datasets')
+        .countDistinct('dataset_id as datasets')
+        .whereBetween('dataset_id', datasetArray);
+
+    Promise.all([tissues, drugs, patients, models, datasets])
         .then((data) => response.status(200).json({
             status: 'success',
             data,
