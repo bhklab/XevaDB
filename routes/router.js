@@ -35,7 +35,7 @@ router.get('/v1/drug/class', verifytoken, drugs.getDrugGroupedByClass);
 
 // APIs related to tissues table.
 router.get('/v1/tissues', tissues.getTissues);
-router.get('/v1/tissue/models', tissues.getModelsGroupedByTissue);
+router.get('/v1/tissue/models', verifytoken, tissues.getModelsGroupedByTissue);
 
 
 // APIs related to drug table.

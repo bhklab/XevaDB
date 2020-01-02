@@ -36,7 +36,7 @@ class DonutTissue extends React.Component {
 
     componentDidMount() {
         const newValues = [];
-        axios.get('/api/v1/tissue/models')
+        axios.get('/api/v1/tissue/models', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 response.data.data.forEach((data) => {
                     const value = {};
