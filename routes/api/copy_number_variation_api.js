@@ -8,65 +8,74 @@ const knex = require('../../db/knex1');
 const getCopyNumberVariationBasedOnDataset = function (request, response) {
     const paramDataset = request.params.dataset;
 
-    // grabbing the copy_number_variation data based on patients and limiting genes to 1-30.
-    knex.select('genes.gene_name', 'patients.patient', 'copy_number_variation.value')
-        .from('copy_number_variation')
-        .rightJoin(
-            'genes',
-            'copy_number_variation.gene_id',
-            'genes.gene_id',
-        )
-        .leftJoin(
-            'modelid_moleculardata_mapping',
-            'copy_number_variation.sequencing_uid',
-            'modelid_moleculardata_mapping.sequencing_uid',
-        )
-        .leftJoin(
-            knex.select()
-                .from('model_information')
-                .groupBy('model_information.patient_id')
-                .as('model_information'),
-            'modelid_moleculardata_mapping.model_id',
-            'model_information.model_id',
-        )
-        .leftJoin(
-            'patients',
-            'model_information.patient_id',
-            'patients.patient_id',
-        )
-        .leftJoin(
-            'sequencing',
-            'copy_number_variation.sequencing_uid',
-            'sequencing.sequencing_uid',
-        )
-        .where('model_information.dataset_id', paramDataset)
-        .andWhereBetween('copy_number_variation.gene_id', [1, 30])
-        .orderBy('genes.gene_id')
-        .orderBy('sequencing.sequencing_uid')
-        .then((copy_number_variation_data) => {
-            let gene_id = '';
-            let i = 0;
-            const data = [];
-            const usersRows = JSON.parse(JSON.stringify(copy_number_variation_data));
-            usersRows.forEach((element) => {
-                if (element.gene_name !== gene_id) {
-                    gene_id = element.gene_name;
-                    data[i] = {};
-                    data[i].gene_id = element.gene_name;
-                    data[i][element.patient] = element.value;
-                    i++;
-                } else {
-                    data[i - 1][element.patient] = element.value;
-                }
-            });
+    if ((response.locals.user === 'unknown' && paramDataset < 7 && paramDataset > 0)
+            || (response.locals.user.verified === 'verified' && paramDataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 3600))
+    ) {
+        // grabbing the copy_number_variation data based on patients and limiting genes to 1-30.
+        knex.select('genes.gene_name', 'patients.patient', 'copy_number_variation.value')
+            .from('copy_number_variation')
+            .rightJoin(
+                'genes',
+                'copy_number_variation.gene_id',
+                'genes.gene_id',
+            )
+            .leftJoin(
+                'modelid_moleculardata_mapping',
+                'copy_number_variation.sequencing_uid',
+                'modelid_moleculardata_mapping.sequencing_uid',
+            )
+            .leftJoin(
+                knex.select()
+                    .from('model_information')
+                    .groupBy('model_information.patient_id')
+                    .as('model_information'),
+                'modelid_moleculardata_mapping.model_id',
+                'model_information.model_id',
+            )
+            .leftJoin(
+                'patients',
+                'model_information.patient_id',
+                'patients.patient_id',
+            )
+            .leftJoin(
+                'sequencing',
+                'copy_number_variation.sequencing_uid',
+                'sequencing.sequencing_uid',
+            )
+            .where('model_information.dataset_id', paramDataset)
+            .andWhereBetween('copy_number_variation.gene_id', [1, 30])
+            .orderBy('genes.gene_id')
+            .orderBy('sequencing.sequencing_uid')
+            .then((copy_number_variation_data) => {
+                let gene_id = '';
+                let i = 0;
+                const data = [];
+                const usersRows = JSON.parse(JSON.stringify(copy_number_variation_data));
+                usersRows.forEach((element) => {
+                    if (element.gene_name !== gene_id) {
+                        gene_id = element.gene_name;
+                        data[i] = {};
+                        data[i].gene_id = element.gene_name;
+                        data[i][element.patient] = element.value;
+                        i++;
+                    } else {
+                        data[i - 1][element.patient] = element.value;
+                    }
+                });
 
-            // sending the response.
-            response.send(data);
-        })
-        .catch((error) => response.status(500).json({
-            status: 'could not find data from copy_number_variation table, getcopy_number_variationBasedOnDataset',
-            data: error,
-        }));
+                // sending the response.
+                response.send(data);
+            })
+            .catch((error) => response.status(500).json({
+                status: 'could not find data from copy_number_variation table, getcopy_number_variationBasedOnDataset',
+                data: error,
+            }));
+    } else {
+        response.status(500).json({
+            status: 'Could not find data from rna_sequencing table, getRnaSeqBasedOnDataset',
+            data: 'Bad Request',
+        });
+    }
 };
 
 

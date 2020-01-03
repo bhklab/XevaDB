@@ -37,9 +37,9 @@ class OncoprintData extends React.Component {
 
     componentDidMount() {
         if (this.state.dataset > 0) {
-            const mutation_data = axios.get(`/api/v1/mutation/${this.state.dataset}`);
-            const rnaseq_data = axios.get(`/api/v1/rnaseq/${this.state.dataset}`);
-            const cnv_data = axios.get(`/api/v1/cnv/${this.state.dataset}`);
+            const mutation_data = axios.get(`/api/v1/mutation/${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const rnaseq_data = axios.get(`/api/v1/rnaseq/${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const cnv_data = axios.get(`/api/v1/cnv/${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
 
             Promise.all([mutation_data, rnaseq_data, cnv_data])
                 .then((response) => {

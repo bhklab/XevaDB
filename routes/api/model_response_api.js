@@ -10,94 +10,96 @@ const knex = require('../../db/knex1');
 const getModelResponseBasedOnDataset = function (request, response) {
     const param_dataset = request.params.dataset;
 
-    // function distinctPatient() {
-    //     return this.distinct('model_id')
-    //         .from('model_information')
-    //         .where({
-    //             dataset_id: param_dataset,
-    //         });
-    // }
-
-    const distinctPatients = knex('model_information')
-        .distinct('patients.patient')
-        .from('model_information')
-        .leftJoin(
-            'patients',
-            'model_information.patient_id',
-            'patients.patient_id',
-        )
-        .where({
-            dataset_id: param_dataset,
-        });
-
-    const selectModelResponse = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id')
-        .from('model_response')
-        .rightJoin(
-            'model_information',
-            'model_response.model_id',
-            'model_information.model_id',
-        )
-        .leftJoin(
-            'patients',
-            'model_information.patient_id',
-            'patients.patient_id',
-        )
-        .leftJoin(
-            'drugs',
-            'model_information.drug_id',
-            'drugs.drug_id',
-        )
-        .where('model_information.dataset_id', param_dataset)
-        // .whereIn('model_response.model_id', distinctPatient)
-        // .andWhere('model_response.response_type', 'mRECIST')
-        .andWhere(function () {
-            this.where('model_response.response_type', 'mRECIST');
-            // .orWhereNull('model_response.response_type')
-        })
-        .orderBy('drug_name')
-        .orderBy('patient');
-
-
-    Promise.all([distinctPatients, selectModelResponse])
-        .then((row) => {
-            let drug = '';
-            const data = [];
-            const untreated = {};
-            let value = 0;
-            let patient = [];
-
-            // this will create enteries for heatmap.
-            const usersRows = JSON.parse(JSON.stringify(row[1]));
-            usersRows.forEach((element) => {
-                if (element.drug_name === drug) {
-                    data[value - 1][element.patient] = element.value;
-                } else if (element.drug_name === 'untreated' || element.drug_name === 'WATER' || element.drug_name === 'Control') {
-                    untreated.Drug = element.drug_name;
-                    untreated[element.patient] = element.value;
-                } else {
-                    drug = element.drug_name;
-                    data.push({});
-                    data[value].Drug = element.drug_name;
-                    data[value][element.patient] = element.value;
-                    value += 1;
-                }
+    // allows only if the dataset value is less than 6 and user is unknown or token is verified.
+    if ((response.locals.user === 'unknown' && param_dataset < 7 && param_dataset > 0)
+            || (response.locals.user.verified === 'verified' && param_dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 3600))
+    ) {
+        const distinctPatients = knex('model_information')
+            .distinct('patients.patient')
+            .from('model_information')
+            .leftJoin(
+                'patients',
+                'model_information.patient_id',
+                'patients.patient_id',
+            )
+            .where({
+                dataset_id: param_dataset,
             });
 
-            if (Object.entries(untreated).length === 1 && untreated.constructor === Object) {}
-            else { data.unshift(untreated); }
+        const selectModelResponse = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id')
+            .from('model_response')
+            .rightJoin(
+                'model_information',
+                'model_response.model_id',
+                'model_information.model_id',
+            )
+            .leftJoin(
+                'patients',
+                'model_information.patient_id',
+                'patients.patient_id',
+            )
+            .leftJoin(
+                'drugs',
+                'model_information.drug_id',
+                'drugs.drug_id',
+            )
+            .where('model_information.dataset_id', param_dataset)
+        // .whereIn('model_response.model_id', distinctPatient)
+        // .andWhere('model_response.response_type', 'mRECIST')
+            .andWhere(function () {
+                this.where('model_response.response_type', 'mRECIST');
+            // .orWhereNull('model_response.response_type')
+            })
+            .orderBy('drug_name')
+            .orderBy('patient');
 
-            // array of all the patients belonging to a particular dataset.
-            const patientRows = JSON.parse(JSON.stringify(row[0]));
-            patient = patientRows.map((element) => element.patient);
-            data.push(patient);
 
-            // sending the response.
-            response.send(data);
-        })
-        .catch((error) => response.status(500).json({
+        Promise.all([distinctPatients, selectModelResponse])
+            .then((row) => {
+                let drug = '';
+                const data = [];
+                const untreated = {};
+                let value = 0;
+                let patient = [];
+
+                // this will create enteries for heatmap.
+                const usersRows = JSON.parse(JSON.stringify(row[1]));
+                usersRows.forEach((element) => {
+                    if (element.drug_name === drug) {
+                        data[value - 1][element.patient] = element.value;
+                    } else if (element.drug_name === 'untreated' || element.drug_name === 'WATER' || element.drug_name === 'Control') {
+                        untreated.Drug = element.drug_name;
+                        untreated[element.patient] = element.value;
+                    } else {
+                        drug = element.drug_name;
+                        data.push({});
+                        data[value].Drug = element.drug_name;
+                        data[value][element.patient] = element.value;
+                        value += 1;
+                    }
+                });
+
+                if (Object.entries(untreated).length === 1 && untreated.constructor === Object) {}
+                else { data.unshift(untreated); }
+
+                // array of all the patients belonging to a particular dataset.
+                const patientRows = JSON.parse(JSON.stringify(row[0]));
+                patient = patientRows.map((element) => element.patient);
+                data.push(patient);
+
+                // sending the response.
+                response.send(data);
+            })
+            .catch((error) => response.status(500).json({
+                status: 'could not find data from model_response table, getModelResponseBasedOnDataset',
+                data: error,
+            }));
+    } else {
+        response.status(500).json({
             status: 'could not find data from model_response table, getModelResponseBasedOnDataset',
-            data: error,
-        }));
+            data: 'Bad Request',
+        });
+    }
 };
 
 

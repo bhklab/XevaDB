@@ -26,7 +26,7 @@ const postDrugandPatientBasedOnDataset = function (request, response) {
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if ((response.locals.user === 'unknown' && request.body.label < 7 && request.body.label > 0)
-            || (response.locals.user.verified === 'verified' && request.body.label > 0 && ((response.locals.user.iat - response.locals.user.exp) === 3600))
+            || (response.locals.user.verified === 'verified' && request.body.label > 0 && ((response.locals.user.exp - response.locals.user.iat) === 3600))
     ) {
         const drugs = knex.select('drugs.drug_name as drug', 'drugs.drug_id as drug_id')
             .from(distinctDrug)
