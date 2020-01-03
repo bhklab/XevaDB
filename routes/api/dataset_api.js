@@ -4,8 +4,12 @@ const knex = require('../../db/knex1');
 
 // get all the data from the dataset table.
 const getDatasets = function (request, response) {
+    // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
+    const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
+    // select the datasets.
     knex.select()
         .from('datasets')
+        .whereBetween('datasets.dataset_id', datasetArray)
         .then((dataset) => response.status(200).json({
             status: 'success',
             data: dataset,

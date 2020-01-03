@@ -93,7 +93,7 @@ const createLogin = function (request, response) {
                 if (!validPass) return response.status(400).send('Invalid password');
 
                 // Create and assign token.
-                const token = jwt.sign({ username: data[0].user_id }, 'secretkey');
+                const token = jwt.sign({ username: data[0].user_id }, 'secretkey', { expiresIn: '1h' });
                 response.header('auth-token', token).send(token);
             }
             checkValidPass();

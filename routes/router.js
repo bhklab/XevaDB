@@ -23,7 +23,7 @@ const verifytoken = require('./api/verify_token_api');
 
 
 // APIs related to dataset table.
-router.get('/v1/datasets', datasets.getDatasets);
+router.get('/v1/datasets', verifytoken, datasets.getDatasets);
 router.get('/v1/dataset/patients', datasets.getPatientsGroupedByDataset);
 router.get('/v1/dataset/models', verifytoken, datasets.getModelsPatientsGroupedByDataset);
 
@@ -59,7 +59,7 @@ router.get('/v1/counter', verifytoken, mixed.getCounter);
 
 
 // APIs for the model information table.
-router.post('/v1/drugpatient/dataset', modelInformation.postDrugandPatientBasedOnDataset);
+router.post('/v1/drugpatient/dataset', verifytoken, modelInformation.postDrugandPatientBasedOnDataset);
 
 
 // APIs for model response table.
