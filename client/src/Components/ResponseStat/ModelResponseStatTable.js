@@ -15,7 +15,8 @@ class StatTable extends React.Component {
             data: [],
             batchData: [],
             tableHeader: ['Patient', 'Model', 'Drug',
-                'mRECIST', 'Best Average Response', 'Slope', 'AUC', 'Survival'],
+                'mRECIST', 'Best Average Response', 'Slope', 'AUC',
+                'Survival', 'Link', 'Row Number'],
         };
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
@@ -37,6 +38,14 @@ class StatTable extends React.Component {
             data: response[1].data,
             batchData: response[0].data,
         });
+        // if the dataset id is not 7 then table header won't include Link and Row Number.
+        const { data } = this.state;
+        if (data[0] && data[0].dataset_id !== 7) {
+            this.setState({
+                tableHeader: ['Patient', 'Model', 'Drug',
+                    'mRECIST', 'Best Average Response', 'Slope', 'AUC', 'Survival'],
+            });
+        }
     }
 
     createTable() {
@@ -56,17 +65,30 @@ class StatTable extends React.Component {
                 newData[total].model = modelValue;
                 newData[total].drug = drugValue;
                 newData[total].patient = eachdata.patient;
+                newData[total].link = eachdata.link;
+                newData[total].row = eachdata.row;
                 total += 1;
             }
             newData[total - 1][eachdata.response_type === 'best.average.response' ? 'bar' : eachdata.response_type] = eachdata.value;
         });
 
-        const table = newData.map((eachdata, index) => {
+        const createTableRow = (eachdata, index) => {
             const {
                 patient, model, drug,
-                bar, mRECIST, slope, AUC, survival,
+                bar, mRECIST, slope, AUC,
+                survival, link, row,
             } = eachdata;
-            return (
+
+            // will not return anything if there is no data.
+            const checkData = (val) => {
+                let tableData = '';
+                if (val) {
+                    tableData = <td><a href={link} target="_blank" rel="noopener noreferrer">{link}</a></td>;
+                }
+                return tableData;
+            };
+
+            const dataRow = (
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
                     <td>{patient}</td>
                     <td>{model}</td>
@@ -76,9 +98,18 @@ class StatTable extends React.Component {
                     <td>{slope}</td>
                     <td>{AUC}</td>
                     <td>{survival}</td>
+                    {checkData(link)}
+                    {checkData(row)}
                 </tr>
             );
-        });
+
+            return dataRow;
+        };
+
+        const table = newData.map((eachdata, index) => (
+            createTableRow(eachdata, index)
+        ));
+
         return table;
     }
 

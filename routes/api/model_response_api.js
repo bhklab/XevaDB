@@ -256,6 +256,11 @@ const getModelResponseStats = function (request, response) {
                 'model_information.model_id',
                 'models.model_id',
             )
+            .leftJoin(
+                'model_sheets',
+                'model_sheets.model_id',
+                'models.model',
+            )
             .where('patients.patient', patient)
             .andWhere(function () {
                 this.where('drugs.drug_name', drug)

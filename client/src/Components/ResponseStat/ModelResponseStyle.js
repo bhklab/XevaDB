@@ -25,6 +25,9 @@ const StyleTable = styled.div`
     td {
         color: #cd5686;
         padding: 12px;
+        white-space: normal;
+        max-width: 200px;
+        overflow: scroll;
     }
 
     tr:hover {
