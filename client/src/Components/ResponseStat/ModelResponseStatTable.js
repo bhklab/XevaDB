@@ -72,6 +72,7 @@ class StatTable extends React.Component {
             newData[total - 1][eachdata.response_type === 'best.average.response' ? 'bar' : eachdata.response_type] = eachdata.value;
         });
 
+        // creating each table row.
         const createTableRow = (eachdata, index) => {
             const {
                 patient, model, drug,
@@ -82,8 +83,10 @@ class StatTable extends React.Component {
             // will not return anything if there is no data.
             const checkData = (val) => {
                 let tableData = '';
-                if (val) {
-                    tableData = <td><a href={link} target="_blank" rel="noopener noreferrer">{link}</a></td>;
+                if (val && val === link) {
+                    tableData = <td><a href={val} target="_blank" rel="noopener noreferrer">URL</a></td>;
+                } else if (val && val === row) {
+                    tableData = <td>{val}</td>;
                 }
                 return tableData;
             };
@@ -106,6 +109,7 @@ class StatTable extends React.Component {
             return dataRow;
         };
 
+        // create the table.
         const table = newData.map((eachdata, index) => (
             createTableRow(eachdata, index)
         ));
