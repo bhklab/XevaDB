@@ -5,6 +5,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
+import { mutationTypeMap } from '../../util/MutationViewsUtil';
 
 class Oncoprint extends React.Component {
     constructor(props) {
@@ -43,6 +44,8 @@ class Oncoprint extends React.Component {
 
 
     makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
+        this.node = node;
+
         // to merge two arrays and give the unique values.
         // eslint-disable-next-line no-extend-native
         Array.prototype.unique = function () {
@@ -54,9 +57,19 @@ class Oncoprint extends React.Component {
             }
             return a;
         };
+
+        // merging the data from all of three calls to api ie cnv, mutation and rnaseq.
         const genes = genes_mut.concat(genes_rna).concat(genes_cnv).unique();
 
-        this.node = node;
+        // aberration data
+        const aberration = [
+            { value: 'missense', color: '#1a9850' },
+            { value: 'inframe', color: '#8B4513' },
+            { value: 'truncating', color: '#000000' },
+            { value: 'other', color: '#8B00C9' },
+            { value: 'del', color: '#0033CC' },
+            { value: 'amp', color: '#e41a1c' },
+        ];
 
         // height and width for the SVG based on the number of genes_mut and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
@@ -69,10 +82,14 @@ class Oncoprint extends React.Component {
 
         // adding this for rectangles on right side of oncoprint.
         // only if the mutation data is present.
+        // TODO:: This should be according to the types of mutation present in the data.
         let rect_alterations_mut = [];
         if (data_mut.length > 0) {
             rect_alterations_mut = [
-                { value: 'Mutation', color: '#e41a1c' },
+                { value: 'Missense Mutation', color: '#1a9850' },
+                { value: 'Inframe Mutation', color: '#8B4513' },
+                { value: 'Truncating Mutation', color: '#000000' },
+                { value: 'Other Mutations', color: '#8B00C9' },
             ];
         }
         // only if rnaseq data is available.
@@ -88,7 +105,7 @@ class Oncoprint extends React.Component {
         if (data_cnv.length > 0) {
             rect_alterations_cnv = [
                 { value: 'Deep Deletion', color: '#0033CC' },
-                { value: 'Amplification', color: '#1a9850' },
+                { value: 'Amplification', color: '#e41a1c' },
             ];
         }
 
@@ -119,7 +136,7 @@ class Oncoprint extends React.Component {
             .attr('id', 'skeleton');
 
 
-        /**  Gene Names on Y-Axis * */
+        /* *  Gene Names on Y-Axis * */
 
         // geneNames
         const geneNames = skeleton.append('g')
@@ -167,11 +184,15 @@ class Oncoprint extends React.Component {
 
         if (genes_mut.length > 0 || genes_cnv.length > 0) {
             for (let i = 0; i < genes.length; i++) {
-                gene_alterations[genes[i]] = { mut: 0, amp: 0, del: 0 };
+                gene_alterations[genes[i]] = {
+                    missense: 0, amp: 0, del: 0, inframe: 0, truncating: 0, other: 0,
+                };
             }
 
             for (let i = 0; i < hmap_patients.length; i++) {
-                patient_alterations.push({ mut: 0, amp: 0, del: 0 });
+                patient_alterations.push({
+                    missense: 0, amp: 0, del: 0, inframe: 0, truncating: 0, other: 0,
+                });
             }
         }
 
@@ -185,16 +206,16 @@ class Oncoprint extends React.Component {
             diff = hmap_patients.filter((x) => !patient_cnv.includes(x));
         }
 
-        /** Coloring the rectangles based on mutation data * */
+        /** Coloring the rectangles based on mutation, cnv or rnaseq data * */
 
         // this will take four parameters and color the rectangle accordingly
-        const colorReactangles = (value, color, i, j) => {
+        const colorReactangles = (value, color, i, j, mutationType) => {
             // setting a = 12 if value is mut
             const a = value === 'mut' ? 12 : 0;
             // setting the color based on value param.
             if (value !== 'empty' && value === 'mut') {
-                gene_alterations[genes[i]][value]++;
-                patient_alterations[j][value]++;
+                gene_alterations[genes[i]][mutationType]++;
+                patient_alterations[j][mutationType]++;
             } else if (value !== 'empty' && (value === 'amp' || value === 'del')) {
                 gene_alterations[genes[i]][value]++;
                 patient_alterations[j][value]++;
@@ -235,27 +256,13 @@ class Oncoprint extends React.Component {
         };
 
 
-        /** Coloring the rectangles borders based on mutation data * */
-        for (let i = 0; i < genes_mut.length; i++) {
-            for (let j = 0; j < hmap_patients.length; j++) {
-                if (diff.indexOf(hmap_patients[j]) !== -1) {
-                    // if not sequenced, make it white with a border
-                    colorNotSequenced(i, j);
-                } else {
-                    // complete layer of lightgrey rectangles.
-                    colorReactangles('empty', 'lightgrey', i, j);
-                    // based on the data gives different colors to the rectangle.
-                    if (data_mut[i][hmap_patients[j]].includes('MutNovel') || data_mut[i][hmap_patients[j]].includes('mutation') || data_mut[i][hmap_patients[j]].includes('MutKnownFunctional') || data_mut[i][hmap_patients[j]].includes('Mutation')) {
-                        colorReactangles('mut', '#e41a1c', i, j);
-                    }
-                }
-            }
-        }
-
-
-        /** Coloring the rectangles borders based on cnv data * */
+        /** Coloring the rectangles borders based on mutation and cnv data * */
         for (let i = 0; i < genes.length; i++) {
             for (let j = 0; j < hmap_patients.length; j++) {
+                // complete layer of lightgrey rectangles.
+                colorReactangles('empty', 'lightgrey', i, j);
+
+                /** Coloring the rectangles borders based on cnv data * */
                 if (genes_cnv.includes(genes[i])) {
                     if (diff.indexOf(hmap_patients[j]) !== -1) {
                         // if not sequenced, make it white with a border
@@ -270,8 +277,22 @@ class Oncoprint extends React.Component {
                             colorReactangles('del', '#0033CC', i, j);
                         }
                         if (data_cnv[i][hmap_patients[j]].includes('Amp') || data_cnv[i][hmap_patients[j]].includes('Amplification')) {
-                            colorReactangles('amp', '#1a9850', i, j);
+                            colorReactangles('amp', '#e41a1c', i, j);
                         }
+                    }
+                }
+
+                /** Coloring the rectangles borders based on mutation data * */
+                // if the gene from genes located in genes_mut.
+                if (genes_mut.includes(genes[i])) {
+                    if (diff.indexOf(hmap_patients[j]) !== -1) {
+                        // if not sequenced, make it white with a border
+                        colorNotSequenced(i, j);
+                    } else if (data_mut[i][hmap_patients[j]].toLowerCase() !== '0' && Boolean(data_mut[i][hmap_patients[j]])) {
+                        // based on the data gives different colors to the rectangle.
+                        const { color } = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()];
+                        const type = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()].mainType;
+                        colorReactangles('mut', color, i, j, type);
                     }
                 }
             }
@@ -302,8 +323,9 @@ class Oncoprint extends React.Component {
             }
         }
 
+        console.log(gene_alterations, patient_alterations);
         /** Setting Maxes for the alterations * */
-
+        // --> Not used in the code <-- //
         // getting the maxes
         let maxPAmp = [];
         let maxPMut = [];
@@ -336,21 +358,25 @@ class Oncoprint extends React.Component {
             maxGMut = d3.max(maxGMut);
         }
 
+
         /** ALTERATION GRAPHS * */
 
         /** Vertical Graph * */
-
         if (genes_mut.length > 0 || genes_cnv.length > 0) {
             // calculating max width
             const max_width_arr = [];
             for (let i = 0; i < genes.length; i++) {
-                max_width_arr.push(gene_alterations[genes[i]].mut + gene_alterations[genes[i]].amp + gene_alterations[genes[i]].del);
+                let max = 0;
+                for (let j = 0; j < aberration.length; j++) {
+                    max += gene_alterations[genes[i]][aberration[j].value];
+                }
+                max_width_arr.push(max);
             }
-
             const max_width = d3.max(max_width_arr);
 
+
             const xrange_gene = d3.scaleLinear()
-                .domain([0, d3.max([maxGAmp, maxGMut, maxGHomdel])])
+                .domain([0, max_width])
                 .range([0, 70]);
 
 
@@ -375,18 +401,18 @@ class Oncoprint extends React.Component {
             // function to caculate alterations.
             const geneAlterationReactangle = (iterator) => {
                 // variables.
-                const gene_class = ['mut', 'amp', 'del'];
+                const gene_class = ['missense', 'amp', 'del'];
                 const i = iterator;
                 let x_range = stroke_width / 2;
                 // loops through each type for each of the genes_mut.
                 gene_class.forEach((type) => {
                     // color setting.
                     let color = '';
-                    if (type === 'mut') {
-                        color = '#e41a1c';
-                    } else if (type === 'amp') {
+                    if (type === 'missense') {
                         color = '#1a9850';
-                        x_range += xrange_gene(gene_alterations[genes[i]].mut);
+                    } else if (type === 'amp') {
+                        color = '#e41a1c';
+                        x_range += xrange_gene(gene_alterations[genes[i]].missense);
                     } else if (type === 'del') {
                         color = '#0033CC';
                         x_range += xrange_gene(gene_alterations[genes[i]].amp);
@@ -442,9 +468,16 @@ class Oncoprint extends React.Component {
         // calculating max height
 
         if (genes_mut.length > 0 || genes_cnv.length > 0) {
+            // calculating the max height.
             const max_height_arr = [];
+
             for (let i = 0; i < patient_alterations.length; i++) {
-                max_height_arr.push(patient_alterations[i].mut + patient_alterations[i].amp + patient_alterations[i].del);
+                let max = 0;
+                for (let j = 0; j < aberration.length; j++) {
+                    max += patient_alterations[i][aberration[j].value];
+                    // max_height_arr.push(patient_alterations[i][aberration[j].value]);
+                }
+                max_height_arr.push(max);
             }
 
             const max_height = d3.max(max_height_arr);
@@ -459,7 +492,7 @@ class Oncoprint extends React.Component {
             // function to caculate alterations.
             const patientAlterationReactangle = (iterator) => {
                 // variables.
-                const patient_class = ['mut', 'amp', 'del'];
+                const patient_class = ['missense', 'amp', 'del'];
                 const i = iterator;
                 let y_range = 0;
 
@@ -473,10 +506,10 @@ class Oncoprint extends React.Component {
 
                     // color setting.
                     let color = '';
-                    if (type === 'mut') {
-                        color = '#e41a1c';
-                    } else if (type === 'amp') {
+                    if (type === 'missense') {
                         color = '#1a9850';
+                    } else if (type === 'amp') {
+                        color = '#e41a1c';
                     } else if (type === 'del') {
                         color = '#0033CC';
                     }
