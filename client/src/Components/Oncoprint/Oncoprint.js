@@ -44,6 +44,7 @@ class Oncoprint extends React.Component {
 
 
     makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
+        // reference.
         this.node = node;
 
         // to merge two arrays and give the unique values.
@@ -284,6 +285,7 @@ class Oncoprint extends React.Component {
 
                 /** Coloring the rectangles borders based on mutation data * */
                 // if the gene from genes located in genes_mut.
+                // mutation later because they are 1/3 the box.
                 if (genes_mut.includes(genes[i])) {
                     if (diff.indexOf(hmap_patients[j]) !== -1) {
                         // if not sequenced, make it white with a border
@@ -401,27 +403,22 @@ class Oncoprint extends React.Component {
             // function to caculate alterations.
             const geneAlterationReactangle = (iterator) => {
                 // variables.
-                const gene_class = ['missense', 'amp', 'del'];
                 const i = iterator;
                 let x_range = stroke_width / 2;
+                let aberration_type = '';
                 // loops through each type for each of the genes_mut.
-                gene_class.forEach((type) => {
-                    // color setting.
-                    let color = '';
-                    if (type === 'missense') {
-                        color = '#1a9850';
-                    } else if (type === 'amp') {
-                        color = '#e41a1c';
-                        x_range += xrange_gene(gene_alterations[genes[i]].missense);
-                    } else if (type === 'del') {
-                        color = '#0033CC';
-                        x_range += xrange_gene(gene_alterations[genes[i]].amp);
+                aberration.forEach((type) => {
+                    const { color } = type;
+                    if (aberration_type !== '') {
+                        x_range += xrange_gene(gene_alterations[genes[i]][aberration_type]);
                     }
+                    aberration_type = type.value;
+
                     // rectangle coloring.
                     gene_alter.append('rect')
                         .attr('class', `gene-rect ${type}`)
                         .attr('height', rect_height - 6)
-                        .attr('width', xrange_gene(gene_alterations[genes[i]][type]))
+                        .attr('width', xrange_gene(gene_alterations[genes[i]][type.value]))
                         .attr('fill', color)
                         .attr('y', (i * (rect_height)))
                         .attr('x', x_range);
