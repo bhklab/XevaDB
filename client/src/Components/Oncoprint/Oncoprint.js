@@ -325,7 +325,6 @@ class Oncoprint extends React.Component {
             }
         }
 
-        console.log(gene_alterations, patient_alterations);
         /** Setting Maxes for the alterations * */
         // --> Not used in the code <-- //
         // getting the maxes
@@ -489,31 +488,24 @@ class Oncoprint extends React.Component {
             // function to caculate alterations.
             const patientAlterationReactangle = (iterator) => {
                 // variables.
-                const patient_class = ['missense', 'amp', 'del'];
                 const i = iterator;
                 let y_range = 0;
 
                 // loops through each type for each of the genes_mut.
-                patient_class.forEach((type, j) => {
+                aberration.forEach((type, j) => {
                     // set value to 1 if j is greater than 1.
                     j = j > 1 ? j / j : j;
 
                     // setting y range.
-                    y_range = (yrange_patient(patient_alterations[i][type])) - ((35 * j) - y_range);
+                    y_range = (yrange_patient(patient_alterations[i][type.value])) - ((35 * j) - y_range);
 
                     // color setting.
-                    let color = '';
-                    if (type === 'missense') {
-                        color = '#1a9850';
-                    } else if (type === 'amp') {
-                        color = '#e41a1c';
-                    } else if (type === 'del') {
-                        color = '#0033CC';
-                    }
+                    const { color } = type;
+
                     // rectangle coloring.
                     patient_alter.append('rect')
                         .attr('class', `patient-rect${type}`)
-                        .attr('height', 35 - yrange_patient(patient_alterations[i][type]))
+                        .attr('height', 35 - yrange_patient(patient_alterations[i][type.value]))
                         .attr('width', rect_width - 5)
                         .attr('fill', color)
                         .attr('y', y_range)
