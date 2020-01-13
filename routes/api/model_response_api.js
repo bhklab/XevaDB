@@ -208,7 +208,7 @@ const getModelResponseStats = function (request, response) {
     drug = drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
 
     // grabs the batch id based on the patient id and drug param passed.
-    const grabBatchId = knex.select('batch_information.batch_id')
+    const grabBatchId = knex.select('batch_information.batch_id', 'model_information.dataset_id')
         .from('batch_information')
         .rightJoin(
             'model_information',
@@ -229,53 +229,61 @@ const getModelResponseStats = function (request, response) {
         .andWhere('patients.patient', patient);
 
     grabBatchId.then((batch) => {
-        knex.select()
-            .from('model_response')
-            .leftJoin(
-                'model_information',
-                'model_response.model_id',
-                'model_information.model_id',
-            )
-            .leftJoin(
-                'patients',
-                'model_information.patient_id',
-                'patients.patient_id',
-            )
-            .leftJoin(
-                'drugs',
-                'model_information.drug_id',
-                'drugs.drug_id',
-            )
-            .leftJoin(
-                'batch_information',
-                'batch_information.model_id',
-                'model_information.model_id',
-            )
-            .leftJoin(
-                'models',
-                'model_information.model_id',
-                'models.model_id',
-            )
-            .leftJoin(
-                'model_sheets',
-                'model_sheets.model_id',
-                'models.model',
-            )
-            .where('patients.patient', patient)
-            .andWhere(function () {
-                this.where('drugs.drug_name', drug)
-                    .orWhere('drugs.drug_name', 'water')
-                    .orWhere('drugs.drug_name', 'untreated')
-                    .orWhere('drugs.drug_name', 'control');
-            })
-            .andWhere('batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)
-            .then((data) => {
-                response.send(data);
-            })
-            .catch((error) => response.status(500).json({
-                status: 'an error has occured in stats route at getModelResponseStats',
-                data: error,
-            }));
+        // grab the dataset id.
+        const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
+        // check if it verified and the dataset id is greater than 0
+        // or if it's not verified (unkown) then the dataset id should be less than 7.
+        if ((response.locals.user === 'unknown' && dataset < 7 && dataset > 0)
+                 || (response.locals.user.verified === 'verified' && dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 3600))
+        ) {
+            knex.select()
+                .from('model_response')
+                .leftJoin(
+                    'model_information',
+                    'model_response.model_id',
+                    'model_information.model_id',
+                )
+                .leftJoin(
+                    'patients',
+                    'model_information.patient_id',
+                    'patients.patient_id',
+                )
+                .leftJoin(
+                    'drugs',
+                    'model_information.drug_id',
+                    'drugs.drug_id',
+                )
+                .leftJoin(
+                    'batch_information',
+                    'batch_information.model_id',
+                    'model_information.model_id',
+                )
+                .leftJoin(
+                    'models',
+                    'model_information.model_id',
+                    'models.model_id',
+                )
+                .leftJoin(
+                    'model_sheets',
+                    'model_sheets.model_id',
+                    'models.model',
+                )
+                .where('patients.patient', patient)
+                .andWhere(function () {
+                    this.where('drugs.drug_name', drug)
+                        .orWhere('drugs.drug_name', 'water')
+                        .orWhere('drugs.drug_name', 'untreated')
+                        .orWhere('drugs.drug_name', 'control');
+                })
+                .andWhere('batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)
+                .then((data) => {
+                    response.send(data);
+                })
+                .catch((error) => response.status(500).json({
+                    status: 'an error has occured in stats route at getModelResponseStats',
+                    data: error,
+                }));
+        }
     });
 };
 
