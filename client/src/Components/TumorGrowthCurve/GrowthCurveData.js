@@ -31,7 +31,7 @@ class GrowthCurveData extends React.Component {
 
     componentDidMount() {
         const { patientParam, drugParam } = this.state;
-        axios.get(`/api/v1/treatment?drug=${drugParam}&patient=${patientParam}`)
+        axios.get(`/api/v1/treatment?drug=${drugParam}&patient=${patientParam}`, { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 const batches = [];
                 for (let i = 0; i < response.data.length; i++) {

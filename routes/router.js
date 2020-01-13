@@ -72,7 +72,7 @@ router.get('/v1/cnv/:dataset', mixed.isValidId, verifytoken, copyNumberVariation
 router.get('/v1/cnv', copyNumberVariation.getCopyNumberVariationBasedPerDatasetBasedOnGenes);
 
 // APIs related to drug screening table.
-router.get('/v1/treatment', drugScreening.getDrugScreening);
+router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreening);
 
 // Authorization APIs.
 router.post('/v1/login', awtauthentication.createLogin);
