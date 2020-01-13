@@ -98,7 +98,7 @@ class Login extends React.Component {
                                         color: '#3f51b5', marginTop: '4.5vh', fontWeight: '700', fontSize: '30px',
                                     }}
                                 >
-                Sign in
+                                    Sign in
                                 </Typography>
 
                                 <form onSubmit={this.handleSubmit}>
@@ -132,14 +132,14 @@ class Login extends React.Component {
                                             variant="contained"
                                             color="primary"
                                         >
-                  Sign In
+                                            Sign In
                                         </Button>
                                     </SubmitStyle>
 
                                     <Grid container style={{ marginTop: '15px' }}>
                                         <Grid item xs>
                                             <Link href="#" variant="body2">
-                      Forgot password?
+                                                Forgot password?
                                             </Link>
                                         </Grid>
                                     </Grid>
