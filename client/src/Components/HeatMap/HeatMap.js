@@ -45,12 +45,35 @@ class HeatMap extends React.Component {
         const width = patient.length * rectWidth + 100;
 
         const targetEval = [
-            { value: 'CR', color: '#0033CC' },
-            { value: 'PR', color: '#1a9850' },
-            { value: 'SD', color: '#fed976' },
-            { value: 'PD', color: '#e41a1c' },
+            { CR: '#0033CC' },
+            { PR: '#1a9850' },
+            { SD: '#fed976' },
+            { PD: '#e41a1c' },
         ];
-        const targetColor = ['#0033CC', '#1a9850', '#fed976', '#e41a1c', 'lightgray'];
+
+        const targetColor = {
+            CR: '#0033CC',
+            PR: '#1a9850',
+            SD: '#fed976',
+            PD: '#e41a1c',
+            empty: 'lightgray',
+            NA: 'lightgray',
+        };
+
+        // making tooltips
+        const tooltip = d3.select('.heatmap-wrapper')
+            .append('div')
+            .style('position', 'absolute')
+            .style('visibility', 'hidden')
+            .style('border', 'solid')
+            .style('border-width', '1px')
+            .style('border-radius', '5px')
+            .style('padding', '5px')
+            .style('min-width', '150px')
+            .style('min-height', '80px')
+            .attr('top', 10)
+            .attr('left', 20);
+
 
         // setting the query strings
         let drugUse = '';
@@ -195,18 +218,7 @@ class HeatMap extends React.Component {
 
 
         // this will fill the rectangles with different color based on the data.
-        drawrectangle.attr('fill', (d) => {
-            if (d === 'CR') {
-                return targetColor[0];
-            } if (d === 'PR') {
-                return targetColor[1];
-            } if (d === 'SD') {
-                return targetColor[2];
-            } if (d === 'PD') {
-                return targetColor[3];
-            }
-            return targetColor[4];
-        });
+        drawrectangle.attr('fill', (d) => targetColor[d]);
 
         // reset
         drugEvaluations = {};
@@ -385,7 +397,7 @@ class HeatMap extends React.Component {
             .attr('y', (d, i) => (drug.length * 10) + i * 25)
             .attr('height', '15')
             .attr('width', '15')
-            .attr('fill', (d) => d.color);
+            .attr('fill', (d) => Object.values(d));
 
         targetRect.selectAll('text')
             .data(targetEval)
@@ -393,7 +405,7 @@ class HeatMap extends React.Component {
             .append('text')
             .attr('x', (patient.length * rectWidth + 140))
             .attr('y', (d, i) => (drug.length * 10 + 12) + i * 25)
-            .text((d) => d.value)
+            .text((d) => Object.keys(d))
             .attr('font-size', '14px');
 
 
@@ -445,7 +457,7 @@ class HeatMap extends React.Component {
             const responseEvalTypes = ['CR', 'PR', 'SD', 'PD'];
             let xRange = patient.length * rectWidth + 20;
             let width = 0;
-            responseEvalTypes.forEach((type, j) => {
+            responseEvalTypes.forEach((type) => {
             // x range for the rectangles.
                 xRange += width;
                 width = drugScale(drugEvaluations[drug[iterator]][type]);
@@ -455,7 +467,7 @@ class HeatMap extends React.Component {
                     .attr('width', width)
                     .attr('x', xRange)
                     .attr('y', drugHeightScale(42 + iterator * 40))
-                    .attr('fill', targetColor[j])
+                    .attr('fill', targetColor[type])
                     .style('stroke', 'black')
                     .style('stroke-width', strokeWidth);
             });
@@ -526,7 +538,7 @@ class HeatMap extends React.Component {
                 let height = 0;
                 let yRange = -130 + boxHeight;
 
-                responseEvalTypes.forEach((type, j) => {
+                responseEvalTypes.forEach((type) => {
                     height = patientScale(patientEvaluations[patient[iterator]][type]);
                     yRange -= height;
                     patientEval.append('rect')
@@ -535,7 +547,7 @@ class HeatMap extends React.Component {
                         .attr('width', 16)
                         .attr('x', iterator * 20)
                         .attr('y', yRange)
-                        .attr('fill', targetColor[j])
+                        .attr('fill', targetColor[type])
                         .style('stroke', 'black')
                         .style('stroke-width', strokeWidth);
                 });
