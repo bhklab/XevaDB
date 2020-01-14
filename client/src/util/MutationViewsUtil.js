@@ -33,7 +33,7 @@
  * Singleton utility class for Mutation View related tasks.
  *
  * @author Selcuk Onur Sumer
- * @modified Gangesh Beri
+ * @modified by Gangesh Beri
  */
 
 /**
@@ -225,6 +225,50 @@ export const mutationTypeMap = {
 };
 
 
+/*
+Mapping btw the copy number (data) values and view values.
+*/
+export const cnaMap = {
+    '-2': {
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+    },
+    '-1': {
+        label: 'ShallowDel', style: 'cna-hetloss', tooltip: 'Shallow deletion', color: '#0033CC', xevalabel: 'del',
+    },
+    0: {
+        label: 'Diploid', style: 'cna-diploid', tooltip: 'Diploid / normal', color: 'lightgray', xevalabel: 'empty',
+    },
+    1: {
+        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#e41a1c', xevalabel: 'amp',
+    },
+    2: {
+        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp',
+    },
+    'Del0.8': {
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+    },
+    Deletion: {
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+    },
+    'Shallow Deletion': {
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+    },
+    Gain: {
+        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#e41a1c', xevalabel: 'amp',
+    },
+    Amp: {
+        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp',
+    },
+    Amplification: {
+        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp',
+    },
+    unknown: {
+        label: 'NA', style: 'cna-unknown', tooltip: 'CNA data is not available for this gene', xevalabel: 'empty',
+    },
+};
+
+
 export default {
     mutationTypeMap,
+    cnaMap,
 };
