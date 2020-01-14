@@ -650,7 +650,7 @@ class Oncoprint extends React.Component {
 
 
         // creating tooltip.
-        const createToolTip = (x, y, gene, patient) => {
+        const createToolTip = (x, y, gene, patient, mutation, cnv) => {
             // tooltip on mousever setting the div to visible.
             tooltip
                 .style('visibility', 'visible');
@@ -667,6 +667,10 @@ class Oncoprint extends React.Component {
             const tooltipData = [
                 `Gene: ${gene}`, `Patient: ${patient}`,
             ];
+            // pushing data into the tooltipData if mutation or cnv is not empty or null.
+            if (mutation !== '0' && mutation) { tooltipData.push(`Mutation: ${mutation}`); }
+            if (cnv !== '0' && cnv) { tooltipData.push(`Copy Number Variation: ${cnv}`); }
+
             tooltipDiv.selectAll('textDiv')
                 .data(tooltipData)
                 .enter()
@@ -692,7 +696,6 @@ class Oncoprint extends React.Component {
         // highlight
         for (let i = 0; i < genes.length; i++) {
             for (let j = 0; j < hmap_patients.length; j++) {
-                console.log(i, j, hmap_patients[j], data_mut[i][hmap_patients[j]]);
                 highlight.append('rect')
                     .attr('class', `oprint-hlight-${hmap_patients[j]} oprint-hlight-${genes[i]}`)
                     .attr('width', rect_width - 2)
@@ -703,7 +706,9 @@ class Oncoprint extends React.Component {
                     .style('opacity', 0)
                     .on('mouseover', () => {
                         // calling createToolTip function passing pageX and pageY
-                        createToolTip(d3.event.pageX, d3.event.pageY, genes[i], hmap_patients[j]);
+                        const mutationToolTip = data_mut[i][hmap_patients[j]];
+                        const cnvToolTip = data_cnv[i][hmap_patients[j]];
+                        createToolTip(d3.event.pageX, d3.event.pageY, genes[i], hmap_patients[j], mutationToolTip, cnvToolTip);
 
                         // highlight
                         d3.selectAll(`.hmap-hlight-${hmap_patients[j]}`)
