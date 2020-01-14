@@ -105,7 +105,7 @@ class Oncoprint extends React.Component {
         let rect_alterations_cnv = [];
         if (data_cnv.length > 0) {
             rect_alterations_cnv = [
-                { value: 'Deep Deletion', color: '#0033CC' },
+                { value: 'Deletion', color: '#0033CC' },
                 { value: 'Amplification', color: '#e41a1c' },
             ];
         }
@@ -337,40 +337,6 @@ class Oncoprint extends React.Component {
                 }
                 z++;
             }
-        }
-
-        /** Setting Maxes for the alterations * */
-        // --> Not used in the code <-- //
-        // getting the maxes
-        let maxPAmp = [];
-        let maxPMut = [];
-        let maxPHomdel = [];
-
-        if (genes_mut.length > 0 || genes_cnv.length > 0) {
-            for (let i = 0; i < patient_alterations.length; i++) {
-                maxPAmp.push(patient_alterations[i].amp);
-                maxPHomdel.push(patient_alterations[i].del);
-                maxPMut.push(patient_alterations[i].mut);
-            }
-            maxPAmp = d3.max(maxPAmp);
-            maxPHomdel = d3.max(maxPHomdel);
-            maxPMut = d3.max(maxPMut);
-        }
-
-        // getting the maxes
-        let maxGAmp = [];
-        let maxGMut = [];
-        let maxGHomdel = [];
-
-        if (genes_mut.length > 0 || genes_cnv.length > 0) {
-            for (let i = 0; i < genes.length; i++) {
-                maxGAmp.push(gene_alterations[genes[i]].amp);
-                maxGHomdel.push(gene_alterations[genes[i]].del);
-                maxGMut.push(gene_alterations[genes[i]].mut);
-            }
-            maxGAmp = d3.max(maxGAmp);
-            maxGHomdel = d3.max(maxGHomdel);
-            maxGMut = d3.max(maxGMut);
         }
 
 
