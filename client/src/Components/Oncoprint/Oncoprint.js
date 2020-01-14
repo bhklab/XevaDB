@@ -5,7 +5,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-import { mutationTypeMap } from '../../util/MutationViewsUtil';
+import { mutationTypeMap, cnaMap } from '../../util/MutationViewsUtil';
 
 class Oncoprint extends React.Component {
     constructor(props) {
@@ -289,11 +289,10 @@ class Oncoprint extends React.Component {
                             colorReactangles('empty', 'lightgrey', i, j);
                         }
                         // based on the data gives different colors to the rectangle.
-                        if (data_cnv[i][hmap_patients[j]].includes('Del0.8') || data_cnv[i][hmap_patients[j]].includes('Deletion')) {
-                            colorReactangles('del', '#0033CC', i, j);
-                        }
-                        if (data_cnv[i][hmap_patients[j]].includes('Amp') || data_cnv[i][hmap_patients[j]].includes('Amplification')) {
-                            colorReactangles('amp', '#e41a1c', i, j);
+                        if (data_cnv[i][hmap_patients[j]]) {
+                            const cnvType = cnaMap[data_cnv[i][hmap_patients[j]]].xevalabel;
+                            const cnvColor = cnaMap[data_cnv[i][hmap_patients[j]]].color;
+                            colorReactangles(cnvType, cnvColor, i, j);
                         }
                     }
                 }
