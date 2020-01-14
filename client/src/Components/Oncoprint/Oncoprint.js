@@ -119,6 +119,21 @@ class Oncoprint extends React.Component {
         ];
 
 
+        // making tooltips
+        const tooltip = d3.select('.oprint-wrapper')
+            .append('div')
+            .style('position', 'absolute')
+            .style('visibility', 'hidden')
+            .style('border', 'solid')
+            .style('border-width', '1px')
+            .style('border-radius', '5px')
+            .style('padding', '5px')
+            .style('min-width', '150px')
+            .style('min-height', '80px')
+            .attr('top', 10)
+            .attr('left', 20);
+
+
         /** SETTING SVG ATTRIBUTES and Oncoprint SKELETON * */
         // make the svg element
         const svg = d3.select(node)
@@ -634,9 +649,50 @@ class Oncoprint extends React.Component {
             .attr('font-size', '14px');
 
 
+        // creating tooltip.
+        const createToolTip = (x, y, gene, patient) => {
+            // tooltip on mousever setting the div to visible.
+            tooltip
+                .style('visibility', 'visible');
+
+            // tooltip grabbing event.pageX and event.pageY
+            // and set color according to the ordinal scale.
+            const tooltipDiv = tooltip
+                .style('left', `${x + 10}px`)
+                .style('top', `${y + 10}px`)
+                .style('color', '#000000')
+                .style('background-color', '#ffffff');
+
+            // tooltip data.
+            const tooltipData = [
+                `Gene: ${gene}`, `Patient: ${patient}`,
+            ];
+            tooltipDiv.selectAll('textDiv')
+                .data(tooltipData)
+                .enter()
+                .append('div')
+                .attr('id', 'tooltiptextonco')
+                .html((d) => {
+                    const data = d.split(':');
+                    return `<b>${data[0]}</b>: ${data[1]}`;
+                })
+                .attr('x', `${x + 10}px`)
+                .attr('y', (d, i) => (`${y + 10 + i * 10}px`));
+        };
+
+        // hiding tooltip.
+        const hideToolTip = () => {
+            // tooltip on mousever setting the div to hidden.
+            tooltip
+                .style('visibility', 'hidden');
+            // remove all the divs with id tooltiptext.
+            d3.selectAll('#tooltiptextonco').remove();
+        };
+
         // highlight
         for (let i = 0; i < genes.length; i++) {
             for (let j = 0; j < hmap_patients.length; j++) {
+                console.log(i, j, hmap_patients[j], data_mut[i][hmap_patients[j]]);
                 highlight.append('rect')
                     .attr('class', `oprint-hlight-${hmap_patients[j]} oprint-hlight-${genes[i]}`)
                     .attr('width', rect_width - 2)
@@ -646,6 +702,10 @@ class Oncoprint extends React.Component {
                     .attr('y', i * (rect_height))
                     .style('opacity', 0)
                     .on('mouseover', () => {
+                        // calling createToolTip function passing pageX and pageY
+                        createToolTip(d3.event.pageX, d3.event.pageY, genes[i], hmap_patients[j]);
+
+                        // highlight
                         d3.selectAll(`.hmap-hlight-${hmap_patients[j]}`)
                             .style('opacity', 0.2);
                         d3.selectAll(`.oprint-hlight-${hmap_patients[j]}`)
@@ -654,6 +714,10 @@ class Oncoprint extends React.Component {
                             .style('opacity', 0.2);
                     })
                     .on('mouseout', () => {
+                        // hide tooltip
+                        hideToolTip();
+
+                        // highlight
                         d3.selectAll(`.hmap-hlight-${hmap_patients[j]}`)
                             .style('opacity', 0);
                         d3.selectAll(`.oprint-hlight-${hmap_patients[j]}`)

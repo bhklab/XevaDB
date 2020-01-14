@@ -128,7 +128,7 @@ class OncoprintData extends React.Component {
 
     render() {
         return (
-            <div className="wrapper" style={{ margin: 'auto', fontSize: '0' }}>
+            <div className="wrapper" style={{ margin: 'auto' }}>
                 <Oncoprint
                     className="oprint"
                     dimensions={this.state.dimensions}
