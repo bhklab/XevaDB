@@ -70,7 +70,7 @@ class HeatMap extends React.Component {
             .style('border-radius', '5px')
             .style('padding', '5px')
             .style('min-width', '150px')
-            .style('min-height', '80px')
+            .style('min-height', '50px')
             .attr('top', 10)
             .attr('left', 20);
 
@@ -235,13 +235,54 @@ class HeatMap extends React.Component {
                 CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, empty: 0, total: 0,
             };
         }
+
+        // creating tooltip.
+        const createToolTip = (x, y, patient, response) => {
+            // tooltip on mousever setting the div to visible.
+            tooltip
+                .style('visibility', 'visible');
+
+            // tooltip grabbing event.pageX and event.pageY
+            // and set color according to the ordinal scale.
+            const tooltipDiv = tooltip
+                .style('left', `${x + 10}px`)
+                .style('top', `${y + 10}px`)
+                .style('color', '#000000')
+                .style('background-color', '#ffffff');
+
+            // tooltip data.
+            const tooltipData = [
+                `Patient: ${patient}`, `Response Evaluation: ${response}`,
+            ];
+
+            tooltipDiv.selectAll('textDiv')
+                .data(tooltipData)
+                .enter()
+                .append('div')
+                .attr('id', 'tooltiptextonco')
+                .html((d) => {
+                    const data = d.split(':');
+                    return `<b>${data[0]}</b>: ${data[1]}`;
+                })
+                .attr('x', `${x + 10}px`)
+                .attr('y', (d, i) => (`${y + 10 + i * 10}px`));
+        };
+
+        // hiding tooltip.
+        const hideToolTip = () => {
+            // tooltip on mousever setting the div to hidden.
+            tooltip
+                .style('visibility', 'hidden');
+            // remove all the divs with id tooltiptext.
+            d3.selectAll('#tooltiptextonco').remove();
+        };
+
         let pCount = 0;
         drugIndex = 0;
 
         // let highlight =
         gskeleton.selectAll('rect.hmap-hlight')
             .data((d, i) => {
-                // console.log(d)
                 // calling the function and passing the data d as parameter.
                 calculateEvaluations(d, i);
                 // this returns the object values to next chaining method.
@@ -278,6 +319,10 @@ class HeatMap extends React.Component {
             .style('opacity', 0)
             // eslint-disable-next-line func-names
             .on('mouseover', function (d, i) {
+                // creating tooltip by calling createtooltip function.
+                const patientToolTip = rectKeys[i];
+                createToolTip(d3.event.pageX, d3.event.pageY, patientToolTip, d);
+                // highlight
                 const drugClass = d3.select(this).attr('class').split(' ')[1];
                 d3.selectAll(`.hmap-hlight-${rectKeys[i]}`)
                     .style('opacity', 0.2);
@@ -290,6 +335,9 @@ class HeatMap extends React.Component {
             })
             // eslint-disable-next-line func-names
             .on('mouseout', function (d, i) {
+                // hide tooltip
+                hideToolTip();
+                // highlight
                 const drugClass = d3.select(this).attr('class').split(' ')[1];
                 d3.selectAll(`.hmap-hlight-${rectKeys[i]}`)
                     .style('opacity', 0);
