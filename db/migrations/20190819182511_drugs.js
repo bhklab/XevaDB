@@ -7,7 +7,6 @@ exports.up = function (knex, Promise) {
         table.string('standard_name');
         table.string('targets');
         table.string('treatment_type');
-        table.string('pubchemId');
         table.string('class');
         table.string('class_name');
         table.string('source');
