@@ -8,7 +8,7 @@ const getDrugs = function (request, response) {
     const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
     // selecting drug list based on dataset list.
     knex.distinct('drugs.drug_id')
-        .select('drug_name', 'standard_name', 'targets', 'treatment_type', 'pubchemId', 'class', 'class_name', 'source')
+        .select('drug_name', 'standard_name', 'targets', 'treatment_type', 'class', 'class_name', 'source')
         .from('drugs')
         .leftJoin(
             'model_information',
