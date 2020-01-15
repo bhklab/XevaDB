@@ -1,3 +1,4 @@
+/* eslint-disable react/no-deprecated */
 import React from 'react';
 import HeatMapData from '../HeatMap/HeatMapData';
 import OncoprintData from '../Oncoprint/OncoprintData';

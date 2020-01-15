@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import TableWrapper from '../Drug/DrugTableStyle';
 import Spinner from '../SpinnerUtil/Spinner';
@@ -19,6 +20,12 @@ const DatasetTable = (props) => {
             accessor: 'id',
             minWidth: 180,
             search: false,
+            sortable: false,
+            Cell: (row) => (
+                <Link to={`/dataset/${row.original.parameter}`} style={{ color: '#3453b0', textDecoration: 'none' }}>
+                    {row.original.id}
+                </Link>
+            ),
         },
         {
             Header: 'Number of Patients',
