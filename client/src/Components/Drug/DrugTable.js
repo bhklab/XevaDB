@@ -76,18 +76,39 @@ class DrugTable extends React.Component {
             },
             {
                 Header: 'Source',
-                Cell: (val) => (
-                    <div>
-                        <a
-                            className="hover"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={`${val.original.source}`}
-                        >
-                            <img height={38} src={val.original.img} alt="pubchem links" />
-                        </a>
-                    </div>
-                ),
+                Cell: (val) => {
+                    const pubchemLink = val.original.source.split(' + ');
+                    const { length } = pubchemLink;
+                    const link = [];
+                    let isNa = '';
+
+                    // function checks if any of the value in the pubchemlink array is NA.
+                    pubchemLink.forEach((row) => {
+                        if (row === 'NA') {
+                            isNa = true;
+                        }
+                    });
+
+                    // looping through the pubchemLink and adding image and url based on the data.
+                    pubchemLink.forEach((row, i) => {
+                        if (row !== 'NA') {
+                            link.push(
+                                <span key={row}>
+                                    <a
+                                        className="hover"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href={`${row}`}
+                                    >
+                                        <img height={38} src={val.original.img} alt="pubchem links" />
+                                    </a>
+                                    { ((length > i + 1) && !isNa) ? <sup> + </sup> : ''}
+                                </span>,
+                            );
+                        }
+                    });
+                    return link;
+                },
                 sortable: false,
             },
         ];
