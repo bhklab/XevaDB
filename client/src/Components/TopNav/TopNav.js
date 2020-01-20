@@ -17,8 +17,12 @@ class TopNav extends React.Component {
         this.isLoggedIn = this.isLoggedIn.bind(this);
     }
 
-    componentWillMount() {
-        localStorage.getItem('user') ? this.setState({ isLogged: 'Logout', isLink: '/login' }) : this.setState({ isLogged: 'Login' });
+    static getDerivedStateFromProps() {
+        let localState = '';
+        localStorage.getItem('user')
+            ? localState = ({ isLogged: 'Logout', isLink: '/login' })
+            : localState = ({ isLogged: 'Login' });
+        return localState;
     }
 
     isLoggedIn() {

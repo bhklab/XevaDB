@@ -20,10 +20,10 @@ class GrowthCurveData extends React.Component {
     }
 
     // get the parameters and set the values in the variables.
-    componentWillMount() {
-        const { location } = this.props;
+    static getDerivedStateFromProps(props) {
+        const { location } = props;
         const params = new URLSearchParams(location.search);
-        this.setState({
+        return ({
             patientParam: params.get('patient'),
             drugParam: params.get('drug'),
         });
