@@ -1,4 +1,3 @@
-/* eslint-disable react/no-deprecated */
 /* eslint-disable no-shadow */
 import React from 'react';
 import axios from 'axios';
@@ -23,11 +22,12 @@ class HeatMapData extends React.Component {
         this.parseData = this.parseData.bind(this);
     }
 
-    componentWillMount() {
-        const { dataset } = this.props;
-        this.setState({
+
+    static getDerivedStateFromProps(props) {
+        const { dataset } = props;
+        return {
             datasetParam: dataset,
-        });
+        };
     }
 
     componentDidMount() {

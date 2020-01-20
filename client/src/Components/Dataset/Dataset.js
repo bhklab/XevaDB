@@ -1,4 +1,3 @@
-/* eslint-disable react/no-deprecated */
 import React from 'react';
 import HeatMapData from '../HeatMap/HeatMapData';
 import OncoprintData from '../Oncoprint/OncoprintData';
@@ -12,13 +11,15 @@ class Dataset extends React.Component {
         };
     }
 
-    componentWillMount() {
-        const { match } = this.props;
+    // new component life cycle method (mounting).
+    static getDerivedStateFromProps(props) {
+        const { match } = props;
         const datasetParam = match.params.id;
-        this.setState({
+        return {
             dataset: datasetParam,
-        });
+        };
     }
+
 
     render() {
         const { dataset } = this.state;

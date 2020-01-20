@@ -1,7 +1,6 @@
 /* eslint-disable no-shadow */
 /* eslint-disable camelcase */
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/no-deprecated */
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -29,10 +28,11 @@ class OncoprintData extends React.Component {
         this.updateResults = this.updateResults.bind(this);
     }
 
-    componentWillMount() {
-        this.setState({
-            dataset: this.props.dataset,
-        });
+    static getDerivedStateFromProps(props) {
+        const { dataset } = props;
+        return {
+            dataset,
+        };
     }
 
     componentDidMount() {
