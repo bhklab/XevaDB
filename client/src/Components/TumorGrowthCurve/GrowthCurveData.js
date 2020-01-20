@@ -1,6 +1,5 @@
 /* eslint-disable radix */
 /* eslint-disable no-extend-native */
-/* eslint-disable react/no-deprecated */
 /* eslint-disable no-plusplus */
 import React from 'react';
 import axios from 'axios';

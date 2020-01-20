@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-/* eslint-disable react/no-deprecated */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable class-methods-use-this */
 import React from 'react';
