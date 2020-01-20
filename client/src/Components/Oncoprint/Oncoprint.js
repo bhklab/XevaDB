@@ -671,8 +671,8 @@ class Oncoprint extends React.Component {
                     .style('opacity', 0)
                     .on('mouseover', () => {
                         // calling createToolTip function passing pageX and pageY
-                        const mutationToolTip = data_mut[i][hmap_patients[j]];
-                        const cnvToolTip = data_cnv[i][hmap_patients[j]];
+                        const mutationToolTip = (data_mut.length !== 0) && data_mut[i][hmap_patients[j]];
+                        const cnvToolTip = (data_cnv.length !== 0) && data_cnv[i][hmap_patients[j]];
                         createToolTip(d3.event.pageX, d3.event.pageY, genes[i], hmap_patients[j], mutationToolTip, cnvToolTip);
 
                         // highlight
