@@ -1,4 +1,3 @@
-/* eslint-disable react/no-deprecated */
 import React from 'react';
 import SearchResultHeatMap from './SearchResultHeatMap';
 import SearchResultOncoprint from './SearchResultOncoprint';
@@ -18,9 +17,9 @@ class SearchResult extends React.Component {
         };
     }
 
-    componentWillMount() {
+    static getDerivedStateFromProps(props) {
         // eslint-disable-next-line react/prop-types
-        const { location } = this.props;
+        const { location } = props;
         // eslint-disable-next-line react/prop-types
         const params = new URLSearchParams(location.search);
         const genomics = params.get('genomics');
@@ -28,14 +27,13 @@ class SearchResult extends React.Component {
         const dataset = params.get('dataset');
         const gene = params.get('genes');
         const threshold = params.get('threshold');
-
-        this.setState({
+        return {
             drugParam: drug,
             datasetParam: dataset,
             geneParam: gene,
             genomicsParam: genomics,
             threshold,
-        });
+        };
     }
 
     render() {
