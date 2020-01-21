@@ -86,6 +86,8 @@ class StatTable extends React.Component {
                     tableData = <td style={{ minWidth: 150 }}><a href={val} target="_blank" rel="noopener noreferrer">Google-Sheet</a></td>;
                 } else if (val && val === row) {
                     tableData = <td>{val}</td>;
+                } else {
+                    tableData = null;
                 }
                 return tableData;
             };
