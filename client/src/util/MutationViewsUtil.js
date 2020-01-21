@@ -253,6 +253,9 @@ export const cnaMap = {
     'Shallow Deletion': {
         label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
     },
+    'Deep Deletion': {
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+    },
     Gain: {
         label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#e41a1c', xevalabel: 'amp',
     },
