@@ -114,17 +114,21 @@ class TumorGrowthCurve extends React.Component {
             const minVolArray = [];
             const maxVolArray = [];
             const maxVolNormArray = [];
+            const minVolNormArray = [];
             for (let i = 0; i < data.length; i++) {
                 maxTimeArray.push(d3.max(data[i].pdx_points[0].times));
                 minVolArray.push(d3.min(data[i].pdx_points[0].volumes));
                 maxVolArray.push(d3.max(data[i].pdx_points[0].volumes));
                 maxVolNormArray.push(d3.max(data[i].pdx_points[0].volume_normals));
+                minVolNormArray.push(d3.min(data[i].pdx_points[0].volume_normals));
             }
 
             const maxTime = Math.max.apply(null, maxTimeArray);
             const minVolume = Math.min.apply(null, minVolArray);
             const maxVolume = Math.max.apply(null, maxVolArray);
             const maxVolNorm = Math.max.apply(null, maxVolNormArray);
+            const minVolNorm = Math.min.apply(null, minVolNormArray);
+
 
             const expTypes = ['control', 'treatment'];
 
@@ -134,7 +138,7 @@ class TumorGrowthCurve extends React.Component {
             const margin = {
                 top: 50,
                 right: 260,
-                bottom: 200,
+                bottom: 250,
                 left: 130,
             };
             // make the svg element
@@ -183,7 +187,7 @@ class TumorGrowthCurve extends React.Component {
                 .nice();
 
             const yrange = d3.scaleLinear()
-                .domain([0, maxVolume])
+                .domain([minVolume, maxVolume])
                 .range([height, 0])
                 .nice();
 
@@ -238,7 +242,7 @@ class TumorGrowthCurve extends React.Component {
             // plot each model
             plotBatch(data, graph, xrange, yrange, width, height, false);
             volumeToggle(data, svg, xrange, yrange, yAxis, yAxisAdd,
-                width, height, maxVolume, maxVolNorm, plotId);
+                width, height, maxVolume, maxVolNorm, plotId, minVolNorm);
         }
 
         function plotBatch(data, graph, xrange, yrange, width, height, norm) {
@@ -723,7 +727,7 @@ class TumorGrowthCurve extends React.Component {
         }
 
         // toggle to show each model
-        function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm, plotId) {
+        function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm, plotId, minVolNorm) {
             const volRaw = svg.append('rect')
                 .attr('x', width + 25)
                 .attr('y', height / 2 + 50)
@@ -766,7 +770,7 @@ class TumorGrowthCurve extends React.Component {
                 .attr('id', 'volNormToggle')
                 .on('click', () => {
                     yrange = d3.scaleLinear()
-                        .domain([0, maxVolNorm])
+                        .domain([minVolNorm, maxVolNorm])
                         .range([height, 0])
                         .nice();
 
@@ -829,7 +833,7 @@ class TumorGrowthCurve extends React.Component {
                 .text('Normalized')
                 .on('click', () => {
                     yrange = d3.scaleLinear()
-                        .domain([0, maxVolNorm])
+                        .domain([minVolNorm, maxVolNorm])
                         .range([height, 0])
                         .nice();
 
