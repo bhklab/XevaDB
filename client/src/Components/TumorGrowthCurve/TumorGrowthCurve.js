@@ -367,6 +367,10 @@ class TumorGrowthCurve extends React.Component {
                         .selectAll('td')
                         .style('color', '#f5f5f5')
                         .style('background', '#5974c4');
+                    d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                        .selectAll('a')
+                        .style('color', '#f5f5f5')
+                        .style('background', '#5974c4');
                 })
                 .on('mouseout', (d) => {
                     // remove all the divs with id tooltiptext.
@@ -385,6 +389,10 @@ class TumorGrowthCurve extends React.Component {
                             .selectAll('td')
                             .style('color', '#cd5686')
                             .style('background', 'white');
+                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                            .selectAll('a')
+                            .style('color', '#5974c4')
+                            .style('background', 'white');
                     }
                 })
                 .on('click', function (d) {
@@ -397,6 +405,10 @@ class TumorGrowthCurve extends React.Component {
                             .selectAll('td')
                             .style('color', '#f5f5f5')
                             .style('background', '#5974c4');
+                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                            .selectAll('a')
+                            .style('color', '#f5f5f5')
+                            .style('background', '#5974c4');
                     } else if (d3.select(this).classed('selected')) {
                         d3.select(this).classed('selected', false);
                         d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
@@ -405,6 +417,10 @@ class TumorGrowthCurve extends React.Component {
                         d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
                             .selectAll('td')
                             .style('color', '#cd5686')
+                            .style('background', 'white');
+                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                            .selectAll('a')
+                            .style('color', '#5974c4')
                             .style('background', 'white');
                     }
                 });
