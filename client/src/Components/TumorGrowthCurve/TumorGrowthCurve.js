@@ -32,6 +32,7 @@ class TumorGrowthCurve extends React.Component {
         const plotId = 'plot';
         const { data } = this.props;
 
+        // call the function only if there is data available.
         if (data.length !== 0) {
             this.makeTumorGrowthCurve(data, plotId, node);
             d3.select('.no-graph').remove();
@@ -47,6 +48,7 @@ class TumorGrowthCurve extends React.Component {
 
     // This is the main function to create Growth curves.
     makeTumorGrowthCurve(data, plotId, node) {
+        // calling tumorCurve function passing the data, PlotID and node reference.
         tumorCurve(data, plotId, node);
 
         String.prototype.replaceAll = String.prototype.replaceAll || function (s, r) {
@@ -108,13 +110,16 @@ class TumorGrowthCurve extends React.Component {
         }
 
 
-        function tumorCurve(data, plotId, node) {
+        // calculating the min max volume and time.
+        function calculateMinMax(data) {
             // calculating max time, min/max volumes of all data
             const maxTimeArray = [];
             const minVolArray = [];
             const maxVolArray = [];
             const maxVolNormArray = [];
             const minVolNormArray = [];
+
+            // looping through data to get max and min array.
             for (let i = 0; i < data.length; i++) {
                 maxTimeArray.push(d3.max(data[i].pdx_points[0].times));
                 minVolArray.push(d3.min(data[i].pdx_points[0].volumes));
@@ -123,13 +128,24 @@ class TumorGrowthCurve extends React.Component {
                 minVolNormArray.push(d3.min(data[i].pdx_points[0].volume_normals));
             }
 
+            // maxt and min value.
             const maxTime = Math.max.apply(null, maxTimeArray);
             const minVolume = Math.min.apply(null, minVolArray);
             const maxVolume = Math.max.apply(null, maxVolArray);
             const maxVolNorm = Math.max.apply(null, maxVolNormArray);
             const minVolNorm = Math.min.apply(null, minVolNormArray);
 
+            return {
+                maxTime, minVolume, maxVolume, maxVolNorm, minVolNorm,
+            };
+        }
 
+
+        function tumorCurve(data, plotId, node) {
+            // calling function to grab the min max values.
+            const minmax = calculateMinMax(data);
+
+            // expression types.
             const expTypes = ['control', 'treatment'];
 
             // positioning variables
@@ -141,6 +157,7 @@ class TumorGrowthCurve extends React.Component {
                 bottom: 250,
                 left: 130,
             };
+
             // make the svg element
             const svg = d3.select(node)
                 .append('svg')
@@ -182,12 +199,12 @@ class TumorGrowthCurve extends React.Component {
 
             // set domain and range scaling
             const xrange = d3.scaleLinear()
-                .domain([0, maxTime])
+                .domain([0, minmax.maxTime])
                 .range([0, width])
                 .nice();
 
             const yrange = d3.scaleLinear()
-                .domain([minVolume, maxVolume])
+                .domain([0, minmax.maxVolume])
                 .range([height, 0])
                 .nice();
 
@@ -239,10 +256,11 @@ class TumorGrowthCurve extends React.Component {
 
             const graph = svg.append('g')
                 .attr('id', 'curves');
+
             // plot each model
             plotBatch(data, graph, xrange, yrange, width, height, false);
             volumeToggle(data, svg, xrange, yrange, yAxis, yAxisAdd,
-                width, height, maxVolume, maxVolNorm, plotId, minVolNorm);
+                width, height, minmax.maxVolume, minmax.maxVolNorm, plotId, minmax.minVolNorm);
         }
 
         function plotBatch(data, graph, xrange, yrange, width, height, norm) {
@@ -742,135 +760,119 @@ class TumorGrowthCurve extends React.Component {
                 .attr('y2', (d, i) => yrange(ypointArr[i] - stdDevs[i]));
         }
 
+
         // toggle to show each model
         function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm, plotId, minVolNorm) {
-            const volRaw = svg.append('rect')
-                .attr('x', width + 25)
-                .attr('y', height / 2 + 50)
-                .attr('width', 70)
-                .attr('height', 20)
-                .attr('fill', '#cd5686')
-                .style('opacity', 0.8)
-                .attr('id', 'volRawToggle')
-                .on('click', () => {
-                    yrange = d3.scaleLinear()
-                        .domain([0, maxVolume])
-                        .range([height, 0])
-                        .nice();
+            const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText'];
 
-                    yAxis = d3.axisLeft()
-                        .scale(yrange)
-                        .tickPadding(2);
-
-                    d3.selectAll('g.y.axis').call(yAxis);
-                    svg.selectAll('.tick').select('text')
+            // to create the rectangle and
+            function createReactangle(additionalHeight, color, id, val) {
+                let rect = '';
+                if (val === 'volRaw' || val === 'volNorm') {
+                    rect = svg.append('rect')
+                        .attr('x', width + 25)
+                        .attr('y', height / 2 + additionalHeight)
+                        .attr('width', 70)
+                        .attr('height', 20)
+                        .attr('fill', color)
+                        .style('opacity', 0.8)
+                        .attr('id', id);
+                } else if (val === 'volRawText' || val === 'volNormText') {
+                    rect = svg.append('text')
                         .attr('fill', 'black')
-                        .attr('stroke', 'none')
-                        .attr('font-size', '14px');
-                    d3.select('#curves').remove();
-                    const graph = svg.append('g')
-                        .attr('id', 'curves');
-                    plotBatch(data, graph, xrange, yrange, width, height, false);
+                        .style('font-size', '12px')
+                        .attr('text-anchor', val === 'volRawText' ? 'middle' : 'null')
+                        .attr('id', 'volNormText')
+                        .attr('x', width + (val === 'volRawText' ? 60 : 29))
+                        .attr('y', height / 2 + (val === 'volRawText' ? 64 : 84))
+                        .text(val === 'volRawText' ? 'Raw' : 'Normalized');
+                }
+                return rect;
+            }
 
-                    d3.select('#volRawToggle').attr('fill', '#cd5686');
-                    d3.select('#volNormToggle').attr('fill', 'lightgray');
-                });
+            toggleValues.forEach((val) => {
+                // setting the initial variables.
+                let additionalHeight = 50;
+                let color = '#cd5686';
+                let id = '';
+                let plot = false;
+                let rawToggle = '#cd5686';
+                let normToggle = 'lightgray';
+                let minimum = 0;
+                let maximum = maxVolume;
 
-            const volNorm = svg.append('rect')
-                .attr('x', width + 25)
-                .attr('y', height / 2 + 70)
-                .attr('width', 70)
-                .attr('height', 20)
-                .style('opacity', 0.8)
-                .attr('fill', 'lightgray')
-                .attr('id', 'volNormToggle')
-                .on('click', () => {
-                    yrange = d3.scaleLinear()
-                        .domain([minVolNorm, maxVolNorm])
-                        .range([height, 0])
-                        .nice();
+                // switching based on the toggle value.
+                switch (val) {
+                case 'volNorm':
+                    additionalHeight = 70;
+                    color = 'lightgray';
+                    id = 'volNormToggle';
+                    plot = true;
+                    rawToggle = 'lightgray';
+                    normToggle = '#cd5686';
+                    minimum = minVolNorm;
+                    maximum = maxVolNorm;
+                    break;
 
-                    yAxis = d3.axisLeft()
-                        .scale(yrange)
-                        .tickPadding(2);
+                case 'volNormText':
+                    additionalHeight = 70;
+                    color = 'lightgray';
+                    id = 'volNormText';
+                    plot = true;
+                    rawToggle = 'lightgray';
+                    normToggle = '#cd5686';
+                    minimum = minVolNorm;
+                    maximum = maxVolNorm;
+                    break;
 
-                    d3.selectAll('g.y.axis').call(yAxis);
-                    svg.selectAll('.tick').select('text')
-                        .attr('fill', 'black')
-                        .attr('stroke', 'none')
-                        .attr('font-size', '14px');
-                    d3.select('#curves').remove();
-                    const graph = svg.append('g')
-                        .attr('id', 'curves');
-                    plotBatch(data, graph, xrange, yrange, width, height, true);
+                case 'volRaw':
+                    id = 'volRawToggle';
+                    break;
 
-                    d3.select('#volRawToggle').attr('fill', 'lightgray');
-                    d3.select('#volNormToggle').attr('fill', '#cd5686');
-                });
+                case 'volRawText':
+                    id = 'volRawText';
+                    break;
 
-            const volRawText = svg.append('text')
-                .attr('fill', 'black')
-                .style('font-size', '12px')
-                .attr('id', 'volRawText')
-                .attr('text-anchor', 'middle')
-                .attr('x', width + 60)
-                .attr('y', height / 2 + 64)
-                .text('Raw')
-                .on('click', () => {
-                    yrange = d3.scaleLinear()
-                        .domain([0, maxVolume])
-                        .range([height, 0])
-                        .nice();
+                default:
+                    id = 'Looking for what??';
+                }
 
-                    yAxis = d3.axisLeft()
-                        .scale(yrange)
-                        .tickPadding(2);
+                // call to create toggle rectangle and text.
+                const rect = createReactangle(additionalHeight, color, id, val);
 
-                    d3.selectAll('g.y.axis').call(yAxis);
-                    svg.selectAll('.tick').select('text')
-                        .attr('fill', 'black')
-                        .attr('stroke', 'none')
-                        .attr('font-size', '14px');
-                    d3.select('#curves').remove();
-                    const graph = svg.append('g')
-                        .attr('id', 'curves');
-                    plotBatch(data, graph, xrange, yrange, width, height, false);
+                // on click handler.
+                rect
+                    .on('click', () => {
+                        // y-axis change
+                        const yrange = d3.scaleLinear()
+                            .domain([minimum, maximum])
+                            .range([height, 0])
+                            .nice();
 
-                    d3.select('#volRawToggle').attr('fill', '#cd5686');
-                    d3.select('#volNormToggle').attr('fill', 'lightgray');
-                });
+                        const yAxis = d3.axisLeft()
+                            .scale(yrange)
+                            .tickPadding(2);
 
-            const volNormText = svg.append('text')
-                .attr('fill', 'black')
-                .style('font-size', '12px')
-                .attr('id', 'volNormText')
-                .attr('x', width + 29)
-                .attr('y', height / 2 + 84)
-                .text('Normalized')
-                .on('click', () => {
-                    yrange = d3.scaleLinear()
-                        .domain([minVolNorm, maxVolNorm])
-                        .range([height, 0])
-                        .nice();
+                        d3.selectAll('g.y.axis').call(yAxis);
 
-                    yAxis = d3.axisLeft()
-                        .scale(yrange)
-                        .tickPadding(2);
+                        // setting ticks.
+                        svg.selectAll('.tick').select('text')
+                            .attr('fill', 'black')
+                            .attr('stroke', 'none')
+                            .attr('font-size', '14px');
 
-                    d3.selectAll('g.y.axis').call(yAxis);
-                    svg.selectAll('.tick').select('text')
-                        .attr('fill', 'black')
-                        .attr('stroke', 'none')
-                        .attr('font-size', '14px');
-                    d3.select('#curves').remove();
-                    const graph = svg.append('g')
-                        .attr('id', 'curves');
-                    plotBatch(data, graph, xrange, yrange, width, height, true);
+                        // removing the other curve.
+                        d3.select('#curves').remove();
+                        const graph = svg.append('g')
+                            .attr('id', 'curves');
 
-                    d3.select('#volRawToggle').attr('fill', 'lightgray');
-                    d3.select('#volNormToggle').attr('fill', '#cd5686');
-                });
-            // })
+                        // plot the toggle curve.
+                        plotBatch(data, graph, xrange, yrange, width, height, plot);
+
+                        d3.select('#volRawToggle').attr('fill', rawToggle);
+                        d3.select('#volNormToggle').attr('fill', normToggle);
+                    });
+            });
         }
     }
 
