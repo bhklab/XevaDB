@@ -10,6 +10,7 @@ class HeatMap extends React.Component {
         super(props);
         this.HeatMap = this.HeatMap.bind(this);
         this.makeHeatmap = this.makeHeatmap.bind(this);
+        this.rankHeatMap = this.rankHeatMap.bind(this);
     }
 
     componentDidMount() {
@@ -33,6 +34,7 @@ class HeatMap extends React.Component {
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
     makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
+        console.log(data, patient, drug, plotId, dimensions, margin, node);
         this.node = node;
 
         // height and width for the SVG based on the number of drugs and patient/sample ids.
@@ -63,6 +65,7 @@ class HeatMap extends React.Component {
         // making tooltips
         const tooltip = d3.select('.heatmap-wrapper')
             .append('div')
+            .attr('id', 'heatmap-tooltip')
             .style('position', 'absolute')
             .style('visibility', 'hidden')
             .style('border', 'solid')
@@ -415,6 +418,10 @@ class HeatMap extends React.Component {
                     .replace(/[+]/g, '-');
                 d3.selectAll(`.hmap-hlight-${drugClass}`)
                     .style('opacity', 0);
+            })
+            .on('click', (d, i) => {
+                // console.log('hello!!', d, i, data[i]);
+                this.rankHeatMap(d, i, data);
             });
 
         // calling the x-axis to set the axis and we have also transformed the text.
@@ -607,6 +614,51 @@ class HeatMap extends React.Component {
         }
     }
 
+    rankHeatMap(drug, i, dataset) {
+        // grabbing the clicked data value.
+        const data = dataset[i];
+        const { node } = this;
+        const { dimensions } = this.props;
+        const { drugId } = this.props;
+        const { margin } = this.props;
+        const className = 'heatmap-heatmap-wrapper';
+
+        // removing the heatmap wrapper and tooltip from the DOM when clicked on drug.
+        d3.select('#heatmap-heatmap-wrapper').remove();
+        d3.select('#heatmap-tooltip').remove();
+
+        // responses.
+        const responses = ['CR', 'PR', 'SD', 'PD', ''];
+        const newSortedData = [{}];
+
+        // this produces the newSortedData.
+        responses.forEach((val) => {
+            Object.keys(data).forEach((res) => {
+                if (data[res] === val) {
+                    newSortedData[0][res] = data[res];
+                }
+            });
+        });
+
+        // setting the variables with new data.
+        // const drugId = [drug];
+        const patientId = Object.keys(newSortedData[0]);
+        const newDataset = [];
+
+        // sort the dataset or complete data according to the new sorted patient ids.
+        dataset.forEach((val, i) => {
+            newDataset.push({});
+            patientId.forEach((patient) => {
+                newDataset[i][patient] = val[patient];
+            });
+        });
+
+        // console.log(patientId, newSortedData, dataset, 'it\'s newww!!', newDataset);
+
+        this.makeHeatmap(newDataset, patientId, drugId, className, dimensions, margin, node);
+    }
+
+
     render() {
         return (
             // eslint-disable-next-line no-return-assign
@@ -614,7 +666,6 @@ class HeatMap extends React.Component {
         );
     }
 }
-
 
 HeatMap.propTypes = {
     dimensions: PropTypes.shape({
