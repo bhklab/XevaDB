@@ -34,7 +34,6 @@ class HeatMap extends React.Component {
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
     makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
-        console.log(data, patient, drug, plotId, dimensions, margin, node);
         this.node = node;
 
         // height and width for the SVG based on the number of drugs and patient/sample ids.
@@ -420,8 +419,8 @@ class HeatMap extends React.Component {
                     .style('opacity', 0);
             })
             .on('click', (d, i) => {
-                // console.log('hello!!', d, i, data[i]);
-                this.rankHeatMap(d, i, data);
+                const mapId = plotId;
+                this.rankHeatMap(d, i, data, mapId);
             });
 
         // calling the x-axis to set the axis and we have also transformed the text.
@@ -614,21 +613,21 @@ class HeatMap extends React.Component {
         }
     }
 
-    rankHeatMap(drug, i, dataset) {
+    rankHeatMap(drug, i, dataset, mapId) {
         // grabbing the clicked data value.
         const data = dataset[i];
         const { node } = this;
         const { dimensions } = this.props;
         const { drugId } = this.props;
         const { margin } = this.props;
-        const className = 'heatmap-heatmap-wrapper';
+        const className = mapId;
 
         // removing the heatmap wrapper and tooltip from the DOM when clicked on drug.
-        d3.select('#heatmap-heatmap-wrapper').remove();
+        d3.select(`#heatmap-${mapId}`).remove();
         d3.select('#heatmap-tooltip').remove();
 
         // responses.
-        const responses = ['CR', 'PR', 'SD', 'PD', ''];
+        const responses = ['CR', 'PR', 'SD', 'PD', '', 'NA'];
         const newSortedData = [{}];
 
         // this produces the newSortedData.
@@ -652,8 +651,6 @@ class HeatMap extends React.Component {
                 newDataset[i][patient] = val[patient];
             });
         });
-
-        // console.log(patientId, newSortedData, dataset, 'it\'s newww!!', newDataset);
 
         this.makeHeatmap(newDataset, patientId, drugId, className, dimensions, margin, node);
     }
