@@ -76,14 +76,16 @@ class SearchResultHeatMap extends React.Component {
             margin,
         } = this.state;
         return (
-            <HeatMap
-                data={drugData}
-                drugId={drugId}
-                patientId={patientIdDrug}
-                dimensions={dimensions}
-                margin={margin}
-                className="searchedheatmap"
-            />
+            drugData.length > 0 ? (
+                <HeatMap
+                    data={drugData}
+                    drugId={drugId}
+                    patientId={patientIdDrug}
+                    dimensions={dimensions}
+                    margin={margin}
+                    className="searchedheatmap"
+                />
+            ) : ''
         );
     }
 }

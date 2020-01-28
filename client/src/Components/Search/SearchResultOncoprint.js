@@ -148,22 +148,24 @@ class SearchResultOncoprint extends React.Component {
             genesMut, genesRna, genesCnv, patientMut, patientRna, patientCnv,
         } = this.state;
         return (
-            <Oncoprint
-                className="oprint_result"
-                dimensions={dimensions}
-                margin={margin}
-                threshold={Number(threshold)}
-                hmap_patients={hmapPatients}
-                genes_mut={genesMut}
-                genes_rna={genesRna}
-                genes_cnv={genesCnv}
-                patient_mut={patientMut}
-                patient_rna={patientRna}
-                patient_cnv={patientCnv}
-                data_mut={dataMut}
-                data_rna={dataRna}
-                data_cnv={dataCnv}
-            />
+            (dataMut.length > 0 || dataCnv.length > 0 || dataRna.length > 0) ? (
+                <Oncoprint
+                    className="oprint_result"
+                    dimensions={dimensions}
+                    margin={margin}
+                    threshold={Number(threshold)}
+                    hmap_patients={hmapPatients}
+                    genes_mut={genesMut}
+                    genes_rna={genesRna}
+                    genes_cnv={genesCnv}
+                    patient_mut={patientMut}
+                    patient_rna={patientRna}
+                    patient_cnv={patientCnv}
+                    data_mut={dataMut}
+                    data_rna={dataRna}
+                    data_cnv={dataCnv}
+                />
+            ) : ''
         );
     }
 }

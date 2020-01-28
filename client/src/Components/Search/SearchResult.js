@@ -3,17 +3,26 @@ import SearchResultHeatMap from './SearchResultHeatMap';
 import SearchResultOncoprint from './SearchResultOncoprint';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
-
+import { PatientProvider } from '../Dataset/DatasetContext';
 
 class SearchResult extends React.Component {
     constructor(props) {
         super(props);
+
+        this.setPatients = (patients) => {
+            this.setState({
+                globalPatients: patients,
+            });
+        };
+
         this.state = {
             drugParam: '',
             datasetParam: '',
             geneParam: '',
             genomicsParam: '',
             threshold: 0,
+            globalPatients: [],
+            setPatients: this.setPatients,
         };
     }
 
@@ -45,16 +54,18 @@ class SearchResult extends React.Component {
                 <TopNav />
                 <GlobalStyles />
                 <div className="wrapper" style={{ margin: 'auto' }}>
-                    <SearchResultHeatMap
-                        drugParam={drugParam}
-                        datasetParam={datasetParam}
-                    />
-                    <SearchResultOncoprint
-                        geneParam={geneParam}
-                        datasetParam={datasetParam}
-                        genomicsParam={genomicsParam}
-                        threshold={threshold}
-                    />
+                    <PatientProvider value={this.state}>
+                        <SearchResultHeatMap
+                            drugParam={drugParam}
+                            datasetParam={datasetParam}
+                        />
+                        <SearchResultOncoprint
+                            geneParam={geneParam}
+                            datasetParam={datasetParam}
+                            genomicsParam={genomicsParam}
+                            threshold={threshold}
+                        />
+                    </PatientProvider>
                 </div>
             </div>
         );
