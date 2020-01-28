@@ -3,7 +3,7 @@ import SearchResultHeatMap from './SearchResultHeatMap';
 import SearchResultOncoprint from './SearchResultOncoprint';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
-import { PatientProvider } from '../Dataset/DatasetContext';
+import { PatientProvider } from '../Context/PatientContext';
 
 class SearchResult extends React.Component {
     constructor(props) {
@@ -47,14 +47,19 @@ class SearchResult extends React.Component {
 
     render() {
         const {
-            drugParam, datasetParam, geneParam, genomicsParam, threshold,
+            drugParam, datasetParam, geneParam, genomicsParam,
+            threshold, globalPatients, setPatients,
         } = this.state;
+        const providerData = {
+            globalPatients,
+            setPatients,
+        };
         return (
             <div>
                 <TopNav />
                 <GlobalStyles />
                 <div className="wrapper" style={{ margin: 'auto' }}>
-                    <PatientProvider value={this.state}>
+                    <PatientProvider value={providerData}>
                         <SearchResultHeatMap
                             drugParam={drugParam}
                             datasetParam={datasetParam}

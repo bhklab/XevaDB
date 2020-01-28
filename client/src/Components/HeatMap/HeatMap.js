@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-import PatientContext from '../Dataset/DatasetContext';
+import PatientContext from '../Context/PatientContext';
 
 
 class HeatMap extends Component {

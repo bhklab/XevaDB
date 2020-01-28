@@ -2,7 +2,7 @@ import React from 'react';
 import HeatMapData from '../HeatMap/HeatMapData';
 import OncoprintData from '../Oncoprint/OncoprintData';
 import Footer from '../Footer/Footer';
-import { PatientProvider } from './DatasetContext';
+import { PatientProvider } from '../Context/PatientContext';
 
 class Dataset extends React.Component {
     constructor(props) {
@@ -31,10 +31,14 @@ class Dataset extends React.Component {
     }
 
     render() {
-        const { dataset } = this.state;
+        const { dataset, globalPatients, setPatients } = this.state;
+        const providerData = {
+            globalPatients,
+            setPatients,
+        };
         return (
             <div>
-                <PatientProvider value={this.state}>
+                <PatientProvider value={providerData}>
                     <HeatMapData
                         dataset={dataset}
                     />

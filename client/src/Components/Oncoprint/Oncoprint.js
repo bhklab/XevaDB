@@ -6,7 +6,7 @@ import React from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import { mutationTypeMap, cnaMap } from '../../util/MutationViewsUtil';
-import { PatientConsumer } from '../Dataset/DatasetContext';
+import { PatientConsumer } from '../Context/PatientContext';
 
 class Oncoprint extends React.Component {
     constructor(props) {
