@@ -88,16 +88,20 @@ class HeatMapData extends React.Component {
             <div>
                 <TopNav />
                 <GlobalStyles />
-                <div className="wrapper" style={{ margin: 'auto' }}>
-                    <HeatMap
-                        data={data}
-                        drugId={drugId}
-                        className="heatmap"
-                        patientId={patientId}
-                        dimensions={dimensions}
-                        margin={margin}
-                    />
-                </div>
+                {
+                    data.length > 0 ? (
+                        <div className="wrapper" style={{ margin: 'auto' }}>
+                            <HeatMap
+                                data={data}
+                                drugId={drugId}
+                                className="heatmap"
+                                patientId={patientId}
+                                dimensions={dimensions}
+                                margin={margin}
+                            />
+                        </div>
+                    ) : ''
+                }
             </div>
         );
     }

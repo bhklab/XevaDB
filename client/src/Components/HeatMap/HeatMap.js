@@ -1,24 +1,29 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-shadow */
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
-import React from 'react';
+import React, { Component } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
+import PatientContext from '../Dataset/DatasetContext';
 
-class HeatMap extends React.Component {
+
+class HeatMap extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            modifiedPatients: [],
+        };
         this.HeatMap = this.HeatMap.bind(this);
         this.makeHeatmap = this.makeHeatmap.bind(this);
         this.rankHeatMap = this.rankHeatMap.bind(this);
     }
 
     componentDidMount() {
-        // this.HeatMap()
+        this.HeatMap();
     }
 
     componentDidUpdate() {
-        this.HeatMap();
+        // console.log('inside update!!!')
     }
 
     HeatMap() {
@@ -652,17 +657,30 @@ class HeatMap extends React.Component {
             });
         });
 
+        this.setState({
+            modifiedPatients: patientId,
+        }, () => {
+            const { setPatients } = this.context;
+            const { modifiedPatients } = this.state;
+            // calling the context setPatients method.
+            setPatients(modifiedPatients);
+        });
+
+        // finally calling the makeHeatMap function in order passing
+        // new dataset in order to make new heatmap based on ranking.
         this.makeHeatmap(newDataset, patientId, drugId, className, dimensions, margin, node);
     }
 
+    // static contextType = PatientContext;
 
     render() {
         return (
-            // eslint-disable-next-line no-return-assign
-            <div ref={(node) => this.node = node} className="heatmap-wrapper" />
+            <div ref={(node) => { this.node = node; }} className="heatmap-wrapper" />
         );
     }
 }
+
+HeatMap.contextType = PatientContext;
 
 HeatMap.propTypes = {
     dimensions: PropTypes.shape({

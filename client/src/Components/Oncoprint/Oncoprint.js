@@ -6,28 +6,31 @@ import React from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import { mutationTypeMap, cnaMap } from '../../util/MutationViewsUtil';
+import { PatientConsumer } from '../Dataset/DatasetContext';
 
 class Oncoprint extends React.Component {
     constructor(props) {
         super(props);
         this.Oncoprint = this.Oncoprint.bind(this);
+        this.rankOncoprint = this.rankOncoprint.bind(this);
     }
 
     componentDidMount() {
-    // this.Oncoprint()
-    }
-
-    componentDidUpdate() {
         this.Oncoprint();
     }
 
-    Oncoprint() {
+    // componentDidUpdate() {
+    //     this.Oncoprint();
+    // }
+
+    Oncoprint(modifiedPatients) {
+        let { hmap_patients } = this.props;
+        hmap_patients = modifiedPatients || hmap_patients;
         const { node } = this;
         const { className } = this.props;
         const { dimensions } = this.props;
         const { margin } = this.props;
         const { threshold } = this.props;
-        const { hmap_patients } = this.props;
         const { data_mut } = this.props;
         const { data_rna } = this.props;
         const { data_cnv } = this.props;
@@ -699,10 +702,23 @@ class Oncoprint extends React.Component {
         }
     }
 
+    // ranking the oncopring based on the globalPatients passed from heatmap.
+    rankOncoprint(value) {
+        const { globalPatients } = value;
+        const { className } = this.props;
+        if (globalPatients.length > 0) {
+            d3.select(`#oncoprint-${className}`).remove();
+            this.Oncoprint(globalPatients);
+        }
+    }
+
     render() {
         return (
             // eslint-disable-next-line no-return-assign
-            <div ref={(node) => this.node = node} className="oprint-wrapper" />
+            <div>
+                <div ref={(node) => { this.node = node; }} className="oprint-wrapper" />
+                <PatientConsumer>{(value) => { this.rankOncoprint(value); }}</PatientConsumer>
+            </div>
         );
     }
 }

@@ -127,31 +127,45 @@ class OncoprintData extends React.Component {
 
 
     render() {
+        const {
+            genes_mut, genes_rna, genes_cnv,
+            patient_mut, patient_rna, patient_cnv,
+            data_mut, data_rna, data_cnv,
+            dimensions, margin, threshold,
+            hmap_patients,
+        } = this.state;
+
         return (
             <div className="wrapper" style={{ margin: 'auto' }}>
-                <Oncoprint
-                    className="oprint"
-                    dimensions={this.state.dimensions}
-                    margin={this.state.margin}
-                    threshold={this.state.threshold}
-                    hmap_patients={this.state.hmap_patients}
-                    genes_mut={this.state.genes_mut}
-                    genes_rna={this.state.genes_rna}
-                    genes_cnv={this.state.genes_cnv}
-                    patient_mut={this.state.patient_mut}
-                    patient_rna={this.state.patient_rna}
-                    patient_cnv={this.state.patient_cnv}
-                    data_mut={this.state.data_mut}
-                    data_rna={this.state.data_rna}
-                    data_cnv={this.state.data_cnv}
-                />
+                {
+                    (data_mut.length > 0 || data_cnv.length > 0 || data_rna.length > 0)
+                        ? (
+                            <Oncoprint
+                                className="oprint"
+                                dimensions={dimensions}
+                                margin={margin}
+                                threshold={threshold}
+                                hmap_patients={hmap_patients}
+                                genes_mut={genes_mut}
+                                genes_rna={genes_rna}
+                                genes_cnv={genes_cnv}
+                                patient_mut={patient_mut}
+                                patient_rna={patient_rna}
+                                patient_cnv={patient_cnv}
+                                data_mut={data_mut}
+                                data_rna={data_rna}
+                                data_cnv={data_cnv}
+                            />
+                        )
+                        : ''
+                }
             </div>
         );
     }
 }
 
 OncoprintData.propTypes = {
-    dataset: PropTypes.number.isRequired,
+    dataset: PropTypes.string.isRequired,
 };
 
 
