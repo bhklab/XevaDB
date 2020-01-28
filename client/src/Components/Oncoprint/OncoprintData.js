@@ -5,6 +5,7 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import Oncoprint from './Oncoprint';
+import Spinner from '../SpinnerUtil/Spinner';
 
 class OncoprintData extends React.Component {
     constructor(props) {
@@ -24,6 +25,7 @@ class OncoprintData extends React.Component {
             data_cnv: [],
             dimensions: {},
             margin: {},
+            loading: true,
         };
         this.updateResults = this.updateResults.bind(this);
     }
@@ -122,6 +124,7 @@ class OncoprintData extends React.Component {
             margin: {
                 top: 50, right: 200, bottom: 0, left: 250,
             },
+            loading: false,
         });
     }
 
@@ -132,13 +135,13 @@ class OncoprintData extends React.Component {
             patient_mut, patient_rna, patient_cnv,
             data_mut, data_rna, data_cnv,
             dimensions, margin, threshold,
-            hmap_patients,
+            hmap_patients, loading,
         } = this.state;
 
         return (
             <div className="wrapper" style={{ margin: 'auto' }}>
                 {
-                    (data_mut.length > 0 || data_cnv.length > 0 || data_rna.length > 0)
+                    (data_mut.length || data_cnv.length || data_rna.length)
                         ? (
                             <Oncoprint
                                 className="oprint"
@@ -157,7 +160,7 @@ class OncoprintData extends React.Component {
                                 data_cnv={data_cnv}
                             />
                         )
-                        : ''
+                        : (<div className="oprint-wrapper"><Spinner loading={loading} /></div>)
                 }
             </div>
         );

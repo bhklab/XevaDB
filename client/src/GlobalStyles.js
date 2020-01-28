@@ -51,7 +51,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .heatmap-wrapper, .oprint-wrapper {
-    min-width:1000px;
+    min-width:1417px;
   }
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
   .donut-wrapper, .doc-wrapper { //put all wrappers here and wrap them with wrapper
