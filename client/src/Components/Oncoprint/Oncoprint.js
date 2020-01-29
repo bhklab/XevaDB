@@ -12,7 +12,7 @@ class Oncoprint extends React.Component {
     constructor(props) {
         super(props);
         this.Oncoprint = this.Oncoprint.bind(this);
-        this.rankOncoprint = this.rankOncoprint.bind(this);
+        this.rankOncoprintBasedOnHeatMapChanges = this.rankOncoprintBasedOnHeatMapChanges.bind(this);
     }
 
     componentDidMount() {
@@ -703,7 +703,7 @@ class Oncoprint extends React.Component {
     }
 
     // ranking the oncopring based on the globalPatients passed from heatmap.
-    rankOncoprint(value) {
+    rankOncoprintBasedOnHeatMapChanges(value) {
         const { globalPatients } = value;
         const { className } = this.props;
         if (globalPatients.length > 0) {
@@ -717,7 +717,7 @@ class Oncoprint extends React.Component {
             // eslint-disable-next-line no-return-assign
             <div>
                 <div ref={(node) => { this.node = node; }} className="oprint-wrapper" />
-                <PatientConsumer>{(value) => { this.rankOncoprint(value); }}</PatientConsumer>
+                <PatientConsumer>{(value) => { this.rankOncoprintBasedOnHeatMapChanges(value); }}</PatientConsumer>
             </div>
         );
     }
