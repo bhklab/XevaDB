@@ -5,7 +5,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-import { mutationTypeMap, cnaMap } from '../../util/MutationViewsUtil';
+import { mutationTypeMap, cnaMap, rnaMap } from '../../util/MutationViewsUtil';
 import { PatientConsumer } from '../Context/PatientContext';
 
 class Oncoprint extends React.Component {
@@ -13,6 +13,7 @@ class Oncoprint extends React.Component {
         super(props);
         this.Oncoprint = this.Oncoprint.bind(this);
         this.rankOncoprintBasedOnHeatMapChanges = this.rankOncoprintBasedOnHeatMapChanges.bind(this);
+        this.rankOncoprint = this.rankOncoprint.bind(this);
     }
 
     componentDidMount() {
@@ -47,6 +48,7 @@ class Oncoprint extends React.Component {
 
 
     makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
+        console.log(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv);
         // reference.
         this.node = node;
 
@@ -179,6 +181,9 @@ class Oncoprint extends React.Component {
                     .on('mouseout', () => {
                         d3.selectAll(`.oprint-hlight-${genes[i]}`)
                             .style('opacity', 0);
+                    })
+                    .on('click', () => {
+                        // this.rankOncoprint(genes[i], [data_mut, data_cnv, data_rna]);
                     });
             }
         };
@@ -293,8 +298,8 @@ class Oncoprint extends React.Component {
                         }
                         // based on the data gives different colors to the rectangle.
                         if (data_cnv[i][hmap_patients[j]]) {
-                            const cnvType = cnaMap[data_cnv[i][hmap_patients[j]]].xevalabel;
-                            const cnvColor = cnaMap[data_cnv[i][hmap_patients[j]]].color;
+                            const cnvType = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].xevalabel;
+                            const cnvColor = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].color;
                             colorReactangles(cnvType, cnvColor, i, j);
                         }
                     }
@@ -710,6 +715,73 @@ class Oncoprint extends React.Component {
             d3.select(`#oncoprint-${className}`).remove();
             this.Oncoprint(globalPatients);
         }
+    }
+
+    // ranking oncoprint based on the gene clicked.
+    // ranking based on the selected gene.
+    // eslint-disable-next-line class-methods-use-this
+    rankOncoprint(gene, data) {
+        // array for new data.
+        const newData = {};
+        // loop through all the data types and push relevant data into the array.
+        let type = {};
+        // calling the right object based on the type.
+        data.forEach((val, i) => {
+            switch (i) {
+            case 0:
+                type = mutationTypeMap;
+                break;
+            case 1:
+                type = cnaMap;
+                break;
+            case 2:
+                type = rnaMap;
+                break;
+            default:
+                type = mutationTypeMap;
+            }
+            // loop through each of the data value.
+            val.forEach((row) => {
+                // if the gene id matches the clicked gene.
+                if (row.gene_id === gene) {
+                    Object.keys(row).forEach((patient, j) => {
+                        if ((isNaN(row[patient]) && j !== 0)) {
+                            const total = newData[patient] ? newData[patient].total + 1 : 1;
+                            if (!(newData[patient])) {
+                                newData[patient] = {
+                                    priority: type[row[patient].toLowerCase()].priority,
+                                    total,
+                                };
+                            } else {
+                                newData[patient].total = total;
+                            }
+                        } else if (Number(row[patient])) {
+                            const { threshold } = this.props;
+                            let isNegative = '';
+                            if (Number(row[patient]) > threshold) {
+                                isNegative = 'positive';
+                            } else if (Number(row[patient]) < -threshold) {
+                                isNegative = 'negative';
+                            } else {
+                                isNegative = 'not available';
+                            }
+                            let total = 1;
+                            if (newData[patient] && isNegative !== 'not available') {
+                                total = newData[patient].total + 1;
+                                newData[patient].total = total;
+                            } else if (!newData[patient] && isNegative !== 'not available') {
+                                total = 1;
+                                newData[patient] = {
+                                    priority: type[isNegative].priority,
+                                    total,
+                                };
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        console.log(newData);
     }
 
     render() {
