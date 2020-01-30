@@ -47,7 +47,7 @@ const mutationStyleMap = {
         longName: 'Missense',
         style: 'missense_mutation',
         mainType: 'missense',
-        priority: 1,
+        priority: 3,
         color: '#1a9850',
     },
     inframe: {
@@ -55,7 +55,7 @@ const mutationStyleMap = {
         longName: 'In-frame',
         style: 'inframe_mutation',
         mainType: 'inframe',
-        priority: 2,
+        priority: 4,
         color: '#8B4513',
     },
     truncating: {
@@ -63,7 +63,7 @@ const mutationStyleMap = {
         longName: 'Truncating',
         style: 'trunc_mutation',
         mainType: 'truncating',
-        priority: 4,
+        priority: 6,
         color: '#000000',
     },
     nonsense: {
@@ -71,7 +71,7 @@ const mutationStyleMap = {
         longName: 'Nonsense',
         style: 'trunc_mutation',
         mainType: 'truncating',
-        priority: 6,
+        priority: 8,
         color: '#000000',
     },
     nonstop: {
@@ -79,7 +79,7 @@ const mutationStyleMap = {
         longName: 'Nonstop',
         style: 'trunc_mutation',
         mainType: 'truncating',
-        priority: 7,
+        priority: 9,
         color: '#000000',
     },
     nonstart: {
@@ -87,7 +87,7 @@ const mutationStyleMap = {
         longName: 'Nonstart',
         style: 'trunc_mutation',
         mainType: 'truncating',
-        priority: 8,
+        priority: 10,
         color: '#000000',
     },
     frameshift: {
@@ -95,7 +95,7 @@ const mutationStyleMap = {
         longName: 'Frame Shift',
         style: 'trunc_mutation',
         mainType: 'truncating',
-        priority: 4,
+        priority: 6,
         color: '#000000',
     },
     frame_shift_del: {
@@ -103,7 +103,7 @@ const mutationStyleMap = {
         longName: 'Frame Shift Deletion',
         style: 'trunc_mutation',
         mainType: 'truncating',
-        priority: 4,
+        priority: 6,
         color: '#000000',
     },
     frame_shift_ins: {
@@ -111,7 +111,7 @@ const mutationStyleMap = {
         longName: 'Frame Shift Insertion',
         style: 'trunc_mutation',
         mainType: 'truncating',
-        priority: 5,
+        priority: 7,
         color: '#000000',
     },
     in_frame_ins: {
@@ -119,7 +119,7 @@ const mutationStyleMap = {
         longName: 'In-frame Insertion',
         style: 'inframe_mutation',
         mainType: 'inframe',
-        priority: 3,
+        priority: 5,
         color: '#8B4513',
     },
     in_frame_del: {
@@ -127,7 +127,7 @@ const mutationStyleMap = {
         longName: 'In-frame Deletion',
         style: 'inframe_mutation',
         mainType: 'inframe',
-        priority: 2,
+        priority: 4,
         color: '#8B4513',
     },
     splice_site: {
@@ -135,7 +135,7 @@ const mutationStyleMap = {
         longName: 'Splice site',
         style: 'trunc_mutation',
         mainType: 'truncating',
-        priority: 9,
+        priority: 11,
         color: '#000000',
     },
     fusion: {
@@ -143,7 +143,7 @@ const mutationStyleMap = {
         longName: 'Fusion',
         style: 'fusion',
         mainType: 'other',
-        priority: 10,
+        priority: 12,
         color: '#8B00C9',
     },
     silent: {
@@ -151,7 +151,7 @@ const mutationStyleMap = {
         longName: 'Silent',
         style: 'other_mutation',
         mainType: 'other',
-        priority: 11,
+        priority: 13,
         color: '#8B00C9',
     },
     // this
@@ -160,7 +160,7 @@ const mutationStyleMap = {
         longName: 'Other',
         style: 'other_mutation',
         mainType: 'other',
-        priority: 11,
+        priority: 13,
         color: '#8B00C9',
     },
     // mutations mapped to "other" will be labelled
@@ -168,7 +168,7 @@ const mutationStyleMap = {
     other: {
         style: 'other_mutation',
         mainType: 'other',
-        priority: 11,
+        priority: 13,
         color: '#8B00C9',
     },
 };
@@ -230,43 +230,55 @@ Mapping btw the copy number (data) values and view values.
 */
 export const cnaMap = {
     '-2': {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del', priority: 2,
     },
     '-1': {
-        label: 'ShallowDel', style: 'cna-hetloss', tooltip: 'Shallow deletion', color: '#0033CC', xevalabel: 'del',
+        label: 'ShallowDel', style: 'cna-hetloss', tooltip: 'Shallow deletion', color: '#0033CC', xevalabel: 'del', priority: 2,
     },
     0: {
-        label: 'Diploid', style: 'cna-diploid', tooltip: 'Diploid / normal', color: 'lightgray', xevalabel: 'empty',
+        label: 'Diploid', style: 'cna-diploid', tooltip: 'Diploid / normal', color: 'lightgray', xevalabel: 'empty', priority: -1,
     },
     1: {
-        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#e41a1c', xevalabel: 'amp',
+        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#e41a1c', xevalabel: 'amp', priority: 1,
     },
     2: {
-        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp',
+        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp', priority: 1,
     },
-    'Del0.8': {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+    'del0.8': {
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del', priority: 2,
     },
-    Deletion: {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+    deletion: {
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del', priority: 2,
     },
-    'Shallow Deletion': {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+    'shallow deletion': {
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del', priority: 2,
     },
-    'Deep Deletion': {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del',
+    'deep deletion': {
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: '#0033CC', xevalabel: 'del', priority: 2,
     },
-    Gain: {
-        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#e41a1c', xevalabel: 'amp',
+    gain: {
+        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#e41a1c', xevalabel: 'amp', priority: 1,
     },
-    Amp: {
-        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp',
+    amp: {
+        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp', priority: 1,
     },
-    Amplification: {
-        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp',
+    amplification: {
+        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp', priority: 1,
     },
     unknown: {
-        label: 'NA', style: 'cna-unknown', tooltip: 'CNA data is not available for this gene', xevalabel: 'empty',
+        label: 'NA', style: 'cna-unknown', tooltip: 'CNA data is not available for this gene', xevalabel: 'empty', priority: -1,
+    },
+};
+
+export const rnaMap = {
+    positive: {
+        priority: 14,
+    },
+    negative: {
+        priority: 15,
+    },
+    'not available': {
+        priority: 16,
     },
 };
 
@@ -274,4 +286,5 @@ export const cnaMap = {
 export default {
     mutationTypeMap,
     cnaMap,
+    rnaMap,
 };
