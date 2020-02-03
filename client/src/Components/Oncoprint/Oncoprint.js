@@ -794,7 +794,21 @@ class Oncoprint extends React.Component {
                 }
             });
         });
-        console.log(newData);
+
+        // sorting the array based on priority.
+        const sortableArray = [];
+        Object.keys(newData).forEach((val) => {
+            sortableArray.push([val, newData[val].priority, newData[val].total]);
+        });
+        const sortedData = sortableArray.sort((a, b) => (a[1] - b[1]));
+
+        // final list of the patients in the sorted order.
+        const sortedPatients = sortedData.map((patient) => patient[0]);
+
+        // creating a new oncoprint based on the sorted patients list.
+        const { className } = this.props;
+        d3.select(`#oncoprint-${className}`).remove();
+        this.Oncoprint(sortedPatients);
     }
 
     render() {
