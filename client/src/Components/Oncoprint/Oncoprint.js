@@ -20,10 +20,6 @@ class Oncoprint extends React.Component {
         this.Oncoprint();
     }
 
-    // componentDidUpdate() {
-    //     this.Oncoprint();
-    // }
-
     Oncoprint(modifiedPatients) {
         let { hmap_patients } = this.props;
         hmap_patients = modifiedPatients || hmap_patients;
@@ -183,7 +179,7 @@ class Oncoprint extends React.Component {
                             .style('opacity', 0);
                     })
                     .on('click', () => {
-                        // this.rankOncoprint(genes[i], [data_mut, data_cnv, data_rna]);
+                        this.rankOncoprint(genes[i], [data_mut, data_cnv, data_rna]);
                     });
             }
         };
@@ -718,15 +714,13 @@ class Oncoprint extends React.Component {
     }
 
     // ranking oncoprint based on the gene clicked.
-    // ranking based on the selected gene.
     // eslint-disable-next-line class-methods-use-this
     rankOncoprint(gene, data) {
         // array for new data.
         const newData = {};
-        // loop through all the data types and push relevant data into the array.
-        let type = {};
-        // calling the right object based on the type.
-        data.forEach((val, i) => {
+        // function to return the type.
+        const retunType = (i) => {
+            let type = {};
             switch (i) {
             case 0:
                 type = mutationTypeMap;
@@ -740,42 +734,69 @@ class Oncoprint extends React.Component {
             default:
                 type = mutationTypeMap;
             }
+            return type;
+        };
+        // function to check if it's a negative number or not.
+        const isNegativeCheck = (row) => {
+            let val = '';
+            const { threshold } = this.props;
+            if (Number(row) > threshold) {
+                val = 'positive';
+            } else if (Number(row) < -threshold) {
+                val = 'negative';
+            } else {
+                val = 'not available';
+            }
+            return val;
+        };
+        // loop through all the data types and push relevant data into the array.
+        data.forEach((val, i) => {
+            // type from the function.
+            const type = retunType(i);
             // loop through each of the data value.
             val.forEach((row) => {
                 // if the gene id matches the clicked gene.
                 if (row.gene_id === gene) {
                     Object.keys(row).forEach((patient, j) => {
                         if ((isNaN(row[patient]) && j !== 0)) {
-                            const total = newData[patient] ? newData[patient].total + 1 : 1;
-                            if (!(newData[patient])) {
+                            const { priority } = type[row[patient].toLowerCase()];
+                            if (!newData[patient] || (newData[patient] && newData[patient].priority === 16)) {
+                                const total = 1;
                                 newData[patient] = {
-                                    priority: type[row[patient].toLowerCase()].priority,
+                                    priority,
                                     total,
                                 };
-                            } else {
+                            } else if (newData[patient].priority < priority) {
+                                const total = newData[patient].total + 1;
                                 newData[patient].total = total;
+                            } else if (newData[patient].priority > priority) {
+                                const total = newData[patient].total + 1;
+                                newData[patient].total = total;
+                                newData[patient].priority = priority;
                             }
                         } else if (Number(row[patient])) {
-                            const { threshold } = this.props;
-                            let isNegative = '';
-                            if (Number(row[patient]) > threshold) {
-                                isNegative = 'positive';
-                            } else if (Number(row[patient]) < -threshold) {
-                                isNegative = 'negative';
-                            } else {
-                                isNegative = 'not available';
-                            }
-                            let total = 1;
-                            if (newData[patient] && isNegative !== 'not available') {
-                                total = newData[patient].total + 1;
-                                newData[patient].total = total;
-                            } else if (!newData[patient] && isNegative !== 'not available') {
-                                total = 1;
+                            // check for the value of the number.
+                            const isNegative = isNegativeCheck(row[patient]);
+                            const { priority } = type[isNegative];
+                            if (!newData[patient] || (newData[patient] && newData[patient].priority === 16)) {
+                                const total = 1;
                                 newData[patient] = {
                                     priority: type[isNegative].priority,
                                     total,
                                 };
+                            } else if (newData[patient] && newData[patient].priority > priority && priority !== 16) {
+                                const total = newData[patient].total + 1;
+                                newData[patient].total = total;
+                                newData[patient].priority = priority;
+                            } else if (newData[patient].priority < priority && priority !== 16) {
+                                const total = newData[patient].total + 1;
+                                newData[patient].total = total;
                             }
+                        } else if ((Number(row[patient]) === 0 && typeof (newData[patient]) === 'undefined')) {
+                            newData[patient] = {
+                                priority: 16,
+                                total: 1,
+                            };
                         }
                     });
                 }
