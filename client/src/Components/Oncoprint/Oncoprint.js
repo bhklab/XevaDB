@@ -749,6 +749,24 @@ class Oncoprint extends React.Component {
             }
             return val;
         };
+        // this function will create/push data to the newData object.
+        const createNewData = (patient, priority) => {
+            if (!newData[patient] || (newData[patient] && newData[patient].priority === 16)) {
+                const total = 1;
+                newData[patient] = {
+                    priority,
+                    total,
+                };
+            } else if (newData[patient].priority < priority && priority !== 16) {
+                const total = newData[patient].total + 1;
+                newData[patient].total = total;
+            } else if (newData[patient] && newData[patient].priority > priority && priority !== 16) {
+                const total = newData[patient].total + 1;
+                newData[patient].total = total;
+                newData[patient].priority = priority;
+            }
+        };
+
         // loop through all the data types and push relevant data into the array.
         data.forEach((val, i) => {
             // type from the function.
@@ -760,38 +778,12 @@ class Oncoprint extends React.Component {
                     Object.keys(row).forEach((patient, j) => {
                         if ((isNaN(row[patient]) && j !== 0)) {
                             const { priority } = type[row[patient].toLowerCase()];
-                            if (!newData[patient] || (newData[patient] && newData[patient].priority === 16)) {
-                                const total = 1;
-                                newData[patient] = {
-                                    priority,
-                                    total,
-                                };
-                            } else if (newData[patient].priority < priority) {
-                                const total = newData[patient].total + 1;
-                                newData[patient].total = total;
-                            } else if (newData[patient].priority > priority) {
-                                const total = newData[patient].total + 1;
-                                newData[patient].total = total;
-                                newData[patient].priority = priority;
-                            }
+                            createNewData(patient, priority);
                         } else if (Number(row[patient])) {
                             // check for the value of the number.
                             const isNegative = isNegativeCheck(row[patient]);
                             const { priority } = type[isNegative];
-                            if (!newData[patient] || (newData[patient] && newData[patient].priority === 16)) {
-                                const total = 1;
-                                newData[patient] = {
-                                    priority: type[isNegative].priority,
-                                    total,
-                                };
-                            } else if (newData[patient] && newData[patient].priority > priority && priority !== 16) {
-                                const total = newData[patient].total + 1;
-                                newData[patient].total = total;
-                                newData[patient].priority = priority;
-                            } else if (newData[patient].priority < priority && priority !== 16) {
-                                const total = newData[patient].total + 1;
-                                newData[patient].total = total;
-                            }
+                            createNewData(patient, priority);
                         } else if ((Number(row[patient]) === 0 && typeof (newData[patient]) === 'undefined')) {
                             newData[patient] = {
                                 priority: 16,
