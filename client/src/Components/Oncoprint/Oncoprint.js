@@ -804,14 +804,20 @@ class Oncoprint extends React.Component {
         // final list of the patients in the sorted order.
         const sortedPatients = sortedData.map((patient) => patient[0]);
 
-        // creating a new oncoprint based on the sorted patients list.
-        const { className } = this.props;
-        d3.select(`#oncoprint-${className}`).remove();
-        this.Oncoprint(sortedPatients);
+        // grabbing the difference from the list of initial patients and sorted patients.
+        // pushing it to the sortedPatients list.
+        const { hmap_patients } = this.props;
+        const diff = hmap_patients.filter((x) => !sortedPatients.includes(x));
+        sortedPatients.push(diff);
 
         // setting the patients in the context.
         const { setPatients } = this.context;
         setPatients(sortedPatients);
+
+        // creating a new oncoprint based on the sorted patients list.
+        const { className } = this.props;
+        d3.select(`#oncoprint-${className}`).remove();
+        this.Oncoprint(sortedPatients);
     }
 
     render() {
