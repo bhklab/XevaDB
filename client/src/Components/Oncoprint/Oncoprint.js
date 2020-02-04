@@ -6,7 +6,7 @@ import React from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import { mutationTypeMap, cnaMap, rnaMap } from '../../util/MutationViewsUtil';
-import { PatientConsumer } from '../Context/PatientContext';
+import PatientContext, { PatientConsumer } from '../Context/PatientContext';
 
 class Oncoprint extends React.Component {
     constructor(props) {
@@ -44,7 +44,6 @@ class Oncoprint extends React.Component {
 
 
     makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
-        console.log(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv);
         // reference.
         this.node = node;
 
@@ -809,6 +808,10 @@ class Oncoprint extends React.Component {
         const { className } = this.props;
         d3.select(`#oncoprint-${className}`).remove();
         this.Oncoprint(sortedPatients);
+
+        // setting the patients in the context.
+        const { setPatients } = this.context;
+        setPatients(sortedPatients);
     }
 
     render() {
@@ -822,6 +825,7 @@ class Oncoprint extends React.Component {
     }
 }
 
+Oncoprint.contextType = PatientContext;
 
 Oncoprint.propTypes = {
     className: PropTypes.string.isRequired,

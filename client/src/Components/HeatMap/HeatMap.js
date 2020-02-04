@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-import PatientContext from '../Context/PatientContext';
+import PatientContext, { PatientConsumer } from '../Context/PatientContext';
 
 
 class HeatMap extends Component {
@@ -16,14 +16,11 @@ class HeatMap extends Component {
         this.HeatMap = this.HeatMap.bind(this);
         this.makeHeatmap = this.makeHeatmap.bind(this);
         this.rankHeatMap = this.rankHeatMap.bind(this);
+        this.rankHeatMapBasedOnOncoprintChanges = this.rankHeatMapBasedOnOncoprintChanges.bind(this);
     }
 
     componentDidMount() {
         this.HeatMap();
-    }
-
-    componentDidUpdate() {
-        // console.log('inside update!!!')
     }
 
     HeatMap() {
@@ -627,9 +624,6 @@ class HeatMap extends Component {
         const { margin } = this.props;
         const className = mapId;
 
-        // removing the heatmap wrapper and tooltip from the DOM when clicked on drug.
-        d3.select(`#heatmap-${mapId}`).remove();
-        d3.select('#heatmap-tooltip').remove();
 
         // responses.
         const responses = ['CR', 'PR', 'SD', 'PD', '', 'NA'];
@@ -657,6 +651,7 @@ class HeatMap extends Component {
             });
         });
 
+
         this.setState({
             modifiedPatients: patientId,
         }, () => {
@@ -666,16 +661,49 @@ class HeatMap extends Component {
             setPatients(modifiedPatients);
         });
 
+        // removing the heatmap wrapper and tooltip from the DOM when clicked on drug.
+        d3.select(`#heatmap-${mapId}`).remove();
+        d3.select('#heatmap-tooltip').remove();
+
         // finally calling the makeHeatMap function in order passing
         // new dataset in order to make new heatmap based on ranking.
         this.makeHeatmap(newDataset, patientId, drugId, className, dimensions, margin, node);
+    }
+
+    rankHeatMapBasedOnOncoprintChanges(value) {
+        const { node } = this;
+        const { data } = this.props;
+        const { drugId } = this.props;
+        const { globalPatients } = value;
+        const { dimensions } = this.props;
+        const { margin } = this.props;
+        const { className } = this.props;
+        const newDataset = [];
+
+        // sort the complete data according to the globalPatients.
+        data.forEach((val, i) => {
+            newDataset.push({});
+            globalPatients.forEach((patient) => {
+                newDataset[i][patient] = val[patient];
+            });
+        });
+
+        // removing the heatmap wrapper and tooltip from the DOM when clicked on drug.
+        if (globalPatients.length > 0) {
+            d3.select('#heatmap-heatmap').remove();
+            d3.select('#heatmap-tooltip').remove();
+            this.makeHeatmap(newDataset, globalPatients, drugId, className, dimensions, margin, node);
+        }
     }
 
     // static contextType = PatientContext;
 
     render() {
         return (
-            <div ref={(node) => { this.node = node; }} className="heatmap-wrapper" />
+            <div>
+                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper" />
+                <PatientConsumer>{(value) => { this.rankHeatMapBasedOnOncoprintChanges(value); }}</PatientConsumer>
+            </div>
         );
     }
 }
