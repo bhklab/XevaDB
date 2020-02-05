@@ -150,7 +150,7 @@ class HeatMap extends Component {
         const yAxis = d3.axisLeft()
             .scale(yScale)
             .tickSize(0)
-            .tickPadding(15);
+            .tickPadding(25);
 
 
         const xAxis = d3.axisTop()
@@ -169,6 +169,20 @@ class HeatMap extends Component {
             .attr('width', width + margin.left + margin.right)
             .append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
+
+
+        /** Appending Circle to the  Y-Axis */
+        drug.forEach((val, i) => {
+            svg
+                .append('circle')
+                .attr('cx', -12)
+                .attr('cy', i)
+                .attr('r', 6)
+                .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
+                .style('fill', '#98e5f4')
+                .attr('transform', `translate(0,${yScale(val) + 15 - i})`)
+                .style('visibility', 'hidden');
+        });
 
 
         /** HEATMAP SKELETON * */
@@ -669,6 +683,10 @@ class HeatMap extends Component {
         // finally calling the makeHeatMap function in order passing
         // new dataset in order to make new heatmap based on ranking.
         this.makeHeatmap(newDataset, patientId, drugId, className, dimensions, margin, node);
+
+        // making the circle visible on click of the drug.
+        d3.select(`#circle-${drug.replace(/\s/g, '').replace(/\+/g, '')}`)
+            .style('visibility', 'visible');
     }
 
     rankHeatMapBasedOnOncoprintChanges(value) {
