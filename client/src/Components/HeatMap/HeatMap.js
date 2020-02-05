@@ -406,6 +406,7 @@ class HeatMap extends Component {
                 if (d === 'untreated' || d === 'WATER' || d === 'Control') { return '700'; }
                 return '500';
             })
+            .attr('id', (d) => `tick-${d.replace(/\s/g, '').replace(/\+/g, '')}`)
             // eslint-disable-next-line func-names
             .on('mouseover', function () {
                 const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[.]/g, '')
