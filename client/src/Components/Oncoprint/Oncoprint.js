@@ -184,14 +184,44 @@ class Oncoprint extends React.Component {
                     .attr('font-weight', '500')
                     .text(genes[i])
                     .on('mouseover', () => {
+                        // tooltip on mousever setting the div to visible.
+                        d3.select('.oprint-wrapper')
+                            .append('div')
+                            .style('position', 'absolute')
+                            .style('border', 'solid')
+                            .style('visibility', 'visible')
+                            .style('border-width', '1px')
+                            .style('border-radius', '5px')
+                            .style('padding', '5px')
+                            .style('min-width', '70px')
+                            .style('min-height', '25px')
+                            .style('left', `${d3.event.pageX - 100}px`)
+                            .style('top', `${d3.event.pageY + 15}px`)
+                            .attr('id', 'tooltiptextgene')
+                            .style('color', '#000000')
+                            .style('background-color', '#ffffff')
+                            .text('Click to Sort!');
+
                         d3.selectAll(`.oprint-hlight-${genes[i]}`)
                             .style('opacity', 0.2);
                     })
                     .on('mouseout', () => {
+                        // tooltip on mousever setting the div to hidden.
+                        tooltip
+                            .style('visibility', 'hidden');
+                        // remove all the divs with id tooltiptext.
+                        d3.select('#tooltiptextgene').remove();
+                        // for highlight.
                         d3.selectAll(`.oprint-hlight-${genes[i]}`)
                             .style('opacity', 0);
                     })
                     .on('click', () => {
+                        // tooltip on mousever setting the div to hidden.
+                        tooltip
+                            .style('visibility', 'hidden');
+                        // remove all the divs with id tooltiptext.
+                        d3.select('#tooltiptextgene').remove();
+                        // ranking oncoprint.
                         this.rankOncoprint(genes[i], [data_mut, data_cnv, data_rna]);
                     });
             }
