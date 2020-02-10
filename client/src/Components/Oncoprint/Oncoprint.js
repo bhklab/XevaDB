@@ -158,7 +158,7 @@ class Oncoprint extends React.Component {
                 .append('circle')
                 .attr('cx', -12)
                 .attr('cy', i)
-                .attr('r', 6)
+                .attr('r', 7)
                 .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
                 .style('fill', '#98e5f4')
                 .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
