@@ -152,6 +152,20 @@ class Oncoprint extends React.Component {
             .attr('id', 'skeleton');
 
 
+        /** Appending Circle to the  Y-Axis */
+        genes.forEach((val, i) => {
+            svg
+                .append('circle')
+                .attr('cx', -12)
+                .attr('cy', i)
+                .attr('r', 6)
+                .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
+                .style('fill', '#98e5f4')
+                .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
+                .style('visibility', 'hidden');
+        });
+
+
         /* *  Gene Names on Y-Axis * */
 
         // geneNames
@@ -163,10 +177,10 @@ class Oncoprint extends React.Component {
             for (let i = 0; i < genes.length; i++) {
                 geneNames.append('text')
                     .attr('class', genes[i])
-                    .attr('dx', -20)
+                    .attr('dx', -25)
                     .style('text-anchor', 'end')
                     .style('font-size', '13px')
-                    .attr('dy', i * (rect_height) + 23)
+                    .attr('dy', i * (rect_height) + 20)
                     .attr('font-weight', '500')
                     .text(genes[i])
                     .on('mouseover', () => {
@@ -818,6 +832,10 @@ class Oncoprint extends React.Component {
         const { className } = this.props;
         d3.select(`#oncoprint-${className}`).remove();
         this.Oncoprint(sortedPatients);
+
+        // making the circle visible on click of the drug.
+        d3.select(`#circle-${gene.replace(/\s/g, '').replace(/\+/g, '')}`)
+            .style('visibility', 'visible');
     }
 
     render() {
