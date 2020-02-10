@@ -179,7 +179,7 @@ class HeatMap extends Component {
                 .attr('cy', i)
                 .attr('r', 7)
                 .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
-                .style('fill', '#98e5f4')
+                .style('fill', '#5b8c85')
                 .attr('transform', `translate(0,${yScale(val) + 15 - i})`)
                 .style('visibility', 'hidden');
         });
@@ -423,6 +423,24 @@ class HeatMap extends Component {
             .attr('id', (d) => `tick-${d.replace(/\s/g, '').replace(/\+/g, '')}`)
             // eslint-disable-next-line func-names
             .on('mouseover', function () {
+                // tooltip on mousever setting the div to visible.
+                d3.select('.heatmap-wrapper')
+                    .append('div')
+                    .style('position', 'absolute')
+                    .style('border', 'solid')
+                    .style('visibility', 'visible')
+                    .style('border-width', '1px')
+                    .style('border-radius', '5px')
+                    .style('padding', '5px')
+                    .style('min-width', '70px')
+                    .style('min-height', '25px')
+                    .style('left', `${d3.event.pageX - 100}px`)
+                    .style('top', `${d3.event.pageY + 15}px`)
+                    .attr('id', 'tooltiptextdrug')
+                    .style('color', '#000000')
+                    .style('background-color', '#ffffff')
+                    .text('Click to Sort!');
+
                 const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[.]/g, '')
                     .replace(/[+]/g, '-');
                 d3.selectAll(`.hmap-hlight-${drugClass}`)
@@ -430,12 +448,24 @@ class HeatMap extends Component {
             })
             // eslint-disable-next-line func-names
             .on('mouseout', function () {
+                // tooltip on mousever setting the div to hidden.
+                tooltip
+                    .style('visibility', 'hidden');
+                // remove all the divs with id tooltiptext.
+                d3.select('#tooltiptextdrug').remove();
+                // highlight.
                 const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[.]/g, '')
                     .replace(/[+]/g, '-');
                 d3.selectAll(`.hmap-hlight-${drugClass}`)
                     .style('opacity', 0);
             })
             .on('click', (d, i) => {
+                // tooltip on mousever setting the div to hidden.
+                tooltip
+                    .style('visibility', 'hidden');
+                // remove all the divs with id tooltiptext.
+                d3.select('#tooltiptextdrug').remove();
+                // highlight.
                 const mapId = plotId;
                 this.rankHeatMap(d, i, data, mapId);
             });
