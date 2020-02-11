@@ -852,7 +852,7 @@ class Oncoprint extends React.Component {
         // pushing it to the sortedPatients list.
         const { hmap_patients } = this.props;
         const diff = hmap_patients.filter((x) => !sortedPatients.includes(x));
-        sortedPatients.push(diff);
+        diff.forEach((val) => sortedPatients.push(val));
 
         // setting the patients in the context.
         const { setPatients } = this.context;
