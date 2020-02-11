@@ -672,33 +672,30 @@ class HeatMap extends Component {
 
         // responses.
         const responses = ['CR', 'PR', 'SD', 'PD', '', 'NA'];
-        const newSortedData = [{}];
+        const newSortedPatients = [];
 
         // this produces the newSortedData.
         responses.forEach((val) => {
             Object.keys(data).forEach((res) => {
                 if (data[res] === val) {
-                    newSortedData[0][res] = data[res];
+                    newSortedPatients.push(res);
                 }
             });
         });
 
         // setting the variables with new data.
-        // const drugId = [drug];
-        const patientId = Object.keys(newSortedData[0]);
         const newDataset = [];
 
         // sort the dataset or complete data according to the new sorted patient ids.
         dataset.forEach((val, i) => {
             newDataset.push({});
-            patientId.forEach((patient) => {
+            newSortedPatients.forEach((patient) => {
                 newDataset[i][patient] = val[patient];
             });
         });
 
-
         this.setState({
-            modifiedPatients: patientId,
+            modifiedPatients: newSortedPatients,
         }, () => {
             const { setPatients } = this.context;
             const { modifiedPatients } = this.state;
@@ -712,7 +709,7 @@ class HeatMap extends Component {
 
         // finally calling the makeHeatMap function in order passing
         // new dataset in order to make new heatmap based on ranking.
-        this.makeHeatmap(newDataset, patientId, drugId, className, dimensions, margin, node);
+        this.makeHeatmap(newDataset, newSortedPatients, drugId, className, dimensions, margin, node);
 
         // making the circle visible on click of the drug.
         d3.select(`#circle-${drug.replace(/\s/g, '').replace(/\+/g, '')}`)
