@@ -204,31 +204,28 @@ class HeatMap extends Component {
             .attr('transform', (d, i) => `translate(0,${i * rectHeight})`);
 
 
-        let rectKeys;
         // this will append rect equivalent to number of patient ids.
         const drawrectangle = gskeleton.selectAll('rect.hmap-rect')
             .data((d, i) => {
                 // calling the function and passing the data d as parameter.
                 calculateEvaluations(d, i);
                 // this returns the object values to next chaining method.
-                rectKeys = Object.keys(d);
-                const rectValue = Object.values(d, i)
-                    .map((value) => {
-                        let val = '';
-                        if (value.length === 2) {
-                            val = value;
-                        } else if (value.length === 0) {
-                            val = 'empty';
-                        }
-                        return val;
-                    });
+                const rectValue = patient.map((value) => {
+                    let val = '';
+                    if (d[value].length === 2) {
+                        val = d[value];
+                    } else if (d[value].length === 0) {
+                        val = 'empty';
+                    }
+                    return val;
+                });
                 return rectValue;
             })
             .enter()
             .append('a')
             .attr('xlink:href', (d, i) => querystringValue(d, i))
             .append('rect')
-            .attr('class', (d, i) => `hmap-rect heatmap-${rectKeys[i]}`)
+            .attr('class', (d, i) => `hmap-rect heatmap-${patient[i]}`)
             .attr('width', rectWidth - 2)
             .attr('height', rectHeight - 2)
             .attr('x', (d, i) => i * rectWidth)
@@ -304,17 +301,15 @@ class HeatMap extends Component {
                 // calling the function and passing the data d as parameter.
                 calculateEvaluations(d, i);
                 // this returns the object values to next chaining method.
-                rectKeys = Object.keys(d);
-                const rectValue = Object.values(d, i)
-                    .map((value) => {
-                        let val = '';
-                        if (value.length === 2) {
-                            val = value;
-                        } else if (value.length === 0) {
-                            val = 'empty';
-                        }
-                        return val;
-                    });
+                const rectValue = patient.map((value) => {
+                    let val = '';
+                    if (d[value].length === 2) {
+                        val = d[value];
+                    } else if (d[value].length === 0) {
+                        val = 'empty';
+                    }
+                    return val;
+                });
                 return rectValue;
             })
             .enter()
@@ -327,7 +322,7 @@ class HeatMap extends Component {
                 if (i === (patient.length - 1)) {
                     pCount++;
                 }
-                return `hmap-hlight-${rectKeys[i]} hmap-hlight-${drugClass}`;
+                return `hmap-hlight-${patient[i]} hmap-hlight-${drugClass}`;
             })
             .attr('width', rectWidth - 2)
             .attr('height', rectHeight - 2)
@@ -338,15 +333,15 @@ class HeatMap extends Component {
             // eslint-disable-next-line func-names
             .on('mouseover', function (d, i) {
                 // creating tooltip by calling createtooltip function.
-                const patientToolTip = rectKeys[i];
+                const patientToolTip = patient[i];
                 createToolTip(d3.event.pageX, d3.event.pageY, patientToolTip, d);
                 // highlight
                 const drugClass = d3.select(this).attr('class').split(' ')[1];
-                d3.selectAll(`.hmap-hlight-${rectKeys[i]}`)
+                d3.selectAll(`.hmap-hlight-${patient[i]}`)
                     .style('opacity', 0.2);
-                d3.selectAll(`.oprint-hlight-${rectKeys[i]}`)
+                d3.selectAll(`.oprint-hlight-${patient[i]}`)
                     .style('opacity', 0.2);
-                d3.selectAll(`.hlight-space-${rectKeys[i]}`)
+                d3.selectAll(`.hlight-space-${patient[i]}`)
                     .style('opacity', 0.2);
 
                 return drugClass;
@@ -357,11 +352,11 @@ class HeatMap extends Component {
                 hideToolTip();
                 // highlight
                 const drugClass = d3.select(this).attr('class').split(' ')[1];
-                d3.selectAll(`.hmap-hlight-${rectKeys[i]}`)
+                d3.selectAll(`.hmap-hlight-${patient[i]}`)
                     .style('opacity', 0);
-                d3.selectAll(`.oprint-hlight-${rectKeys[i]}`)
+                d3.selectAll(`.oprint-hlight-${patient[i]}`)
                     .style('opacity', 0);
-                d3.selectAll(`.hlight-space-${rectKeys[i]}`)
+                d3.selectAll(`.hlight-space-${patient[i]}`)
                     .style('opacity', 0);
 
                 return drugClass;
