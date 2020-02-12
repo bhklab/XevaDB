@@ -234,7 +234,7 @@ const getModelResponseStats = function (request, response) {
         // check if it verified and the dataset id is greater than 0
         // or if it's not verified (unkown) then the dataset id should be less than 7.
         if ((response.locals.user === 'unknown' && dataset < 7 && dataset > 0)
-                 || (response.locals.user.verified === 'verified' && dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 36000))
+                 || (response.locals.user.verified === 'verified' && dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
         ) {
             knex.select()
                 .from('model_response')
