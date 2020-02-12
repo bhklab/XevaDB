@@ -236,7 +236,7 @@ export const cnaMap = {
         label: 'ShallowDel', style: 'cna-hetloss', tooltip: 'Shallow deletion', color: '#0033CC', xevalabel: 'del', priority: 2,
     },
     0: {
-        label: 'Diploid', style: 'cna-diploid', tooltip: 'Diploid / normal', color: 'lightgray', xevalabel: 'empty', priority: -1,
+        label: 'Diploid', style: 'cna-diploid', tooltip: 'Diploid / normal', color: 'lightgray', xevalabel: 'empty', priority: 16,
     },
     1: {
         label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#e41a1c', xevalabel: 'amp', priority: 1,
@@ -266,7 +266,7 @@ export const cnaMap = {
         label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: '#e41a1c', xevalabel: 'amp', priority: 1,
     },
     unknown: {
-        label: 'NA', style: 'cna-unknown', tooltip: 'CNA data is not available for this gene', xevalabel: 'empty', priority: -1,
+        label: 'NA', style: 'cna-unknown', tooltip: 'CNA data is not available for this gene', xevalabel: 'empty', priority: 16,
     },
 };
 
