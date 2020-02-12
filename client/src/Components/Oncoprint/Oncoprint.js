@@ -61,6 +61,7 @@ class Oncoprint extends React.Component {
 
         // merging the data from all of three calls to api ie cnv, mutation and rnaseq.
         const genes = genes_mut.concat(genes_rna).concat(genes_cnv).unique();
+        const patients = patient_mut.concat(patient_rna).concat(patient_cnv).unique();
 
         // aberration data
         const aberration = [
@@ -259,15 +260,6 @@ class Oncoprint extends React.Component {
             }
         }
 
-        // take the difference of patient_mut/cnv/rna from hmap_patients
-        let diff = [];
-        if (patient_mut.length > 0) {
-            diff = hmap_patients.filter((x) => !patient_mut.includes(x));
-        } else if (patient_mut.length === 0 && patient_rna.length > 0) {
-            diff = hmap_patients.filter((x) => !patient_rna.includes(x));
-        } else {
-            diff = hmap_patients.filter((x) => !patient_cnv.includes(x));
-        }
 
         /** Coloring the rectangles based on mutation, cnv or rnaseq data * */
 
@@ -319,44 +311,35 @@ class Oncoprint extends React.Component {
         };
 
 
+        // creates a layer of oncoprint.
+        for (let i = 0; i < genes.length; i++) {
+            for (let j = 0; j < hmap_patients.length; j++) {
+                if (patients.includes(hmap_patients[j])) {
+                    colorReactangles('empty', 'lightgrey', i, j);
+                } else {
+                    colorNotSequenced(i, j);
+                }
+            }
+        }
+
         /** Coloring the rectangles borders based on mutation and cnv data * */
         for (let i = 0; i < genes.length; i++) {
             for (let j = 0; j < hmap_patients.length; j++) {
-                // complete layer of lightgrey rectangles.
-                colorReactangles('empty', 'lightgrey', i, j);
-
                 /** Coloring the rectangles borders based on cnv data * */
-                if (genes_cnv.includes(genes[i])) {
-                    if (diff.indexOf(hmap_patients[j]) !== -1) {
-                        // if not sequenced, make it white with a border
-                        colorNotSequenced(i, j);
-                    } else {
-                        // complete layer of lightgrey rectangles only if mutation data is not available.
-                        if (data_mut.length === 0) {
-                            colorReactangles('empty', 'lightgrey', i, j);
-                        }
-                        // based on the data gives different colors to the rectangle.
-                        if (data_cnv[i][hmap_patients[j]]) {
-                            const cnvType = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].xevalabel;
-                            const cnvColor = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].color;
-                            colorReactangles(cnvType, cnvColor, i, j);
-                        }
-                    }
+                if (genes_cnv.includes(genes[i]) && data_cnv[i][hmap_patients[j]]) {
+                    const cnvType = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].xevalabel;
+                    const cnvColor = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].color;
+                    colorReactangles(cnvType, cnvColor, i, j);
                 }
 
                 /** Coloring the rectangles borders based on mutation data * */
                 // if the gene from genes located in genes_mut.
                 // mutation later because they are 1/3 the box.
-                if (genes_mut.includes(genes[i])) {
-                    if (diff.indexOf(hmap_patients[j]) !== -1) {
-                        // if not sequenced, make it white with a border
-                        colorNotSequenced(i, j);
-                    } else if (data_mut[i][hmap_patients[j]].toLowerCase() !== '0' && Boolean(data_mut[i][hmap_patients[j]])) {
-                        // based on the data gives different colors to the rectangle.
-                        const { color } = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()];
-                        const type = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()].mainType;
-                        colorReactangles('mut', color, i, j, type);
-                    }
+                if (genes_mut.includes(genes[i]) && patient_mut.includes(hmap_patients[j]) && data_mut[i][hmap_patients[j]] !== '0' && data_mut[i][hmap_patients[j]] !== '') {
+                    // based on the data gives different colors to the rectangle.
+                    const { color } = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()];
+                    const type = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()].mainType;
+                    colorReactangles('mut', color, i, j, type);
                 }
             }
         }
@@ -367,19 +350,12 @@ class Oncoprint extends React.Component {
         for (let i = 0; i < genes.length; i++) {
             if (genes_rna.includes(genes[i])) {
                 for (let j = 0; j < hmap_patients.length; j++) {
-                    if (diff.indexOf(hmap_patients[j]) !== -1) {
-                        // if not sequenced, make it white with a border
-                        colorNotSequenced(i, j);
-                    } else { // only if the element is not included
-                        // complete layer of lightgrey rectangles only if mutation data is not available.
-                        if (data_mut.length === 0 && data_cnv.length === 0) {
-                            colorReactangles('empty', 'lightgrey', i, j);
-                        }
-                        if (Number(data_rna[z][hmap_patients[j]]) > threshold) {
-                            colorReactangles('highrna', 'none', i, j);
-                        } else if (Number(data_rna[z][hmap_patients[j]]) < -threshold) {
-                            colorReactangles('lowrna', 'none', i, j);
-                        }
+                    // only if the element is not included
+                    // complete layer of lightgrey rectangles only if mutation data is not available.
+                    if (Number(data_rna[z][hmap_patients[j]]) > threshold) {
+                        colorReactangles('highrna', 'none', i, j);
+                    } else if (Number(data_rna[z][hmap_patients[j]]) < -threshold) {
+                        colorReactangles('lowrna', 'none', i, j);
                     }
                 }
                 z++;
@@ -819,7 +795,7 @@ class Oncoprint extends React.Component {
                 // if the gene id matches the clicked gene.
                 if (row.gene_id === gene) {
                     Object.keys(row).forEach((patient, j) => {
-                        if ((isNaN(row[patient]) && j !== 0)) {
+                        if (isNaN(row[patient]) && patient !== 'gene_id') {
                             const { priority } = type[row[patient].toLowerCase()];
                             createNewData(patient, priority);
                         } else if (Number(row[patient])) {
@@ -827,7 +803,7 @@ class Oncoprint extends React.Component {
                             const isNegative = isNegativeCheck(row[patient]);
                             const { priority } = type[isNegative];
                             createNewData(patient, priority);
-                        } else if ((Number(row[patient]) === 0 && typeof (newData[patient]) === 'undefined')) {
+                        } else if ((Number(row[patient]) === 0 || row[patient] === '') && typeof (newData[patient]) === 'undefined') {
                             newData[patient] = {
                                 priority: 16,
                                 total: 1,
