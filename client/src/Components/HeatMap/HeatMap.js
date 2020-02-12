@@ -459,8 +459,7 @@ class HeatMap extends Component {
                 // remove all the divs with id tooltiptext.
                 d3.select('#tooltiptextdrug').remove();
                 // highlight.
-                const mapId = plotId;
-                this.rankHeatMap(d, i, data, mapId);
+                this.rankHeatMap(d, i, data);
             });
 
         // calling the x-axis to set the axis and we have also transformed the text.
@@ -653,14 +652,14 @@ class HeatMap extends Component {
         }
     }
 
-    rankHeatMap(drug, i, dataset, mapId) {
+    rankHeatMap(drug, i, dataset) {
         // grabbing the clicked data value.
         const data = dataset[i];
         const { node } = this;
         const { dimensions } = this.props;
         const { drugId } = this.props;
         const { margin } = this.props;
-        const className = mapId;
+        const { className } = this.props;
 
 
         // responses.
@@ -697,7 +696,7 @@ class HeatMap extends Component {
         });
 
         // removing the heatmap wrapper and tooltip from the DOM when clicked on drug.
-        d3.select(`#heatmap-${mapId}`).remove();
+        d3.select(`#heatmap-${className}`).remove();
         d3.select('#heatmap-tooltip').remove();
 
         // finally calling the makeHeatMap function in order passing
@@ -729,7 +728,7 @@ class HeatMap extends Component {
 
         // removing the heatmap wrapper and tooltip from the DOM when clicked on drug.
         if (globalPatients.length > 0) {
-            d3.select('#heatmap-heatmap').remove();
+            d3.select(`#heatmap-${className}`).remove();
             d3.select('#heatmap-tooltip').remove();
             this.makeHeatmap(newDataset, globalPatients, drugId, className, dimensions, margin, node);
         }
