@@ -73,8 +73,8 @@ class HeatMap extends Component {
             .style('border-width', '1px')
             .style('border-radius', '5px')
             .style('padding', '5px')
-            .style('min-width', '150px')
-            .style('min-height', '50px')
+            // .style('min-width', '150px')
+            // .style('min-height', '50px')
             .attr('top', 10)
             .attr('left', 20);
 
@@ -432,14 +432,12 @@ class HeatMap extends Component {
                     .style('border-width', '1px')
                     .style('border-radius', '5px')
                     .style('padding', '5px')
-                    .style('min-width', '70px')
-                    .style('min-height', '25px')
                     .style('left', `${d3.event.pageX - 100}px`)
                     .style('top', `${d3.event.pageY + 15}px`)
                     .attr('id', 'tooltiptextdrug')
                     .style('color', '#000000')
                     .style('background-color', '#ffffff')
-                    .text('Click to Sort!');
+                    .text('Click to Sort');
 
                 const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[.]/g, '')
                     .replace(/[+]/g, '-');

@@ -129,8 +129,8 @@ class Oncoprint extends React.Component {
             .style('border-width', '1px')
             .style('border-radius', '5px')
             .style('padding', '5px')
-            .style('min-width', '150px')
-            .style('min-height', '80px')
+            // .style('min-width', '150px')
+            // .style('min-height', '80px')
             .attr('top', 10)
             .attr('left', 20);
 
@@ -194,14 +194,12 @@ class Oncoprint extends React.Component {
                             .style('border-width', '1px')
                             .style('border-radius', '5px')
                             .style('padding', '5px')
-                            .style('min-width', '70px')
-                            .style('min-height', '25px')
                             .style('left', `${d3.event.pageX - 100}px`)
                             .style('top', `${d3.event.pageY + 15}px`)
                             .attr('id', 'tooltiptextgene')
                             .style('color', '#000000')
                             .style('background-color', '#ffffff')
-                            .text('Click to Sort!');
+                            .text('Click to Sort');
 
                         d3.selectAll(`.oprint-hlight-${genes[i]}`)
                             .style('opacity', 0.2);
