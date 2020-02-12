@@ -9,7 +9,7 @@ const getMutationBasedOnDataset = function (request, response) {
     const paramDataset = request.params.dataset;
 
     if ((response.locals.user === 'unknown' && paramDataset < 7 && paramDataset > 0)
-            || (response.locals.user.verified === 'verified' && paramDataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 3600))
+            || (response.locals.user.verified === 'verified' && paramDataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
     ) {
         // get the distinct patients or total patients from model information table.
         // as some patient ids are missing from oncoprint

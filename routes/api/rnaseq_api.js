@@ -11,7 +11,7 @@ const getRnaSeqBasedOnDataset = function (request, response) {
     const paramDataset = request.params.dataset;
 
     if ((response.locals.user === 'unknown' && paramDataset < 7 && paramDataset > 0)
-            || (response.locals.user.verified === 'verified' && paramDataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 3600))
+            || (response.locals.user.verified === 'verified' && paramDataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
     ) {
         // grabbing the rna_sequencing data based on patients and limiting genes to 1-30.
         knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
