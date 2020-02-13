@@ -403,6 +403,7 @@ class HeatMap extends Component {
             .attr('id', 'drugName');
 
         drugName.attr('stroke-width', '0')
+            .style('font-family', '\'Raleway\',sans-serif')
             .style('font-size', '12px')
             .attr('font-weight', '500')
             .call(yAxis)
@@ -468,6 +469,7 @@ class HeatMap extends Component {
 
         patientId.attr('stroke-width', '0')
             .style('font-size', '13px')
+            .style('font-family', '\'Raleway\',sans-serif')
             .call(xAxis)
             .selectAll('text')
             .attr('transform', 'rotate(-90)')

@@ -16,7 +16,7 @@ const StyleTable = styled.div`
     th {
         color: #5974c4;
         text-align: left;
-        font-family: arial, sans-serif;
+        font-family: 'Raleway', sans-serif;
         padding: 10px;
         height: 40px;
         background-color: #ddd;
