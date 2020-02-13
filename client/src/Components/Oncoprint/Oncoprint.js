@@ -60,8 +60,8 @@ class Oncoprint extends React.Component {
         };
 
         // merging the data from all of three calls to api ie cnv, mutation and rnaseq.
-        const genes = genes_mut.concat(genes_rna).concat(genes_cnv).unique();
-        const patients = patient_mut.concat(patient_rna).concat(patient_cnv).unique();
+        const genes = [...genes_mut, ...genes_rna, ...genes_cnv].unique();
+        const patients = [...patient_mut, ...patient_rna, ...patient_cnv].unique();
 
         // aberration data
         const aberration = [
