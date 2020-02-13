@@ -810,8 +810,8 @@ class TumorGrowthCurve extends React.Component {
                     plot = true;
                     rawToggle = 'lightgray';
                     normToggle = '#cd5686';
-                    minimum = minVolNorm;
-                    maximum = maxVolNorm;
+                    minimum = minVolNorm - 1;
+                    maximum = maxVolNorm + 1;
                     break;
 
                 case 'volNormText':
@@ -821,8 +821,8 @@ class TumorGrowthCurve extends React.Component {
                     plot = true;
                     rawToggle = 'lightgray';
                     normToggle = '#cd5686';
-                    minimum = minVolNorm;
-                    maximum = maxVolNorm;
+                    minimum = minVolNorm - 1;
+                    maximum = maxVolNorm + 1;
                     break;
 
                 case 'volRaw':

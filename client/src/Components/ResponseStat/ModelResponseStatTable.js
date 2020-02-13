@@ -15,7 +15,7 @@ class StatTable extends React.Component {
             batchData: [],
             tableHeader: ['Patient', 'Model', 'Drug',
                 'mRECIST', 'Best Average Response', 'Slope', 'AUC',
-                'Survival', 'Link', 'Row Number'],
+                'Survival (Days)', 'Link', 'Row Number'],
         };
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
@@ -42,7 +42,7 @@ class StatTable extends React.Component {
         if (data[0] && data[0].dataset_id !== 7) {
             this.setState({
                 tableHeader: ['Patient', 'Model', 'Drug',
-                    'mRECIST', 'Best Average Response', 'Slope', 'AUC', 'Survival'],
+                    'mRECIST', 'Best Average Response', 'Slope', 'AUC', 'Survival (Days)'],
             });
         }
     }
@@ -128,7 +128,7 @@ class StatTable extends React.Component {
     render() {
         const { batchData } = this.state;
         return (
-            <div>
+            <>
                 <BatchStatTable data={batchData} />
                 <div className="curve-wrapper" style={{ marginTop: '0px', padding: '30px 0px' }}>
                     <h1 id="titlemodel">Statistics (Model Response)</h1>
@@ -141,7 +141,7 @@ class StatTable extends React.Component {
                         </table>
                     </StyleTable>
                 </div>
-            </div>
+            </>
         );
     }
 }

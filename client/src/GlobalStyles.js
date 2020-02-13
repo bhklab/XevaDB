@@ -56,7 +56,7 @@ const GlobalStyles = createGlobalStyle`
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
   .donut-wrapper, .doc-wrapper { //put all wrappers here and wrap them with wrapper
     background:white;
-    font-family:Arial;
+    font-family:'Raleway', sans-serif;
   }
 
   .donut-wrapper {

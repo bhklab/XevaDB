@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const TableWrapper = styled.div`
     padding:10px 20px 30px 20px;
-    font-family: 'Source Serif Pro', sans-serif;
+    font-family: 'Raleway', sans-serif;
 
     .ReactTable * {
         box-sizing: border-box;

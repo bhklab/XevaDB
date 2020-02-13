@@ -180,7 +180,7 @@ class Oncoprint extends React.Component {
                     .attr('class', genes[i])
                     .attr('dx', -25)
                     .style('text-anchor', 'end')
-                    .style('font-size', '13px')
+                    .style('font-size', '12px')
                     .attr('dy', i * (rect_height) + 20)
                     .attr('font-weight', '500')
                     .text(genes[i])

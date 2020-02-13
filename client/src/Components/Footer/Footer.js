@@ -14,7 +14,7 @@ const styles = {
     position: 'absolute',
     minWidth: '100vw',
     backgroundColor: 'rgb(255,255,255,0.8)',
-    fontFamily: 'sans-serif',
+    fontFamily: 'Raleway, sans-serif',
 
 };
 

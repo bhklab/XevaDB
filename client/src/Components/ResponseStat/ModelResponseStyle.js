@@ -8,7 +8,7 @@ const StyleTable = styled.div`
 
     #stats-table {
         text-align: left;
-        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-family: 'Raleway', sans-serif;
         border-collapse: collapse;
         width: 800px;
     }
