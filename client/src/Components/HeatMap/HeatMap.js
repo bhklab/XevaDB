@@ -468,13 +468,14 @@ class HeatMap extends Component {
             .attr('id', 'patient_id');
 
         patientId.attr('stroke-width', '0')
-            .style('font-size', '13px')
+            .style('font-size', '12px')
             .style('font-family', '\'Raleway\',sans-serif')
+            .style('text-anchor', 'start')
             .call(xAxis)
             .selectAll('text')
             .attr('transform', 'rotate(-90)')
             .attr('font-weight', '500')
-            .attr('x', '0.5em')
+            .attr('x', '-2.4em')
             .attr('y', '.15em');
 
 
