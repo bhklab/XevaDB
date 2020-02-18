@@ -62,7 +62,7 @@ const StyleBar = styled.div`
         }
 
         .div-gene-enter {
-            margin: 15px;
+            margin-top: 15px;
             min-width: 620px;
             max-height: 150px;
             textarea {
@@ -79,6 +79,19 @@ const StyleBar = styled.div`
                 box-sizing: border-box;
                 resize: none
             }
+        }
+
+        .sample {
+            margin: 10px 0px 10px 15px;
+            min-width: 600px;
+            font-size: 16px;
+            text-align: left;
+            font-weight: 550;
+            a {
+                color: #3453b0;
+                text-decoration: none;
+            }
+            font-style: italic;
         }
 
     }
@@ -121,6 +134,9 @@ const StyleBar = styled.div`
         }
         .div-genomics, .div-gene {
             margin: 5px !important;
+        }
+        .sample {
+            margin: 0px 0px 0px 10px !important;
         }
    }
 
