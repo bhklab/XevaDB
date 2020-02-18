@@ -363,7 +363,7 @@ class HeatMap extends Component {
             });
 
         // Creating lines.
-        const lines = svg.append('g')
+        const lines = skeleton.append('g')
             .attr('id', 'lines')
             .attr('transform', () => `translate(2,${height - 62})`);
 
@@ -510,7 +510,7 @@ class HeatMap extends Component {
         const strokeWidth = 0.75;
 
         // This will make a right side vertical graph.
-        const drugEval = svg.append('g')
+        const drugEval = skeleton.append('g')
             .attr('id', 'drug_eval');
 
         const drugScale = d3.scaleLinear()
@@ -524,7 +524,7 @@ class HeatMap extends Component {
             .tickSize(3)
             .tickFormat(d3.format('.0f'));
 
-        svg.append('g')
+        skeleton.append('g')
             .attr('transform', `translate(${patient.length * rectWidth + 20},${35})`)
             .call(xAxisVertical)
             .selectAll('text')
@@ -592,7 +592,7 @@ class HeatMap extends Component {
         // array is greater than 1 (it has more than one drug)
         if (drug.length > 1) {
         // appending 'g' element to the SVG.
-            const patientEval = svg.append('g')
+            const patientEval = skeleton.append('g')
                 .attr('id', 'patient_eval');
 
             // setting the outer rectangle.
@@ -623,7 +623,7 @@ class HeatMap extends Component {
                     .tickSize(0)
                     .tickFormat(d3.format('.0f'));
 
-                svg.append('g')
+                skeleton.append('g')
                     .attr('transform', 'translate(0,-130.5)')
                     .call(yAxis);
             }

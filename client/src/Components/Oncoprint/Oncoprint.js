@@ -46,6 +46,7 @@ class Oncoprint extends React.Component {
     makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
         // reference.
         this.node = node;
+        const isAlteration = false;
 
         // to merge two arrays and give the unique values.
         // eslint-disable-next-line no-extend-native
@@ -364,7 +365,7 @@ class Oncoprint extends React.Component {
         /** ALTERATION GRAPHS * */
 
         /** Vertical Graph * */
-        if (genes_mut.length > 0 || genes_cnv.length > 0) {
+        if ((genes_mut.length > 0 || genes_cnv.length > 0) && isAlteration) {
             // calculating max width
             const max_width_arr = [];
             for (let i = 0; i < genes.length; i++) {
@@ -464,7 +465,7 @@ class Oncoprint extends React.Component {
 
         // calculating max height
 
-        if (genes_mut.length > 0 || genes_cnv.length > 0) {
+        if ((genes_mut.length > 0 || genes_cnv.length > 0) && isAlteration) {
             // calculating the max height.
             const max_height_arr = [];
 

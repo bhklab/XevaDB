@@ -77,7 +77,7 @@ class SearchResultOncoprint extends React.Component {
         // this is according to the object and heatmap sequence.
         result.forEach((value, i) => { // can't break in forEach use for if wanna break.
             const dataObject = {};
-            if (value.data.length > 1) {
+            if (value.data.length > 0) {
                 hmapPatients.forEach((patient) => {
                     if (!result[i].data[0][patient]) {
                         dataObject[patient] = '';
