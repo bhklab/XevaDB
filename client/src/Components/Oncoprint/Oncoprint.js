@@ -46,7 +46,7 @@ class Oncoprint extends React.Component {
     makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
         // reference.
         this.node = node;
-        const isAlteration = false;
+        let isAlteration = false;
 
         // to merge two arrays and give the unique values.
         // eslint-disable-next-line no-extend-native
@@ -328,6 +328,9 @@ class Oncoprint extends React.Component {
                 if (genes_cnv.includes(genes[i]) && data_cnv[i][hmap_patients[j]]) {
                     const cnvType = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].xevalabel;
                     const cnvColor = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].color;
+                    if (!isAlteration) {
+                        isAlteration = (cnvType !== 'empty');
+                    }
                     colorReactangles(cnvType, cnvColor, i, j);
                 }
 
@@ -335,6 +338,7 @@ class Oncoprint extends React.Component {
                 // if the gene from genes located in genes_mut.
                 // mutation later because they are 1/3 the box.
                 if (genes_mut.includes(genes[i]) && patient_mut.includes(hmap_patients[j]) && data_mut[i][hmap_patients[j]] !== '0' && data_mut[i][hmap_patients[j]] !== '') {
+                    isAlteration = !isAlteration ? true : isAlteration;
                     // based on the data gives different colors to the rectangle.
                     const { color } = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()];
                     const type = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()].mainType;
