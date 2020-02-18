@@ -40,6 +40,7 @@ class Search extends React.Component {
         this.redirectUser = this.redirectUser.bind(this);
         this.handleThreshold = this.handleThreshold.bind(this);
         this.checkInput = this.checkInput.bind(this);
+        this.clearText = this.clearText.bind(this);
     }
 
 
@@ -256,6 +257,13 @@ class Search extends React.Component {
         return ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') && (genomics.length > 0));
     }
 
+    // clear the text.
+    clearText() {
+        this.setState({
+            selectedGeneSearch: '',
+        });
+    }
+
 
     render() {
         const {
@@ -343,6 +351,7 @@ class Search extends React.Component {
                                     type="text"
                                     value={selectedGeneSearch}
                                     onChange={this.handleGeneSearchChange}
+                                    onClick={this.clearText}
                                 />
                             </form>
                         </div>
@@ -356,7 +365,7 @@ class Search extends React.Component {
                             {
                                 this.checkInput()
                                     ? (
-                                        <StyleButton onClick={this.redirectUser} type="button">
+                                        <StyleButton onClick={this.redirectUser} type="button" className="stylebutton">
                                             <span>
                                                 Search
                                             </span>
@@ -365,7 +374,7 @@ class Search extends React.Component {
                                     : (
                                         <Popup
                                             trigger={(
-                                                <StyleButton onClick={this.redirectUser} type="button">
+                                                <StyleButton onClick={this.redirectUser} type="button" className="stylebutton">
                                                     <span>
                                                         Search
                                                     </span>

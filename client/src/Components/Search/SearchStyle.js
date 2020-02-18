@@ -82,7 +82,7 @@ const StyleBar = styled.div`
         }
 
         .sample {
-            margin: 10px 0px 10px 15px;
+            margin: 10px 0px 0px 15px;
             min-width: 600px;
             font-size: 16px;
             text-align: left;
@@ -136,7 +136,12 @@ const StyleBar = styled.div`
             margin: 5px !important;
         }
         .sample {
+            font-size: 14px !important;
             margin: 0px 0px 0px 10px !important;
+        }
+        .stylebutton {
+            font-size: 22px;
+            padding: 6px 10px 6px 10px;
         }
    }
 
