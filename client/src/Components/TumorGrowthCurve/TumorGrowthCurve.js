@@ -18,10 +18,6 @@ class TumorGrowthCurve extends React.Component {
         this.makeTumorGrowthCurve = this.makeTumorGrowthCurve.bind(this);
     }
 
-    componentDidMount() {
-        // this.tumorGrowthCurve();
-    }
-
     componentDidUpdate() {
         this.tumorGrowthCurve();
     }
@@ -296,6 +292,7 @@ class TumorGrowthCurve extends React.Component {
                 .attr('top', 10)
                 .attr('left', 20);
 
+            // appends dots.
             dots.append('circle')
                 .attr('id', (d, i) => `dot-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}-${
                     d.exp_type}${i}`)
@@ -329,25 +326,49 @@ class TumorGrowthCurve extends React.Component {
                     return yrange(d.volume);
                 });
 
+            // creating line.
+            const createLine = (stroke, opacity, color = '#cd5686') => (
+                paths.append('path')
+                    .attr('id', (d) => `path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                    .attr('class', (d) => `model-path_${d.exp_type}_${
+                        d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${
+                        d.batch}`)
+                    .attr('d', (d) => linepath(d.pdx_json))
+                    .attr('fill', 'none')
+                    .style('opacity', opacity)
+                    .attr('stroke', (d) => {
+                        if (color === 'white') {
+                            return color;
+                        }
+                        if (d.exp_type === 'control') {
+                            return '#cd5686';
+                        }
+                        return '#5974c4';
+                    })
+                    .attr('stroke-width', stroke)
+            );
+
+            // selecting and unselecting the table data.
+            const tableSelect = (d, stroke, opacity, tcolor, tback, acolor, aback) => {
+                d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
+                    .attr('stroke-width', stroke)
+                    .style('opacity', opacity);
+                d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                    .selectAll('td')
+                    .style('color', tcolor)
+                    .style('background', tback);
+                d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                    .selectAll('a')
+                    .style('color', acolor)
+                    .style('background', aback);
+            };
 
             // add line
-            paths.append('path')
-                .attr('id', (d) => `path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
-                .attr('class', (d) => `model-path_${d.exp_type}_${
-                    d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${
-                    d.batch}`)
-                .attr('d', (d) => linepath(d.pdx_json))
-                .attr('fill', 'none')
-                .style('opacity', 0.6)
-                .attr('stroke', (d) => {
-                    if (d.exp_type === 'control') {
-                        return '#cd5686';
-                    }
-                    return '#5974c4';
-                })
-                .attr('stroke-width', 3)
-                .attr('stroke-dasharray', ('3', '3'))
-                // event listeners.
+            createLine(3, 0.6)
+                .attr('stroke-dasharray', ('3', '3'));
+
+            // create a white line to let user hover over with opacity 0 and event listeners.
+            createLine(4, 0, 'white')
                 .on('mouseover', (d) => {
                     // tooltip on mousever setting the div to visible.
                     tooltip
@@ -378,17 +399,7 @@ class TumorGrowthCurve extends React.Component {
                         .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
 
                     // changing attributes of the line on mouseover.
-                    d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
-                        .attr('stroke-width', 5)
-                        .style('opacity', 1.0);
-                    d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                        .selectAll('td')
-                        .style('color', '#f5f5f5')
-                        .style('background', '#5974c4');
-                    d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                        .selectAll('a')
-                        .style('color', '#f5f5f5')
-                        .style('background', '#5974c4');
+                    tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
                 })
                 .on('mouseout', (d) => {
                     // remove all the divs with id tooltiptext.
@@ -400,46 +411,17 @@ class TumorGrowthCurve extends React.Component {
 
                     // changing attributes back to normal of the line on mouseout.
                     if (!(d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${d.batch}`).classed('selected'))) {
-                        d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
-                            .attr('stroke-width', 3)
-                            .style('opacity', 0.6);
-                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                            .selectAll('td')
-                            .style('color', '#cd5686')
-                            .style('background', 'white');
-                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                            .selectAll('a')
-                            .style('color', '#5974c4')
-                            .style('background', 'white');
+                        tableSelect(d, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
                     }
                 })
-                .on('click', function (d) {
-                    if (!(d3.select(this).classed('selected'))) {
-                        d3.select(this).classed('selected', true);
-                        d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
-                            .attr('stroke-width', 5)
-                            .style('opacity', 1.0);
-                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                            .selectAll('td')
-                            .style('color', '#f5f5f5')
-                            .style('background', '#5974c4');
-                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                            .selectAll('a')
-                            .style('color', '#f5f5f5')
-                            .style('background', '#5974c4');
-                    } else if (d3.select(this).classed('selected')) {
-                        d3.select(this).classed('selected', false);
-                        d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
-                            .attr('stroke-width', 3)
-                            .style('opacity', 0.6);
-                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                            .selectAll('td')
-                            .style('color', '#cd5686')
-                            .style('background', 'white');
-                        d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                            .selectAll('a')
-                            .style('color', '#5974c4')
-                            .style('background', 'white');
+                .on('click', (d) => {
+                    const selection = d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${d.batch}`);
+                    if (!(selection.classed('selected'))) {
+                        selection.classed('selected', true);
+                        tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
+                    } else if (selection.classed('selected')) {
+                        selection.classed('selected', false);
+                        tableSelect(d, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
                     }
                 });
             // plotMeans(data, graph, xrange, yrange, width, height);
