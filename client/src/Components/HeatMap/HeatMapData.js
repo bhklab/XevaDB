@@ -82,7 +82,7 @@ class HeatMapData extends React.Component {
         const {
             data, drugId,
             patientId, dimensions,
-            margin,
+            margin, datasetParam,
         } = this.state;
         return (
             <div>
@@ -98,6 +98,7 @@ class HeatMapData extends React.Component {
                                 patientId={patientId}
                                 dimensions={dimensions}
                                 margin={margin}
+                                dataset={datasetParam}
                             />
                         </div>
                     ) : ''

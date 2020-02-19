@@ -75,6 +75,7 @@ class SearchResultHeatMap extends React.Component {
             patientIdDrug, dimensions,
             margin,
         } = this.state;
+        const { datasetParam } = this.props;
         return (
             drugData.length > 0 ? (
                 <HeatMap
@@ -84,6 +85,7 @@ class SearchResultHeatMap extends React.Component {
                     dimensions={dimensions}
                     margin={margin}
                     className="searchedheatmap"
+                    dataset={datasetParam}
                 />
             ) : ''
         );

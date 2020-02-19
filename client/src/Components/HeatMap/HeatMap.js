@@ -31,11 +31,12 @@ class HeatMap extends Component {
         const { dimensions } = this.props;
         const { margin } = this.props;
         const { className } = this.props;
-        this.makeHeatmap(data, patientId, drugId, className, dimensions, margin, node);
+        const { dataset } = this.props;
+        this.makeHeatmap(data, patientId, drugId, dataset, className, dimensions, margin, node);
     }
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatmap(data, patient, drug, plotId, dimensions, margin, node) {
+    makeHeatmap(data, patient, drug, dataset, plotId, dimensions, margin, node) {
         this.node = node;
 
         // height and width for the SVG based on the number of drugs and patient/sample ids.
@@ -470,12 +471,12 @@ class HeatMap extends Component {
         patientId.attr('stroke-width', '0')
             .style('font-size', '12px')
             .style('font-family', '\'Raleway\',sans-serif')
-            .style('text-anchor', 'start')
+            .style('text-anchor', (dataset === '7' ? 'start' : 'middle'))
             .call(xAxis)
             .selectAll('text')
             .attr('transform', 'rotate(-90)')
             .attr('font-weight', '500')
-            .attr('x', '-2.4em')
+            .attr('x', (dataset === '7' ? '-2.4em' : '0.6em'))
             .attr('y', '.15em');
 
 
