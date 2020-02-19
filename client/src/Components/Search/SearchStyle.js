@@ -137,10 +137,10 @@ const StyleBar = styled.div`
         }
         .sample {
             font-size: 14px !important;
-            margin: 0px 0px 0px 10px !important;
+            margin: 0px 0px -10px 10px !important;
         }
         .stylebutton {
-            font-size: 22px;
+            font-size: 28px;
             padding: 6px 10px 6px 10px;
         }
    }
