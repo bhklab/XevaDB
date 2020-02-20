@@ -6,6 +6,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Oncoprint from './Oncoprint';
 import Spinner from '../SpinnerUtil/Spinner';
+import Error from '../Error/Error';
 
 class OncoprintData extends React.Component {
     constructor(props) {
@@ -26,6 +27,7 @@ class OncoprintData extends React.Component {
             dimensions: {},
             margin: {},
             loading: true,
+            error: false,
         };
         this.updateResults = this.updateResults.bind(this);
     }
@@ -46,6 +48,13 @@ class OncoprintData extends React.Component {
             Promise.all([mutation_data, rnaseq_data, cnv_data])
                 .then((response) => {
                     this.updateResults(response);
+                })
+                .catch((err) => {
+                    if (err) {
+                        this.setState({
+                            error: true,
+                        });
+                    }
                 });
         }
     }
@@ -135,32 +144,44 @@ class OncoprintData extends React.Component {
             patient_mut, patient_rna, patient_cnv,
             data_mut, data_rna, data_cnv,
             dimensions, margin, threshold,
-            hmap_patients, loading,
+            hmap_patients, loading, error, dataset,
         } = this.state;
+
+        function renderingData() {
+            let data = '';
+            if (data_mut.length || data_cnv.length || data_rna.length) {
+                data = (
+                    <Oncoprint
+                        className="oprint"
+                        dimensions={dimensions}
+                        margin={margin}
+                        threshold={threshold}
+                        hmap_patients={hmap_patients}
+                        genes_mut={genes_mut}
+                        genes_rna={genes_rna}
+                        genes_cnv={genes_cnv}
+                        patient_mut={patient_mut}
+                        patient_rna={patient_rna}
+                        patient_cnv={patient_cnv}
+                        data_mut={data_mut}
+                        data_rna={data_rna}
+                        data_cnv={data_cnv}
+                    />
+                );
+            } else if (dataset === '4') {
+                return <Error message="There is no data available for PDXE (Gastric Cancer)" />;
+            } else if (error) {
+                return <Error message="Page not found!!" />;
+            } else {
+                data = (<div className="oprint-wrapper"><Spinner loading={loading} /></div>);
+            }
+            return data;
+        }
 
         return (
             <div className="wrapper" style={{ margin: 'auto' }}>
                 {
-                    (data_mut.length || data_cnv.length || data_rna.length)
-                        ? (
-                            <Oncoprint
-                                className="oprint"
-                                dimensions={dimensions}
-                                margin={margin}
-                                threshold={threshold}
-                                hmap_patients={hmap_patients}
-                                genes_mut={genes_mut}
-                                genes_rna={genes_rna}
-                                genes_cnv={genes_cnv}
-                                patient_mut={patient_mut}
-                                patient_rna={patient_rna}
-                                patient_cnv={patient_cnv}
-                                data_mut={data_mut}
-                                data_rna={data_rna}
-                                data_cnv={data_cnv}
-                            />
-                        )
-                        : (<div className="oprint-wrapper"><Spinner loading={loading} /></div>)
+                    renderingData()
                 }
             </div>
         );

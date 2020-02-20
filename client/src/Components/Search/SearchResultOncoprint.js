@@ -4,6 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Oncoprint from '../Oncoprint/Oncoprint';
 import Spinner from '../SpinnerUtil/Spinner';
+import Error from '../Error/Error';
 
 class SearchResultOncoprint extends React.Component {
     constructor(props) {
@@ -24,6 +25,7 @@ class SearchResultOncoprint extends React.Component {
             dimensions: {},
             margin: {},
             loading: true,
+            error: false,
         };
         // binding the functions declared.
         this.updateResults = this.updateResults.bind(this);
@@ -55,6 +57,13 @@ class SearchResultOncoprint extends React.Component {
         Promise.all([...queryData])
             .then((response) => {
                 this.updateResults(response, genomics);
+            })
+            .catch((err) => {
+                if (err) {
+                    this.setState({
+                        error: true,
+                    });
+                }
             });
     }
 
@@ -147,28 +156,41 @@ class SearchResultOncoprint extends React.Component {
 
     render() {
         const {
-            dimensions, margin, threshold, dataMut, dataRna, dataCnv, hmapPatients,
+            dimensions, margin, threshold, dataMut, dataRna, dataCnv, hmapPatients, error,
             genesMut, genesRna, genesCnv, patientMut, patientRna, patientCnv, loading,
         } = this.state;
+
+        function renderingData() {
+            let data = '';
+            if (dataMut.length || dataCnv.length || dataRna.length) {
+                data = (
+                    <Oncoprint
+                        className="oprint_result"
+                        dimensions={dimensions}
+                        margin={margin}
+                        threshold={Number(threshold)}
+                        hmap_patients={hmapPatients}
+                        genes_mut={genesMut}
+                        genes_rna={genesRna}
+                        genes_cnv={genesCnv}
+                        patient_mut={patientMut}
+                        patient_rna={patientRna}
+                        patient_cnv={patientCnv}
+                        data_mut={dataMut}
+                        data_rna={dataRna}
+                        data_cnv={dataCnv}
+                    />
+                );
+            } else if (error) {
+                return <Error />;
+            } else {
+                data = (<div className="oprint-wrapper"><Spinner loading={loading} /></div>);
+            }
+            return data;
+        }
+
         return (
-            (dataMut.length || dataCnv.length || dataRna.length) ? (
-                <Oncoprint
-                    className="oprint_result"
-                    dimensions={dimensions}
-                    margin={margin}
-                    threshold={Number(threshold)}
-                    hmap_patients={hmapPatients}
-                    genes_mut={genesMut}
-                    genes_rna={genesRna}
-                    genes_cnv={genesCnv}
-                    patient_mut={patientMut}
-                    patient_rna={patientRna}
-                    patient_cnv={patientCnv}
-                    data_mut={dataMut}
-                    data_rna={dataRna}
-                    data_cnv={dataCnv}
-                />
-            ) : (<div className="oprint-wrapper"><Spinner loading={loading} /></div>)
+            renderingData()
         );
     }
 }
