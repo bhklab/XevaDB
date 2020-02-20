@@ -56,20 +56,20 @@ router.post('/v1/drugpatient/dataset', verifytoken, modelInformation.postDrugand
 
 // APIs for model response table.
 router.get('/v1/response/:dataset', verifytoken, modelResponse.getModelResponseBasedOnDataset);
-router.get('/v1/response', modelResponse.getModelResponseBasedPerDatasetBasedOnDrugs);
+router.get('/v1/response', verifytoken, modelResponse.getModelResponseBasedPerDatasetBasedOnDrugs);
 router.get('/v1/stats', verifytoken, modelResponse.getModelResponseStats);
 
 // APIs related to mutation table.
 router.get('/v1/mutation/:dataset', mixed.isValidId, verifytoken, mutation.getMutationBasedOnDataset);
-router.get('/v1/mutation', mutation.getMutationBasedPerDatasetBasedOnGenes);
+router.get('/v1/mutation', verifytoken, mutation.getMutationBasedPerDatasetBasedOnGenes);
 
 // APIs related to rnasequencing table.
 router.get('/v1/rnaseq/:dataset', mixed.isValidId, verifytoken, rnasequencing.getRnaSeqBasedOnDataset);
-router.get('/v1/rnaseq', rnasequencing.getRnaSeqBasedPerDatasetBasedOnGenes);
+router.get('/v1/rnaseq', verifytoken, rnasequencing.getRnaSeqBasedPerDatasetBasedOnGenes);
 
 // APIs related to copy_number_variation table.
 router.get('/v1/cnv/:dataset', mixed.isValidId, verifytoken, copyNumberVariation.getCopyNumberVariationBasedOnDataset);
-router.get('/v1/cnv', copyNumberVariation.getCopyNumberVariationBasedPerDatasetBasedOnGenes);
+router.get('/v1/cnv', verifytoken, copyNumberVariation.getCopyNumberVariationBasedPerDatasetBasedOnGenes);
 
 // APIs related to drug screening table.
 router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreening);

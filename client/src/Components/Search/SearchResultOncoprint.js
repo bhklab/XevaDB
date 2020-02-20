@@ -40,15 +40,15 @@ class SearchResultOncoprint extends React.Component {
         // making get requests based on the genomics parameters.
         // sequence is important (first cnv or mutation) then rnaseq has to be pushed.
         if (genomicsParam.includes('Mutation')) {
-            queryData.push(axios.get(`/api/v1/mutation?genes=${geneParam}&dataset=${datasetParam}`));
+            queryData.push(axios.get(`/api/v1/mutation?genes=${geneParam}&dataset=${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } }));
             genomics.push('Mutation');
         }
         if (genomicsParam.includes('RNASeq') || genomicsParam.includes('Expression')) {
-            queryData.push(axios.get(`/api/v1/rnaseq?genes=${geneParam}&dataset=${datasetParam}`));
+            queryData.push(axios.get(`/api/v1/rnaseq?genes=${geneParam}&dataset=${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } }));
             genomics.push('RNASeq');
         }
         if (genomicsParam.includes('CNV')) {
-            queryData.push(axios.get(`/api/v1/cnv?genes=${geneParam}&dataset=${datasetParam}`));
+            queryData.push(axios.get(`/api/v1/cnv?genes=${geneParam}&dataset=${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } }));
             genomics.push('CNV');
         }
 

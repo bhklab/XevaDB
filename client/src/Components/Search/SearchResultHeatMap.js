@@ -23,7 +23,7 @@ class SearchResultHeatMap extends React.Component {
         const { drugParam } = this.props;
         const { datasetParam } = this.props;
 
-        axios.get(`/api/v1/response?drug=${drugParam}&dataset=${datasetParam}`)
+        axios.get(`/api/v1/response?drug=${drugParam}&dataset=${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 this.parseData(response.data);
             });
