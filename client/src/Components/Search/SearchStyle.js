@@ -91,6 +91,10 @@ const StyleBar = styled.div`
                 color: #3453b0;
                 text-decoration: none;
             }
+            a:hover {
+                color: #cd5686;
+                cursor: pointer;
+            }
             font-style: italic;
         }
 
