@@ -10,7 +10,7 @@ const ErrorStyle = styled.h1`
 const Error = ({ message }) => {
     // data variable if message is not defined.
     let data = '';
-    if (!undefined) {
+    if (!message) {
         data = 'Page not found!!';
     }
     // returing the data.
