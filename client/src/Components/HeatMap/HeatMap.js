@@ -664,7 +664,7 @@ class HeatMap extends Component {
         const { drugId } = this.props;
         const { margin } = this.props;
         const { className } = this.props;
-
+        const { dataset: datasetId } = this.props;
 
         // responses.
         const responses = ['CR', 'PR', 'SD', 'PD', '', 'NA'];
@@ -705,7 +705,7 @@ class HeatMap extends Component {
 
         // finally calling the makeHeatMap function in order passing
         // new dataset in order to make new heatmap based on ranking.
-        this.makeHeatmap(newDataset, newSortedPatients, drugId, className, dimensions, margin, node);
+        this.makeHeatmap(newDataset, newSortedPatients, drugId, datasetId, className, dimensions, margin, node);
 
         // making the circle visible on click of the drug.
         d3.select(`#circle-${drug.replace(/\s/g, '').replace(/\+/g, '')}`)
@@ -720,6 +720,7 @@ class HeatMap extends Component {
         const { dimensions } = this.props;
         const { margin } = this.props;
         const { className } = this.props;
+        const { dataset } = this.props;
         const newDataset = [];
 
         // sort the complete data according to the globalPatients.
@@ -734,7 +735,7 @@ class HeatMap extends Component {
         if (globalPatients.length > 0) {
             d3.select(`#heatmap-${className}`).remove();
             d3.select('#heatmap-tooltip').remove();
-            this.makeHeatmap(newDataset, globalPatients, drugId, className, dimensions, margin, node);
+            this.makeHeatmap(newDataset, globalPatients, drugId, dataset, className, dimensions, margin, node);
         }
     }
 
