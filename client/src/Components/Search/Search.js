@@ -243,9 +243,12 @@ class Search extends React.Component {
             selectedDataset, selectedDrugs, selectedGeneSearch,
             selectedGenomics, threshold, genomics,
         } = this.state;
+        // this removes spaces from gene list.
+        const formatedGeneList = selectedGeneSearch.replace(/\s/g, '');
+        // only renders if all the data is available.
         if ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') && (genomics.length > 0)) {
             const { history } = this.props;
-            history.push(`/search/?drug=${selectedDrugs}&dataset=${selectedDataset}&genes=${selectedGeneSearch}&genomics=${selectedGenomics}&threshold=${threshold}`);
+            history.push(`/search/?drug=${selectedDrugs}&dataset=${selectedDataset}&genes=${formatedGeneList}&genomics=${selectedGenomics}&threshold=${threshold}`);
         }
     }
 
@@ -257,11 +260,14 @@ class Search extends React.Component {
         return ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') && (genomics.length > 0));
     }
 
-    // clear the text.
+    // clear the text from text area.
     clearText() {
-        this.setState({
-            selectedGeneSearch: '',
-        });
+        const { selectedGeneSearch } = this.state;
+        if (selectedGeneSearch[0] === 'Enter Gene Symbol(s)') {
+            this.setState({
+                selectedGeneSearch: '',
+            });
+        }
     }
 
 
