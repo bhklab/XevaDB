@@ -422,7 +422,10 @@ class TumorGrowthCurve extends React.Component {
                         if (val.attributes[5] && val.style.opacity !== '0' && val.classList.contains('selected')) {
                             val.attributes[5].value = 3;
                             val.style.opacity = 0.6;
-                            d3.select(`.${val.classList[0]}`).classed('selected', false);
+                            const previousSelection = d3.select(`.${val.classList[0]}`);
+                            const model = previousSelection.data()[0];
+                            previousSelection.classed('selected', false);
+                            tableSelect(model, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
                             if (val.classList[0] === selection.attr('class')) {
                                 selectedCurve = true;
                             }
