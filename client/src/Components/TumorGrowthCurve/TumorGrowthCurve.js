@@ -415,8 +415,21 @@ class TumorGrowthCurve extends React.Component {
                     }
                 })
                 .on('click', (d) => {
+                    let selectedCurve = false;
                     const selection = d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${d.batch}`);
-                    if (!(selection.classed('selected'))) {
+                    // select all the path elements and deselect them.
+                    d3.selectAll('path').nodes().forEach((val) => {
+                        if (val.attributes[5] && val.style.opacity !== '0' && val.classList.contains('selected')) {
+                            val.attributes[5].value = 3;
+                            val.style.opacity = 0.6;
+                            d3.select(`.${val.classList[0]}`).classed('selected', false);
+                            if (val.classList[0] === selection.attr('class')) {
+                                selectedCurve = true;
+                            }
+                        }
+                    });
+                    // highlight and classed according to selection.
+                    if (!(selection.classed('selected')) && !selectedCurve) {
                         selection.classed('selected', true);
                         tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
                     } else if (selection.classed('selected')) {
