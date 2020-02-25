@@ -872,6 +872,20 @@ class TumorGrowthCurve extends React.Component {
                         // plot the toggle curve.
                         plotBatch(data, graph, xrange, yrange, width, height, plot);
 
+                        // unselect the data from the table.
+                        d3.selectAll('tr').nodes().forEach((val) => {
+                            if (val.className) {
+                                d3.select(`.${val.className}`)
+                                    .selectAll('td')
+                                    .style('color', '#cd5686')
+                                    .style('background', 'white');
+                                d3.select(`.${val.className}`)
+                                    .selectAll('a')
+                                    .style('color', '#5974c4')
+                                    .style('background', 'white');
+                            }
+                        });
+
                         d3.select('#volRawToggle').attr('fill', rawToggle);
                         d3.select('#volNormToggle').attr('fill', normToggle);
                     });
