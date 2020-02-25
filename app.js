@@ -5,12 +5,18 @@ const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 // const cors = require('cors');
+const logger = require('morgan');
+const knexLogger = require('knex-logger');
+const db = require('./db/knex1');
 
 // setting the path of the router file to variable so that we can use all the routes from it.
 const router = require('./routes/router.js');
 
 // Bodyparser Middleware
 app.use(bodyParser.json());
+// logging
+app.use(logger('dev'));
+app.use(knexLogger(db));
 
 // app.use(cors({origin: 'http://localhost:3000'}));
 
