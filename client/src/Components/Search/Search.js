@@ -339,7 +339,6 @@ class Search extends React.Component {
                                     )
                                     : null
                             }
-
                         </div>
 
                         <div className="div-gene">

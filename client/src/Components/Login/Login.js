@@ -65,7 +65,7 @@ class Login extends React.Component {
                 });
             })
             .catch((error) => {
-                console.log(error, 'authentication failed');
+                // console.log(error, 'authentication failed');
                 alert('Authentication Failed, Please Enter a valid Password and Username');
             });
     }

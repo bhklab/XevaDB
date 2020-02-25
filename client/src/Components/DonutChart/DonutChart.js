@@ -189,9 +189,10 @@ class DonutChart extends React.Component {
         };
 
         // transition while mouseover and mouseout on each slice.
-        piearc.on('mouseover', (d) => {
-            mouseover(d);
-        })
+        piearc
+            .on('mouseover', (d) => {
+                mouseover(d);
+            })
             .on('mousemove', (d) => {
                 mousemove(d);
             })

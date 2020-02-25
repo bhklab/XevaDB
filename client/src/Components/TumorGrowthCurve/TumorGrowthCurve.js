@@ -902,11 +902,11 @@ class TumorGrowthCurve extends React.Component {
                 <div className="wrapper" style={{ margin: 'auto', fontSize: '16px' }}>
                     <div className="curve-wrapper" style={{ marginTop: '100px' }}>
                         <h1>
-Drug ID =
+                            Drug ID =
                             {' '}
                             <span style={{ color: '#cd5686' }}>{drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
                             {' '}
-and Patient ID =
+                            and Patient ID =
                             {' '}
                             <span style={{ color: '#cd5686' }}>{patientParam}</span>
                         </h1>
