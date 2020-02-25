@@ -19,11 +19,11 @@ class TumorGrowthCurve extends React.Component {
     }
 
     componentDidUpdate() {
-        this.tumorGrowthCurve();
+        this.Initialize();
     }
 
     // intiliazing the variables.
-    tumorGrowthCurve() {
+    Initialize() {
         const { node } = this;
         const plotId = 'plot';
         const { data } = this.props;
@@ -44,13 +44,6 @@ class TumorGrowthCurve extends React.Component {
 
     // This is the main function to create Growth curves.
     makeTumorGrowthCurve(data, plotId, node) {
-        // calling tumorCurve function passing the data, PlotID and node reference.
-        tumorCurve(data, plotId, node);
-
-        String.prototype.replaceAll = String.prototype.replaceAll || function (s, r) {
-            return this.replace(new RegExp(s, 'g'), r);
-        };
-
         // unique function
         // usage: let a = [1,2,3,4]; unique = a.filter(unique);
         function unique(value, index, self) {
@@ -136,6 +129,323 @@ class TumorGrowthCurve extends React.Component {
             };
         }
 
+        function plotBatch(data, graph, xrange, yrange, width, height, norm) {
+            // to replace all the periods with dashes because dots interfere with classes
+            const models = graph.selectAll('g.model')
+                .data(data)
+                .enter()
+                .append('g')
+                .attr('class', 'model');
+
+            // plotting the dots
+            const dots = models.selectAll('.model-dot')
+                .data((d) => d.pdx_json)
+                .enter();
+
+            const paths = graph.selectAll('.model-path')
+                .data(() => data)
+                .enter();
+
+            // making tooltips
+            const tooltip = d3.select('.wrapper')
+                .append('div')
+                .style('position', 'absolute')
+                .style('visibility', 'hidden')
+                .style('border', 'solid')
+                .style('border-width', '1px')
+                .style('border-radius', '5px')
+                .style('padding', '5px')
+                .style('min-width', '150px')
+                .style('min-height', '80px')
+                .attr('top', 10)
+                .attr('left', 20);
+
+            // appends dots.
+            dots.append('circle')
+                .attr('id', (d, i) => `dot-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}-${
+                    d.exp_type}${i}`)
+                .attr('class', (d) => `model-dot ${
+                    d.model.replace(/\./g, ' ').replace(/\s/g, '-')} ${
+                    d.batch}`)
+                .attr('r', 4)
+                .attr('fill', (d) => {
+                    if (d.exp_type === 'control') {
+                        return '#cd5686';
+                    }
+                    return '#5974c4';
+                })
+                .style('opacity', 0.6)
+                .attr('cx', (d) => xrange(d.time))
+                .attr('cy', (d) => {
+                    if (norm) {
+                        return yrange(d.volume_normal);
+                    }
+                    return yrange(d.volume);
+                });
+
+
+            // line function, to join dots
+            const linepath = d3.line()
+                .x((d) => xrange(d.time))
+                .y((d) => {
+                    if (norm) {
+                        return yrange(d.volume_normal);
+                    }
+                    return yrange(d.volume);
+                });
+
+            // creating line.
+            const createLine = (stroke, opacity, color = '#cd5686') => (
+                paths.append('path')
+                    .attr('id', (d) => `path-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}`)
+                    .attr('class', (d) => `model-path_${d.exp_type}_${
+                        d.model.replace(/\./g, ' ').replace(/\s/g, '-')}_${
+                        d.batch}`)
+                    .attr('d', (d) => linepath(d.pdx_json))
+                    .attr('fill', 'none')
+                    .style('opacity', opacity)
+                    .attr('stroke', (d) => {
+                        if (color === 'white') {
+                            return color;
+                        }
+                        if (d.exp_type === 'control') {
+                            return '#cd5686';
+                        }
+                        return '#5974c4';
+                    })
+                    .attr('stroke-width', stroke)
+            );
+
+            // selecting and unselecting the table data.
+            const tableSelect = (d, stroke, opacity, tcolor, tback, acolor, aback) => {
+                d3.select(`#path-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}`)
+                    .attr('stroke-width', stroke)
+                    .style('opacity', opacity);
+                d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                    .selectAll('td')
+                    .style('color', tcolor)
+                    .style('background', tback);
+                d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
+                    .selectAll('a')
+                    .style('color', acolor)
+                    .style('background', aback);
+            };
+
+            // add line
+            createLine(3, 0.6)
+                .attr('stroke-dasharray', ('3', '3'));
+
+            // create a white line to let user hover over with opacity 0 and event listeners.
+            createLine(4, 0, 'white')
+                .on('mouseover', (d) => {
+                    // tooltip on mousever setting the div to visible.
+                    tooltip
+                        .style('visibility', 'visible');
+
+                    // tooltip grabbing event.pageX and event.pageY
+                    // and set color according to the ordinal scale.
+                    const tooltipDiv = tooltip
+                        .style('left', `${d3.event.pageX + 10}px`)
+                        .style('top', `${d3.event.pageY + 10}px`)
+                        .style('color', '#000000')
+                        .style('background-color', '#ffffff');
+
+                    // tooltip data.
+                    const tooltipData = [
+                        `Batch: ${d.batch}`, `Drug: ${d.drug}`, `Exp_Type: ${d.exp_type}`, `Model: ${d.model}`,
+                    ];
+                    tooltipDiv.selectAll('textDiv')
+                        .data(tooltipData)
+                        .enter()
+                        .append('div')
+                        .attr('id', 'tooltiptext')
+                        .html((d) => {
+                            const data = d.split(':');
+                            return `<b>${data[0]}</b>: ${data[1]}`;
+                        })
+                        .attr('x', `${d3.event.pageX + 10}px`)
+                        .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
+
+                    // changing attributes of the line on mouseover.
+                    tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
+                })
+                .on('mouseout', (d) => {
+                    // remove all the divs with id tooltiptext.
+                    d3.selectAll('#tooltiptext').remove();
+
+                    // tooltip on mousever setting the div to hidden.
+                    tooltip
+                        .style('visibility', 'hidden');
+
+                    // changing attributes back to normal of the line on mouseout.
+                    if (!(d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}_${d.batch}`).classed('selected'))) {
+                        tableSelect(d, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
+                    }
+                })
+                .on('click', (d) => {
+                    d3.event.preventDefault();
+                    let selectedCurve = false;
+                    const selection = d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}_${d.batch}`);
+                    // select all the path elements and deselect them.
+                    // multiple selections in case of ctrl or command key.
+                    if (!(d3.event.ctrlKey || d3.event.metaKey)) {
+                        d3.selectAll('path').nodes().forEach((val) => {
+                            if (val.attributes[5] && val.style.opacity !== '0' && val.classList.contains('selected')) {
+                                val.attributes[5].value = 3;
+                                val.style.opacity = 0.6;
+                                const previousSelection = d3.select(`.${val.classList[0]}`);
+                                const model = previousSelection.data()[0];
+                                previousSelection.classed('selected', false);
+                                tableSelect(model, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
+                                if (val.classList[0] === selection.attr('class')) {
+                                    selectedCurve = true;
+                                }
+                            }
+                        });
+                    }
+
+                    // highlight and classed according to selection.
+                    if (!(selection.classed('selected')) && !selectedCurve) {
+                        selection.classed('selected', true);
+                        tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
+                    } else if (selection.classed('selected')) {
+                        selection.classed('selected', false);
+                        tableSelect(d, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
+                    }
+                });
+            // plotMeans(data, graph, xrange, yrange, width, height);
+            // modelToggle(graph, width, height)
+        }
+
+
+        // toggle to show each model
+        function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm, plotId, minVolNorm) {
+            const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText'];
+
+            // to create the rectangle and
+            function createReactangle(additionalHeight, color, id, val) {
+                let rect = '';
+                if (val === 'volRaw' || val === 'volNorm') {
+                    rect = svg.append('rect')
+                        .attr('x', width + 25)
+                        .attr('y', height / 2 + additionalHeight)
+                        .attr('width', 70)
+                        .attr('height', 20)
+                        .attr('fill', color)
+                        .style('opacity', 0.8)
+                        .attr('id', id);
+                } else if (val === 'volRawText' || val === 'volNormText') {
+                    rect = svg.append('text')
+                        .attr('fill', 'black')
+                        .style('font-size', '12px')
+                        .attr('text-anchor', val === 'volRawText' ? 'middle' : 'null')
+                        .attr('id', 'volNormText')
+                        .attr('x', width + (val === 'volRawText' ? 60 : 29))
+                        .attr('y', height / 2 + (val === 'volRawText' ? 64 : 84))
+                        .text(val === 'volRawText' ? 'Raw' : 'Normalized');
+                }
+                return rect;
+            }
+
+            toggleValues.forEach((val) => {
+                // setting the initial variables.
+                let additionalHeight = 50;
+                let color = '#cd5686';
+                let id = '';
+                let plot = false;
+                let rawToggle = '#cd5686';
+                let normToggle = 'lightgray';
+                let minimum = 0;
+                let maximum = maxVolume;
+
+                // switching based on the toggle value.
+                switch (val) {
+                case 'volNorm':
+                    additionalHeight = 70;
+                    color = 'lightgray';
+                    id = 'volNormToggle';
+                    plot = true;
+                    rawToggle = 'lightgray';
+                    normToggle = '#cd5686';
+                    minimum = minVolNorm - 1;
+                    maximum = maxVolNorm + 1;
+                    break;
+
+                case 'volNormText':
+                    additionalHeight = 70;
+                    color = 'lightgray';
+                    id = 'volNormText';
+                    plot = true;
+                    rawToggle = 'lightgray';
+                    normToggle = '#cd5686';
+                    minimum = minVolNorm - 1;
+                    maximum = maxVolNorm + 1;
+                    break;
+
+                case 'volRaw':
+                    id = 'volRawToggle';
+                    break;
+
+                case 'volRawText':
+                    id = 'volRawText';
+                    break;
+
+                default:
+                    id = 'Looking for what??';
+                }
+
+                // call to create toggle rectangle and text.
+                const rect = createReactangle(additionalHeight, color, id, val);
+
+                // on click handler.
+                rect
+                    .on('click', () => {
+                        // y-axis change
+                        const yrange = d3.scaleLinear()
+                            .domain([minimum, maximum])
+                            .range([height, 0])
+                            .nice();
+
+                        const yAxis = d3.axisLeft()
+                            .scale(yrange)
+                            .tickPadding(2);
+
+                        d3.selectAll('g.y.axis').call(yAxis);
+
+                        // setting ticks.
+                        svg.selectAll('.tick').select('text')
+                            .attr('fill', 'black')
+                            .attr('stroke', 'none')
+                            .attr('font-size', '14px');
+
+                        // removing the other curve.
+                        d3.select('#curves').remove();
+                        const graph = svg.append('g')
+                            .attr('id', 'curves');
+
+                        // plot the toggle curve.
+                        plotBatch(data, graph, xrange, yrange, width, height, plot);
+
+                        // unselect the data from the table.
+                        d3.selectAll('tr').nodes().forEach((val) => {
+                            if (val.className) {
+                                d3.select(`.${val.className}`)
+                                    .selectAll('td')
+                                    .style('color', '#cd5686')
+                                    .style('background', 'white');
+                                d3.select(`.${val.className}`)
+                                    .selectAll('a')
+                                    .style('color', '#5974c4')
+                                    .style('background', 'white');
+                            }
+                        });
+
+                        d3.select('#volRawToggle').attr('fill', rawToggle);
+                        d3.select('#volNormToggle').attr('fill', normToggle);
+                    });
+            });
+        }
+
 
         function tumorCurve(data, plotId, node) {
             // calling function to grab the min max values.
@@ -214,7 +524,7 @@ class TumorGrowthCurve extends React.Component {
                 .tickPadding(2);
 
             // Add the X Axis
-            const xAxisAdd = svg.append('g')
+            svg.append('g')
                 .attr('class', 'x axis')
                 .attr('transform', `translate(0,${yrange(0)})`)
                 .attr('fill', 'none')
@@ -259,195 +569,10 @@ class TumorGrowthCurve extends React.Component {
                 width, height, minmax.maxVolume, minmax.maxVolNorm, plotId, minmax.minVolNorm);
         }
 
-        function plotBatch(data, graph, xrange, yrange, width, height, norm) {
-            // when using d.model, use d.model.replace(/\./g,' ').replaceAll(' ', '-')
-            // to replace all the periods with dashes because dots interfere with classes
 
-            const models = graph.selectAll('g.model')
-                .data(data)
-                .enter()
-                .append('g')
-                .attr('class', 'model');
+        // calling tumorCurve function passing the data, PlotID and node reference.
+        tumorCurve(data, plotId, node);
 
-            // plotting the dots
-            const dots = models.selectAll('.model-dot')
-                .data((d) => d.pdx_json)
-                .enter();
-
-            const paths = graph.selectAll('.model-path')
-                .data(() => data)
-                .enter();
-
-            // making tooltips
-            const tooltip = d3.select('.wrapper')
-                .append('div')
-                .style('position', 'absolute')
-                .style('visibility', 'hidden')
-                .style('border', 'solid')
-                .style('border-width', '1px')
-                .style('border-radius', '5px')
-                .style('padding', '5px')
-                .style('min-width', '150px')
-                .style('min-height', '80px')
-                .attr('top', 10)
-                .attr('left', 20);
-
-            // appends dots.
-            dots.append('circle')
-                .attr('id', (d, i) => `dot-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}-${
-                    d.exp_type}${i}`)
-                .attr('class', (d) => `model-dot ${
-                    d.model.replace(/\./g, ' ').replaceAll(' ', '-')} ${
-                    d.batch}`)
-                .attr('r', 4)
-                .attr('fill', (d) => {
-                    if (d.exp_type === 'control') {
-                        return '#cd5686';
-                    }
-                    return '#5974c4';
-                })
-                .style('opacity', 0.6)
-                .attr('cx', (d) => xrange(d.time))
-                .attr('cy', (d) => {
-                    if (norm) {
-                        return yrange(d.volume_normal);
-                    }
-                    return yrange(d.volume);
-                });
-
-
-            // line function, to join dots
-            const linepath = d3.line()
-                .x((d) => xrange(d.time))
-                .y((d) => {
-                    if (norm) {
-                        return yrange(d.volume_normal);
-                    }
-                    return yrange(d.volume);
-                });
-
-            // creating line.
-            const createLine = (stroke, opacity, color = '#cd5686') => (
-                paths.append('path')
-                    .attr('id', (d) => `path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
-                    .attr('class', (d) => `model-path_${d.exp_type}_${
-                        d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${
-                        d.batch}`)
-                    .attr('d', (d) => linepath(d.pdx_json))
-                    .attr('fill', 'none')
-                    .style('opacity', opacity)
-                    .attr('stroke', (d) => {
-                        if (color === 'white') {
-                            return color;
-                        }
-                        if (d.exp_type === 'control') {
-                            return '#cd5686';
-                        }
-                        return '#5974c4';
-                    })
-                    .attr('stroke-width', stroke)
-            );
-
-            // selecting and unselecting the table data.
-            const tableSelect = (d, stroke, opacity, tcolor, tback, acolor, aback) => {
-                d3.select(`#path-${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}`)
-                    .attr('stroke-width', stroke)
-                    .style('opacity', opacity);
-                d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                    .selectAll('td')
-                    .style('color', tcolor)
-                    .style('background', tback);
-                d3.selectAll(`.responsetable_${d.model.replace(/\./g, '_')}`)
-                    .selectAll('a')
-                    .style('color', acolor)
-                    .style('background', aback);
-            };
-
-            // add line
-            createLine(3, 0.6)
-                .attr('stroke-dasharray', ('3', '3'));
-
-            // create a white line to let user hover over with opacity 0 and event listeners.
-            createLine(4, 0, 'white')
-                .on('mouseover', (d) => {
-                    // tooltip on mousever setting the div to visible.
-                    tooltip
-                        .style('visibility', 'visible');
-
-                    // tooltip grabbing event.pageX and event.pageY
-                    // and set color according to the ordinal scale.
-                    const tooltipDiv = tooltip
-                        .style('left', `${d3.event.pageX + 10}px`)
-                        .style('top', `${d3.event.pageY + 10}px`)
-                        .style('color', '#000000')
-                        .style('background-color', '#ffffff');
-
-                    // tooltip data.
-                    const tooltipData = [
-                        `Batch: ${d.batch}`, `Drug: ${d.drug}`, `Exp_Type: ${d.exp_type}`, `Model: ${d.model}`,
-                    ];
-                    tooltipDiv.selectAll('textDiv')
-                        .data(tooltipData)
-                        .enter()
-                        .append('div')
-                        .attr('id', 'tooltiptext')
-                        .html((d) => {
-                            const data = d.split(':');
-                            return `<b>${data[0]}</b>: ${data[1]}`;
-                        })
-                        .attr('x', `${d3.event.pageX + 10}px`)
-                        .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
-
-                    // changing attributes of the line on mouseover.
-                    tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
-                })
-                .on('mouseout', (d) => {
-                    // remove all the divs with id tooltiptext.
-                    d3.selectAll('#tooltiptext').remove();
-
-                    // tooltip on mousever setting the div to hidden.
-                    tooltip
-                        .style('visibility', 'hidden');
-
-                    // changing attributes back to normal of the line on mouseout.
-                    if (!(d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${d.batch}`).classed('selected'))) {
-                        tableSelect(d, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
-                    }
-                })
-                .on('click', (d) => {
-                    d3.event.preventDefault();
-                    let selectedCurve = false;
-                    const selection = d3.select(`.model-path_${d.exp_type}_${d.model.replace(/\./g, ' ').replaceAll(' ', '-')}_${d.batch}`);
-                    // select all the path elements and deselect them.
-                    // multiple selections in case of ctrl or command key.
-                    if (!(d3.event.ctrlKey || d3.event.metaKey)) {
-                        d3.selectAll('path').nodes().forEach((val) => {
-                            if (val.attributes[5] && val.style.opacity !== '0' && val.classList.contains('selected')) {
-                                val.attributes[5].value = 3;
-                                val.style.opacity = 0.6;
-                                const previousSelection = d3.select(`.${val.classList[0]}`);
-                                const model = previousSelection.data()[0];
-                                previousSelection.classed('selected', false);
-                                tableSelect(model, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
-                                if (val.classList[0] === selection.attr('class')) {
-                                    selectedCurve = true;
-                                }
-                            }
-                        });
-                    }
-
-                    // highlight and classed according to selection.
-                    if (!(selection.classed('selected')) && !selectedCurve) {
-                        selection.classed('selected', true);
-                        tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
-                    } else if (selection.classed('selected')) {
-                        selection.classed('selected', false);
-                        tableSelect(d, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
-                    }
-                });
-            // plotMeans(data, graph, xrange, yrange, width, height);
-            // modelToggle(graph, width, height)
-        }
 
         // plot the mean of each experiment type (control, treatment)
         function plotMeans(data, svg, xrange, yrange, width, height) {
@@ -761,135 +886,6 @@ class TumorGrowthCurve extends React.Component {
                 .attr('x2', (d, i) => xrange(times[i]) + 3)
                 .attr('y1', (d, i) => yrange(ypointArr[i] - stdDevs[i]))
                 .attr('y2', (d, i) => yrange(ypointArr[i] - stdDevs[i]));
-        }
-
-
-        // toggle to show each model
-        function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm, plotId, minVolNorm) {
-            const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText'];
-
-            // to create the rectangle and
-            function createReactangle(additionalHeight, color, id, val) {
-                let rect = '';
-                if (val === 'volRaw' || val === 'volNorm') {
-                    rect = svg.append('rect')
-                        .attr('x', width + 25)
-                        .attr('y', height / 2 + additionalHeight)
-                        .attr('width', 70)
-                        .attr('height', 20)
-                        .attr('fill', color)
-                        .style('opacity', 0.8)
-                        .attr('id', id);
-                } else if (val === 'volRawText' || val === 'volNormText') {
-                    rect = svg.append('text')
-                        .attr('fill', 'black')
-                        .style('font-size', '12px')
-                        .attr('text-anchor', val === 'volRawText' ? 'middle' : 'null')
-                        .attr('id', 'volNormText')
-                        .attr('x', width + (val === 'volRawText' ? 60 : 29))
-                        .attr('y', height / 2 + (val === 'volRawText' ? 64 : 84))
-                        .text(val === 'volRawText' ? 'Raw' : 'Normalized');
-                }
-                return rect;
-            }
-
-            toggleValues.forEach((val) => {
-                // setting the initial variables.
-                let additionalHeight = 50;
-                let color = '#cd5686';
-                let id = '';
-                let plot = false;
-                let rawToggle = '#cd5686';
-                let normToggle = 'lightgray';
-                let minimum = 0;
-                let maximum = maxVolume;
-
-                // switching based on the toggle value.
-                switch (val) {
-                case 'volNorm':
-                    additionalHeight = 70;
-                    color = 'lightgray';
-                    id = 'volNormToggle';
-                    plot = true;
-                    rawToggle = 'lightgray';
-                    normToggle = '#cd5686';
-                    minimum = minVolNorm - 1;
-                    maximum = maxVolNorm + 1;
-                    break;
-
-                case 'volNormText':
-                    additionalHeight = 70;
-                    color = 'lightgray';
-                    id = 'volNormText';
-                    plot = true;
-                    rawToggle = 'lightgray';
-                    normToggle = '#cd5686';
-                    minimum = minVolNorm - 1;
-                    maximum = maxVolNorm + 1;
-                    break;
-
-                case 'volRaw':
-                    id = 'volRawToggle';
-                    break;
-
-                case 'volRawText':
-                    id = 'volRawText';
-                    break;
-
-                default:
-                    id = 'Looking for what??';
-                }
-
-                // call to create toggle rectangle and text.
-                const rect = createReactangle(additionalHeight, color, id, val);
-
-                // on click handler.
-                rect
-                    .on('click', () => {
-                        // y-axis change
-                        const yrange = d3.scaleLinear()
-                            .domain([minimum, maximum])
-                            .range([height, 0])
-                            .nice();
-
-                        const yAxis = d3.axisLeft()
-                            .scale(yrange)
-                            .tickPadding(2);
-
-                        d3.selectAll('g.y.axis').call(yAxis);
-
-                        // setting ticks.
-                        svg.selectAll('.tick').select('text')
-                            .attr('fill', 'black')
-                            .attr('stroke', 'none')
-                            .attr('font-size', '14px');
-
-                        // removing the other curve.
-                        d3.select('#curves').remove();
-                        const graph = svg.append('g')
-                            .attr('id', 'curves');
-
-                        // plot the toggle curve.
-                        plotBatch(data, graph, xrange, yrange, width, height, plot);
-
-                        // unselect the data from the table.
-                        d3.selectAll('tr').nodes().forEach((val) => {
-                            if (val.className) {
-                                d3.select(`.${val.className}`)
-                                    .selectAll('td')
-                                    .style('color', '#cd5686')
-                                    .style('background', 'white');
-                                d3.select(`.${val.className}`)
-                                    .selectAll('a')
-                                    .style('color', '#5974c4')
-                                    .style('background', 'white');
-                            }
-                        });
-
-                        d3.select('#volRawToggle').attr('fill', rawToggle);
-                        d3.select('#volNormToggle').attr('fill', normToggle);
-                    });
-            });
         }
     }
 
