@@ -37,11 +37,6 @@ class TumorGrowthCurve extends React.Component {
         }
     }
 
-    // unity normalization
-    norm(value, first) {
-        return (value / first) - 1;
-    }
-
     // This is the main function to create Growth curves.
     makeTumorGrowthCurve(data, plotId, node) {
         // this function will return all the unqiue time points for control and treatment.
@@ -99,7 +94,7 @@ class TumorGrowthCurve extends React.Component {
         }
 
         // plot the mean of each experiment type (control, treatment)
-        function plotMeans(data, svg, xrange, yrange) {
+        function plotMeans(data, svg, xrange, yrange, isNormal) {
             // calling getUnionOfTimepoints to get all the timepoints.
             const timeUnion = getUnionOfTimepoints(data);
             let expTypes = [];
@@ -123,7 +118,7 @@ class TumorGrowthCurve extends React.Component {
             data.forEach((val) => {
                 let z = 0;
                 if (val.exp_type === 'control') {
-                    const oldVolume = val.pdx_points[0].volumes;
+                    const oldVolume = isNormal ? val.pdx_points[0].volume_normals : val.pdx_points[0].volumes;
                     const oldTime = val.pdx_points[0].times;
                     timeUnion[0].forEach((time) => {
                         if ((time === oldTime[z]) && !newVolume[time]) {
@@ -387,7 +382,8 @@ class TumorGrowthCurve extends React.Component {
                         tableSelect(d, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
                     }
                 });
-            plotMeans(data, graph, xrange, yrange);
+            // calling plotMeans to plot the mean function.
+            plotMeans(data, graph, xrange, yrange, norm);
         }
 
         // toggle to show each model
