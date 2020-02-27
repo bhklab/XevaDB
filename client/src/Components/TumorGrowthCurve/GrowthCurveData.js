@@ -45,9 +45,6 @@ class GrowthCurveData extends React.Component {
     dataParse(data, batchSelect) {
         const dataFormatted = [];
         const batches = [];
-        String.prototype.replaceAll = String.prototype.replaceAll || function (s, r) {
-            return this.replace(new RegExp(s, 'g'), r);
-        };
 
         // loop throuth the data and set the values in the variable.
         for (let i = 0; i < data.length; i++) {
@@ -65,7 +62,7 @@ class GrowthCurveData extends React.Component {
                             volume_normals: [parseFloat(data[i].volume_normal)],
                         }],
                         pdx_json: [{
-                            model: data[i].model_id.replace(/\./g, ' ').replaceAll(' ', '-'),
+                            model: data[i].model_id.replace(/\./g, ' ').replace(/\s/g, '-'),
                             batch: data[i].patient_id,
                             exp_type: data[i].type,
                             time: parseInt(data[i].time),
