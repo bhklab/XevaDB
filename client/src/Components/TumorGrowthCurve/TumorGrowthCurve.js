@@ -93,12 +93,71 @@ class TumorGrowthCurve extends React.Component {
             };
         }
 
+        // plotting the error bars.
+        function plotErrorBars(exp, times, newVolume, meanVolume, svg, xrange, yrange, yStandardError) {
+            const errorBars = svg.append('g')
+                .attr('id', 'errorBars');
+
+            const errorMidBar = errorBars.selectAll('line.error')
+                .data(times);
+
+            errorMidBar.enter()
+                .append('line')
+                .attr('class', 'error')
+                .attr('stroke', () => {
+                    if (exp === 'control') {
+                        return '#cd5686';
+                    }
+                    return '#5974c4';
+                })
+                .attr('stroke-width', 2)
+                .attr('x1', (d) => xrange(d))
+                .attr('x2', (d) => xrange(d))
+                .attr('y1', (d, i) => yrange(meanVolume[i] + yStandardError[i]))
+                .attr('y2', (d, i) => yrange(meanVolume[i] - yStandardError[i]));
+
+            const errorTopBar = errorBars.selectAll('line.errorTop')
+                .data(times);
+
+            errorTopBar.enter()
+                .append('line')
+                .attr('class', 'errorTop')
+                .attr('stroke', () => {
+                    if (exp === 'control') {
+                        return '#cd5686';
+                    }
+                    return '#5974c4';
+                })
+                .attr('stroke-width', 2)
+                .attr('x1', (d) => xrange(d) - 4)
+                .attr('x2', (d) => xrange(d) + 4)
+                .attr('y1', (d, i) => yrange(meanVolume[i] + yStandardError[i]))
+                .attr('y2', (d, i) => yrange(meanVolume[i] + yStandardError[i]));
+
+            const errorBotBar = errorBars.selectAll('line.errorBot')
+                .data(times);
+
+            errorBotBar.enter()
+                .append('line')
+                .attr('class', 'errorBot')
+                .attr('stroke', () => {
+                    if (exp === 'control') {
+                        return '#cd5686';
+                    }
+                    return '#5974c4';
+                })
+                .attr('stroke-width', 2)
+                .attr('x1', (d) => xrange(d) - 4)
+                .attr('x2', (d) => xrange(d) + 4)
+                .attr('y1', (d, i) => yrange(meanVolume[i] - yStandardError[i]))
+                .attr('y2', (d, i) => yrange(meanVolume[i] - yStandardError[i]));
+        }
+
         // plot the mean of each experiment type (control, treatment)
         function plotMeans(data, svg, xrange, yrange, isNormal) {
             // calling getUnionOfTimepoints to get all the timepoints.
             const timeUnion = getUnionOfTimepoints(data);
             let expTypes = [];
-            let ypointArr = []; // un-yranged
             const { batch } = data[0]; // TODO: fix the batch, it's the first one rn
 
             // if there is no control
@@ -109,54 +168,83 @@ class TumorGrowthCurve extends React.Component {
                 expTypes = ['control'];
                 timeUnion.pop();
             } else {
-                expTypes = ['control', 'treatment'];
+                expTypes = ['control'];
             }
 
             // object of the volume with number of occurences(control/treatment).
-            const newVolume = {};
+            const newVolumeControl = {};
+            const newVolumeTreatment = {};
 
             data.forEach((val) => {
                 let z = 0;
                 if (val.exp_type === 'control') {
                     const oldVolume = isNormal ? val.pdx_points[0].volume_normals : val.pdx_points[0].volumes;
                     const oldTime = val.pdx_points[0].times;
+                    const newVolume = newVolumeControl;
                     timeUnion[0].forEach((time) => {
                         if ((time === oldTime[z]) && !newVolume[time]) {
                             newVolume[time] = {};
-                            newVolume[time].volume = oldVolume[z];
+                            newVolume[time].totalVolume = oldVolume[z];
                             newVolume[time].number = 1;
+                            newVolume[time].minVol = oldVolume[z];
+                            newVolume[time].maxVol = oldVolume[z];
+                            newVolume[time].volume = [];
+                            newVolume[time].volume.push(oldVolume[z]);
                             z++;
                         } else if ((time === oldTime[z]) && newVolume[time]) {
-                            newVolume[time].volume += oldVolume[z];
+                            newVolume[time].totalVolume += oldVolume[z];
                             newVolume[time].number += 1;
+                            newVolume[time].minVol = newVolume[time].minVol > oldVolume[z] ? oldVolume[z] : newVolume[time].minVol;
+                            newVolume[time].maxVol = newVolume[time].maxVol < oldVolume[z] ? oldVolume[z] : newVolume[time].maxVol;
+                            newVolume[time].volume.push(oldVolume[z]);
                             z++;
                         } else if (oldTime[z]) {
                             const current = oldVolume[z - 1] + ((oldVolume[z] - oldVolume[z - 1]) / (oldTime[z] - oldTime[z - 1])) * (time - oldTime[z - 1]);
                             if (!newVolume[time]) {
                                 newVolume[time] = {};
-                                newVolume[time].volume = 0;
+                                newVolume[time].totalVolume = 0;
+                                newVolume[time].minVol = 10000;
+                                newVolume[time].maxVol = 0;
+                                newVolume[time].volume = [];
                             }
-                            newVolume[time].volume += current;
+                            newVolume[time].totalVolume += current;
                             newVolume[time].number = newVolume[time].number ? newVolume[time].number + 1 : 1;
+                            newVolume[time].minVol = newVolume[time].minVol > current ? current : newVolume[time].minVol;
+                            newVolume[time].maxVol = newVolume[time].maxVol < current ? current : newVolume[time].maxVol;
+                            newVolume[time].volume.push(current);
                         }
                     });
                 }
             });
 
-            // mean volume.
-            ypointArr = Object.keys(newVolume).map((element) => newVolume[element].volume / newVolume[element].number);
+            console.log(newVolumeControl);
 
+
+            // median volume.
+            // meanVolume = Object.keys(newVolume).map((element) => (d3.deviation(newVolume[element].volume) / (newVolume[element].volume.length)));
 
             for (let n = 0; n < expTypes.length; n++) {
-                // const exp = expTypes[n];
+                const exp = expTypes[n];
                 const times = timeUnion[n];
+                const newVolume = expTypes[n] === 'control' ? newVolumeControl : newVolumeTreatment;
+                // mean volume.
+                const meanVolume = Object.keys(newVolume).map((element) => d3.mean(newVolume[element].volume));
+                // calculating standard error.
+                const yStandardError = Object.keys(newVolume).map((element) => {
+                    const deviation = d3.deviation(newVolume[element].volume);
+                    const error = Math.sqrt(newVolume[element].volume.length - 1);
+                    return deviation / error;
+                });
+
+                // plot error bars
+                plotErrorBars(exp, times, newVolume, meanVolume, svg, xrange, yrange, yStandardError);
 
                 // mean svg
                 const meanSvg = svg.append('g')
                     .attr('id', `mean_${expTypes[n]}`);
 
                 const meanDots = meanSvg.selectAll('.mean-dot')
-                    .data(ypointArr)
+                    .data(meanVolume)
                     .enter();
 
                 meanDots.append('circle')
@@ -170,21 +258,21 @@ class TumorGrowthCurve extends React.Component {
                         return '#5974c4';
                     })
                     .attr('cx', (d, i) => xrange(times[i]))
-                    .attr('cy', (d, i) => yrange(ypointArr[i]));
+                    .attr('cy', (d, i) => yrange(meanVolume[i]));
 
                 const meanPath = meanSvg.selectAll('.mean-path')
-                    .data(ypointArr)
+                    .data(meanVolume)
                     .enter();
 
 
                 const linepath = d3.line()
                     .x((d, i) => xrange(timeUnion[n][i]))
-                    .y((d, i) => yrange(ypointArr[i]));
+                    .y((d, i) => yrange(meanVolume[i]));
 
                 meanPath.append('path')
                     .attr('id', `mean-path-${expTypes[n]}-${batch}`)
                     .attr('class', `mean-path ${batch}`)
-                    .attr('d', linepath(ypointArr))
+                    .attr('d', linepath(meanVolume))
                     .attr('fill', 'none')
                     .style('opacity', 0.2)
                     .attr('stroke', () => {
@@ -196,12 +284,11 @@ class TumorGrowthCurve extends React.Component {
                     .attr('stroke-width', 2);
 
                 // reset y arrs
-                ypointArr = [];
+                meanVolume = [];
             }
         }
 
         function plotBatch(data, graph, xrange, yrange, width, height, norm) {
-            // console.log(data);
             // to replace all the periods with dashes because dots interfere with classes
             const models = graph.selectAll('g.model')
                 .data(data)
@@ -537,7 +624,7 @@ class TumorGrowthCurve extends React.Component {
                 .append('svg')
                 .attr('id', `pdx${plotId}`)
                 .attr('xmlns', 'http://www.w3.org/2000/svg')
-                .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink') // for downloading
+                .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink')
                 .attr('width', width + margin.left + margin.right)
                 .attr('height', height + margin.top + margin.bottom)
                 .append('g')
@@ -637,82 +724,6 @@ class TumorGrowthCurve extends React.Component {
                 width, height, minmax.maxVolume, minmax.maxVolNorm, plotId, minmax.minVolNorm);
         }
 
-
-        // takes in an array of arrays and an array of means,
-        // and returns array of std devs
-        function stdDev(values, means) {
-            const stdDevs = [];
-            for (let i = 0; i < values.length; i++) {
-                let temp = 0;
-                for (let j = 0; j < values[i].length; j++) {
-                    temp += Math.pow(values[i][j] - means[i], 2);
-                }
-                stdDevs.push(Math.sqrt(temp) / values[i].length);
-            }
-            return stdDevs;
-        }
-
-        function plotErrorBars(data, exp, times, allYpoint, ypointArr, svg, xrange, yrange) {
-            const stdDevs = stdDev(allYpoint, ypointArr);
-
-            const errorBars = svg.append('g')
-                .attr('id', 'errorBars');
-
-            const errorMidBar = errorBars.selectAll('line.error')
-                .data(stdDevs);
-
-            errorMidBar.enter()
-                .append('line')
-                .attr('class', 'error')
-                .attr('stroke', () => {
-                    if (exp === 'control') {
-                        return '#3b9dd6';
-                    }
-                    return '#e0913c';
-                })
-                .attr('stroke-width', 2)
-                .attr('x1', (d, i) => xrange(times[i]))
-                .attr('x2', (d, i) => xrange(times[i]))
-                .attr('y1', (d, i) => yrange(ypointArr[i] + stdDevs[i]))
-                .attr('y2', (d, i) => yrange(ypointArr[i] - stdDevs[i]));
-
-            const errorTopBar = errorBars.selectAll('line.errorTop')
-                .data(stdDevs);
-
-            errorTopBar.enter()
-                .append('line')
-                .attr('class', 'errorTop')
-                .attr('stroke', () => {
-                    if (exp === 'control') {
-                        return '#3b9dd6';
-                    }
-                    return '#e0913c';
-                })
-                .attr('stroke-width', 2)
-                .attr('x1', (d, i) => xrange(times[i]) - 3)
-                .attr('x2', (d, i) => xrange(times[i]) + 3)
-                .attr('y1', (d, i) => yrange(ypointArr[i] + stdDevs[i]))
-                .attr('y2', (d, i) => yrange(ypointArr[i] + stdDevs[i]));
-
-            const errorBotBar = errorBars.selectAll('line.errorBot')
-                .data(stdDevs);
-
-            errorBotBar.enter()
-                .append('line')
-                .attr('class', 'errorBot')
-                .attr('stroke', () => {
-                    if (exp === 'control') {
-                        return '#3b9dd6';
-                    }
-                    return '#e0913c';
-                })
-                .attr('stroke-width', 2)
-                .attr('x1', (d, i) => xrange(times[i]) - 3)
-                .attr('x2', (d, i) => xrange(times[i]) + 3)
-                .attr('y1', (d, i) => yrange(ypointArr[i] - stdDevs[i]))
-                .attr('y2', (d, i) => yrange(ypointArr[i] - stdDevs[i]));
-        }
-
         // calling tumorCurve function passing the data, PlotID and node reference.
         tumorCurve(data, plotId, node);
     }
@@ -724,6 +735,7 @@ class TumorGrowthCurve extends React.Component {
                 <TopNav />
                 <GlobalStyles />
                 <div className="wrapper" style={{ margin: 'auto', fontSize: '16px' }}>
+
                     <div className="curve-wrapper" style={{ marginTop: '100px' }}>
                         <h1>
                             Drug ID =
@@ -734,14 +746,12 @@ class TumorGrowthCurve extends React.Component {
                             {' '}
                             <span style={{ color: '#cd5686' }}>{patientParam}</span>
                         </h1>
-
                         <svg ref={(node) => this.node = node} width={1300} height={620} />
-
                         <div className="no-graph">There is no data for this graph.</div>
-
-
                     </div>
+
                     <StatTable patientParam={patientParam} drugParam={drugParam} />
+
                     <div className="curve-wrapper" style={{ marginTop: '20px', padding: '10px 0px' }}>
                         <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
                     </div>
