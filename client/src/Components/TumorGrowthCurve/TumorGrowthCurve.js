@@ -155,10 +155,8 @@ class TumorGrowthCurve extends React.Component {
 
         // plot the mean of each experiment type (control, treatment)
         function plotMeans(data, svg, xrange, yrange, isNormal) {
-            console.log(data);
             // calling getUnionOfTimepoints to get all the timepoints.
             const timeUnion = getUnionOfTimepoints(data);
-            console.log(timeUnion);
             let expTypes = [];
             const { batch } = data[0]; // TODO: fix the batch, it's the first one rn
 
