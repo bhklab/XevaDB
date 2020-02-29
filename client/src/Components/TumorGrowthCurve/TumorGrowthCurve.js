@@ -155,8 +155,10 @@ class TumorGrowthCurve extends React.Component {
 
         // plot the mean of each experiment type (control, treatment)
         function plotMeans(data, svg, xrange, yrange, isNormal) {
+            console.log(data);
             // calling getUnionOfTimepoints to get all the timepoints.
             const timeUnion = getUnionOfTimepoints(data);
+            console.log(timeUnion);
             let expTypes = [];
             const { batch } = data[0]; // TODO: fix the batch, it's the first one rn
 
@@ -168,7 +170,7 @@ class TumorGrowthCurve extends React.Component {
                 expTypes = ['control'];
                 timeUnion.pop();
             } else {
-                expTypes = ['control'];
+                expTypes = ['control', 'treatment'];
             }
 
             // object of the volume with number of occurences(control/treatment).
@@ -177,63 +179,69 @@ class TumorGrowthCurve extends React.Component {
 
             data.forEach((val) => {
                 let z = 0;
-                if (val.exp_type === 'control') {
-                    const oldVolume = isNormal ? val.pdx_points[0].volume_normals : val.pdx_points[0].volumes;
-                    const oldTime = val.pdx_points[0].times;
-                    const newVolume = newVolumeControl;
-                    timeUnion[0].forEach((time) => {
-                        if ((time === oldTime[z]) && !newVolume[time]) {
+                const oldVolume = isNormal ? val.pdx_points[0].volume_normals : val.pdx_points[0].volumes;
+                const oldTime = val.pdx_points[0].times;
+                const newVolume = val.exp_type === 'control' ? newVolumeControl : newVolumeTreatment;
+                const timeUnionData = val.exp_type === 'control' ? timeUnion[0] : timeUnion[1];
+                timeUnionData.forEach((time) => {
+                    if ((time === oldTime[z]) && !newVolume[time]) {
+                        newVolume[time] = {};
+                        newVolume[time].totalVolume = oldVolume[z];
+                        newVolume[time].number = 1;
+                        newVolume[time].minVol = oldVolume[z];
+                        newVolume[time].maxVol = oldVolume[z];
+                        newVolume[time].volume = [];
+                        newVolume[time].volume.push(oldVolume[z]);
+                        z++;
+                    } else if ((time === oldTime[z]) && newVolume[time]) {
+                        newVolume[time].totalVolume += oldVolume[z];
+                        newVolume[time].number += 1;
+                        newVolume[time].minVol = newVolume[time].minVol > oldVolume[z] ? oldVolume[z] : newVolume[time].minVol;
+                        newVolume[time].maxVol = newVolume[time].maxVol < oldVolume[z] ? oldVolume[z] : newVolume[time].maxVol;
+                        newVolume[time].volume.push(oldVolume[z]);
+                        z++;
+                    } else if (oldTime[z]) {
+                        const current = oldVolume[z - 1] + ((oldVolume[z] - oldVolume[z - 1]) / (oldTime[z] - oldTime[z - 1])) * (time - oldTime[z - 1]);
+                        if (!newVolume[time]) {
                             newVolume[time] = {};
-                            newVolume[time].totalVolume = oldVolume[z];
-                            newVolume[time].number = 1;
-                            newVolume[time].minVol = oldVolume[z];
-                            newVolume[time].maxVol = oldVolume[z];
+                            newVolume[time].totalVolume = 0;
+                            newVolume[time].minVol = 10000;
+                            newVolume[time].maxVol = 0;
                             newVolume[time].volume = [];
-                            newVolume[time].volume.push(oldVolume[z]);
-                            z++;
-                        } else if ((time === oldTime[z]) && newVolume[time]) {
-                            newVolume[time].totalVolume += oldVolume[z];
-                            newVolume[time].number += 1;
-                            newVolume[time].minVol = newVolume[time].minVol > oldVolume[z] ? oldVolume[z] : newVolume[time].minVol;
-                            newVolume[time].maxVol = newVolume[time].maxVol < oldVolume[z] ? oldVolume[z] : newVolume[time].maxVol;
-                            newVolume[time].volume.push(oldVolume[z]);
-                            z++;
-                        } else if (oldTime[z]) {
-                            const current = oldVolume[z - 1] + ((oldVolume[z] - oldVolume[z - 1]) / (oldTime[z] - oldTime[z - 1])) * (time - oldTime[z - 1]);
-                            if (!newVolume[time]) {
-                                newVolume[time] = {};
-                                newVolume[time].totalVolume = 0;
-                                newVolume[time].minVol = 10000;
-                                newVolume[time].maxVol = 0;
-                                newVolume[time].volume = [];
-                            }
-                            newVolume[time].totalVolume += current;
-                            newVolume[time].number = newVolume[time].number ? newVolume[time].number + 1 : 1;
-                            newVolume[time].minVol = newVolume[time].minVol > current ? current : newVolume[time].minVol;
-                            newVolume[time].maxVol = newVolume[time].maxVol < current ? current : newVolume[time].maxVol;
-                            newVolume[time].volume.push(current);
                         }
-                    });
-                }
+                        newVolume[time].totalVolume += current;
+                        newVolume[time].number = newVolume[time].number ? newVolume[time].number + 1 : 1;
+                        newVolume[time].minVol = newVolume[time].minVol > current ? current : newVolume[time].minVol;
+                        newVolume[time].maxVol = newVolume[time].maxVol < current ? current : newVolume[time].maxVol;
+                        newVolume[time].volume.push(current);
+                    }
+                });
             });
-
-            console.log(newVolumeControl);
-
 
             // median volume.
             // meanVolume = Object.keys(newVolume).map((element) => (d3.deviation(newVolume[element].volume) / (newVolume[element].volume.length)));
 
             for (let n = 0; n < expTypes.length; n++) {
                 const exp = expTypes[n];
-                const times = timeUnion[n];
+                // assigining the volume based on the control or treatment.
                 const newVolume = expTypes[n] === 'control' ? newVolumeControl : newVolumeTreatment;
-                // mean volume.
-                const meanVolume = Object.keys(newVolume).map((element) => d3.mean(newVolume[element].volume));
-                // calculating standard error.
-                const yStandardError = Object.keys(newVolume).map((element) => {
-                    const deviation = d3.deviation(newVolume[element].volume);
-                    const error = Math.sqrt(newVolume[element].volume.length - 1);
-                    return deviation / error;
+                // const times = timeUnion[n];
+
+                // mean volume, standard error amd time points where there are more than one volume points.
+                let meanVolume = [];
+                let yStandardError = [];
+                let times = [];
+                Object.keys(newVolume).forEach((element) => {
+                    if (newVolume[element].volume.length > 1) {
+                        // volume.
+                        meanVolume.push(d3.mean(newVolume[element].volume));
+                        // standard error.
+                        const deviation = d3.deviation(newVolume[element].volume);
+                        const error = Math.sqrt(newVolume[element].volume.length - 1);
+                        yStandardError.push(deviation / error);
+                        // time.
+                        times.push(element);
+                    }
                 });
 
                 // plot error bars
@@ -285,6 +293,8 @@ class TumorGrowthCurve extends React.Component {
 
                 // reset y arrs
                 meanVolume = [];
+                yStandardError = [];
+                times = [];
             }
         }
 
