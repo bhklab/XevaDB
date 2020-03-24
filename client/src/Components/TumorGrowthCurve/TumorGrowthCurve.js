@@ -482,7 +482,7 @@ class TumorGrowthCurve extends React.Component {
         }
 
         // toggle to show each model
-        function volumeToggle(data, svg, xrange, yrange, yAxisAdd, yAxis, width, height, maxVolume, maxVolNorm, plotId, minVolNorm) {
+        function volumeToggle(data, svg, xrange, width, height, maxVolume, maxVolNorm, minVolNorm) {
             const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText'];
 
             // to create the rectangle and
@@ -610,10 +610,7 @@ class TumorGrowthCurve extends React.Component {
         }
 
 
-        function tumorCurve(data, plotId, node) {
-            // calling function to grab the min max values.
-            const minmax = calculateMinMax(data);
-
+        function tumorCurve(data, plotId, node, minmax) {
             // expression types.
             const expTypes = ['control', 'treatment'];
 
@@ -726,14 +723,23 @@ class TumorGrowthCurve extends React.Component {
             const graph = svg.append('g')
                 .attr('id', 'curves');
 
-            // plot each model
-            plotBatch(data, graph, xrange, yrange, width, height, false);
-            volumeToggle(data, svg, xrange, yrange, yAxis, yAxisAdd,
-                width, height, minmax.maxVolume, minmax.maxVolNorm, plotId, minmax.minVolNorm);
+            // plotBatch(data, graph, xrange, yrange, width, height, false);
+            // volumeToggle(data, svg, xrange, width, height, minmax.maxVolume, minmax.maxVolNorm, minmax.minVolNorm);
+
+            return {
+                graph, xrange, yrange, width, height, svg,
+            };
         }
 
+
+        // calling function to grab the min max values.
+        const minmax = calculateMinMax(data);
         // calling tumorCurve function passing the data, PlotID and node reference.
-        tumorCurve(data, plotId, node);
+        const curve = tumorCurve(data, plotId, node, minmax);
+        // plot each model
+        plotBatch(data, curve.graph, curve.xrange, curve.yrange, curve.width, curve.height, false);
+        // toggle legend buttons.
+        volumeToggle(data, curve.svg, curve.xrange, curve.width, curve.height, minmax.maxVolume, minmax.maxVolNorm, minmax.minVolNorm);
     }
 
     render() {
