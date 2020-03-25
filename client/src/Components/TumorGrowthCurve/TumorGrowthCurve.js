@@ -93,6 +93,70 @@ class TumorGrowthCurve extends React.Component {
             };
         }
 
+        // to calculate new mean volume object.
+        function volumeObject(i, oldVolume, oldTime, volume, timeUnionData) {
+            const newVolume = volume;
+            let z = i;
+            timeUnionData.forEach((time) => {
+                if ((time === oldTime[z]) && !newVolume[time]) {
+                    newVolume[time] = {};
+                    newVolume[time].totalVolume = oldVolume[z];
+                    newVolume[time].number = 1;
+                    newVolume[time].minVol = oldVolume[z];
+                    newVolume[time].maxVol = oldVolume[z];
+                    newVolume[time].volume = [];
+                    newVolume[time].volume.push(oldVolume[z]);
+                    z++;
+                } else if ((time === oldTime[z]) && newVolume[time]) {
+                    newVolume[time].totalVolume += oldVolume[z];
+                    newVolume[time].number += 1;
+                    newVolume[time].minVol = newVolume[time].minVol > oldVolume[z] ? oldVolume[z] : newVolume[time].minVol;
+                    newVolume[time].maxVol = newVolume[time].maxVol < oldVolume[z] ? oldVolume[z] : newVolume[time].maxVol;
+                    newVolume[time].volume.push(oldVolume[z]);
+                    z++;
+                } else if (oldTime[z]) {
+                    const current = oldVolume[z - 1] + ((oldVolume[z] - oldVolume[z - 1]) / (oldTime[z] - oldTime[z - 1])) * (time - oldTime[z - 1]);
+                    if (!newVolume[time]) {
+                        newVolume[time] = {};
+                        newVolume[time].totalVolume = 0;
+                        newVolume[time].minVol = 10000;
+                        newVolume[time].maxVol = 0;
+                        newVolume[time].volume = [];
+                    }
+                    newVolume[time].totalVolume += current;
+                    newVolume[time].number = newVolume[time].number ? newVolume[time].number + 1 : 1;
+                    newVolume[time].minVol = newVolume[time].minVol > current ? current : newVolume[time].minVol;
+                    newVolume[time].maxVol = newVolume[time].maxVol < current ? current : newVolume[time].maxVol;
+                    newVolume[time].volume.push(current);
+                }
+            });
+        }
+
+        // to calculate mean volume, standard error.
+        function meanVolumeError(newVolume) {
+            const meanVolume = [];
+            const yStandardError = [];
+            const times = [];
+            Object.keys(newVolume).forEach((element) => {
+                if (newVolume[element].volume.length > 1) {
+                    // volume.
+                    meanVolume.push(d3.mean(newVolume[element].volume));
+                    // standard error.
+                    const deviation = d3.deviation(newVolume[element].volume);
+                    const error = Math.sqrt(newVolume[element].volume.length - 1);
+                    yStandardError.push(deviation / error);
+                    // time.
+                    times.push(element);
+                }
+            });
+
+            return [
+                meanVolume,
+                yStandardError,
+                times,
+            ];
+        }
+
         // plotting the error bars.
         function plotErrorBars(exp, times, newVolume, meanVolume, svg, xrange, yrange, yStandardError) {
             const errorBars = svg.append('g')
@@ -154,7 +218,7 @@ class TumorGrowthCurve extends React.Component {
         }
 
         // plot the mean of each experiment type (control, treatment)
-        function plotMeans(data, svg, xrange, yrange, isNormal) {
+        function plotMeans(data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) {
             // calling getUnionOfTimepoints to get all the timepoints.
             const timeUnion = getUnionOfTimepoints(data);
             let expTypes = [];
@@ -176,44 +240,13 @@ class TumorGrowthCurve extends React.Component {
             const newVolumeTreatment = {};
 
             data.forEach((val) => {
-                let z = 0;
+                const z = 0;
                 const oldVolume = isNormal ? val.pdx_points[0].volume_normals : val.pdx_points[0].volumes;
                 const oldTime = val.pdx_points[0].times;
                 const newVolume = val.exp_type === 'control' ? newVolumeControl : newVolumeTreatment;
                 const timeUnionData = val.exp_type === 'control' ? timeUnion[0] : timeUnion[1];
-                timeUnionData.forEach((time) => {
-                    if ((time === oldTime[z]) && !newVolume[time]) {
-                        newVolume[time] = {};
-                        newVolume[time].totalVolume = oldVolume[z];
-                        newVolume[time].number = 1;
-                        newVolume[time].minVol = oldVolume[z];
-                        newVolume[time].maxVol = oldVolume[z];
-                        newVolume[time].volume = [];
-                        newVolume[time].volume.push(oldVolume[z]);
-                        z++;
-                    } else if ((time === oldTime[z]) && newVolume[time]) {
-                        newVolume[time].totalVolume += oldVolume[z];
-                        newVolume[time].number += 1;
-                        newVolume[time].minVol = newVolume[time].minVol > oldVolume[z] ? oldVolume[z] : newVolume[time].minVol;
-                        newVolume[time].maxVol = newVolume[time].maxVol < oldVolume[z] ? oldVolume[z] : newVolume[time].maxVol;
-                        newVolume[time].volume.push(oldVolume[z]);
-                        z++;
-                    } else if (oldTime[z]) {
-                        const current = oldVolume[z - 1] + ((oldVolume[z] - oldVolume[z - 1]) / (oldTime[z] - oldTime[z - 1])) * (time - oldTime[z - 1]);
-                        if (!newVolume[time]) {
-                            newVolume[time] = {};
-                            newVolume[time].totalVolume = 0;
-                            newVolume[time].minVol = 10000;
-                            newVolume[time].maxVol = 0;
-                            newVolume[time].volume = [];
-                        }
-                        newVolume[time].totalVolume += current;
-                        newVolume[time].number = newVolume[time].number ? newVolume[time].number + 1 : 1;
-                        newVolume[time].minVol = newVolume[time].minVol > current ? current : newVolume[time].minVol;
-                        newVolume[time].maxVol = newVolume[time].maxVol < current ? current : newVolume[time].maxVol;
-                        newVolume[time].volume.push(current);
-                    }
-                });
+                // calling function to create a new volume object.
+                volumeObject(z, oldVolume, oldTime, newVolume, timeUnionData);
             });
 
             // median volume.
@@ -223,80 +256,65 @@ class TumorGrowthCurve extends React.Component {
                 const exp = expTypes[n];
                 // assigining the volume based on the control or treatment.
                 const newVolume = expTypes[n] === 'control' ? newVolumeControl : newVolumeTreatment;
-                // const times = timeUnion[n];
 
-                // mean volume, standard error amd time points where there are more than one volume points.
-                let meanVolume = [];
-                let yStandardError = [];
-                let times = [];
-                Object.keys(newVolume).forEach((element) => {
-                    if (newVolume[element].volume.length > 1) {
-                        // volume.
-                        meanVolume.push(d3.mean(newVolume[element].volume));
-                        // standard error.
-                        const deviation = d3.deviation(newVolume[element].volume);
-                        const error = Math.sqrt(newVolume[element].volume.length - 1);
-                        yStandardError.push(deviation / error);
-                        // time.
-                        times.push(element);
-                    }
-                });
+                // calulating mean volume, standard error and times.
+                const [meanVolume, yStandardError, times] = meanVolumeError(newVolume);
+
+                // plot mean charts.
+                if (isPlotMean) {
+                    // mean svg
+                    const meanSvg = svg.append('g')
+                        .attr('id', `mean_${expTypes[n]}`);
+
+                    const meanDots = meanSvg.selectAll('.mean-dot')
+                        .data(meanVolume)
+                        .enter();
+
+                    meanDots.append('circle')
+                        .attr('id', `mean-dot-${expTypes[n]}-${batch}`)
+                        .attr('class', `mean-dot ${batch}`)
+                        .attr('r', 4)
+                        .attr('fill', () => {
+                            if (expTypes[n] === 'control') {
+                                return '#cd5686';
+                            }
+                            return '#5974c4';
+                        })
+                        .attr('cx', (d, i) => xrange(times[i]))
+                        .attr('cy', (d, i) => yrange(meanVolume[i]));
+
+                    const meanPath = meanSvg.selectAll('.mean-path')
+                        .data(meanVolume)
+                        .enter();
+
+
+                    const linepath = d3.line()
+                        .x((d, i) => xrange(timeUnion[n][i]))
+                        .y((d, i) => yrange(meanVolume[i]));
+
+                    meanPath.append('path')
+                        .attr('id', `mean-path-${expTypes[n]}-${batch}`)
+                        .attr('class', `mean-path ${batch}`)
+                        .attr('d', linepath(meanVolume))
+                        .attr('fill', 'none')
+                        .style('opacity', 0.2)
+                        .attr('stroke', () => {
+                            if (expTypes[n] === 'control') {
+                                return '#cd5686';
+                            }
+                            return '#5974c4';
+                        })
+                        .attr('stroke-width', 2);
+                }
 
                 // plot error bars
-                plotErrorBars(exp, times, newVolume, meanVolume, svg, xrange, yrange, yStandardError);
-
-                // mean svg
-                const meanSvg = svg.append('g')
-                    .attr('id', `mean_${expTypes[n]}`);
-
-                const meanDots = meanSvg.selectAll('.mean-dot')
-                    .data(meanVolume)
-                    .enter();
-
-                meanDots.append('circle')
-                    .attr('id', `mean-dot-${expTypes[n]}-${batch}`)
-                    .attr('class', `mean-dot ${batch}`)
-                    .attr('r', 4)
-                    .attr('fill', () => {
-                        if (expTypes[n] === 'control') {
-                            return '#cd5686';
-                        }
-                        return '#5974c4';
-                    })
-                    .attr('cx', (d, i) => xrange(times[i]))
-                    .attr('cy', (d, i) => yrange(meanVolume[i]));
-
-                const meanPath = meanSvg.selectAll('.mean-path')
-                    .data(meanVolume)
-                    .enter();
-
-
-                const linepath = d3.line()
-                    .x((d, i) => xrange(timeUnion[n][i]))
-                    .y((d, i) => yrange(meanVolume[i]));
-
-                meanPath.append('path')
-                    .attr('id', `mean-path-${expTypes[n]}-${batch}`)
-                    .attr('class', `mean-path ${batch}`)
-                    .attr('d', linepath(meanVolume))
-                    .attr('fill', 'none')
-                    .style('opacity', 0.2)
-                    .attr('stroke', () => {
-                        if (expTypes[n] === 'control') {
-                            return '#cd5686';
-                        }
-                        return '#5974c4';
-                    })
-                    .attr('stroke-width', 2);
-
-                // reset y arrs
-                meanVolume = [];
-                yStandardError = [];
-                times = [];
+                if (isErrorBar) {
+                    plotErrorBars(exp, times, newVolume, meanVolume, svg, xrange, yrange, yStandardError);
+                }
             }
         }
 
-        function plotBatch(data, graph, xrange, yrange, width, height, norm) {
+        function plotBatch(data, graph, xrange, yrange, norm) {
             // to replace all the periods with dashes because dots interfere with classes
             const models = graph.selectAll('g.model')
                 .data(data)
@@ -339,7 +357,7 @@ class TumorGrowthCurve extends React.Component {
                     }
                     return '#5974c4';
                 })
-                .style('opacity', 0.6)
+                .style('opacity', 0.7)
                 .attr('cx', (d) => xrange(d.time))
                 .attr('cy', (d) => {
                     if (norm) {
@@ -394,9 +412,8 @@ class TumorGrowthCurve extends React.Component {
                     .style('background', aback);
             };
 
-
             // add line
-            createLine(3, 0.6)
+            createLine(3, 0.7)
                 .attr('stroke-dasharray', ('3', '3'));
 
             // create a white line to let user hover over with opacity 0 and event listeners.
@@ -443,7 +460,7 @@ class TumorGrowthCurve extends React.Component {
 
                     // changing attributes back to normal of the line on mouseout.
                     if (!(d3.select(`#path-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}`).classed('selected'))) {
-                        tableSelect(d, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
+                        tableSelect(d, 3, 0.7, '#cd5686', 'white', '#5974c4', 'white');
                     }
                 })
                 .on('click', (d) => {
@@ -456,11 +473,11 @@ class TumorGrowthCurve extends React.Component {
                         d3.selectAll('path').nodes().forEach((val) => {
                             if (val.attributes[5] && val.style.opacity !== '0' && val.classList.contains('selected')) {
                                 val.attributes[5].value = 3;
-                                val.style.opacity = 0.6;
+                                val.style.opacity = 0.7;
                                 const previousSelection = d3.select(`.${val.classList[0]}`);
                                 const model = previousSelection.data()[0];
                                 previousSelection.classed('selected', false);
-                                tableSelect(model, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
+                                tableSelect(model, 3, 0.7, '#cd5686', 'white', '#5974c4', 'white');
                                 if (val.classList[0] === selection.attr('class')) {
                                     selectedCurve = true;
                                 }
@@ -474,11 +491,11 @@ class TumorGrowthCurve extends React.Component {
                         tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
                     } else if (selection.classed('selected')) {
                         selection.classed('selected', false);
-                        tableSelect(d, 3, 0.6, '#cd5686', 'white', '#5974c4', 'white');
+                        tableSelect(d, 3, 0.7, '#cd5686', 'white', '#5974c4', 'white');
                     }
                 });
             // calling plotMeans to plot the mean function.
-            plotMeans(data, graph, xrange, yrange, norm);
+            // plotMeans(data, graph, xrange, yrange, norm, false, false);
         }
 
         // toggle to show each model
@@ -587,7 +604,7 @@ class TumorGrowthCurve extends React.Component {
                             .attr('id', 'curves');
 
                         // plot the toggle curve.
-                        plotBatch(data, graph, xrange, yrange, width, height, plot);
+                        plotBatch(data, graph, xrange, yrange, plot);
 
                         // unselect the data from the table.
                         d3.selectAll('tr').nodes().forEach((val) => {
@@ -723,21 +740,17 @@ class TumorGrowthCurve extends React.Component {
             const graph = svg.append('g')
                 .attr('id', 'curves');
 
-            // plotBatch(data, graph, xrange, yrange, width, height, false);
-            // volumeToggle(data, svg, xrange, width, height, minmax.maxVolume, minmax.maxVolNorm, minmax.minVolNorm);
-
             return {
                 graph, xrange, yrange, width, height, svg,
             };
         }
-
 
         // calling function to grab the min max values.
         const minmax = calculateMinMax(data);
         // calling tumorCurve function passing the data, PlotID and node reference.
         const curve = tumorCurve(data, plotId, node, minmax);
         // plot each model
-        plotBatch(data, curve.graph, curve.xrange, curve.yrange, curve.width, curve.height, false);
+        plotBatch(data, curve.graph, curve.xrange, curve.yrange, false);
         // toggle legend buttons.
         volumeToggle(data, curve.svg, curve.xrange, curve.width, curve.height, minmax.maxVolume, minmax.maxVolNorm, minmax.minVolNorm);
     }
