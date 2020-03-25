@@ -505,7 +505,9 @@ class TumorGrowthCurve extends React.Component {
             // to create the rectangle and
             function createReactangle(additionalHeight, color, id, val) {
                 let rect = '';
-                if (val === 'volRaw' || val === 'volNorm') {
+                switch (val) {
+                case 'volRaw':
+                case 'volNorm':
                     rect = svg.append('rect')
                         .attr('x', width + 25)
                         .attr('y', height / 2 + additionalHeight)
@@ -514,7 +516,9 @@ class TumorGrowthCurve extends React.Component {
                         .attr('fill', color)
                         .style('opacity', 0.8)
                         .attr('id', id);
-                } else if (val === 'volRawText' || val === 'volNormText') {
+                    break;
+                case 'volRawText':
+                case 'volNormText':
                     rect = svg.append('text')
                         .attr('fill', 'black')
                         .style('font-size', '12px')
@@ -523,6 +527,9 @@ class TumorGrowthCurve extends React.Component {
                         .attr('x', width + (val === 'volRawText' ? 60 : 29))
                         .attr('y', height / 2 + (val === 'volRawText' ? 64 : 84))
                         .text(val === 'volRawText' ? 'Raw' : 'Normalized');
+                    break;
+                default:
+                    console.log('It\'s not available');
                 }
                 return rect;
             }
@@ -541,20 +548,10 @@ class TumorGrowthCurve extends React.Component {
                 // switching based on the toggle value.
                 switch (val) {
                 case 'volNorm':
-                    additionalHeight = 70;
-                    color = 'lightgray';
-                    id = 'volNormToggle';
-                    plot = true;
-                    rawToggle = 'lightgray';
-                    normToggle = '#cd5686';
-                    minimum = minVolNorm - 1;
-                    maximum = maxVolNorm + 1;
-                    break;
-
                 case 'volNormText':
                     additionalHeight = 70;
                     color = 'lightgray';
-                    id = 'volNormText';
+                    id = val === 'volNorm' ? 'volNormToggle' : 'volNormText';
                     plot = true;
                     rawToggle = 'lightgray';
                     normToggle = '#cd5686';
