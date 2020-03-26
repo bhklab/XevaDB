@@ -494,12 +494,12 @@ class TumorGrowthCurve extends React.Component {
                     }
                 });
             // calling plotMeans to plot the mean function.
-            // plotMeans(data, graph, xrange, yrange, norm, false, false);
+            plotMeans(data, graph, xrange, yrange, norm, false, true);
         }
 
         // toggle to show each model
         function volumeToggle(data, svg, xrange, width, height, maxVolume, maxVolNorm, minVolNorm) {
-            const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText', 'errorBar', 'errorBarText', 'mean', 'meanText'];
+            const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText', 'errorBar', 'errorBarText', 'allCurves', 'allCurvesText'];
 
             // to create the rectangle and
             function createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight) {
@@ -508,7 +508,7 @@ class TumorGrowthCurve extends React.Component {
                 case 'volRaw':
                 case 'volNorm':
                 case 'errorBar':
-                case 'mean':
+                case 'allCurves':
                     rect = svg.append('rect')
                         .attr('x', width + 25)
                         .attr('y', height / 2 + additionalHeight)
@@ -521,7 +521,7 @@ class TumorGrowthCurve extends React.Component {
                 case 'volRawText':
                 case 'volNormText':
                 case 'errorBarText':
-                case 'meanText':
+                case 'allCurvesText':
                     rect = svg.append('text')
                         .attr('fill', 'black')
                         .style('font-size', '12px')
@@ -590,16 +590,16 @@ class TumorGrowthCurve extends React.Component {
                     extraHeight = 134;
                     break;
 
-                case 'mean':
+                case 'allCurves':
                     additionalHeight = 140;
-                    id = 'mean';
+                    id = 'allCurves';
                     color = 'lightgray';
                     break;
 
-                case 'meanText':
-                    id = 'meanText';
-                    text = 'Mean Curve';
-                    extraWidth = 26;
+                case 'allCurvesText':
+                    id = 'allCurvesText';
+                    text = 'All Curves';
+                    extraWidth = 32;
                     extraHeight = 154;
                     break;
 
@@ -656,6 +656,8 @@ class TumorGrowthCurve extends React.Component {
                             d3.select('#volRawToggle').attr('fill', rawToggle);
                             d3.select('#volNormToggle').attr('fill', normToggle);
                         });
+                } else {
+                    rect = createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight);
                 }
             });
         }
