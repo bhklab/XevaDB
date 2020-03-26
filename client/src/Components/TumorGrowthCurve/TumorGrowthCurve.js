@@ -134,6 +134,8 @@ class TumorGrowthCurve extends React.Component {
 
         // to calculate mean volume, standard error.
         function meanVolumeError(newVolume) {
+            // median volume.
+            // meanVolume = Object.keys(newVolume).map((element) => (d3.deviation(newVolume[element].volume) / (newVolume[element].volume.length)));
             const meanVolume = [];
             const yStandardError = [];
             const times = [];
@@ -248,9 +250,6 @@ class TumorGrowthCurve extends React.Component {
                 // calling function to create a new volume object.
                 volumeObject(z, oldVolume, oldTime, newVolume, timeUnionData);
             });
-
-            // median volume.
-            // meanVolume = Object.keys(newVolume).map((element) => (d3.deviation(newVolume[element].volume) / (newVolume[element].volume.length)));
 
             for (let n = 0; n < expTypes.length; n++) {
                 const exp = expTypes[n];
@@ -500,14 +499,16 @@ class TumorGrowthCurve extends React.Component {
 
         // toggle to show each model
         function volumeToggle(data, svg, xrange, width, height, maxVolume, maxVolNorm, minVolNorm) {
-            const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText'];
+            const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText', 'errorBar', 'errorBarText', 'mean', 'meanText'];
 
             // to create the rectangle and
-            function createReactangle(additionalHeight, color, id, val) {
+            function createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight) {
                 let rect = '';
                 switch (val) {
                 case 'volRaw':
                 case 'volNorm':
+                case 'errorBar':
+                case 'mean':
                     rect = svg.append('rect')
                         .attr('x', width + 25)
                         .attr('y', height / 2 + additionalHeight)
@@ -519,14 +520,16 @@ class TumorGrowthCurve extends React.Component {
                     break;
                 case 'volRawText':
                 case 'volNormText':
+                case 'errorBarText':
+                case 'meanText':
                     rect = svg.append('text')
                         .attr('fill', 'black')
                         .style('font-size', '12px')
                         .attr('text-anchor', val === 'volRawText' ? 'middle' : 'null')
                         .attr('id', 'volNormText')
-                        .attr('x', width + (val === 'volRawText' ? 60 : 29))
-                        .attr('y', height / 2 + (val === 'volRawText' ? 64 : 84))
-                        .text(val === 'volRawText' ? 'Raw' : 'Normalized');
+                        .attr('x', width + extraWidth)
+                        .attr('y', height / 2 + extraHeight)
+                        .text(text);
                     break;
                 default:
                     console.log('It\'s not available');
@@ -544,6 +547,10 @@ class TumorGrowthCurve extends React.Component {
                 let normToggle = 'lightgray';
                 let minimum = 0;
                 let maximum = maxVolume;
+                let text = '';
+                let extraWidth = 29;
+                let extraHeight = 84;
+                let rect = '';
 
                 // switching based on the toggle value.
                 switch (val) {
@@ -557,6 +564,7 @@ class TumorGrowthCurve extends React.Component {
                     normToggle = '#cd5686';
                     minimum = minVolNorm - 1;
                     maximum = maxVolNorm + 1;
+                    text = val === 'volNormText' ? 'Normalized' : '';
                     break;
 
                 case 'volRaw':
@@ -565,6 +573,34 @@ class TumorGrowthCurve extends React.Component {
 
                 case 'volRawText':
                     id = 'volRawText';
+                    text = 'Raw';
+                    extraWidth = 60;
+                    extraHeight = 64;
+                    break;
+
+                case 'errorBar':
+                    additionalHeight = 120;
+                    id = 'errorBar';
+                    break;
+
+                case 'errorBarText':
+                    id = 'errorBarText';
+                    text = 'ErrorBars';
+                    extraWidth = 34;
+                    extraHeight = 134;
+                    break;
+
+                case 'mean':
+                    additionalHeight = 140;
+                    id = 'mean';
+                    color = 'lightgray';
+                    break;
+
+                case 'meanText':
+                    id = 'meanText';
+                    text = 'Mean Curve';
+                    extraWidth = 26;
+                    extraHeight = 154;
                     break;
 
                 default:
@@ -572,54 +608,55 @@ class TumorGrowthCurve extends React.Component {
                 }
 
                 // call to create toggle rectangle and text.
-                const rect = createReactangle(additionalHeight, color, id, val);
-
-                // on click handler.
-                rect
-                    .on('click', () => {
+                if (val.match(/(volRaw|volNorm|volRawText|volNormText)/g)) {
+                    rect = createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight);
+                    // on click handler.
+                    rect
+                        .on('click', () => {
                         // y-axis change
-                        const yrange = d3.scaleLinear()
-                            .domain([minimum, maximum])
-                            .range([height, 0])
-                            .nice();
+                            const yrange = d3.scaleLinear()
+                                .domain([minimum, maximum])
+                                .range([height, 0])
+                                .nice();
 
-                        const yAxis = d3.axisLeft()
-                            .scale(yrange)
-                            .tickPadding(2);
+                            const yAxis = d3.axisLeft()
+                                .scale(yrange)
+                                .tickPadding(2);
 
-                        d3.selectAll('g.y.axis').call(yAxis);
+                            d3.selectAll('g.y.axis').call(yAxis);
 
-                        // setting ticks.
-                        svg.selectAll('.tick').select('text')
-                            .attr('fill', 'black')
-                            .attr('stroke', 'none')
-                            .attr('font-size', '14px');
+                            // setting ticks.
+                            svg.selectAll('.tick').select('text')
+                                .attr('fill', 'black')
+                                .attr('stroke', 'none')
+                                .attr('font-size', '14px');
 
-                        // removing the other curve.
-                        d3.select('#curves').remove();
-                        const graph = svg.append('g')
-                            .attr('id', 'curves');
+                            // removing the other curve.
+                            d3.select('#curves').remove();
+                            const graph = svg.append('g')
+                                .attr('id', 'curves');
 
-                        // plot the toggle curve.
-                        plotBatch(data, graph, xrange, yrange, plot);
+                            // plot the toggle curve.
+                            plotBatch(data, graph, xrange, yrange, plot);
 
-                        // unselect the data from the table.
-                        d3.selectAll('tr').nodes().forEach((val) => {
-                            if (val.className) {
-                                d3.select(`.${val.className}`)
-                                    .selectAll('td')
-                                    .style('color', '#cd5686')
-                                    .style('background', 'white');
-                                d3.select(`.${val.className}`)
-                                    .selectAll('a')
-                                    .style('color', '#5974c4')
-                                    .style('background', 'white');
-                            }
+                            // unselect the data from the table.
+                            d3.selectAll('tr').nodes().forEach((val) => {
+                                if (val.className) {
+                                    d3.select(`.${val.className}`)
+                                        .selectAll('td')
+                                        .style('color', '#cd5686')
+                                        .style('background', 'white');
+                                    d3.select(`.${val.className}`)
+                                        .selectAll('a')
+                                        .style('color', '#5974c4')
+                                        .style('background', 'white');
+                                }
+                            });
+
+                            d3.select('#volRawToggle').attr('fill', rawToggle);
+                            d3.select('#volNormToggle').attr('fill', normToggle);
                         });
-
-                        d3.select('#volRawToggle').attr('fill', rawToggle);
-                        d3.select('#volNormToggle').attr('fill', normToggle);
-                    });
+                }
             });
         }
 
