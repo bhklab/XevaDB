@@ -10,9 +10,9 @@ node_modules/
 scripts
 
 # ignoring the initial csv files for cnv, mutation and rna.
-data_conversion/Initial_csv_file/copy_number_variation/
-data_conversion/Initial_csv_file/mutation_data/
-data_conversion/Initial_csv_file/rna_sequencing/
+data_conversion/InitialCsvFiles/copy_number_variation/
+data_conversion/InitialCsvFiles/mutation_data/
+data_conversion/InitialCsvFiles/rna_sequencing/
 
 # ignoring the final csv files for cnv, mutation and rna.
 data_conversion/Final_Csv_File/copy_number_variation_final.csv
