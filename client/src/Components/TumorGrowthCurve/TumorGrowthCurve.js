@@ -133,14 +133,28 @@ class TumorGrowthCurve extends React.Component {
         }
 
         // to calculate mean volume, standard error.
-        function meanVolumeError(newVolume) {
+        function meanVolumeError(newVolume, isErrorBar, exptype) {
+            // calculating the number of controls/treatments.
+            let control = 0;
+            let treatment = 0;
+            data.forEach((val) => {
+                if (val.exp_type === 'control') {
+                    control += 1;
+                } else {
+                    treatment += 1;
+                }
+            });
+            const typeNumber = exptype === 'control' ? control : treatment;
+
             // median volume.
             // meanVolume = Object.keys(newVolume).map((element) => (d3.deviation(newVolume[element].volume) / (newVolume[element].volume.length)));
             const meanVolume = [];
             const yStandardError = [];
             const times = [];
+            let isvolumePointsMoreThanTwo = false;
             Object.keys(newVolume).forEach((element) => {
-                if (newVolume[element].volume.length > 1) {
+                isvolumePointsMoreThanTwo = newVolume[element].volume.length > 1;
+                if (isvolumePointsMoreThanTwo || (isErrorBar && typeNumber === 1)) {
                     // volume.
                     meanVolume.push(d3.mean(newVolume[element].volume));
                     // standard error.
@@ -156,6 +170,7 @@ class TumorGrowthCurve extends React.Component {
                 meanVolume,
                 yStandardError,
                 times,
+                typeNumber,
             ];
         }
 
@@ -224,7 +239,7 @@ class TumorGrowthCurve extends React.Component {
             // calling getUnionOfTimepoints to get all the timepoints.
             const timeUnion = getUnionOfTimepoints(data);
             let expTypes = [];
-            const { batch } = data[0]; // TODO: fix the batch, it's the first one rn
+            const { batch } = data[0]; // there are no batches.
 
             // if there is no control
             if (timeUnion[0].length === 0) {
@@ -257,7 +272,7 @@ class TumorGrowthCurve extends React.Component {
                 const newVolume = expTypes[n] === 'control' ? newVolumeControl : newVolumeTreatment;
 
                 // calulating mean volume, standard error and times.
-                const [meanVolume, yStandardError, times] = meanVolumeError(newVolume);
+                const [meanVolume, yStandardError, times, number] = meanVolumeError(newVolume, isErrorBar, expTypes[n]);
 
                 // plot mean charts.
                 if (isPlotMean) {
@@ -307,7 +322,7 @@ class TumorGrowthCurve extends React.Component {
                 }
 
                 // plot error bars
-                if (isErrorBar) {
+                if (isErrorBar && number > 1) {
                     plotErrorBars(exp, times, newVolume, meanVolume, svg, xrange, yrange, yStandardError);
                 }
             }
@@ -593,7 +608,7 @@ class TumorGrowthCurve extends React.Component {
                     break;
 
                 case 'allCurves':
-                    additionalHeight = 144;
+                    additionalHeight = 141;
                     id = 'allCurves';
                     color = 'lightgray';
                     break;
@@ -602,7 +617,7 @@ class TumorGrowthCurve extends React.Component {
                     id = 'allCurvesText';
                     text = 'All Curves';
                     extraWidth = 32;
-                    extraHeight = 158;
+                    extraHeight = 155;
                     break;
 
                 default:
@@ -688,6 +703,7 @@ class TumorGrowthCurve extends React.Component {
                             const graph = svg.append('g')
                                 .attr('id', 'curves');
 
+                            // plotting mean curves.
                             plotMeans(data, graph, xrange, yrange, isNormalized, true, true);
 
                             d3.select('#errorBar').attr('fill', color);
