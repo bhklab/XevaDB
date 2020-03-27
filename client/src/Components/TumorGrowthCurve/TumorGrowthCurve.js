@@ -500,6 +500,7 @@ class TumorGrowthCurve extends React.Component {
         // toggle to show each model
         function volumeToggle(data, svg, xrange, width, height, maxVolume, maxVolNorm, minVolNorm) {
             const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText', 'errorBar', 'errorBarText', 'allCurves', 'allCurvesText'];
+            let isNormalized = false;
 
             // to create the rectangle and
             function createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight) {
@@ -581,6 +582,7 @@ class TumorGrowthCurve extends React.Component {
                 case 'errorBar':
                     additionalHeight = 120;
                     id = 'errorBar';
+                    color = 'lightgray';
                     break;
 
                 case 'errorBarText':
@@ -591,7 +593,7 @@ class TumorGrowthCurve extends React.Component {
                     break;
 
                 case 'allCurves':
-                    additionalHeight = 140;
+                    additionalHeight = 144;
                     id = 'allCurves';
                     color = 'lightgray';
                     break;
@@ -600,7 +602,7 @@ class TumorGrowthCurve extends React.Component {
                     id = 'allCurvesText';
                     text = 'All Curves';
                     extraWidth = 32;
-                    extraHeight = 154;
+                    extraHeight = 158;
                     break;
 
                 default:
@@ -613,7 +615,12 @@ class TumorGrowthCurve extends React.Component {
                     // on click handler.
                     rect
                         .on('click', () => {
-                        // y-axis change
+                            if (val.match(/(volNorm|volNormText)/g)) {
+                                isNormalized = true;
+                            } else {
+                                isNormalized = false;
+                            }
+                            // y-axis change
                             const yrange = d3.scaleLinear()
                                 .domain([minimum, maximum])
                                 .range([height, 0])
@@ -655,9 +662,36 @@ class TumorGrowthCurve extends React.Component {
 
                             d3.select('#volRawToggle').attr('fill', rawToggle);
                             d3.select('#volNormToggle').attr('fill', normToggle);
+                            d3.select('#errorBar').attr('fill', 'lightgray');
                         });
                 } else {
                     rect = createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight);
+                    color = '#5974c4';
+                    // on click handler.
+                    rect
+                        .on('click', () => {
+                            if (isNormalized) {
+                                minimum = minVolNorm - 1;
+                                maximum = maxVolNorm + 1;
+                            } else {
+                                minimum = 0;
+                                maximum = maxVolume;
+                            }
+                            // y-axis change
+                            const yrange = d3.scaleLinear()
+                                .domain([minimum, maximum])
+                                .range([height, 0])
+                                .nice();
+
+                            // removing the other curve.
+                            d3.select('#curves').remove();
+                            const graph = svg.append('g')
+                                .attr('id', 'curves');
+
+                            plotMeans(data, graph, xrange, yrange, isNormalized, true, true);
+
+                            d3.select('#errorBar').attr('fill', color);
+                        });
                 }
             });
         }
