@@ -760,19 +760,20 @@ class HeatMap extends Component {
     render() {
         return (
             <div>
-                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper">
+                <div style={{ position: 'relative' }}>
                     <select
                         className="select"
                         style={{
                             display: 'block',
                             align: 'right',
                             height: '30px',
-                            marginTop: '90px',
+                            marginTop: '290px',
                             position: 'absolute',
                             right: '80px',
                         }}
                     />
                 </div>
+                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper" />
                 <PatientConsumer>{(value) => { this.rankHeatMapBasedOnOncoprintChanges(value); }}</PatientConsumer>
             </div>
         );
