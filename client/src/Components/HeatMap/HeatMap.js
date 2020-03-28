@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable no-shadow */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
@@ -134,6 +135,18 @@ class HeatMap extends Component {
             }
         }
 
+        // create a selection dropdown.
+        function createSelection() {
+            const options = ['Slope', 'Best Average Response', 'AUC'];
+
+            d3.select('.select')
+                .selectAll('option')
+                .data(options)
+                .enter()
+                .append('option')
+                .text((d) => d);
+        }
+
 
         /** SCALE FOR MAIN SKELETON * */
 
@@ -170,6 +183,9 @@ class HeatMap extends Component {
             .attr('width', width + margin.left + margin.right)
             .append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
+
+        // calling selection function to create a dropdown selection.
+        createSelection();
 
 
         /** Appending Circle to the  Y-Axis */
@@ -744,7 +760,19 @@ class HeatMap extends Component {
     render() {
         return (
             <div>
-                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper" />
+                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper">
+                    <select
+                        className="select"
+                        style={{
+                            display: 'block',
+                            align: 'right',
+                            height: '30px',
+                            marginTop: '90px',
+                            position: 'absolute',
+                            right: '80px',
+                        }}
+                    />
+                </div>
                 <PatientConsumer>{(value) => { this.rankHeatMapBasedOnOncoprintChanges(value); }}</PatientConsumer>
             </div>
         );
