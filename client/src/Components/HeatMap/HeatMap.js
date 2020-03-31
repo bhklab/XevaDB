@@ -37,7 +37,7 @@ class HeatMap extends Component {
     }
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatmap(data, patient, drug, dataset, plotId, dimensions, margin, node) {
+    makeHeatmap(data, patient, drug, dataset, plotId, dimensions, margin, node, responseType = 'mRECIST') {
         this.node = node;
 
         // height and width for the SVG based on the number of drugs and patient/sample ids.
@@ -112,8 +112,8 @@ class HeatMap extends Component {
             let currentMaxDrug = 0;
             keys.forEach((key) => {
                 if (key[1] === '') { key[1] = 'empty'; }
-                drugEvaluations[drugAlt][key[1].mRECIST]++;
-                patientEvaluations[key[0]][key[1].mRECIST]++;
+                drugEvaluations[drugAlt][key[1][responseType]]++;
+                patientEvaluations[key[0]][key[1][responseType]]++;
                 if (key[1] !== 'NA' || key[1] !== 'empty') {
                     currentMaxDrug++;
                     patientEvaluations[key[0]].total++;
@@ -231,7 +231,7 @@ class HeatMap extends Component {
                     if (d[value].length === 0) {
                         val = 'empty';
                     } else if (typeof (d[value]) === 'object' && d[value] !== null) {
-                        val = d[value].mRECIST;
+                        val = d[value][responseType];
                     }
                     return val;
                 });
@@ -322,7 +322,7 @@ class HeatMap extends Component {
                     if (d[value].length === 0) {
                         val = 'empty';
                     } else if (typeof (d[value]) === 'object' && d[value] !== null) {
-                        val = d[value].mRECIST;
+                        val = d[value][responseType];
                     }
                     return val;
                 });
