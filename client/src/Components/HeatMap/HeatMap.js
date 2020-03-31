@@ -104,16 +104,16 @@ class HeatMap extends Component {
         }
 
         /* this code will add to the drugEvaluations  and
-      patientEvaluations  object the values for PD,SD,PR,CR
-      and also sets the value of the letiable maxDrug. */
+        patientEvaluations  object the values for PD,SD,PR,CR
+        and also sets the value of the letiable maxDrug. */
         function calculateEvaluations(d, i) {
             const drugAlt = drug[i];
             const keys = Object.entries(d);
             let currentMaxDrug = 0;
             keys.forEach((key) => {
                 if (key[1] === '') { key[1] = 'empty'; }
-                drugEvaluations[drugAlt][key[1]]++;
-                patientEvaluations[key[0]][key[1]]++;
+                drugEvaluations[drugAlt][key[1].mRECIST]++;
+                patientEvaluations[key[0]][key[1].mRECIST]++;
                 if (key[1] !== 'NA' || key[1] !== 'empty') {
                     currentMaxDrug++;
                     patientEvaluations[key[0]].total++;
@@ -121,7 +121,6 @@ class HeatMap extends Component {
             });
             if (currentMaxDrug > maxDrug) { maxDrug = currentMaxDrug; }
         }
-
 
         /* This code is used to produce the query strings */
         // eslint-disable-next-line consistent-return
@@ -229,10 +228,10 @@ class HeatMap extends Component {
                 // this returns the object values to next chaining method.
                 const rectValue = patient.map((value) => {
                     let val = '';
-                    if (d[value].length === 2) {
-                        val = d[value];
-                    } else if (d[value].length === 0) {
+                    if (d[value].length === 0) {
                         val = 'empty';
+                    } else if (typeof (d[value]) === 'object' && d[value] !== null) {
+                        val = d[value].mRECIST;
                     }
                     return val;
                 });
@@ -320,10 +319,10 @@ class HeatMap extends Component {
                 // this returns the object values to next chaining method.
                 const rectValue = patient.map((value) => {
                     let val = '';
-                    if (d[value].length === 2) {
-                        val = d[value];
-                    } else if (d[value].length === 0) {
+                    if (d[value].length === 0) {
                         val = 'empty';
+                    } else if (typeof (d[value]) === 'object' && d[value] !== null) {
+                        val = d[value].mRECIST;
                     }
                     return val;
                 });
@@ -689,7 +688,7 @@ class HeatMap extends Component {
         // this produces the newSortedData.
         responses.forEach((val) => {
             Object.keys(data).forEach((res) => {
-                if (data[res] === val) {
+                if (data[res].mRECIST === val) {
                     newSortedPatients.push(res);
                 }
             });
