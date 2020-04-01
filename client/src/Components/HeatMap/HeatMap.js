@@ -198,7 +198,7 @@ class HeatMap extends Component {
         }
 
         // creating legend for the response type except for mRECIST.
-        function createLegend(svg, height, width) {
+        function createLegend(svg, height, width, min, max) {
             const defs = svg.append('defs');
 
             const linearGradient = defs.append('linearGradient')
@@ -238,7 +238,7 @@ class HeatMap extends Component {
             const targetRect = svg.append('g')
                 .attr('id', 'small_rect');
 
-            const legendValue = ['Max', 'Min'];
+            const legendValue = [max, min];
             targetRect.selectAll('text')
                 .data(legendValue)
                 .enter()
@@ -794,7 +794,7 @@ class HeatMap extends Component {
 
         // create legend if response type is not mRECIST.
         if (responseType !== 'mRECIST') {
-            createLegend(svg, height, width);
+            createLegend(svg, height, width, min, max);
         }
     }
 
