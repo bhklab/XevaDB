@@ -24,7 +24,7 @@ class HeatMap extends Component {
         this.HeatMap();
     }
 
-    HeatMap() {
+    HeatMap(responseType = 'mRECIST') {
         const { node } = this;
         const { data } = this.props;
         const { drugId } = this.props;
@@ -33,11 +33,13 @@ class HeatMap extends Component {
         const { margin } = this.props;
         const { className } = this.props;
         const { dataset } = this.props;
-        this.makeHeatmap(data, patientId, drugId, dataset, className, dimensions, margin, node);
+        this.makeHeatmap(data, patientId, drugId, dataset, className, dimensions, margin, node, responseType);
     }
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatmap(data, patient, drug, dataset, plotId, dimensions, margin, node, responseType = 'mRECIST') {
+    makeHeatmap(data, patient, drug, dataset, plotId, dimensions, margin, node, responseType) {
+        // variable to get the function stored.
+        const heatmap = this.makeHeatmap;
         this.node = node;
 
         // height and width for the SVG based on the number of drugs and patient/sample ids.
@@ -140,14 +142,34 @@ class HeatMap extends Component {
 
         // create a selection dropdown.
         function createSelection() {
-            const options = ['Slope', 'Best Average Response', 'AUC'];
+            const options = ['mRECIST', 'Slope', 'Best Average Response', 'AUC'];
 
             d3.select('.select')
                 .selectAll('option')
                 .data(options)
                 .enter()
                 .append('option')
-                .text((d) => d);
+                .text((d) => d)
+                .attr('value', (d) => d);
+
+            d3.select('.select').on('change', () => {
+                // recover the option that has been chosen
+                const selectedOption = d3.select('select').property('value');
+                let response = '';
+                switch (selectedOption) {
+                case 'Slope':
+                    response = 'slope';
+                    break;
+                case 'Best Average Response':
+                    response = 'best.average.response';
+                    break;
+                default:
+                    response = selectedOption;
+                }
+                d3.select(`#heatmap-${plotId}`).remove();
+                d3.select('#heatmap-tooltip').remove();
+                heatmap(data, patient, drug, dataset, plotId, dimensions, margin, node, response);
+            });
         }
 
         // calculates the min and max value of the response type.
@@ -185,7 +207,7 @@ class HeatMap extends Component {
             // Set the color for the start (0%)
             linearGradient.append('stop')
                 .attr('offset', '0%')
-                .attr('stop-color', '#f46a33');
+                .attr('stop-color', '#67a9cf');
 
             // Set the color for the start (50%)
             linearGradient.append('stop')
@@ -195,7 +217,7 @@ class HeatMap extends Component {
             // Set the color for the end (100%)
             linearGradient.append('stop')
                 .attr('offset', '100%')
-                .attr('stop-color', '#67a9cf');
+                .attr('stop-color', '#ef8a62');
 
             // Draw the rectangle and fill with gradient
             svg.append('rect')
@@ -257,13 +279,6 @@ class HeatMap extends Component {
             .append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
 
-        // calling selection function to create a dropdown selection.
-        createSelection();
-
-        // create legend if response type is not mRECIST.
-        if (responseType !== 'mRECIST') {
-            createLegend(svg, height, width);
-        }
 
         /** Appending Circle to the  Y-Axis */
         drug.forEach((val, i) => {
@@ -333,7 +348,7 @@ class HeatMap extends Component {
         // scale for coloring.
         const linearColorScale = d3.scaleLinear()
             .domain([min, 0, max])
-            .range(['#67a9cf', '#f7f7f7', '#f46a33']);
+            .range(['#ef8a62', '#f7f7f7', '#67a9cf']);
         // this will fill the rectangles with different color based on the data.
         drawrectangle.attr('fill', (d) => {
             if (responseType === 'mRECIST') {
@@ -766,6 +781,14 @@ class HeatMap extends Component {
                 }
             }
         }
+
+        // calling selection function to create a dropdown selection.
+        createSelection();
+
+        // create legend if response type is not mRECIST.
+        if (responseType !== 'mRECIST') {
+            createLegend(svg, height, width);
+        }
     }
 
     rankHeatMap(drug, i, dataset) {
@@ -859,6 +882,7 @@ class HeatMap extends Component {
                 <div style={{ position: 'relative' }}>
                     <select
                         className="select"
+                        id="selectButton"
                         style={{
                             display: 'block',
                             align: 'right',
