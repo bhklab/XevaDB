@@ -13,6 +13,7 @@ class HeatMap extends Component {
         super(props);
         this.state = {
             modifiedPatients: [],
+            responseValue: 'mRECIST',
         };
         this.HeatMap = this.HeatMap.bind(this);
         this.makeHeatmap = this.makeHeatmap.bind(this);
@@ -24,7 +25,7 @@ class HeatMap extends Component {
         this.HeatMap();
     }
 
-    HeatMap(responseType = 'mRECIST') {
+    HeatMap() {
         const { node } = this;
         const { data } = this.props;
         const { drugId } = this.props;
@@ -33,6 +34,7 @@ class HeatMap extends Component {
         const { margin } = this.props;
         const { className } = this.props;
         const { dataset } = this.props;
+        const { responseValue: responseType } = this.state;
         this.makeHeatmap(data, patientId, drugId, dataset, className, dimensions, margin, node, responseType);
     }
 
@@ -40,6 +42,7 @@ class HeatMap extends Component {
     makeHeatmap(data, patient, drug, dataset, plotId, dimensions, margin, node, responseType) {
         // variable to get the function stored.
         const heatmap = this.makeHeatmap;
+        const reference = this;
         this.node = node;
 
         // height and width for the SVG based on the number of drugs and patient/sample ids.
@@ -166,9 +169,13 @@ class HeatMap extends Component {
                 default:
                     response = selectedOption;
                 }
-                d3.select(`#heatmap-${plotId}`).remove();
-                d3.select('#heatmap-tooltip').remove();
-                heatmap(data, patient, drug, dataset, plotId, dimensions, margin, node, response);
+                reference.setState({
+                    responseValue: response,
+                }, () => {
+                    d3.select(`#heatmap-${plotId}`).remove();
+                    d3.select('#heatmap-tooltip').remove();
+                    heatmap(data, patient, drug, dataset, plotId, dimensions, margin, node, response);
+                });
             });
         }
 
@@ -207,7 +214,7 @@ class HeatMap extends Component {
             // Set the color for the start (0%)
             linearGradient.append('stop')
                 .attr('offset', '0%')
-                .attr('stop-color', '#67a9cf');
+                .attr('stop-color', '#d8b365');
 
             // Set the color for the start (50%)
             linearGradient.append('stop')
@@ -217,7 +224,7 @@ class HeatMap extends Component {
             // Set the color for the end (100%)
             linearGradient.append('stop')
                 .attr('offset', '100%')
-                .attr('stop-color', '#ef8a62');
+                .attr('stop-color', '#5ab4ac');
 
             // Draw the rectangle and fill with gradient
             svg.append('rect')
@@ -348,12 +355,12 @@ class HeatMap extends Component {
         // scale for coloring.
         const linearColorScale = d3.scaleLinear()
             .domain([min, 0, max])
-            .range(['#ef8a62', '#f7f7f7', '#67a9cf']);
+            .range(['#5ab4ac', '#f7f7f7', '#d8b365']);
         // this will fill the rectangles with different color based on the data.
         drawrectangle.attr('fill', (d) => {
             if (responseType === 'mRECIST') {
                 return targetColor[d];
-            } if (responseType !== 'mRECIST' && d === 'empty') {
+            } if (responseType !== 'mRECIST' && (d === 'empty' || d === 'NA')) {
                 return 'lightgray';
             }
             return linearColorScale(d);
@@ -791,7 +798,7 @@ class HeatMap extends Component {
         }
     }
 
-    rankHeatMap(drug, i, dataset) {
+    rankHeatMap(drug, i, dataset, responseType) {
         // grabbing the clicked data value.
         const data = dataset[i];
         const { node } = this;
@@ -840,7 +847,7 @@ class HeatMap extends Component {
 
         // finally calling the makeHeatMap function in order passing
         // new dataset in order to make new heatmap based on ranking.
-        this.makeHeatmap(newDataset, newSortedPatients, drugId, datasetId, className, dimensions, margin, node);
+        this.makeHeatmap(newDataset, newSortedPatients, drugId, datasetId, className, dimensions, margin, node, responseType);
 
         // making the circle visible on click of the drug.
         d3.select(`#circle-${drug.replace(/\s/g, '').replace(/\+/g, '')}`)
@@ -856,6 +863,7 @@ class HeatMap extends Component {
         const { margin } = this.props;
         const { className } = this.props;
         const { dataset } = this.props;
+        const { responseValue: responseType } = this.state;
         const newDataset = [];
 
         // sort the complete data according to the globalPatients.
@@ -870,7 +878,7 @@ class HeatMap extends Component {
         if (globalPatients.length > 0) {
             d3.select(`#heatmap-${className}`).remove();
             d3.select('#heatmap-tooltip').remove();
-            this.makeHeatmap(newDataset, globalPatients, drugId, dataset, className, dimensions, margin, node);
+            this.makeHeatmap(newDataset, globalPatients, drugId, dataset, className, dimensions, margin, node, responseType);
         }
     }
 
