@@ -89,18 +89,22 @@ class HeatMap extends Component {
         // drug evaluations
         let maxDrug = 0;
         let drugEvaluations = {};
-        for (let i = 0; i < drug.length; i++) {
-            drugEvaluations[drug[i]] = {
-                CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, empty: 0,
-            };
+        if (responseType === 'mRECIST') {
+            for (let i = 0; i < drug.length; i++) {
+                drugEvaluations[drug[i]] = {
+                    CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, empty: 0,
+                };
+            }
         }
 
         // patient evaluations
         let patientEvaluations = {};
-        for (let j = 0; j < patient.length; j++) {
-            patientEvaluations[patient[j]] = {
-                CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, empty: 0, total: 0,
-            };
+        if (responseType === 'mRECIST') {
+            for (let j = 0; j < patient.length; j++) {
+                patientEvaluations[patient[j]] = {
+                    CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, empty: 0, total: 0,
+                };
+            }
         }
 
         /* this code will add to the drugEvaluations  and
@@ -146,6 +150,76 @@ class HeatMap extends Component {
                 .text((d) => d);
         }
 
+        // calculates the min and max value of the response type.
+        function calculateMinMax() {
+            let min = 0;
+            let max = 0;
+            data.forEach((row) => {
+                const keys = Object.keys(row);
+                keys.forEach((val) => {
+                    if (Number(row[val][responseType]) > max) {
+                        max = Number(row[val][responseType]);
+                    }
+                    if (Number(row[val][responseType]) < min) {
+                        min = Number(row[val][responseType]);
+                    }
+                });
+            });
+            return [min, max];
+        }
+
+        // creating legend for the response type except for mRECIST.
+        function createLegend(svg, height, width) {
+            const defs = svg.append('defs');
+
+            const linearGradient = defs.append('linearGradient')
+                .attr('id', 'linear-gradient');
+
+            // Vertical gradient
+            linearGradient
+                .attr('x1', '0%')
+                .attr('y1', '0%')
+                .attr('x2', '0%')
+                .attr('y2', '100%');
+
+            // Set the color for the start (0%)
+            linearGradient.append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', '#f46a33');
+
+            // Set the color for the start (50%)
+            linearGradient.append('stop')
+                .attr('offset', '50%')
+                .attr('stop-color', '#f7f7f7');
+
+            // Set the color for the end (100%)
+            linearGradient.append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', '#67a9cf');
+
+            // Draw the rectangle and fill with gradient
+            svg.append('rect')
+                .attr('x', width)
+                .attr('y', height / 4)
+                .attr('width', 28)
+                .attr('height', 129)
+                .style('fill', 'url(#linear-gradient)');
+
+            // legend value.
+            const targetRect = svg.append('g')
+                .attr('id', 'small_rect');
+
+            const legendValue = ['Max', 'Min'];
+            targetRect.selectAll('text')
+                .data(legendValue)
+                .enter()
+                .append('text')
+                .attr('x', width + 30)
+                .attr('y', (d, i) => [height / 4 + 15, height / 4 + 125][i])
+                .text((d) => d)
+                .attr('font-size', '15px')
+                .style('text-anchor', 'start');
+        }
 
         /** SCALE FOR MAIN SKELETON * */
 
@@ -186,6 +260,10 @@ class HeatMap extends Component {
         // calling selection function to create a dropdown selection.
         createSelection();
 
+        // create legend if response type is not mRECIST.
+        if (responseType !== 'mRECIST') {
+            createLegend(svg, height, width);
+        }
 
         /** Appending Circle to the  Y-Axis */
         drug.forEach((val, i) => {
@@ -224,7 +302,9 @@ class HeatMap extends Component {
         const drawrectangle = gskeleton.selectAll('rect.hmap-rect')
             .data((d, i) => {
                 // calling the function and passing the data d as parameter.
-                calculateEvaluations(d, i);
+                if (responseType === 'mRECIST') {
+                    calculateEvaluations(d, i);
+                }
                 // this returns the object values to next chaining method.
                 const rectValue = patient.map((value) => {
                     let val = '';
@@ -248,8 +328,21 @@ class HeatMap extends Component {
             .attr('y', rectHeight);
 
 
+        // grabbing the min and max value for the response type.
+        const [min, max] = calculateMinMax();
+        // scale for coloring.
+        const linearColorScale = d3.scaleLinear()
+            .domain([min, 0, max])
+            .range(['#67a9cf', '#f7f7f7', '#f46a33']);
         // this will fill the rectangles with different color based on the data.
-        drawrectangle.attr('fill', (d) => targetColor[d]);
+        drawrectangle.attr('fill', (d) => {
+            if (responseType === 'mRECIST') {
+                return targetColor[d];
+            } if (responseType !== 'mRECIST' && d === 'empty') {
+                return 'lightgray';
+            }
+            return linearColorScale(d);
+        });
 
         // reset
         drugEvaluations = {};
@@ -315,7 +408,9 @@ class HeatMap extends Component {
         gskeleton.selectAll('rect.hmap-hlight')
             .data((d, i) => {
                 // calling the function and passing the data d as parameter.
-                calculateEvaluations(d, i);
+                if (responseType === 'mRECIST') {
+                    calculateEvaluations(d, i);
+                }
                 // this returns the object values to next chaining method.
                 const rectValue = patient.map((value) => {
                     let val = '';
@@ -476,7 +571,7 @@ class HeatMap extends Component {
                 // remove all the divs with id tooltiptext.
                 d3.select('#tooltiptextdrug').remove();
                 // highlight.
-                this.rankHeatMap(d, i, data);
+                this.rankHeatMap(d, i, data, responseType);
             });
 
         // calling the x-axis to set the axis and we have also transformed the text.
@@ -498,175 +593,177 @@ class HeatMap extends Component {
         /** SMALL RECTANGLES ON RIGHT SIDE OF HEATMAP * */
 
         // This will create four rectangles on right side for the Evaluation of target lesions.
-        const targetRect = skeleton.append('g')
-            .attr('id', 'small_rect');
+        if (responseType === 'mRECIST') {
+            const targetRect = skeleton.append('g')
+                .attr('id', 'small_rect');
 
-        targetRect.selectAll('rect')
-            .data(targetEval)
-            .enter()
-            .append('rect')
-            .attr('x', (patient.length * rectWidth + 120))
-            .attr('y', (d, i) => (drug.length * 10) + i * 25)
-            .attr('height', '15')
-            .attr('width', '15')
-            .attr('fill', (d) => Object.values(d));
+            targetRect.selectAll('rect')
+                .data(targetEval)
+                .enter()
+                .append('rect')
+                .attr('x', (patient.length * rectWidth + 120))
+                .attr('y', (d, i) => (drug.length * 10) + i * 25)
+                .attr('height', '15')
+                .attr('width', '15')
+                .attr('fill', (d) => Object.values(d));
 
-        targetRect.selectAll('text')
-            .data(targetEval)
-            .enter()
-            .append('text')
-            .attr('x', (patient.length * rectWidth + 140))
-            .attr('y', (d, i) => (drug.length * 10 + 12) + i * 25)
-            .text((d) => Object.keys(d))
-            .attr('font-size', '14px');
-
-
-        /** VERTICAL GRAPH ON RIGHT SIDE OF HEATMAP * */
-
-        const strokeWidth = 0.75;
-
-        // This will make a right side vertical graph.
-        const drugEval = skeleton.append('g')
-            .attr('id', 'drug_eval');
-
-        const drugScale = d3.scaleLinear()
-            .domain([0, maxDrug])
-            .range([0, 70]);
-
-        // This will set an x-axis for the vertical graph.
-        const xAxisVertical = d3.axisTop()
-            .scale(drugScale)
-            .ticks(4)
-            .tickSize(3)
-            .tickFormat(d3.format('.0f'));
-
-        skeleton.append('g')
-            .attr('transform', `translate(${patient.length * rectWidth + 20},${35})`)
-            .call(xAxisVertical)
-            .selectAll('text')
-            .attr('fill', 'black')
-            .style('font-size', 8)
-            .attr('stroke', 'none');
+            targetRect.selectAll('text')
+                .data(targetEval)
+                .enter()
+                .append('text')
+                .attr('x', (patient.length * rectWidth + 140))
+                .attr('y', (d, i) => (drug.length * 10 + 12) + i * 25)
+                .text((d) => Object.keys(d))
+                .attr('font-size', '14px');
 
 
-        const drugHeightScale = d3.scaleLinear()
-            .domain([0, (44 + (drug.length - 1) * 40)])
-            .range([0, (rectHeight * drug.length) + 10]);
+            /** VERTICAL GRAPH ON RIGHT SIDE OF HEATMAP * */
 
-        drugEval.append('rect')
-            .attr('class', 'drug_eval_rect')
-            .attr('x', patient.length * rectWidth + 20)
-            .attr('y', 35)
-            .attr('height', rectHeight * drug.length)
-            .attr('width', drugScale(maxDrug))
-            .attr('fill', 'white')
-            .style('stroke', 'black')
-            .style('stroke-width', 1);
+            const strokeWidth = 0.75;
 
+            // This will make a right side vertical graph.
+            const drugEval = skeleton.append('g')
+                .attr('id', 'drug_eval');
 
-        // rectangle for vertical graph.
-        const drugEvaluationRectangle = (iterator) => {
-            const responseEvalTypes = ['CR', 'PR', 'SD', 'PD'];
-            let xRange = patient.length * rectWidth + 20;
-            let width = 0;
-            responseEvalTypes.forEach((type) => {
-            // x range for the rectangles.
-                xRange += width;
-                width = drugScale(drugEvaluations[drug[iterator]][type]);
-                drugEval.append('rect')
-                    .attr('class', `drug_eval_${type}`)
-                    .attr('height', 26)
-                    .attr('width', width)
-                    .attr('x', xRange)
-                    .attr('y', drugHeightScale(42 + iterator * 40))
-                    .attr('fill', targetColor[type])
-                    .style('stroke', 'black')
-                    .style('stroke-width', strokeWidth);
-            });
-        };
+            const drugScale = d3.scaleLinear()
+                .domain([0, maxDrug])
+                .range([0, 70]);
 
-        for (let i = 0; i < drug.length; i++) {
-            drugEvaluationRectangle(i);
-        }
+            // This will set an x-axis for the vertical graph.
+            const xAxisVertical = d3.axisTop()
+                .scale(drugScale)
+                .ticks(4)
+                .tickSize(3)
+                .tickFormat(d3.format('.0f'));
+
+            skeleton.append('g')
+                .attr('transform', `translate(${patient.length * rectWidth + 20},${35})`)
+                .call(xAxisVertical)
+                .selectAll('text')
+                .attr('fill', 'black')
+                .style('font-size', 8)
+                .attr('stroke', 'none');
 
 
-        /** HORIZONTAL GRAPH AT THE TOP OF HEATMAP * */
+            const drugHeightScale = d3.scaleLinear()
+                .domain([0, (44 + (drug.length - 1) * 40)])
+                .range([0, (rectHeight * drug.length) + 10]);
 
-        let maxPatientidTotal = 0;
-        const boxHeight = 80;
-
-        // This will set the maximum number of total letiants.
-        const keys = Object.entries(patientEvaluations);
-        keys.forEach((key) => {
-            const curentMax = key[1].total;
-            if (curentMax > maxPatientidTotal) {
-                maxPatientidTotal = curentMax;
-            }
-        });
-
-        // This will only run if the length of the drug
-        // array is greater than 1 (it has more than one drug)
-        if (drug.length > 1) {
-        // appending 'g' element to the SVG.
-            const patientEval = skeleton.append('g')
-                .attr('id', 'patient_eval');
-
-            // setting the outer rectangle.
-            patientEval.append('rect')
-                .attr('class', 'patient_eval_rect')
-                .attr('x', 0)
-                .attr('y', -130)
-                .attr('height', boxHeight)
-                .attr('width', patient.length * 20)
+            drugEval.append('rect')
+                .attr('class', 'drug_eval_rect')
+                .attr('x', patient.length * rectWidth + 20)
+                .attr('y', 35)
+                .attr('height', rectHeight * drug.length)
+                .attr('width', drugScale(maxDrug))
                 .attr('fill', 'white')
                 .style('stroke', 'black')
                 .style('stroke-width', 1);
 
-            // setting scale to map max patient_id value to range (height of the box.)
-            const patientScale = d3.scaleLinear()
-                .domain([0, maxPatientidTotal])
-                .range([0, boxHeight]);
 
-            // This code will set y-axis of the graph at top
-            if (maxPatientidTotal !== 0) {
-                const patientScales = d3.scaleLinear()
-                    .domain([0, maxPatientidTotal])
-                    .range([boxHeight, 0]);
-
-                const yAxis = d3.axisLeft()
-                    .scale(patientScales)
-                    .ticks(2)
-                    .tickSize(0)
-                    .tickFormat(d3.format('.0f'));
-
-                skeleton.append('g')
-                    .attr('transform', 'translate(0,-130.5)')
-                    .call(yAxis);
-            }
-
-            // function to calculate patient evaluations.
-            const patientEvaluationRectangle = (iterator) => {
+            // rectangle for vertical graph.
+            const drugEvaluationRectangle = (iterator) => {
                 const responseEvalTypes = ['CR', 'PR', 'SD', 'PD'];
-                let height = 0;
-                let yRange = -130 + boxHeight;
-
+                let xRange = patient.length * rectWidth + 20;
+                let width = 0;
                 responseEvalTypes.forEach((type) => {
-                    height = patientScale(patientEvaluations[patient[iterator]][type]);
-                    yRange -= height;
-                    patientEval.append('rect')
-                        .attr('class', 'patient_eval_cr')
-                        .attr('height', height)
-                        .attr('width', 16)
-                        .attr('x', iterator * 20)
-                        .attr('y', yRange)
+                    // x range for the rectangles.
+                    xRange += width;
+                    width = drugScale(drugEvaluations[drug[iterator]][type]);
+                    drugEval.append('rect')
+                        .attr('class', `drug_eval_${type}`)
+                        .attr('height', 26)
+                        .attr('width', width)
+                        .attr('x', xRange)
+                        .attr('y', drugHeightScale(42 + iterator * 40))
                         .attr('fill', targetColor[type])
                         .style('stroke', 'black')
                         .style('stroke-width', strokeWidth);
                 });
             };
 
-            for (let i = 0; i < patient.length; i++) {
-                patientEvaluationRectangle(i);
+            for (let i = 0; i < drug.length; i++) {
+                drugEvaluationRectangle(i);
+            }
+
+
+            /** HORIZONTAL GRAPH AT THE TOP OF HEATMAP * */
+
+            let maxPatientidTotal = 0;
+            const boxHeight = 80;
+
+            // This will set the maximum number of total letiants.
+            const keys = Object.entries(patientEvaluations);
+            keys.forEach((key) => {
+                const curentMax = key[1].total;
+                if (curentMax > maxPatientidTotal) {
+                    maxPatientidTotal = curentMax;
+                }
+            });
+
+            // This will only run if the length of the drug
+            // array is greater than 1 (it has more than one drug)
+            if (drug.length > 1) {
+                // appending 'g' element to the SVG.
+                const patientEval = skeleton.append('g')
+                    .attr('id', 'patient_eval');
+
+                // setting the outer rectangle.
+                patientEval.append('rect')
+                    .attr('class', 'patient_eval_rect')
+                    .attr('x', 0)
+                    .attr('y', -130)
+                    .attr('height', boxHeight)
+                    .attr('width', patient.length * 20)
+                    .attr('fill', 'white')
+                    .style('stroke', 'black')
+                    .style('stroke-width', 1);
+
+                // setting scale to map max patient_id value to range (height of the box.)
+                const patientScale = d3.scaleLinear()
+                    .domain([0, maxPatientidTotal])
+                    .range([0, boxHeight]);
+
+                // This code will set y-axis of the graph at top
+                if (maxPatientidTotal !== 0) {
+                    const patientScales = d3.scaleLinear()
+                        .domain([0, maxPatientidTotal])
+                        .range([boxHeight, 0]);
+
+                    const yAxis = d3.axisLeft()
+                        .scale(patientScales)
+                        .ticks(2)
+                        .tickSize(0)
+                        .tickFormat(d3.format('.0f'));
+
+                    skeleton.append('g')
+                        .attr('transform', 'translate(0,-130.5)')
+                        .call(yAxis);
+                }
+
+                // function to calculate patient evaluations.
+                const patientEvaluationRectangle = (iterator) => {
+                    const responseEvalTypes = ['CR', 'PR', 'SD', 'PD'];
+                    let height = 0;
+                    let yRange = -130 + boxHeight;
+
+                    responseEvalTypes.forEach((type) => {
+                        height = patientScale(patientEvaluations[patient[iterator]][type]);
+                        yRange -= height;
+                        patientEval.append('rect')
+                            .attr('class', 'patient_eval_cr')
+                            .attr('height', height)
+                            .attr('width', 16)
+                            .attr('x', iterator * 20)
+                            .attr('y', yRange)
+                            .attr('fill', targetColor[type])
+                            .style('stroke', 'black')
+                            .style('stroke-width', strokeWidth);
+                    });
+                };
+
+                for (let i = 0; i < patient.length; i++) {
+                    patientEvaluationRectangle(i);
+                }
             }
         }
     }
@@ -688,7 +785,7 @@ class HeatMap extends Component {
         // this produces the newSortedData.
         responses.forEach((val) => {
             Object.keys(data).forEach((res) => {
-                if (data[res].mRECIST === val) {
+                if (data[res].mRECIST === val || data[res] === val) {
                     newSortedPatients.push(res);
                 }
             });
