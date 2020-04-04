@@ -2,6 +2,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 
+
 class DensityPlot extends React.Component {
     constructor(props) {
         super(props);
@@ -25,7 +26,7 @@ class DensityPlot extends React.Component {
         const height = 400 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
-        const svg = d3.select('#my_dataviz')
+        const svg = d3.select('#densityplot')
             .append('svg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
@@ -84,7 +85,7 @@ class DensityPlot extends React.Component {
 
     render() {
         return (
-            <div id="my_dataviz"> Hey </div>
+            <div id="densityplot" />
         );
     }
 }
