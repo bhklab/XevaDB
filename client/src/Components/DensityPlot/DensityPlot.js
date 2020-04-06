@@ -2,7 +2,6 @@
 import React from 'react';
 import * as d3 from 'd3';
 
-
 class DensityPlot extends React.Component {
     constructor(props) {
         super(props);
@@ -10,20 +9,36 @@ class DensityPlot extends React.Component {
     }
 
     componentDidMount() {
-        this.makeDensityPlot();
+        const { data } = this.props;
+        const { response } = this.props;
+        const parsedData = {};
+        // creating new data object.
+        data.forEach((row) => {
+            Object.keys(row).forEach((val) => {
+                if (!parsedData[val]) {
+                    parsedData[val] = [];
+                }
+                parsedData[val].push(row[val][response]);
+            });
+        });
+        this.makeDensityPlot(parsedData['X-1004']);
     }
 
-    componentDidUpdate() {
-        this.makeDensityPlot();
-    }
-
-    makeDensityPlot() {
+    makeDensityPlot(data) {
         // set the dimensions and margins of the graph
         const margin = {
             top: 30, right: 30, bottom: 30, left: 50,
         };
-        const width = 460 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+        const width = 120 - margin.left - margin.right;
+        const height = 90 - margin.top - margin.bottom;
+
+        // Function to compute density
+        function kernelDensityEstimator(kernel, X) {
+            return (V) => X.map((x) => [x, d3.mean(V, (v) => kernel(x - v))]);
+        }
+        function kernelEpanechnikov(k) {
+            return (v) => (Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0);
+        }
 
         // append the svg object to the body of the page
         const svg = d3.select('#densityplot')
@@ -34,53 +49,41 @@ class DensityPlot extends React.Component {
             .attr('transform',
                 `translate(${margin.left},${margin.top})`);
 
-        // get the data
-        console.log(data);
         // add the x Axis
         const x = d3.scaleLinear()
-            .domain([0, 1000])
+            .domain([-100, 100])
             .range([0, width]);
         svg.append('g')
             .attr('transform', `translate(0,${height})`)
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x).tickSize(0).tickFormat(''))
+            .selectAll('path')
+            .attr('stroke', '#f03b20');
 
         // add the y Axis
         const y = d3.scaleLinear()
             .range([height, 0])
-            .domain([0, 0.01]);
-        svg.append('g')
-            .call(d3.axisLeft(y));
+            .domain([0, 0.1]);
+        // svg.append('g')
+        //     .call(d3.axisLeft(y).tickSize(0).tickFormat(''));
 
         // Compute kernel density estimation
-        const kde = kernelDensityEstimator(kernelEpanechnikov(7), x.ticks(40));
+        const bandwidth = 7;
+        const kde = kernelDensityEstimator(kernelEpanechnikov(bandwidth), x.ticks(20));
         const density = kde(data.map((d) => d));
 
         // Plot the area
         svg.append('path')
             .attr('class', 'mypath')
             .datum(density)
-            .attr('fill', '#69b3a2')
+            .attr('fill', '#ffffff')
             .attr('opacity', '.8')
-            .attr('stroke', '#000')
+            .attr('stroke', '#f03b20')
             .attr('stroke-width', 1)
             .attr('stroke-linejoin', 'round')
             .attr('d', d3.line()
                 .curve(d3.curveBasis)
                 .x((d) => x(d[0]))
                 .y((d) => y(d[1])));
-
-
-        // Function to compute density
-        function kernelDensityEstimator(kernel, X) {
-            return function (V) {
-                return X.map((x) => [x, d3.mean(V, (v) => kernel(x - v))]);
-            };
-        }
-        function kernelEpanechnikov(k) {
-            return function (v) {
-                return Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0;
-            };
-        }
     }
 
     render() {
