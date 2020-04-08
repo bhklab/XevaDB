@@ -48,7 +48,24 @@ class DensityPlot extends React.Component {
     }
 
     makeDensityPlot(data) {
-        // set the dimensions and margins of the graph
+        // calculate min and max value from data.
+        const calculateMinMax = (dataArray) => {
+            let min = 0;
+            let max = 0;
+            dataArray.forEach((val) => {
+                if (Number(val) > max) {
+                    max = Number(val);
+                }
+                if (Number(val) < min) {
+                    min = Number(val);
+                }
+            });
+            min = Math.ceil(min / 10 - 1) * 10;
+            max = Math.ceil(max / 10 + 1) * 10;
+            return [min, max];
+        };
+
+        // set the dimensions; and margins of the graph
         const margin = {
             top: 1, right: 1, bottom: 1, left: 1,
         };
@@ -74,7 +91,7 @@ class DensityPlot extends React.Component {
 
         // add the x Axis
         const x = d3.scaleLinear()
-            .domain([-100, 100])
+            .domain([...calculateMinMax(data)])
             .range([0, width]);
         svg.append('g')
             .attr('transform', `translate(0,${height})`)
