@@ -5,12 +5,33 @@ import * as d3 from 'd3';
 class DensityPlot extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            response: '',
+            data: '',
+        };
         this.makeDensityPlot = this.makeDensityPlot.bind(this);
+        this.parseData = this.parseData.bind(this);
+    }
+
+    static getDerivedStateFromProps(props) {
+        return {
+            response: props.response,
+            data: props.data,
+        };
     }
 
     componentDidMount() {
-        const { data } = this.props;
-        const { response } = this.props;
+        this.parseData();
+    }
+
+    componentDidUpdate() {
+        d3.selectAll('#densityplotsvg').remove();
+        this.parseData();
+    }
+
+    parseData() {
+        const { data } = this.state;
+        const { response } = this.state;
         const parsedData = {};
         // creating new data object.
         data.forEach((row) => {
@@ -47,6 +68,7 @@ class DensityPlot extends React.Component {
             .append('svg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
+            .attr('id', 'densityplotsvg')
             .attr('transform',
                 'translate(255, 150) rotate(90)');
 
