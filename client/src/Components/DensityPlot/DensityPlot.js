@@ -21,16 +21,18 @@ class DensityPlot extends React.Component {
                 parsedData[val].push(row[val][response]);
             });
         });
-        this.makeDensityPlot(parsedData['X-1004']);
+        Object.keys(parsedData).forEach((val) => {
+            this.makeDensityPlot(parsedData[val]);
+        });
     }
 
     makeDensityPlot(data) {
         // set the dimensions and margins of the graph
         const margin = {
-            top: 30, right: 30, bottom: 30, left: 50,
+            top: 1, right: 1, bottom: 1, left: 1,
         };
-        const width = 120 - margin.left - margin.right;
-        const height = 90 - margin.top - margin.bottom;
+        const width = 20 - margin.left - margin.right;
+        const height = 20 - margin.top - margin.bottom;
 
         // Function to compute density
         function kernelDensityEstimator(kernel, X) {
@@ -45,9 +47,8 @@ class DensityPlot extends React.Component {
             .append('svg')
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
-            .append('g')
             .attr('transform',
-                `translate(${margin.left},${margin.top})`);
+                'translate(255, 150) rotate(90)');
 
         // add the x Axis
         const x = d3.scaleLinear()
@@ -57,7 +58,8 @@ class DensityPlot extends React.Component {
             .attr('transform', `translate(0,${height})`)
             .call(d3.axisBottom(x).tickSize(0).tickFormat(''))
             .selectAll('path')
-            .attr('stroke', '#f03b20');
+            .attr('stroke', '#ff2100')
+            .attr('stroke-width', 0.25);
 
         // add the y Axis
         const y = d3.scaleLinear()
@@ -77,8 +79,8 @@ class DensityPlot extends React.Component {
             .datum(density)
             .attr('fill', '#ffffff')
             .attr('opacity', '.8')
-            .attr('stroke', '#f03b20')
-            .attr('stroke-width', 1)
+            .attr('stroke', '#ff2100')
+            .attr('stroke-width', 0.25)
             .attr('stroke-linejoin', 'round')
             .attr('d', d3.line()
                 .curve(d3.curveBasis)

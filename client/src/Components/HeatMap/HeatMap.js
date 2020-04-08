@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import PatientContext, { PatientConsumer } from '../Context/PatientContext';
-
+import DensityPlot from '../DensityPlot/DensityPlot';
 
 class HeatMap extends Component {
     constructor(props) {
@@ -885,6 +885,8 @@ class HeatMap extends Component {
     // static contextType = PatientContext;
 
     render() {
+        const { responseValue } = this.state;
+        const { data } = this.props;
         return (
             <div>
                 <div style={{ position: 'relative' }}>
@@ -901,7 +903,11 @@ class HeatMap extends Component {
                         }}
                     />
                 </div>
-                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper" />
+                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper">
+                    {
+                        responseValue !== 'mRECIST' ? <DensityPlot response={responseValue} data={data} /> : <div />
+                    }
+                </div>
                 <PatientConsumer>{(value) => { this.rankHeatMapBasedOnOncoprintChanges(value); }}</PatientConsumer>
             </div>
         );
