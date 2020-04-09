@@ -218,13 +218,15 @@ class HeatMap extends Component {
 
             // Set the color for the start (50%)
             linearGradient.append('stop')
-                .attr('offset', '50%')
+                .attr('offset', min < 0 ? '50%' : '100%')
                 .attr('stop-color', '#f7f7f7');
 
             // Set the color for the end (100%)
-            linearGradient.append('stop')
-                .attr('offset', '100%')
-                .attr('stop-color', '#5ab4ac');
+            if (min < 0) {
+                linearGradient.append('stop')
+                    .attr('offset', '100%')
+                    .attr('stop-color', '#5ab4ac');
+            }
 
             // Draw the rectangle and fill with gradient
             svg.append('rect')
