@@ -8,6 +8,7 @@ class DensityPlot extends React.Component {
         this.state = {
             response: '',
             data: '',
+            patient: [],
         };
         this.makeDensityPlot = this.makeDensityPlot.bind(this);
         this.parseData = this.parseData.bind(this);
@@ -17,6 +18,7 @@ class DensityPlot extends React.Component {
         return {
             response: props.response,
             data: props.data,
+            patient: props.patients,
         };
     }
 
@@ -32,10 +34,12 @@ class DensityPlot extends React.Component {
     parseData() {
         const { data } = this.state;
         const { response } = this.state;
+        const { patient } = this.state;
         const parsedData = {};
         // creating new data object.
         data.forEach((row) => {
-            Object.keys(row).forEach((val) => {
+            const keys = patient.length > 1 ? patient : Object.keys(row)
+            keys.forEach((val) => {
                 if (!parsedData[val]) {
                     parsedData[val] = [];
                 }
@@ -60,17 +64,10 @@ class DensityPlot extends React.Component {
                     min = Number(val);
                 }
             });
-            min = Math.ceil(min / 10 - 1) * 10;
-            max = Math.ceil(max / 10 + 1) * 10;
+            min = Math.ceil(min / 10 - 2) * 10;
+            max = Math.ceil(max / 10 + 2) * 10;
             return [min, max];
         };
-
-        // set the dimensions; and margins of the graph
-        const margin = {
-            top: 1, right: 1, bottom: 1, left: 1,
-        };
-        const width = 20 - margin.left - margin.right;
-        const height = 20 - margin.top - margin.bottom;
 
         // Function to compute density
         function kernelDensityEstimator(kernel, X) {
@@ -79,6 +76,14 @@ class DensityPlot extends React.Component {
         function kernelEpanechnikov(k) {
             return (v) => (Math.abs(v /= k) <= 1 ? 0.75 * (1 - v * v) / k : 0);
         }
+
+        // set the dimensions; and margins of the graph
+        const margin = {
+            top: 1, right: 1, bottom: 1, left: 1,
+        };
+        const width = 20 - margin.left - margin.right;
+        const height = 20 - margin.top - margin.bottom;
+
 
         // append the svg object to the body of the page
         const svg = d3.select('#densityplot')

@@ -813,13 +813,31 @@ class HeatMap extends Component {
         const newSortedPatients = [];
 
         // this produces the newSortedData.
-        responses.forEach((val) => {
+        if (responseType === 'mRECIST') {
+            responses.forEach((val) => {
+                Object.keys(data).forEach((res) => {
+                    if (data[res][responseType] === val || data[res] === val) {
+                        newSortedPatients.push(res);
+                    }
+                });
+            });
+        } else {
+            // grab the sortable data.
+            const sortable = [];
             Object.keys(data).forEach((res) => {
-                if (data[res].mRECIST === val || data[res] === val) {
-                    newSortedPatients.push(res);
+                sortable.push([res, data[res][responseType]]);
+            });
+
+            sortable.sort((a, b) => a[1] - b[1]);
+            // push the data to new sorted patients array.
+            sortable.forEach((val) => {
+                if (val[1] === undefined) {
+                    newSortedPatients.push(val[0]);
+                } else {
+                    newSortedPatients.unshift(val[0]);
                 }
             });
-        });
+        }
 
         // setting the variables with new data.
         const newDataset = [];
@@ -887,6 +905,7 @@ class HeatMap extends Component {
     render() {
         const { responseValue } = this.state;
         const { data } = this.props;
+        const { modifiedPatients } = this.state;
         return (
             <div>
                 <div style={{ position: 'relative' }}>
@@ -905,7 +924,7 @@ class HeatMap extends Component {
                 </div>
                 <div ref={(node) => { this.node = node; }} className="heatmap-wrapper">
                     {
-                        responseValue !== 'mRECIST' ? <DensityPlot response={responseValue} data={data} /> : <div />
+                        responseValue !== 'mRECIST' ? <DensityPlot response={responseValue} data={data} patients={modifiedPatients} /> : <div />
                     }
                 </div>
                 <PatientConsumer>{(value) => { this.rankHeatMapBasedOnOncoprintChanges(value); }}</PatientConsumer>
