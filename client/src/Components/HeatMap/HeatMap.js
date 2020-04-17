@@ -138,7 +138,7 @@ class HeatMap extends Component {
                 drugUse = drug[drugIndex];
                 drugIndex++;
             }
-            if (d.length === 2 && d !== 'NA') {
+            if ((d.length === 2 && d !== 'NA') || Number(d)) {
                 return `/curve?patient=${patientUse[i]}&drug=${drugUse}`;
             }
         }
