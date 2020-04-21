@@ -140,7 +140,7 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
                 dataset_id: param_dataset,
             });
 
-        const responseData = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id')
+        const responseData = knex.select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id', 'response_type')
             .from('model_response')
             .rightJoin(
                 'model_information',
@@ -158,10 +158,10 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
                 'drugs.drug_id',
             )
             .where('model_information.dataset_id', param_dataset)
-            .andWhere(function () {
-                this.where('model_response.response_type', 'mRECIST')
-                    .orWhereNull('model_response.response_type');
-            })
+            // .andWhere(function () {
+            //     this.where('model_response.response_type', 'mRECIST')
+            //         .orWhereNull('model_response.response_type');
+            // })
             .whereIn('drugs.drug_name', drug)
             .orderBy('drug_name')
             .orderBy('patient');
@@ -171,7 +171,7 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
             .then((row) => {
                 let drug = '';
                 const data = [];
-                const untreated = { Drug: 'untreated' };
+                const untreated = {};
                 let value = 0;
                 let patient = [];
 
@@ -179,15 +179,24 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
                 const usersRows = JSON.parse(JSON.stringify(row[1]));
                 usersRows.forEach((element) => {
                     if (element.drug_name === drug) {
-                        data[value - 1][element.patient] = element.value;
+                        if (!(element.patient in data[value - 1])) {
+                            data[value - 1][element.patient] = {};
+                        }
+                        data[value - 1][element.patient][element.response_type] = element.value;
                     } else if (element.drug_name === 'untreated' || element.drug_name === 'WATER' || element.drug_name === 'Control') {
                         untreated.Drug = element.drug_name;
-                        untreated[element.patient] = element.value;
+                        if (!(element.patient in untreated)) {
+                            untreated[element.patient] = {};
+                        }
+                        untreated[element.patient][element.response_type] = element.value;
                     } else {
                         drug = element.drug_name;
                         data.push({});
                         data[value].Drug = element.drug_name;
-                        data[value][element.patient] = element.value;
+                        if (!(element.patient in data[value])) {
+                            data[value][element.patient] = {};
+                        }
+                        data[value][element.patient][element.response_type] = element.value;
                         value += 1;
                     }
                 });
@@ -206,6 +215,11 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
                 status: 'could not find data from model_response table, getModelResponseBasedPerDatasetBasedOnDrugs',
                 data: error,
             }));
+    } else {
+        response.status(500).json({
+            status: 'could not find data from model_response table, getModelResponseBasedPerDatasetBasedOnDrugs',
+            data: 'Bad Request',
+        });
     }
 };
 
