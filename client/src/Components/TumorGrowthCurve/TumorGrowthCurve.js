@@ -554,6 +554,21 @@ class TumorGrowthCurve extends React.Component {
                 return rect;
             }
 
+            function calcMinMax(isNormalized, minVolNorm, maxVolNorm, maxVolume) {
+                let minimum = 0;
+                let maximum = 0;
+
+                if (isNormalized) {
+                    minimum = minVolNorm - 1;
+                    maximum = maxVolNorm + 1;
+                } else {
+                    minimum = 0;
+                    maximum = maxVolume;
+                }
+
+                return [minimum, maximum];
+            }
+
             toggleValues.forEach((val) => {
                 // setting the initial variables.
                 let additionalHeight = 50;
@@ -635,42 +650,38 @@ class TumorGrowthCurve extends React.Component {
                     id = 'Looking for what??';
                 }
 
-                // call to create toggle rectangle and text.
-                if (val.match(/(volRaw|volNorm|volRawText|volNormText|allCurves|allCurvesText)/g)) {
-                    rect = createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight);
+                // create rectangles/toggle bars.
+                rect = createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight);
+
+                // on click handler.
+                if (val.match(/(allCurves|allCurvesText|errorBar|errorBarText)/g)) {
                     // on click handler.
                     rect
                         .on('click', () => {
-                            if (val.match(/(volNorm|volNormText)/g)) {
-                                isNormalized = true;
-                            } else {
-                                isNormalized = false;
-                            }
-                            // y-axis change
+                            const [minimum, maximum] = calcMinMax(isNormalized, minVolNorm, maxVolNorm, maxVolume);
                             const yrange = d3.scaleLinear()
                                 .domain([minimum, maximum])
                                 .range([height, 0])
                                 .nice();
-
-                            const yAxis = d3.axisLeft()
-                                .scale(yrange)
-                                .tickPadding(2);
-
-                            d3.selectAll('g.y.axis').call(yAxis);
-
-                            // setting ticks.
-                            svg.selectAll('.tick').select('text')
-                                .attr('fill', 'black')
-                                .attr('stroke', 'none')
-                                .attr('font-size', '14px');
-
                             // removing the other curve.
                             d3.select('#curves').remove();
+
                             const graph = svg.append('g')
                                 .attr('id', 'curves');
 
-                            // plot the toggle curve.
-                            plotBatch(data, graph, xrange, yrange, plot);
+                            if (val.match(/(errorBar|errorBarText)/g)) {
+                                isErrorBar = true;
+                            } else {
+                                isErrorBar = false;
+                            }
+
+                            if (isErrorBar) {
+                                // plotting mean curves.
+                                plotMeans(data, graph, xrange, yrange, isNormalized, true, true);
+                            } else {
+                                // plot the toggle curve.
+                                plotBatch(data, graph, xrange, yrange, plot);
+                            }
 
                             // unselect the data from the table.
                             d3.selectAll('tr').nodes().forEach((val) => {
@@ -687,40 +698,50 @@ class TumorGrowthCurve extends React.Component {
                             });
                             d3.select('#errorBar').attr('fill', errorToggle);
                             d3.select('#allCurves').attr('fill', allToggle);
-                            d3.select('#volRawToggle').attr('fill', rawToggle);
-                            d3.select('#volNormToggle').attr('fill', normToggle);
                         });
                 } else {
-                    rect = createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight);
-                    color = '#5974c4';
-                    // on click handler.
-                    rect
-                        .on('click', () => {
-                            if (isNormalized) {
-                                minimum = minVolNorm - 1;
-                                maximum = maxVolNorm + 1;
-                            } else {
-                                minimum = 0;
-                                maximum = maxVolume;
-                            }
-                            isErrorBar = true;
-                            // y-axis change
-                            const yrange = d3.scaleLinear()
-                                .domain([minimum, maximum])
-                                .range([height, 0])
-                                .nice();
+                    rect.on('click', () => {
+                        if (val.match(/(volNorm|volNormText)/g)) {
+                            isNormalized = true;
+                        } else {
+                            isNormalized = false;
+                        }
+                        const [minimum, maximum] = calcMinMax(isNormalized, minVolNorm, maxVolNorm, maxVolume);
+                        // y-axis change
+                        const yrange = d3.scaleLinear()
+                            .domain([minimum, maximum])
+                            .range([height, 0])
+                            .nice();
 
-                            // removing the other curve.
-                            d3.select('#curves').remove();
-                            const graph = svg.append('g')
-                                .attr('id', 'curves');
+                        const yAxis = d3.axisLeft()
+                            .scale(yrange)
+                            .tickPadding(2);
 
-                            // plotting mean curves.
+                        d3.selectAll('g.y.axis').call(yAxis);
+
+                        // setting ticks.
+                        svg.selectAll('.tick').select('text')
+                            .attr('fill', 'black')
+                            .attr('stroke', 'none')
+                            .attr('font-size', '14px');
+
+                        // removing the other curve.
+                        d3.select('#curves').remove();
+
+                        const graph = svg.append('g')
+                            .attr('id', 'curves');
+
+                        // plot the toggle curve.
+                        if (isErrorBar) {
                             plotMeans(data, graph, xrange, yrange, isNormalized, true, true);
+                        } else {
+                            plotBatch(data, graph, xrange, yrange, plot);
+                        }
 
-                            d3.select('#errorBar').attr('fill', errorToggle);
-                            d3.select('#allCurves').attr('fill', allToggle);
-                        });
+                        // changing toggle color.
+                        d3.select('#volRawToggle').attr('fill', rawToggle);
+                        d3.select('#volNormToggle').attr('fill', normToggle);
+                    });
                 }
             });
         }
