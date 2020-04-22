@@ -514,8 +514,9 @@ class TumorGrowthCurve extends React.Component {
 
         // toggle to show each model
         function volumeToggle(data, svg, xrange, width, height, maxVolume, maxVolNorm, minVolNorm) {
-            const toggleValues = ['volRaw', 'volNorm', 'volRawText', 'volNormText', 'errorBar', 'errorBarText', 'allCurves', 'allCurvesText'];
+            const toggleValues = ['allCurves', 'allCurvesText', 'errorBar', 'errorBarText', 'volRaw', 'volNorm', 'volRawText', 'volNormText'];
             let isNormalized = false;
+            let isErrorBar = false;
 
             // to create the rectangle and
             function createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight) {
@@ -542,7 +543,7 @@ class TumorGrowthCurve extends React.Component {
                         .attr('fill', 'black')
                         .style('font-size', '12px')
                         .attr('text-anchor', val === 'volRawText' ? 'middle' : 'null')
-                        .attr('id', 'volNormText')
+                        .attr('id', id)
                         .attr('x', width + extraWidth)
                         .attr('y', height / 2 + extraHeight)
                         .text(text);
@@ -559,8 +560,10 @@ class TumorGrowthCurve extends React.Component {
                 let color = '#cd5686';
                 let id = '';
                 let plot = false;
-                let rawToggle = '#cd5686';
+                let rawToggle = '#5974c4';
                 let normToggle = 'lightgray';
+                let allToggle = '#cd5686';
+                let errorToggle = 'lightgray';
                 let minimum = 0;
                 let maximum = maxVolume;
                 let text = '';
@@ -570,54 +573,62 @@ class TumorGrowthCurve extends React.Component {
 
                 // switching based on the toggle value.
                 switch (val) {
-                case 'volNorm':
-                case 'volNormText':
+                case 'errorBar':
+                case 'errorBarText':
                     additionalHeight = 70;
                     color = 'lightgray';
-                    id = val === 'volNorm' ? 'volNormToggle' : 'volNormText';
-                    plot = true;
-                    rawToggle = 'lightgray';
-                    normToggle = '#cd5686';
-                    minimum = minVolNorm - 1;
-                    maximum = maxVolNorm + 1;
-                    text = val === 'volNormText' ? 'Normalized' : '';
-                    break;
-
-                case 'volRaw':
-                    id = 'volRawToggle';
-                    break;
-
-                case 'volRawText':
-                    id = 'volRawText';
-                    text = 'Raw';
-                    extraWidth = 60;
-                    extraHeight = 64;
-                    break;
-
-                case 'errorBar':
-                    additionalHeight = 120;
-                    id = 'errorBar';
-                    color = 'lightgray';
-                    break;
-
-                case 'errorBarText':
-                    id = 'errorBarText';
-                    text = 'ErrorBars';
+                    id = val === 'errorBar' ? 'errorBar' : 'errorBarText';
+                    text = val === 'errorBarText' ? 'ErrorBars' : '';
                     extraWidth = 34;
-                    extraHeight = 134;
+                    allToggle = 'lightgray';
+                    errorToggle = '#cd5686';
                     break;
 
                 case 'allCurves':
-                    additionalHeight = 141;
                     id = 'allCurves';
-                    color = 'lightgray';
                     break;
 
                 case 'allCurvesText':
                     id = 'allCurvesText';
                     text = 'All Curves';
                     extraWidth = 32;
+                    extraHeight = 64;
+                    break;
+
+                case 'volRaw':
+                    additionalHeight = 120;
+                    id = 'volRawToggle';
+                    color = '#5974c4';
+                    break;
+
+                case 'volRawText':
+                    id = 'volRawText';
+                    text = 'Raw';
+                    extraWidth = 60;
+                    extraHeight = 134;
+                    break;
+
+                case 'volNorm':
+                    additionalHeight = 141;
+                    id = 'volNormToggle';
+                    color = 'lightgray';
+                    plot = true;
+                    minimum = minVolNorm - 1;
+                    maximum = maxVolNorm + 1;
+                    rawToggle = 'lightgray';
+                    normToggle = '#5974c4';
+                    break;
+
+                case 'volNormText':
+                    id = 'volNormText';
+                    text = 'Normalized';
+                    extraWidth = 28;
                     extraHeight = 155;
+                    plot = true;
+                    minimum = minVolNorm - 1;
+                    maximum = maxVolNorm + 1;
+                    rawToggle = 'lightgray';
+                    normToggle = '#5974c4';
                     break;
 
                 default:
@@ -625,7 +636,7 @@ class TumorGrowthCurve extends React.Component {
                 }
 
                 // call to create toggle rectangle and text.
-                if (val.match(/(volRaw|volNorm|volRawText|volNormText)/g)) {
+                if (val.match(/(volRaw|volNorm|volRawText|volNormText|allCurves|allCurvesText)/g)) {
                     rect = createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight);
                     // on click handler.
                     rect
@@ -674,10 +685,10 @@ class TumorGrowthCurve extends React.Component {
                                         .style('background', 'white');
                                 }
                             });
-
+                            d3.select('#errorBar').attr('fill', errorToggle);
+                            d3.select('#allCurves').attr('fill', allToggle);
                             d3.select('#volRawToggle').attr('fill', rawToggle);
                             d3.select('#volNormToggle').attr('fill', normToggle);
-                            d3.select('#errorBar').attr('fill', 'lightgray');
                         });
                 } else {
                     rect = createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight);
@@ -692,6 +703,7 @@ class TumorGrowthCurve extends React.Component {
                                 minimum = 0;
                                 maximum = maxVolume;
                             }
+                            isErrorBar = true;
                             // y-axis change
                             const yrange = d3.scaleLinear()
                                 .domain([minimum, maximum])
@@ -706,7 +718,8 @@ class TumorGrowthCurve extends React.Component {
                             // plotting mean curves.
                             plotMeans(data, graph, xrange, yrange, isNormalized, true, true);
 
-                            d3.select('#errorBar').attr('fill', color);
+                            d3.select('#errorBar').attr('fill', errorToggle);
+                            d3.select('#allCurves').attr('fill', allToggle);
                         });
                 }
             });
