@@ -569,6 +569,27 @@ class TumorGrowthCurve extends React.Component {
                 return [minimum, maximum];
             }
 
+            function checkIfNormalized(val) {
+                let isNormalized = false;
+                // checks if it's normalized data or not.
+                if (val.match(/(volNorm|volNormText)/g)) {
+                    isNormalized = true;
+                }
+                return isNormalized;
+            }
+
+            function calculateNormalizedRange(isNormalized, minVolNorm, maxVolNorm, maxVolume) {
+                // min and max value for thee scale.
+                const [minimum, maximum] = calcMinMax(isNormalized, minVolNorm, maxVolNorm, maxVolume);
+                // scale for y-axis.
+                const yrange = d3.scaleLinear()
+                    .domain([minimum, maximum])
+                    .range([height, 0])
+                    .nice();
+
+                return yrange;
+            }
+
             toggleValues.forEach((val) => {
                 // setting the initial variables.
                 let additionalHeight = 50;
@@ -654,95 +675,67 @@ class TumorGrowthCurve extends React.Component {
                 rect = createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight);
 
                 // on click handler.
-                if (val.match(/(allCurves|allCurvesText|errorBar|errorBarText)/g)) {
-                    // on click handler.
-                    rect
-                        .on('click', () => {
-                            const [minimum, maximum] = calcMinMax(isNormalized, minVolNorm, maxVolNorm, maxVolume);
-                            const yrange = d3.scaleLinear()
-                                .domain([minimum, maximum])
-                                .range([height, 0])
-                                .nice();
-                            // removing the other curve.
-                            d3.select('#curves').remove();
-
-                            const graph = svg.append('g')
-                                .attr('id', 'curves');
-
-                            if (val.match(/(errorBar|errorBarText)/g)) {
-                                isErrorBar = true;
-                            } else {
-                                isErrorBar = false;
-                            }
-
-                            if (isErrorBar) {
-                                // plotting mean curves.
-                                plotMeans(data, graph, xrange, yrange, isNormalized, true, true);
-                            } else {
-                                // plot the toggle curve.
-                                plotBatch(data, graph, xrange, yrange, plot);
-                            }
-
-                            // unselect the data from the table.
-                            d3.selectAll('tr').nodes().forEach((val) => {
-                                if (val.className) {
-                                    d3.select(`.${val.className}`)
-                                        .selectAll('td')
-                                        .style('color', '#cd5686')
-                                        .style('background', 'white');
-                                    d3.select(`.${val.className}`)
-                                        .selectAll('a')
-                                        .style('color', '#5974c4')
-                                        .style('background', 'white');
-                                }
-                            });
-                            d3.select('#errorBar').attr('fill', errorToggle);
-                            d3.select('#allCurves').attr('fill', allToggle);
-                        });
-                } else {
-                    rect.on('click', () => {
-                        if (val.match(/(volNorm|volNormText)/g)) {
-                            isNormalized = true;
+                rect.on('click', () => {
+                    // y range variable.
+                    let yrange = '';
+                    // conditioning.
+                    if (val.match(/(allCurves|allCurvesText|errorBar|errorBarText)/g)) {
+                        // y range.
+                        yrange = calculateNormalizedRange(isNormalized, minVolNorm, maxVolNorm, maxVolume);
+                        // if error bar selection the set the variable.
+                        if (val.match(/(errorBar|errorBarText)/g)) {
+                            isErrorBar = true;
                         } else {
-                            isNormalized = false;
+                            isErrorBar = false;
                         }
-                        const [minimum, maximum] = calcMinMax(isNormalized, minVolNorm, maxVolNorm, maxVolume);
-                        // y-axis change
-                        const yrange = d3.scaleLinear()
-                            .domain([minimum, maximum])
-                            .range([height, 0])
-                            .nice();
-
+                        // unselect the data from the table.
+                        d3.selectAll('tr').nodes().forEach((val) => {
+                            if (val.className) {
+                                d3.select(`.${val.className}`)
+                                    .selectAll('td')
+                                    .style('color', '#cd5686')
+                                    .style('background', 'white');
+                                d3.select(`.${val.className}`)
+                                    .selectAll('a')
+                                    .style('color', '#5974c4')
+                                    .style('background', 'white');
+                            }
+                        });
+                        // changing toggle color.
+                        d3.select('#errorBar').attr('fill', errorToggle);
+                        d3.select('#allCurves').attr('fill', allToggle);
+                    } else {
+                        // normlized or not.
+                        isNormalized = checkIfNormalized(val);
+                        // y range.
+                        yrange = calculateNormalizedRange(isNormalized, minVolNorm, maxVolNorm, maxVolume);
+                        // create axis/modify the axis.
                         const yAxis = d3.axisLeft()
                             .scale(yrange)
                             .tickPadding(2);
-
+                        // calling to make the axis.
                         d3.selectAll('g.y.axis').call(yAxis);
-
                         // setting ticks.
                         svg.selectAll('.tick').select('text')
                             .attr('fill', 'black')
                             .attr('stroke', 'none')
                             .attr('font-size', '14px');
-
-                        // removing the other curve.
-                        d3.select('#curves').remove();
-
-                        const graph = svg.append('g')
-                            .attr('id', 'curves');
-
-                        // plot the toggle curve.
-                        if (isErrorBar) {
-                            plotMeans(data, graph, xrange, yrange, isNormalized, true, true);
-                        } else {
-                            plotBatch(data, graph, xrange, yrange, plot);
-                        }
-
                         // changing toggle color.
                         d3.select('#volRawToggle').attr('fill', rawToggle);
                         d3.select('#volNormToggle').attr('fill', normToggle);
-                    });
-                }
+                    }
+                    // removing the other curve.
+                    d3.select('#curves').remove();
+                    // creeating new svg for the curve/graph.
+                    const graph = svg.append('g')
+                        .attr('id', 'curves');
+                    // plot the toggle curve.
+                    if (isErrorBar) {
+                        plotMeans(data, graph, xrange, yrange, isNormalized, true, true);
+                    } else {
+                        plotBatch(data, graph, xrange, yrange, plot);
+                    }
+                });
             });
         }
 
