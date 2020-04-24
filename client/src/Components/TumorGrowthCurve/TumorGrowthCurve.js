@@ -595,7 +595,6 @@ class TumorGrowthCurve extends React.Component {
                 let additionalHeight = 50;
                 let color = '#cd5686';
                 let id = '';
-                let plot = false;
                 let rawToggle = '#5974c4';
                 let normToggle = 'lightgray';
                 let allToggle = '#cd5686';
@@ -648,7 +647,6 @@ class TumorGrowthCurve extends React.Component {
                     additionalHeight = 141;
                     id = 'volNormToggle';
                     color = 'lightgray';
-                    plot = true;
                     minimum = minVolNorm - 1;
                     maximum = maxVolNorm + 1;
                     rawToggle = 'lightgray';
@@ -660,7 +658,6 @@ class TumorGrowthCurve extends React.Component {
                     text = 'Normalized';
                     extraWidth = 28;
                     extraHeight = 155;
-                    plot = true;
                     minimum = minVolNorm - 1;
                     maximum = maxVolNorm + 1;
                     rawToggle = 'lightgray';
@@ -677,11 +674,9 @@ class TumorGrowthCurve extends React.Component {
                 // on click handler.
                 rect.on('click', () => {
                     // y range variable.
-                    let yrange = '';
+                    let yrange = calculateNormalizedRange(isNormalized, minVolNorm, maxVolNorm, maxVolume);
                     // conditioning.
                     if (val.match(/(allCurves|allCurvesText|errorBar|errorBarText)/g)) {
-                        // y range.
-                        yrange = calculateNormalizedRange(isNormalized, minVolNorm, maxVolNorm, maxVolume);
                         // if error bar selection the set the variable.
                         if (val.match(/(errorBar|errorBarText)/g)) {
                             isErrorBar = true;
@@ -733,7 +728,7 @@ class TumorGrowthCurve extends React.Component {
                     if (isErrorBar) {
                         plotMeans(data, graph, xrange, yrange, isNormalized, true, true);
                     } else {
-                        plotBatch(data, graph, xrange, yrange, plot);
+                        plotBatch(data, graph, xrange, yrange, isNormalized);
                     }
                 });
             });
