@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import TableWrapper from '../Drug/DrugTableStyle';
@@ -54,6 +55,12 @@ const DatasetTable = (props) => {
                 </TableWrapper>
             )
     );
+};
+
+
+DatasetTable.propTypes = {
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    dataLength: PropTypes.number.isRequired,
 };
 
 export default DatasetTable;

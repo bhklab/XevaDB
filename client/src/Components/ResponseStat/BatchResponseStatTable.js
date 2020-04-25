@@ -1,6 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable class-methods-use-this */
 import React from 'react';
+import PropTypes from 'prop-types';
 import StyleTable from './ModelResponseStyle';
 
 class BatchStatTable extends React.Component {
@@ -71,5 +72,9 @@ class BatchStatTable extends React.Component {
     }
 }
 
+
+BatchStatTable.propTypes = {
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 export default BatchStatTable;

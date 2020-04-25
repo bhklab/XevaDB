@@ -7,9 +7,11 @@
 import React from 'react';
 import * as d3 from 'd3';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
 import StatTable from '../ResponseStat/ModelResponseStatTable';
+
 
 class TumorGrowthCurve extends React.Component {
     constructor(props) {
@@ -896,6 +898,13 @@ class TumorGrowthCurve extends React.Component {
         );
     }
 }
+
+
+TumorGrowthCurve.propTypes = {
+    patientParam: PropTypes.string.isRequired,
+    drugParam: PropTypes.string.isRequired,
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 
 export default TumorGrowthCurve;

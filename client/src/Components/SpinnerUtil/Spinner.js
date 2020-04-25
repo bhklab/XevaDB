@@ -1,6 +1,7 @@
 import React from 'react';
 import { HashLoader } from 'react-spinners';
 import { css } from '@emotion/core';
+import PropTypes from 'prop-types';
 
 
 const override = css`
@@ -23,5 +24,11 @@ const SpinnerUtil = (props) => {
         </div>
     ) : (<div />);
 };
+
+
+SpinnerUtil.propTypes = {
+    loading: PropTypes.bool.isRequired,
+};
+
 
 export default SpinnerUtil;

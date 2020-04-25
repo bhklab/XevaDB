@@ -328,7 +328,7 @@ class Search extends React.Component {
                                 toggleRNA
                                     ? (
                                         <div>
-                                    Enter a z-score threshold ±
+                                            Enter a z-score threshold ±
                                             <input
                                                 type="text"
                                                 name="title"

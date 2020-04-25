@@ -3,6 +3,7 @@
 /* eslint-disable class-methods-use-this */
 import React from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import StyleTable from './ModelResponseStyle';
 import BatchStatTable from './BatchResponseStatTable';
 
@@ -145,6 +146,11 @@ class StatTable extends React.Component {
         );
     }
 }
+
+StatTable.propTypes = {
+    patientParam: PropTypes.string.isRequired,
+    drugParam: PropTypes.string.isRequired,
+};
 
 
 export default StatTable;

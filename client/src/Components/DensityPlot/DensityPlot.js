@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import React from 'react';
+import PropTypes, { object } from 'prop-types';
 import * as d3 from 'd3';
 
 class DensityPlot extends React.Component {
@@ -38,7 +39,7 @@ class DensityPlot extends React.Component {
         const parsedData = {};
         // creating new data object.
         data.forEach((row) => {
-            const keys = patient.length > 1 ? patient : Object.keys(row)
+            const keys = patient.length > 1 ? patient : Object.keys(row);
             keys.forEach((val) => {
                 if (!parsedData[val]) {
                     parsedData[val] = [];
@@ -138,5 +139,11 @@ class DensityPlot extends React.Component {
         );
     }
 }
+
+DensityPlot.propTypes = {
+    response: PropTypes.string.isRequired,
+    data: PropTypes.arrayOf(object).isRequired,
+    patients: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 export default DensityPlot;
