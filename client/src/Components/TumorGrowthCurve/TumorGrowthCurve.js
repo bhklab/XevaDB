@@ -426,7 +426,7 @@ class TumorGrowthCurve extends React.Component {
                     ];
                 } else if (type === 'dot') {
                     tooltipData = [
-                        `Time: ${d.time}`, `Volume: ${d.volume}`,
+                        `Time (days): ${d.time}`, `Volume (mm³): ${d.volume}`,
                     ];
                 }
                 tooltipDiv.selectAll('textDiv')
