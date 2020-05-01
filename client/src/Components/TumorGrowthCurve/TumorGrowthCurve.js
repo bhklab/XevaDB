@@ -351,8 +351,10 @@ class TumorGrowthCurve extends React.Component {
                 .style('border-width', '1px')
                 .style('border-radius', '5px')
                 .style('padding', '5px')
-                .style('min-width', '150px')
-                .style('min-height', '80px')
+                // .style('min-width', '150px')
+                // .style('min-height', '80px')
+                .style('max-width', '250px')
+                .style('max-height', '180px')
                 .attr('top', 10)
                 .attr('left', 20);
 
@@ -403,7 +405,7 @@ class TumorGrowthCurve extends React.Component {
             };
 
             // creating tooltip.
-            const createToolTip = (d) => {
+            const createToolTip = (d, type) => {
                 // tooltip on mousever setting the div to visible.
                 tooltip
                     .style('visibility', 'visible');
@@ -417,9 +419,16 @@ class TumorGrowthCurve extends React.Component {
                     .style('background-color', '#ffffff');
 
                 // tooltip data.
-                const tooltipData = [
-                    `Batch: ${d.batch}`, `Drug: ${d.drug}`, `Exp_Type: ${d.exp_type}`, `Model: ${d.model}`,
-                ];
+                let tooltipData = [];
+                if (type === 'line') {
+                    tooltipData = [
+                        `Batch: ${d.batch}`, `Drug: ${d.drug}`, `Exp_Type: ${d.exp_type}`, `Model: ${d.model}`,
+                    ];
+                } else if (type === 'dot') {
+                    tooltipData = [
+                        `Time: ${d.time}`, `Volume: ${d.volume}`,
+                    ];
+                }
                 tooltipDiv.selectAll('textDiv')
                     .data(tooltipData)
                     .enter()
@@ -441,19 +450,16 @@ class TumorGrowthCurve extends React.Component {
             createLine(4, 0, 'white')
                 .on('mouseover', (d) => {
                     // creating tooltip.
-                    createToolTip(d);
-
+                    createToolTip(d, 'line');
                     // changing attributes of the line on mouseover.
                     tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
                 })
                 .on('mouseout', (d) => {
                     // remove all the divs with id tooltiptext.
                     d3.selectAll('#tooltiptext').remove();
-
                     // tooltip on mousever setting the div to hidden.
                     tooltip
                         .style('visibility', 'hidden');
-
                     // changing attributes back to normal of the line on mouseout.
                     if (!(d3.select(`#path-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}`).classed('selected'))) {
                         tableSelect(d, 3, 0.7, '#cd5686', 'white', '#5974c4', 'white');
@@ -516,8 +522,16 @@ class TumorGrowthCurve extends React.Component {
                     }
                     return yrange(d.volume);
                 })
-                .on('mouseover', () => {
-
+                .on('mouseover', (d) => {
+                    // create tooltip.
+                    createToolTip(d, 'dot');
+                })
+                .on('mouseout', () => {
+                    // remove all the divs with id tooltiptext.
+                    d3.selectAll('#tooltiptext').remove();
+                    // tooltip on mousever setting the div to hidden.
+                    tooltip
+                        .style('visibility', 'hidden');
                 });
 
 
