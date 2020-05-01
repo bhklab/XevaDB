@@ -338,11 +338,6 @@ class TumorGrowthCurve extends React.Component {
                 .append('g')
                 .attr('class', 'model');
 
-            // plotting the dots
-            const dots = models.selectAll('.model-dot')
-                .data((d) => d.pdx_json)
-                .enter();
-
             const paths = graph.selectAll('.model-path')
                 .data(() => data)
                 .enter();
@@ -360,27 +355,6 @@ class TumorGrowthCurve extends React.Component {
                 .style('min-height', '80px')
                 .attr('top', 10)
                 .attr('left', 20);
-
-            // appends dots.
-            dots.append('circle')
-                .attr('id', (d, i) => `dot-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}-${
-                    d.exp_type}${i}`)
-                .attr('class', (d) => `model-dot_${d.exp_type}`)
-                .attr('r', 4)
-                .attr('fill', (d) => {
-                    if (d.exp_type === 'control') {
-                        return '#cd5686';
-                    }
-                    return '#5974c4';
-                })
-                .style('opacity', 0.7)
-                .attr('cx', (d) => xrange(d.time))
-                .attr('cy', (d) => {
-                    if (norm) {
-                        return yrange(d.volume_normal);
-                    }
-                    return yrange(d.volume);
-                });
 
 
             // line function, to join dots
@@ -428,6 +402,37 @@ class TumorGrowthCurve extends React.Component {
                     .style('background', aback);
             };
 
+            // creating tooltip.
+            const createToolTip = (d) => {
+                // tooltip on mousever setting the div to visible.
+                tooltip
+                    .style('visibility', 'visible');
+
+                // tooltip grabbing event.pageX and event.pageY
+                // and set color according to the ordinal scale.
+                const tooltipDiv = tooltip
+                    .style('left', `${d3.event.pageX + 10}px`)
+                    .style('top', `${d3.event.pageY + 10}px`)
+                    .style('color', '#000000')
+                    .style('background-color', '#ffffff');
+
+                // tooltip data.
+                const tooltipData = [
+                    `Batch: ${d.batch}`, `Drug: ${d.drug}`, `Exp_Type: ${d.exp_type}`, `Model: ${d.model}`,
+                ];
+                tooltipDiv.selectAll('textDiv')
+                    .data(tooltipData)
+                    .enter()
+                    .append('div')
+                    .attr('id', 'tooltiptext')
+                    .html((d) => {
+                        const data = d.split(':');
+                        return `<b>${data[0]}</b>: ${data[1]}`;
+                    })
+                    .attr('x', `${d3.event.pageX + 10}px`)
+                    .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
+            };
+
             // add line
             createLine(3, 0.7)
                 .attr('stroke-dasharray', ('3', '3'));
@@ -435,33 +440,8 @@ class TumorGrowthCurve extends React.Component {
             // create a white line to let user hover over with opacity 0 and event listeners.
             createLine(4, 0, 'white')
                 .on('mouseover', (d) => {
-                    // tooltip on mousever setting the div to visible.
-                    tooltip
-                        .style('visibility', 'visible');
-
-                    // tooltip grabbing event.pageX and event.pageY
-                    // and set color according to the ordinal scale.
-                    const tooltipDiv = tooltip
-                        .style('left', `${d3.event.pageX + 10}px`)
-                        .style('top', `${d3.event.pageY + 10}px`)
-                        .style('color', '#000000')
-                        .style('background-color', '#ffffff');
-
-                    // tooltip data.
-                    const tooltipData = [
-                        `Batch: ${d.batch}`, `Drug: ${d.drug}`, `Exp_Type: ${d.exp_type}`, `Model: ${d.model}`,
-                    ];
-                    tooltipDiv.selectAll('textDiv')
-                        .data(tooltipData)
-                        .enter()
-                        .append('div')
-                        .attr('id', 'tooltiptext')
-                        .html((d) => {
-                            const data = d.split(':');
-                            return `<b>${data[0]}</b>: ${data[1]}`;
-                        })
-                        .attr('x', `${d3.event.pageX + 10}px`)
-                        .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
+                    // creating tooltip.
+                    createToolTip(d);
 
                     // changing attributes of the line on mouseover.
                     tableSelect(d, 5, 1.0, '#f5f5f5', '#5974c4', '#f5f5f5', '#5974c4');
@@ -510,6 +490,37 @@ class TumorGrowthCurve extends React.Component {
                         tableSelect(d, 3, 0.7, '#cd5686', 'white', '#5974c4', 'white');
                     }
                 });
+
+            // plotting the dots
+            const dots = models.selectAll('.model-dot')
+                .data((d) => d.pdx_json)
+                .enter();
+
+            // appends dots.
+            dots.append('circle')
+                .attr('id', (d, i) => `dot-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}-${
+                    d.exp_type}${i}`)
+                .attr('class', (d) => `model-dot_${d.exp_type}`)
+                .attr('r', 4)
+                .attr('fill', (d) => {
+                    if (d.exp_type === 'control') {
+                        return '#cd5686';
+                    }
+                    return '#5974c4';
+                })
+                .style('opacity', 1.0)
+                .attr('cx', (d) => xrange(d.time))
+                .attr('cy', (d) => {
+                    if (norm) {
+                        return yrange(d.volume_normal);
+                    }
+                    return yrange(d.volume);
+                })
+                .on('mouseover', () => {
+
+                });
+
+
             // calling plotMeans to plot the mean function.
             plotMeans(data, graph, xrange, yrange, norm, false, true);
         }
