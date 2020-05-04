@@ -41,6 +41,20 @@ class TumorGrowthCurve extends React.Component {
 
     // This is the main function to create Growth curves.
     makeTumorGrowthCurve(data, plotId, node) {
+        // making tooltips
+        const tooltip = d3.select('.wrapper')
+            .append('div')
+            .style('position', 'absolute')
+            .style('visibility', 'hidden')
+            .style('border', 'solid')
+            .style('border-width', '1px')
+            .style('border-radius', '5px')
+            .style('padding', '5px')
+            .style('max-width', '250px')
+            .style('max-height', '180px')
+            .attr('top', 10)
+            .attr('left', 20);
+
         // this function will return all the unqiue time points for control and treatment.
         function getUnionOfTimepoints(data) {
             let control = [];
@@ -63,7 +77,6 @@ class TumorGrowthCurve extends React.Component {
             // return the list.
             return [uniqueControl, uniqueTreatment];
         }
-
 
         // calculating the min max volume and time.
         function calculateMinMax(data) {
@@ -174,6 +187,45 @@ class TumorGrowthCurve extends React.Component {
                 times,
                 typeNumber,
             ];
+        }
+
+        // function to plot/create tooltips.
+        function createToolTip(d, type) {
+            // tooltip on mousever setting the div to visible.
+            tooltip
+                .style('visibility', 'visible');
+
+            // tooltip grabbing event.pageX and event.pageY
+            // and set color according to the ordinal scale.
+            const tooltipDiv = tooltip
+                .style('left', `${d3.event.pageX + 10}px`)
+                .style('top', `${d3.event.pageY + 10}px`)
+                .style('color', '#000000')
+                .style('background-color', '#ffffff');
+
+            // tooltip data.
+            let tooltipData = [];
+            if (type === 'line') {
+                tooltipData = [
+                    `Model: ${d.model}`, `Drug: ${d.drug}`, `Type: ${d.exp_type}`, `Batch: ${d.batch}`,
+                ];
+            } else if (type === 'dot') {
+                tooltipData = [
+                    `Time: ${d.time} days`, `Volume: ${d.volume} mm³`,
+                ];
+            }
+            // append the data.
+            tooltipDiv.selectAll('textDiv')
+                .data(tooltipData)
+                .enter()
+                .append('div')
+                .attr('id', 'tooltiptext')
+                .html((d) => {
+                    const data = d.split(':');
+                    return `<b>${data[0]}</b>: ${data[1]}`;
+                })
+                .attr('x', `${d3.event.pageX + 10}px`)
+                .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
         }
 
         // plotting the error bars.
@@ -342,22 +394,6 @@ class TumorGrowthCurve extends React.Component {
                 .data(() => data)
                 .enter();
 
-            // making tooltips
-            const tooltip = d3.select('.wrapper')
-                .append('div')
-                .style('position', 'absolute')
-                .style('visibility', 'hidden')
-                .style('border', 'solid')
-                .style('border-width', '1px')
-                .style('border-radius', '5px')
-                .style('padding', '5px')
-                // .style('min-width', '150px')
-                // .style('min-height', '80px')
-                .style('max-width', '250px')
-                .style('max-height', '180px')
-                .attr('top', 10)
-                .attr('left', 20);
-
 
             // line function, to join dots
             const linepath = d3.line()
@@ -402,44 +438,6 @@ class TumorGrowthCurve extends React.Component {
                     .selectAll('a')
                     .style('color', acolor)
                     .style('background', aback);
-            };
-
-            // creating tooltip.
-            const createToolTip = (d, type) => {
-                // tooltip on mousever setting the div to visible.
-                tooltip
-                    .style('visibility', 'visible');
-
-                // tooltip grabbing event.pageX and event.pageY
-                // and set color according to the ordinal scale.
-                const tooltipDiv = tooltip
-                    .style('left', `${d3.event.pageX + 10}px`)
-                    .style('top', `${d3.event.pageY + 10}px`)
-                    .style('color', '#000000')
-                    .style('background-color', '#ffffff');
-
-                // tooltip data.
-                let tooltipData = [];
-                if (type === 'line') {
-                    tooltipData = [
-                        `Batch: ${d.batch}`, `Drug: ${d.drug}`, `Exp_Type: ${d.exp_type}`, `Model: ${d.model}`,
-                    ];
-                } else if (type === 'dot') {
-                    tooltipData = [
-                        `Time (days): ${d.time}`, `Volume (mm³): ${d.volume}`,
-                    ];
-                }
-                tooltipDiv.selectAll('textDiv')
-                    .data(tooltipData)
-                    .enter()
-                    .append('div')
-                    .attr('id', 'tooltiptext')
-                    .html((d) => {
-                        const data = d.split(':');
-                        return `<b>${data[0]}</b>: ${data[1]}`;
-                    })
-                    .attr('x', `${d3.event.pageX + 10}px`)
-                    .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
             };
 
             // add line
