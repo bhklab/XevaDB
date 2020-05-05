@@ -99,11 +99,15 @@ class GrowthCurveData extends React.Component {
         const { patientParam, drugParam, dataFormatted } = this.state;
         return (
             <div>
-                <TumorGrowthCurve
-                    patientParam={patientParam}
-                    drugParam={drugParam}
-                    data={dataFormatted}
-                />
+                { dataFormatted.length === 0
+                    ? <div> Loading </div>
+                    : (
+                        <TumorGrowthCurve
+                            patientParam={patientParam}
+                            drugParam={drugParam}
+                            data={dataFormatted}
+                        />
+                    )}
             </div>
         );
     }
