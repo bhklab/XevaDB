@@ -7,6 +7,7 @@ import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import PatientContext, { PatientConsumer } from '../Context/PatientContext';
 import DensityPlot from '../DensityPlot/DensityPlot';
+import BoxPlot from '../BoxPlot/BoxPlot';
 
 class HeatMap extends Component {
     constructor(props) {
