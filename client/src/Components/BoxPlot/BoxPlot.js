@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
-
+// parsing the initial data.
 const parseData = (data, response) => {
     const parsedData = {};
 
@@ -11,10 +11,9 @@ const parseData = (data, response) => {
             if (!parsedData[patient]) {
                 parsedData[patient] = [];
             }
-            parsedData[patient].push(element[patient][response]);
+            parsedData[patient].push(Number(element[patient][response]));
         });
     });
-
     return parsedData;
 };
 
@@ -41,25 +40,24 @@ const appendSvg = (width, height, margin) => {
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .attr('transform', 'translate(250, 150)')
+        .attr('id', 'boxplotsvg')
         .append('g')
         .attr('transform',
             `translate(${margin.left},${margin.top})`)
         .style('background-color', 'grey')
-        .attr('id', 'boxplotsvg');
+        .attr('id', 'boxplotbody');
 
     return svg;
 };
 
+// scale.
+const yScale = (height) => d3.scaleLinear()
+    .domain([-90, 90])
+    .range([height, 0]);
+
 // create y axis.
-const createAxis = (width, height, svg) => {
-    const y = d3.scaleLinear()
-        .domain([0, 24])
-        .range([height, 0]);
+const yAxis = (scale, svg) => svg.call(d3.axisLeft(scale));
 
-    // svg.call(d3.axisLeft(y));
-
-    return y;
-};
 
 // Compute summary statistics used for the box:
 const computeStats = (data) => {
@@ -75,11 +73,11 @@ const computeStats = (data) => {
 
     return {
         sortedData,
-        median,
         min,
-        max,
         q1,
+        median,
         q3,
+        max,
     };
 };
 
@@ -91,11 +89,12 @@ const verticalLine = (width, min, max, svg, y) => {
         .attr('x2', width / 2)
         .attr('y1', y(min))
         .attr('y2', y(max))
-        .attr('stroke', 'black');
+        .attr('stroke', 'black')
+        .attr('stroke-width', 0.50);
 };
 
 // create box.
-const createBox = (svg, margin, width, q3, q1, y) => {
+const createBox = (svg, margin, width, q3, q1, y, element) => {
     svg
         .append('rect')
         .attr('x', margin.left)
@@ -103,7 +102,9 @@ const createBox = (svg, margin, width, q3, q1, y) => {
         .attr('height', (y(q1) - y(q3)))
         .attr('width', width)
         .attr('stroke', 'black')
-        .style('fill', '#69b3a2');
+        .attr('stroke-width', 0.50)
+        .style('fill', '#69b3a2')
+        .attr('id', `box${element}`);
 };
 
 // create median, min and max horizontal lines
@@ -117,38 +118,50 @@ const createRest = (svg, min, median, max, width, y) => {
         .attr('x2', width)
         .attr('y1', (d) => (y(d)))
         .attr('y2', (d) => (y(d)))
-        .attr('stroke', 'black');
+        .attr('stroke', 'black')
+        .attr('stroke-width', 0.50);
 };
 
 
 const BoxPlot = (props) => {
     // destructuring the props.
     const { data, response, patients } = props;
-
     // initialize dimensions.
     const { width, height, margin } = initialize();
-    const data1 = [12, 19, 11, 13, 12, 22, 13, 4, 15, 16, 18, 19, 20, 12, 11, 9];
-
     // parsing the data.
     const parsedData = parseData(data, response);
 
     // use effect function once the component is mounted/updated.
     useEffect(() => {
-        // append svg.
-        const svg = appendSvg(width, height, margin);
-        // create axis.
-        const yAxis = createAxis(width, height, svg);
-        // compute stats.
-        const {
-            median, min, max,
-            q1, q3,
-        } = computeStats(data1);
-            // create vertical line.
-        verticalLine(width, min, max, svg, yAxis);
-        // create box.
-        createBox(svg, margin, width, q3, q1, yAxis);
-        // create rest of the elements.
-        createRest(svg, min, median, max, width, yAxis);
+        d3.selectAll('#boxplotsvg').remove();
+
+        // create a box plot for each of the patient.
+        Object.keys(parsedData).forEach((element, i) => {
+            const total = parsedData[element].filter((val) => isNaN(val));
+            // append svg //
+            const svg = appendSvg(width, height, margin);
+            // only plot the data if the number of NaN is less than 10.
+            if (total.length < 10) {
+                const plotData = parsedData[element];
+                // scale //
+                const scale = yScale(height);
+                // create axis.
+                // if (i === 0) {
+                //     const axis = yAxis(scale, svg);
+                // }
+                // compute stats //
+                const {
+                    median, min, max,
+                    q1, q3,
+                } = computeStats(plotData);
+                // create vertical line //
+                verticalLine(width, min, max, svg, scale);
+                // create box //
+                createBox(svg, margin, width, q3, q1, scale, element);
+                // create rest of the elements //
+                createRest(svg, min, median, max, width, scale);
+            }
+        });
     });
 
     // return statement.
