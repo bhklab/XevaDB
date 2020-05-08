@@ -17,6 +17,7 @@
     "react-bootstrap": "^0.32.4",
     "react-countup": "^4.2.2",
     "react-dom": "^16.11.0",
+    "react-ga": "^2.7.0",
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.2.0",
