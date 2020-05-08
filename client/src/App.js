@@ -33,7 +33,7 @@ const Merge = () => (
 const App = () => {
     // Google analytics setup.
     useEffect(() => {
-        ReactGA.initialize('UA-165761056-4');
+        ReactGA.initialize('UA-102362625-5');
         // To Report Page View
         ReactGA.pageview(window.location.pathname + window.location.search);
     }, []);
