@@ -5,16 +5,27 @@ import * as d3 from 'd3';
 // parsing the initial data.
 const parseData = (data, response) => {
     const parsedData = {};
+    let minTotal = 0;
+    let maxTotal = 0;
 
     data.forEach((element) => {
         Object.keys(element).forEach((patient) => {
+            const value = element[patient][response];
+            if (Number(value) > maxTotal) {
+                maxTotal = value;
+            }
+
+            if (Number(value) < minTotal) {
+                minTotal = value;
+            }
+
             if (!parsedData[patient]) {
                 parsedData[patient] = [];
             }
-            parsedData[patient].push(Number(element[patient][response]));
+            parsedData[patient].push((value === undefined || value === 'NA' || value === 'empty') ? 0 : Number(value));
         });
     });
-    return parsedData;
+    return { parsedData, minTotal, maxTotal };
 };
 
 
@@ -22,7 +33,7 @@ const parseData = (data, response) => {
 // if there are atleast 10 numbers in the array/list return true, else false.
 const isDataPlotable = (data) => {
     // get the total number of numbers.
-    const total = data.filter((element) => !Number.isNaN(element));
+    const total = data.filter((element) => element !== 0);
     return total.length > 10;
 };
 
@@ -63,8 +74,8 @@ const appendSvg = (width, height, margin) => {
 
 
 // scale.
-const yScale = (height) => d3.scaleLinear()
-    .domain([-90, 90])
+const yScale = (height, min, max) => d3.scaleLinear()
+    .domain([min, max])
     .range([height, 0]);
 
 
@@ -146,7 +157,7 @@ const BoxPlot = (props) => {
     // initialize dimensions.
     const { width, height, margin } = initialize();
     // parsing the data.
-    const parsedData = parseData(data, response);
+    const { parsedData, minTotal, maxTotal } = parseData(data, response);
 
     // use effect function once the component is mounted/updated.
     useEffect(() => {
@@ -159,17 +170,17 @@ const BoxPlot = (props) => {
             // only plot the data if the number of NaN is less than 10.
             if (isDataPlotable(parsedData[element])) {
                 const plotData = parsedData[element];
-                // scale //
-                const scale = yScale(height);
-                // create axis.
-                // if (i === 0) {
-                //     const axis = yAxis(scale, svg);
-                // }
                 // compute stats //
                 const {
                     median, min, max,
                     q1, q3,
                 } = computeStats(plotData);
+                // scale //
+                const scale = yScale(height, minTotal, maxTotal);
+                // create axis.
+                // if (i === 0) {
+                //     const axis = yAxis(scale, svg);
+                // }
                 // create vertical line //
                 verticalLine(width, min, max, svg, scale);
                 // create box //
