@@ -17,6 +17,16 @@ const parseData = (data, response) => {
     return parsedData;
 };
 
+
+// checks for column data and checks for the number of NaN/enpty.
+// if there are atleast 10 numbers in the array/list return true, else false.
+const isDataPlotable = (data) => {
+    // get the total number of numbers.
+    const total = data.filter((element) => !Number.isNaN(element));
+    return total.length > 10;
+};
+
+
 // initialize the dimensions and margins.
 const initialize = () => {
     const margin = {
@@ -32,6 +42,7 @@ const initialize = () => {
         width,
     };
 };
+
 
 // append svg to the div element.
 const appendSvg = (width, height, margin) => {
@@ -50,10 +61,12 @@ const appendSvg = (width, height, margin) => {
     return svg;
 };
 
+
 // scale.
 const yScale = (height) => d3.scaleLinear()
     .domain([-90, 90])
     .range([height, 0]);
+
 
 // create y axis.
 const yAxis = (scale, svg) => svg.call(d3.axisLeft(scale));
@@ -61,15 +74,16 @@ const yAxis = (scale, svg) => svg.call(d3.axisLeft(scale));
 
 // Compute summary statistics used for the box:
 const computeStats = (data) => {
-    const sortedData = data.sort(d3.ascending);
+    const newData = data.map((element) => (Number.isNaN(element) ? 0 : element));
+    const sortedData = newData.sort(d3.ascending);
     const q1 = d3.quantile(sortedData, 0.25);
     const median = d3.quantile(sortedData, 0.5);
     const q3 = d3.quantile(sortedData, 0.75);
     const interQuantileRange = q3 - q1;
     // const min = q1 - 1.5 * interQuantileRange;
     // const max = q1 + 1.5 * interQuantileRange;
-    const min = d3.min(data);
-    const max = d3.max(data);
+    const min = d3.min(sortedData);
+    const max = d3.max(sortedData);
 
     return {
         sortedData,
@@ -80,6 +94,7 @@ const computeStats = (data) => {
         max,
     };
 };
+
 
 // create main vertical line.
 const verticalLine = (width, min, max, svg, y) => {
@@ -92,6 +107,7 @@ const verticalLine = (width, min, max, svg, y) => {
         .attr('stroke', 'black')
         .attr('stroke-width', 0.50);
 };
+
 
 // create box.
 const createBox = (svg, margin, width, q3, q1, y, element) => {
@@ -106,6 +122,7 @@ const createBox = (svg, margin, width, q3, q1, y, element) => {
         .style('fill', '#69b3a2')
         .attr('id', `box${element}`);
 };
+
 
 // create median, min and max horizontal lines
 const createRest = (svg, min, median, max, width, y) => {
@@ -137,11 +154,10 @@ const BoxPlot = (props) => {
 
         // create a box plot for each of the patient.
         Object.keys(parsedData).forEach((element, i) => {
-            const total = parsedData[element].filter((val) => isNaN(val));
             // append svg //
             const svg = appendSvg(width, height, margin);
             // only plot the data if the number of NaN is less than 10.
-            if (total.length < 10) {
+            if (isDataPlotable(parsedData[element])) {
                 const plotData = parsedData[element];
                 // scale //
                 const scale = yScale(height);
