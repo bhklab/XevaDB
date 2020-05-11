@@ -60,7 +60,7 @@ const createSvg = (width, height) => {
         .append('svg')
         .attr('width', width)
         .attr('height', height)
-        .attr('transform', 'translate(250, 150)')
+        .attr('transform', 'translate(220, 150)')
         .attr('id', 'boxplotsvg');
 
     return svg;
@@ -98,7 +98,23 @@ const yScale = (height, min, max) => d3.scaleLinear()
 
 
 // create y axis.
-const yAxis = (scale, svg) => svg.call(d3.axisLeft(scale));
+const yAxis = (scale, width, height, margin) => {
+    const svg = d3.select('#boxplot')
+        .append('svg')
+        .attr('width', width + margin.left + margin.right + 10)
+        .attr('height', height + margin.top + margin.bottom)
+        .attr('transform', 'translate(220, 150)')
+        .attr('id', 'boxplotsvg');
+
+    const axis = d3.axisLeft()
+        .scale(scale)
+        .ticks(7)
+        .tickSize(0);
+
+    svg.append('g')
+        .attr('transform', 'translate(30, 0)')
+        .call(axis);
+};
 
 
 // Compute summary statistics used for the box:
@@ -192,6 +208,12 @@ const BoxPlot = (props) => {
         // remove the element if already present.
         d3.selectAll('#boxplotsvg').remove();
 
+        // scale.
+        const scale = yScale(height, minTotal, maxTotal);
+
+        // y-axis.
+        yAxis(scale, width, height, margin);
+
         // create an svg element.
         const svgCanvas = createSvg(svgWidth, svgHeight);
 
@@ -212,14 +234,6 @@ const BoxPlot = (props) => {
                     median, min, max,
                     q1, q3,
                 } = computeStats(plotData);
-
-                // scale.
-                const scale = yScale(height, minTotal, maxTotal);
-
-                // create axis.
-                // if (i === 0) {
-                //     const axis = yAxis(scale, svg);
-                // }
 
                 // create vertical line.
                 verticalLine(width, min, max, svg, scale);
