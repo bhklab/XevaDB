@@ -54,23 +54,41 @@ const initialize = () => {
     };
 };
 
-
-// append svg to the div element.
-const appendSvg = (width, height, margin) => {
+// create an svg.
+const createSvg = (width, height) => {
     const svg = d3.select('#boxplot')
         .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', width)
+        .attr('height', height)
         .attr('transform', 'translate(250, 150)')
-        .attr('id', 'boxplotsvg')
-        .append('g')
-        .attr('transform',
-            `translate(${margin.left},${margin.top})`)
-        .style('background-color', 'grey')
-        .attr('id', 'boxplotbody');
+        .attr('id', 'boxplotsvg');
 
     return svg;
 };
+
+
+// create a rectangle outside the box plots.
+const createRectangle = (svg, width, height) => {
+    const rect = svg
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', width)
+        .attr('height', height)
+        .attr('stroke', 'black')
+        .attr('stroke-width', 1.0)
+        .style('fill', 'white');
+
+    return rect;
+};
+
+// append svg to the div element.
+const appendGElement = (svg, margin, width, i) => svg
+    .append('g')
+    .attr('transform',
+        `translate(${(width + margin.left + margin.right) * i},${margin.top})`)
+    .style('background-color', 'grey')
+    .attr('id', 'boxplotbody');
 
 
 // scale.
@@ -154,38 +172,60 @@ const createRest = (svg, min, median, max, width, y) => {
 const BoxPlot = (props) => {
     // destructuring the props.
     const { data, response, patients } = props;
-    // initialize dimensions.
-    const { width, height, margin } = initialize();
+
     // parsing the data.
     const { parsedData, minTotal, maxTotal } = parseData(data, response);
 
+    // get number of patients.
+    const totalPatients = Object.keys(parsedData).length;
+
+    // initialize dimensions.
+    const { width, height, margin } = initialize();
+
+    // svg width.
+    const svgWidth = (width + margin.left + margin.right) * totalPatients;
+    const svgHeight = height + margin.bottom + margin.top;
+
+
     // use effect function once the component is mounted/updated.
     useEffect(() => {
+        // remove the element if already present.
         d3.selectAll('#boxplotsvg').remove();
+
+        // create an svg element.
+        const svgCanvas = createSvg(svgWidth, svgHeight);
+
+        // creating reactangle around the svgs.
+        createRectangle(svgCanvas, svgWidth, svgHeight);
 
         // create a box plot for each of the patient.
         Object.keys(parsedData).forEach((element, i) => {
-            // append svg //
-            const svg = appendSvg(width, height, margin);
+            // append g element to svg for each patient.
+            const svg = appendGElement(svgCanvas, margin, width, i);
+
             // only plot the data if the number of NaN is less than 10.
             if (isDataPlotable(parsedData[element])) {
                 const plotData = parsedData[element];
-                // compute stats //
+
+                // compute stats.
                 const {
                     median, min, max,
                     q1, q3,
                 } = computeStats(plotData);
-                // scale //
+
+                // scale.
                 const scale = yScale(height, minTotal, maxTotal);
+
                 // create axis.
                 // if (i === 0) {
                 //     const axis = yAxis(scale, svg);
                 // }
-                // create vertical line //
+
+                // create vertical line.
                 verticalLine(width, min, max, svg, scale);
-                // create box //
+                // create box.
                 createBox(svg, margin, width, q3, q1, scale, element);
-                // create rest of the elements //
+                // create rest of the elements.
                 createRest(svg, min, median, max, width, scale);
             }
         });
