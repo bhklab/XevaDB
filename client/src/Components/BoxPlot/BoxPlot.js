@@ -33,15 +33,6 @@ const parseData = (data, response) => {
 };
 
 
-// checks for column data and checks for the number of NaN/enpty.
-// if there are atleast 10 numbers in the array/list return true, else false.
-const isDataPlotable = (data) => {
-    // get the total number of numbers.
-    const total = data.filter((element) => element !== 0);
-    return total.length > 10;
-};
-
-
 // initialize the dimensions and margins.
 const initialize = () => {
     const margin = {
