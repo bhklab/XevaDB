@@ -25,6 +25,9 @@ const parseData = (data, response) => {
             parsedData[patient].push((value === undefined || value === 'NA' || value === 'empty') ? 0 : Number(value));
         });
     });
+
+    console.log(data, parsedData);
+
     return { parsedData, minTotal, maxTotal };
 };
 
@@ -189,6 +192,8 @@ const BoxPlot = (props) => {
     // destructuring the props.
     const { data, response, patients } = props;
 
+    console.log(patients);
+
     // parsing the data.
     const { parsedData, minTotal, maxTotal } = parseData(data, response);
 
@@ -221,7 +226,8 @@ const BoxPlot = (props) => {
         createRectangle(svgCanvas, svgWidth, svgHeight);
 
         // create a box plot for each of the patient.
-        Object.keys(parsedData).forEach((element, i) => {
+        const keys = patients.length === 0 ? Object.keys(parsedData) : patients;
+        keys.forEach((element, i) => {
             // append g element to svg for each patient.
             const svg = appendGElement(svgCanvas, margin, width, i);
 
