@@ -22,9 +22,13 @@ const parseData = (data, response) => {
             if (!parsedData[patient]) {
                 parsedData[patient] = [];
             }
-            parsedData[patient].push((value === undefined || value === 'NA' || value === 'empty') ? 0 : Number(value));
+
+            if (value !== undefined && value !== 'NA' && value !== 'empty') {
+                parsedData[patient].push(Number(value));
+            }
         });
     });
+
     return { parsedData, minTotal, maxTotal };
 };
 
@@ -239,23 +243,20 @@ const BoxPlot = (props) => {
             // append g element to svg for each patient.
             const svg = appendGElement(svgCanvas, margin, width, i);
 
-            // only plot the data if the number of NaN is less than 10.
-            if (isDataPlotable(parsedData[element])) {
-                const plotData = parsedData[element];
+            const plotData = parsedData[element];
 
-                // compute stats.
-                const {
-                    median, min, max,
-                    q1, q3,
-                } = computeStats(plotData);
+            // compute stats.
+            const {
+                median, min, max,
+                q1, q3,
+            } = computeStats(plotData);
 
-                // create vertical line.
-                verticalLine(width, min, max, svg, scale, dataScale);
-                // create box.
-                createBox(svg, margin, width, q3, q1, scale, element, dataScale);
-                // create rest of the elements.
-                createRest(svg, min, median, max, width, scale, dataScale);
-            }
+            // create vertical line.
+            verticalLine(width, min, max, svg, scale, dataScale);
+            // create box.
+            createBox(svg, margin, width, q3, q1, scale, element, dataScale);
+            // create rest of the elements.
+            createRest(svg, min, median, max, width, scale, dataScale);
         });
     });
 
