@@ -26,8 +26,6 @@ const parseData = (data, response) => {
         });
     });
 
-    console.log(data, parsedData);
-
     return { parsedData, minTotal, maxTotal };
 };
 
@@ -191,8 +189,6 @@ const createRest = (svg, min, median, max, width, y) => {
 const BoxPlot = (props) => {
     // destructuring the props.
     const { data, response, patients } = props;
-
-    console.log(patients);
 
     // parsing the data.
     const { parsedData, minTotal, maxTotal } = parseData(data, response);
