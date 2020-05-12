@@ -12,11 +12,11 @@ const parseData = (data, response) => {
         Object.keys(element).forEach((patient) => {
             const value = element[patient][response];
             if (Number(value) > maxTotal) {
-                maxTotal = value;
+                maxTotal = Number(value);
             }
 
             if (Number(value) < minTotal) {
-                minTotal = value;
+                minTotal = Number(value);
             }
 
             if (!parsedData[patient]) {
@@ -25,7 +25,6 @@ const parseData = (data, response) => {
             parsedData[patient].push((value === undefined || value === 'NA' || value === 'empty') ? 0 : Number(value));
         });
     });
-
     return { parsedData, minTotal, maxTotal };
 };
 
@@ -91,11 +90,23 @@ const appendGElement = (svg, margin, width, i) => svg
     .style('background-color', 'grey')
     .attr('id', 'boxplotbody');
 
-
-// scale.
-const yScale = (height, min, max) => d3.scaleLinear()
+// scaling min and max values to 0 and 1 correspondingly.
+const maxMinScale = (min, max) => d3.scaleLinear()
     .domain([min, max])
-    .range([height, 0]);
+    .range([0, 1]);
+
+// scale for y axis. 0,1 mapped to height, 0.
+const yScale = (height, min, max) => {
+    const dataScale = maxMinScale(min, max);
+    const scaleMin = dataScale(min);
+    const scaleMax = dataScale(max);
+
+    const scale = d3.scaleLinear()
+        .domain([scaleMin, scaleMax])
+        .range([height - 2, 3]);
+
+    return scale;
+};
 
 
 // create y axis.
@@ -143,25 +154,25 @@ const computeStats = (data) => {
 
 
 // create main vertical line.
-const verticalLine = (width, min, max, svg, y) => {
+const verticalLine = (width, min, max, svg, y, scale) => {
     svg
         .append('line')
         .attr('x1', width / 2)
         .attr('x2', width / 2)
-        .attr('y1', y(min))
-        .attr('y2', y(max))
+        .attr('y1', y(scale(min)))
+        .attr('y2', y(scale(max)))
         .attr('stroke', 'black')
         .attr('stroke-width', 0.50);
 };
 
 
 // create box.
-const createBox = (svg, margin, width, q3, q1, y, element) => {
+const createBox = (svg, margin, width, q3, q1, y, element, scale) => {
     svg
         .append('rect')
         .attr('x', margin.left)
-        .attr('y', y(q3))
-        .attr('height', (y(q1) - y(q3)))
+        .attr('y', y(scale(q3)))
+        .attr('height', (y(scale(q1)) - y(scale(q3))))
         .attr('width', width)
         .attr('stroke', 'black')
         .attr('stroke-width', 0.50)
@@ -171,7 +182,7 @@ const createBox = (svg, margin, width, q3, q1, y, element) => {
 
 
 // create median, min and max horizontal lines
-const createRest = (svg, min, median, max, width, y) => {
+const createRest = (svg, min, median, max, width, y, scale) => {
     svg
         .selectAll('total')
         .data([min, median, max])
@@ -179,8 +190,8 @@ const createRest = (svg, min, median, max, width, y) => {
         .append('line')
         .attr('x1', 1)
         .attr('x2', width)
-        .attr('y1', (d) => (y(d)))
-        .attr('y2', (d) => (y(d)))
+        .attr('y1', (d) => (y(scale(d))))
+        .attr('y2', (d) => (y(scale(d))))
         .attr('stroke', 'black')
         .attr('stroke-width', 0.50);
 };
@@ -210,6 +221,7 @@ const BoxPlot = (props) => {
         d3.selectAll('#boxplotsvg').remove();
 
         // scale.
+        const dataScale = maxMinScale(minTotal, maxTotal);
         const scale = yScale(height, minTotal, maxTotal);
 
         // y-axis.
@@ -238,11 +250,11 @@ const BoxPlot = (props) => {
                 } = computeStats(plotData);
 
                 // create vertical line.
-                verticalLine(width, min, max, svg, scale);
+                verticalLine(width, min, max, svg, scale, dataScale);
                 // create box.
-                createBox(svg, margin, width, q3, q1, scale, element);
+                createBox(svg, margin, width, q3, q1, scale, element, dataScale);
                 // create rest of the elements.
-                createRest(svg, min, median, max, width, scale);
+                createRest(svg, min, median, max, width, scale, dataScale);
             }
         });
     });
