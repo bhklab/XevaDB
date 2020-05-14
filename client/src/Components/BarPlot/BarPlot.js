@@ -90,10 +90,10 @@ const createBars = (svg, data, xScale, yScale, height, color) => {
 const appendBarText = (svg, data, xScale, yScale) => {
     data.forEach((element) => {
         svg.append('text')
-            .attr('x', xScale(element.id) + 10)
+            .attr('x', xScale(element.id) + 14)
             .attr('y', yScale(element.value) - 4)
             .attr('font-family', 'sans-serif')
-            .attr('font-size', '14px')
+            .attr('font-size', '12px')
             .style('text-anchor', 'start')
             .attr('fill', 'black')
             .text(element.value);
