@@ -82,17 +82,36 @@ const createBars = (svg, data, xScale, yScale, height, color) => {
         .attr('y', (d) => yScale(d.value))
         .attr('width', xScale.bandwidth())
         .attr('height', (d) => height - yScale(d.value))
+        .attr('id', (d) => `bar_${d.id}`)
         .attr('fill', (d) => color(d.id));
+};
+
+
+const appendBarText = (svg, data, xScale, yScale) => {
+    data.forEach((element) => {
+        svg.append('text')
+            .attr('x', xScale(element.id) + 10)
+            .attr('y', yScale(element.value) - 4)
+            .attr('font-family', 'sans-serif')
+            .attr('font-size', '14px')
+            .style('text-anchor', 'start')
+            .attr('fill', 'black')
+            .text(element.value);
+    });
 };
 
 
 const BarPlot = (props) => {
     // getting the prop data.
-    const { dimensions, margin, data } = props;
+    const { dimensions, margin } = props;
+    let { data } = props;
     const { width, height } = dimensions;
     const {
         left, right, top, bottom,
     } = margin;
+
+    // sort data
+    data = data.sort((b, a) => a.value - b.value);
 
     const colorList = [
         '#E64B35FF', '#4DBBD5FF', '#00A087FF', '#3C5488FF',
@@ -117,9 +136,12 @@ const BarPlot = (props) => {
         createXAxis(svg, xScale, height);
         createYAxis(svg, yScale);
 
+        // append text.
+        appendBarText(svg, data, xScale, yScale);
+
         // create bars.
         createBars(svg, data, xScale, yScale, height, color);
-    });
+    }, [data]);
 
 
     return (
@@ -144,5 +166,6 @@ BarPlot.propTypes = {
     }).isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
+
 
 export default BarPlot;
