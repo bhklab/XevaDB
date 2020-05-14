@@ -58,7 +58,7 @@ const createXAxis = (svg, xScale, height) => {
         .selectAll('text')
         .attr('transform', 'translate(-10,0)rotate(-45)')
         .style('text-anchor', 'end')
-        .style('font-size', 14);
+        .style('font-size', 13);
 };
 
 
@@ -69,7 +69,7 @@ const createYAxis = (svg, yScale) => {
 
     svg.append('g')
         .call(axis)
-        .style('font-size', 14);
+        .style('font-size', 13);
 };
 
 
