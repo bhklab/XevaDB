@@ -1,11 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import DonutChart from '../DonutChart/DonutChart';
+// import DonutChart from '../DonutChart/DonutChart';
 import Footer from '../Footer/Footer';
 import DrugTable from './DrugTable';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
+import BarPlot from '../BarPlot/BarPlot';
 
 const Wrapper = styled.div`
     display: flex;
@@ -14,12 +15,12 @@ const Wrapper = styled.div`
     align-items: center;
     margin-top: 200px;
     margin-bottom: 100px;
-    color: #3453b0
-
+    
     h1 {
         font-family:'Raleway', sans-serif;
         font-weight:700;
         text-align:center;
+        color: #3453b0
     }
 `;
 
@@ -49,9 +50,11 @@ class DonutDrug extends React.Component {
                 });
                 this.setState({
                     data: newValues,
-                    dimensions: { width: 650, height: 250 },
+                    // dimensions: { width: 650, height: 250 },
+                    dimensions: { width: 850, height: 400 },
                     margin: {
-                        top: 320, right: 100, bottom: 100, left: 380,
+                        // top: 320, right: 100, bottom: 100, left: 380,
+                        top: 50, right: 150, bottom: 200, left: 150,
                     },
                     arc: { outerRadius: 260, innerRadius: 150 },
                 });
@@ -70,13 +73,18 @@ class DonutDrug extends React.Component {
                 <Wrapper>
                     <div className="donut-wrapper">
                         <h1> Number of Models Per Drug class </h1>
-                        <DonutChart
-                            dimensions={dimensions}
-                            margin={margin}
-                            chartId="donut_drugs"
-                            data={data}
-                            arcRadius={arc}
-                        />
+                        {
+                            data.length === 0 ? <div />
+                                : (
+                                    <BarPlot
+                                        dimensions={dimensions}
+                                        margin={margin}
+                                        chartId="donut_drugs"
+                                        data={data}
+                                        arcRadius={arc}
+                                    />
+                                )
+                        }
                     </div>
                     <div className="donut-wrapper">
                         <DrugTable />

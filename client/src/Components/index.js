@@ -3,7 +3,7 @@ import Dataset from './Dataset/Dataset';
 import DatasetDonut from './Dataset/DatasetDonut';
 import Documentation from './Documentation/Documentation';
 import DonutChart from './DonutChart/DonutChart';
-import DonutDrug from './Drug/DonutDrug';
+import DonutDrug from './Drug/BarDrug';
 import DonutPatient from './DonutChart/DonutPatient';
 import DonutTissue from './Tissue/DonutTissue';
 import DrugTable from './Drug/DrugTable';

@@ -24,18 +24,15 @@ class DonutChart extends React.Component {
         const { margin } = this.props;
         const { node } = this;
         const { data } = this.props;
-        const { height } = dimensions;
-        const { width } = dimensions;
-        const { left } = margin;
-        const { top } = margin;
-        const { bottom } = margin;
-        const { right } = margin;
+        const { height, width } = dimensions;
+        const {
+            left, top, bottom, right,
+        } = margin;
         this.makeDonutChart(node, data, height, width, left, top, bottom, right);
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
     makeDonutChart(node, data, height, width, left, top, bottom, right) {
-        // console.log(data)
         const { chartId } = this.props;
 
         /** SETTING SVG ATTRIBUTES * */
