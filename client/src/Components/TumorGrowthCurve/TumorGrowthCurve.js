@@ -856,15 +856,17 @@ const TumorGrowthCurve = (props) => {
 
     // function will be triggered once the component is mounted/updated.
     useEffect(() => {
-        const tooltip = initializeToolTop();
-        // calling function to grab the min max values.
-        const minmax = calculateMinMax(data);
-        // calling tumorCurve function passing the data, PlotID and node reference.
-        const curve = tumorCurve(data, plotId, minmax);
-        // plot each model
-        plotBatch(data, curve.graph, curve.xrange, curve.yrange, tooltip, false);
-        // toggle legend buttons.
-        volumeToggle(data, curve.svg, curve.xrange, curve.width, curve.height, minmax.maxVolume, minmax.maxVolNorm, minmax.minVolNorm, tooltip);
+        if (data.length !== 0) {
+            const tooltip = initializeToolTop();
+            // calling function to grab the min max values.
+            const minmax = calculateMinMax(data);
+            // calling tumorCurve function passing the data, PlotID and node reference.
+            const curve = tumorCurve(data, plotId, minmax);
+            // plot each model
+            plotBatch(data, curve.graph, curve.xrange, curve.yrange, tooltip, false);
+            // toggle legend buttons.
+            volumeToggle(data, curve.svg, curve.xrange, curve.width, curve.height, minmax.maxVolume, minmax.maxVolNorm, minmax.minVolNorm, tooltip);
+        }
     });
 
 
