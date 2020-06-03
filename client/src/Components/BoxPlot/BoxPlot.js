@@ -3,14 +3,18 @@ import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
 // parsing the initial data.
-const parseData = (data, response) => {
-    const parsedData = {};
+const parseData = (data, response, drugs) => {
+    const parsedPatientData = {};
+    const parsedDrugData = {};
     let minTotal = 0;
     let maxTotal = 0;
 
-    data.forEach((element) => {
+    data.forEach((element, i) => {
+        // creates an array for each drug.
+        parsedDrugData[drugs[i]] = [];
         Object.keys(element).forEach((patient) => {
             const value = element[patient][response];
+
             if (Number(value) > maxTotal) {
                 maxTotal = Number(value);
             }
@@ -19,45 +23,53 @@ const parseData = (data, response) => {
                 minTotal = Number(value);
             }
 
-            if (!parsedData[patient]) {
-                parsedData[patient] = [];
+            if (!parsedPatientData[patient]) {
+                parsedPatientData[patient] = [];
             }
 
             if (value !== undefined && value !== 'NA' && value !== 'empty') {
-                parsedData[patient].push(Number(value));
+                parsedPatientData[patient].push(Number(value));
+                parsedDrugData[drugs[i]].push(Number(value));
             }
         });
     });
-
-    return { parsedData, minTotal, maxTotal };
+    
+    return { parsedPatientData, minTotal, maxTotal, parsedDrugData };
 };
 
 
 // initialize the dimensions and margins.
 const initialize = () => {
     const margin = {
-        // top: 10, right: 10, bottom: 10, left: 20,
         top: 1, right: 1, bottom: 1, left: 1,
     };
-    const width = 20 - margin.left - margin.right;
-    const height = 100 - margin.top - margin.bottom;
+    const patientWidth = 20 - margin.left - margin.right;
+    const patientHeight = 100 - margin.top - margin.bottom;
 
     return {
         margin,
-        height,
-        width,
+        patientHeight,
+        patientWidth,
     };
 };
 
 // create an svg.
-const createSvg = (width, height) => {
-    const svg = d3.select('#boxplot')
-        .append('svg')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('transform', 'translate(220, 150)')
-        .attr('id', 'boxplotsvg');
-
+const createSvg = (width, height, id, svgId, patientSvgWidth, boxHeight) => {
+        let svg = ''
+    
+        if (svgId === 'right') {
+            svg = d3.select(`#${id}`).append('g')
+                .attr('transform', `translate(${patientSvgWidth + 20}, ${boxHeight})`)
+                .attr('id', `boxplotsvg${svgId}-g`);
+        } else {
+            svg = d3.select(`#${id}`)
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('transform', 'translate(220, 150)')
+                .attr('id', `boxplotsvg${svgId}`)
+        }
+       
     return svg;
 };
 
@@ -85,10 +97,12 @@ const appendGElement = (svg, margin, width, i) => svg
     .style('background-color', 'grey')
     .attr('id', 'boxplotbody');
 
+
 // scaling min and max values to 0 and 1 correspondingly.
 const maxMinScale = (min, max) => d3.scaleLinear()
     .domain([min, max])
     .range([0, 1]);
+
 
 // scale for y axis. 0,1 mapped to height, 0.
 const yScale = (height, min, max) => {
@@ -105,13 +119,13 @@ const yScale = (height, min, max) => {
 
 
 // create y axis.
-const yAxis = (scale, width, height, margin) => {
+const yAxis = (scale, width, height, margin, id) => {
     const svg = d3.select('#boxplot')
         .append('svg')
         .attr('width', width + margin.left + margin.right + 10)
         .attr('height', height + margin.top + margin.bottom)
         .attr('transform', 'translate(220, 150)')
-        .attr('id', 'boxplotsvg');
+        .attr('id', `svg-${id}`);
 
     const axis = d3.axisLeft()
         .scale(scale)
@@ -194,61 +208,71 @@ const createRest = (svg, min, median, max, width, y, scale) => {
 
 const BoxPlot = (props) => {
     // destructuring the props.
-    const { data, response, patients } = props;
+    const { data, response, patients, drugs } = props;
 
     // parsing the data.
-    const { parsedData, minTotal, maxTotal } = parseData(data, response);
+    const { parsedPatientData, minTotal, maxTotal, parsedDrugData } = parseData(data, response, drugs);
 
     // get number of patients.
-    const totalPatients = Object.keys(parsedData).length;
+    const totalPatients = Object.keys(parsedPatientData).length;
 
     // initialize dimensions.
-    const { width, height, margin } = initialize();
+    const { patientWidth, patientHeight, margin } = initialize();
 
     // svg width.
-    const svgWidth = (width + margin.left + margin.right) * totalPatients;
-    const svgHeight = height + margin.bottom + margin.top;
+    const boxHeight = 35;
+    const boxWidth = 70;
+    const patientSvgWidth = (patientWidth + margin.left + margin.right) * totalPatients;
+    const patientSvgHeight = patientHeight + margin.bottom + margin.top;
+    const drugSvgWidth = boxWidth;
+    const drugSvgHeight = boxHeight * drugs.length;
 
-
+    
     // use effect function once the component is mounted/updated.
     useEffect(() => {
         // remove the element if already present.
-        d3.selectAll('#boxplotsvg').remove();
+        d3.selectAll('#boxplotsvgtop').remove();
+        d3.selectAll('#svg-y-axis').remove();
 
         // scale.
         const dataScale = maxMinScale(minTotal, maxTotal);
-        const scale = yScale(height, minTotal, maxTotal);
+        const scale = yScale(patientHeight, minTotal, maxTotal);
 
         // y-axis.
-        yAxis(scale, width, height, margin);
+        yAxis(scale, patientWidth, patientHeight, margin, 'y-axis');
 
         // create an svg element.
-        const svgCanvas = createSvg(svgWidth, svgHeight);
+        const svgCanvas = createSvg(patientSvgWidth, patientSvgHeight, 'boxplot', 'top');
+        const svgCanvasRight = createSvg(drugSvgWidth, drugSvgHeight, 'heatmap-heatmap-g', 'right', patientSvgWidth, boxHeight);
 
         // creating reactangle around the svgs.
-        createRectangle(svgCanvas, svgWidth, svgHeight);
+        createRectangle(svgCanvas, patientSvgWidth, patientSvgHeight);
+        createRectangle(svgCanvasRight, drugSvgWidth, drugSvgHeight);
 
         // create a box plot for each of the patient.
-        const keys = patients.length === 0 ? Object.keys(parsedData) : patients;
-        keys.forEach((element, i) => {
-            // append g element to svg for each patient.
-            const svg = appendGElement(svgCanvas, margin, width, i);
+        const keys = patients.length === 0 ? Object.keys(parsedPatientData) : patients;
 
-            const plotData = parsedData[element];
-
-            // compute stats.
-            const {
-                median, min, max,
-                q1, q3,
-            } = computeStats(plotData);
-
-            // create vertical line.
-            verticalLine(width, min, max, svg, scale, dataScale);
-            // create box.
-            createBox(svg, margin, width, q3, q1, scale, element, dataScale);
-            // create rest of the elements.
-            createRest(svg, min, median, max, width, scale, dataScale);
-        });
+        [svgCanvas].map(canvas => {
+            keys.forEach((element, i) => {
+                // append g element to svg for each patient.
+                const svg = appendGElement(canvas, margin, patientWidth, i);
+    
+                const plotData = parsedPatientData[element];
+    
+                // compute stats.
+                const {
+                    median, min, max,
+                    q1, q3,
+                } = computeStats(plotData);
+    
+                // create vertical line.
+                verticalLine(patientWidth, min, max, svg, scale, dataScale);
+                // create box.
+                createBox(svg, margin, patientWidth, q3, q1, scale, element, dataScale);
+                // create rest of the elements.
+                createRest(svg, min, median, max, patientWidth, scale, dataScale);
+            });
+        })
     });
 
     // return statement.
@@ -264,6 +288,7 @@ BoxPlot.propTypes = {
     response: PropTypes.string.isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     patients: PropTypes.arrayOf(PropTypes.string).isRequired,
+    drugs: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 

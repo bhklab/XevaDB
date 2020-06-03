@@ -287,7 +287,8 @@ class HeatMap extends Component {
             .attr('height', height + margin.bottom + margin.top)
             .attr('width', width + margin.left + margin.right)
             .append('g')
-            .attr('transform', `translate(${margin.left},${margin.top})`);
+            .attr('transform', `translate(${margin.left},${margin.top})`)
+            .attr('id', `heatmap-${plotId}-g`);
 
 
         /** Appending Circle to the  Y-Axis */
@@ -909,6 +910,8 @@ class HeatMap extends Component {
         const { responseValue } = this.state;
         const { data } = this.props;
         const { modifiedPatients } = this.state;
+        const { drugId: drugs } = this.props;
+
         return (
             <div>
                 <div style={{ position: 'relative' }}>
@@ -927,7 +930,7 @@ class HeatMap extends Component {
                 </div>
                 <div ref={(node) => { this.node = node; }} className="heatmap-wrapper">
                     {
-                        responseValue !== 'mRECIST' ? <BoxPlot response={responseValue} data={data} patients={modifiedPatients} /> : <div />
+                        responseValue !== 'mRECIST' ? <BoxPlot response={responseValue} data={data} patients={modifiedPatients} drugs={drugs} /> : <div />
                     }
                 </div>
                 <PatientConsumer>{(value) => { this.rankHeatMapBasedOnOncoprintChanges(value); }}</PatientConsumer>
