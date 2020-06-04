@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable no-shadow */
 /* eslint-disable no-param-reassign */
