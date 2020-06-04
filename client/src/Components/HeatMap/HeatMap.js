@@ -232,7 +232,7 @@ class HeatMap extends Component {
 
             // Draw the rectangle and fill with gradient
             svg.append('rect')
-                .attr('x', width)
+                .attr('x', width + 30)
                 .attr('y', height / 4)
                 .attr('width', 28)
                 .attr('height', 129)
@@ -247,7 +247,7 @@ class HeatMap extends Component {
                 .data(legendValue)
                 .enter()
                 .append('text')
-                .attr('x', width + 30)
+                .attr('x', width + 60)
                 .attr('y', (d, i) => [height / 4 + 15, height / 4 + 125][i])
                 .text((d) => d)
                 .attr('font-size', '15px')
