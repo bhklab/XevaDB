@@ -13,7 +13,7 @@ const HeaderStyle = styled.header`
     max-height: 100px;
     font-family: 'Raleway', sans-serif;
     background-color: rgb(255,255,255,0.8);
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
