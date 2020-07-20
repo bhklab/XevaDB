@@ -4,6 +4,7 @@
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { CSVLink } from 'react-csv';
 import StyleTable from './ModelResponseStyle';
 import BatchStatTable from './BatchResponseStatTable';
 
@@ -21,6 +22,7 @@ class StatTable extends React.Component {
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
         this.parseData = this.parseData.bind(this);
+        this.getCSVHeader = this.getCSVHeader.bind(this);
     }
 
     componentDidMount() {
@@ -31,6 +33,17 @@ class StatTable extends React.Component {
         Promise.all([getBatchResponse, getModelResponse]).then((response) => {
             this.parseData(response);
         });
+    }
+
+    getCSVHeader(data) {
+        let headers = [];
+        if (data.length !== 0) {
+            headers = Object.keys(data[0]).map((value) => ({
+                label: value.split('_').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' '),
+                key: value,
+            }));
+            console.log(headers);
+        }
     }
 
     parseData(response) {
@@ -127,12 +140,16 @@ class StatTable extends React.Component {
     }
 
     render() {
-        const { batchData } = this.state;
+        const { batchData, data } = this.state;
+
         return (
             <>
                 <BatchStatTable data={batchData} />
                 <div className="curve-wrapper" style={{ marginTop: '0px', padding: '30px 0px' }}>
                     <h1 id="titlemodel">Statistics (Model Response)</h1>
+                    <CSVLink data={data} headers={this.getCSVHeader(data)}>
+                        <h3 style={{ color: '#cd5686' }}> Download Model Response Data </h3>
+                    </CSVLink>
                     <StyleTable>
                         <table id="stats-table">
                             <tbody>
@@ -151,6 +168,5 @@ StatTable.propTypes = {
     patientParam: PropTypes.string.isRequired,
     drugParam: PropTypes.string.isRequired,
 };
-
 
 export default StatTable;

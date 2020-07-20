@@ -33,6 +33,7 @@ const StyleTable = styled.div`
     tr:hover {
         background-color: #f5f5f5;
     }
+
 `;
 
 export default StyleTable;
