@@ -122,7 +122,13 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
     drug = drug.map((value) => value.replace('_', ' + '));
 
     // to always include untreated/water (control)
-    drug.push('untreated');
+    if (param_dataset === '7') {
+        drug.push('water');
+    } else if (param_dataset === '8') {
+        drug.push('control');
+    } else {
+        drug.push('untreated');
+    }
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if ((response.locals.user === 'unknown' && param_dataset < 7 && param_dataset > 0)
