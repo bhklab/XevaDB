@@ -13,6 +13,16 @@ import { StyleBar, customStyles, StyleButton } from './SearchStyle';
 import { GeneList } from '../../util/GeneList';
 
 class Search extends React.Component {
+    static parseDataset(dataset) {
+        if (dataset === 'SU2C UHN (Breast Cancer)') {
+            return 'UHN (Breast Cancer)';
+        }
+        if (dataset === 'SU2C McGill (Breast Cancer)') {
+            return 'McGill (Breast Cancer)';
+        }
+        return dataset;
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -42,7 +52,6 @@ class Search extends React.Component {
         this.checkInput = this.checkInput.bind(this);
         this.clearText = this.clearText.bind(this);
     }
-
 
     componentWillMount() {
         const { genomicsValue } = this.state;
@@ -75,14 +84,13 @@ class Search extends React.Component {
             .then((response) => {
                 const datasets = response.data.data.map((item) => ({
                     value: item.dataset_id,
-                    label: item.dataset_name,
+                    label: Search.parseDataset(item.dataset_name),
                 }));
                 this.setState({
                     datasets: [...datasets],
                 });
             });
     }
-
 
     handleDrugChange(selectedOption) {
         if (selectedOption !== null && selectedOption.length > 0) {
@@ -230,7 +238,6 @@ class Search extends React.Component {
         });
     }
 
-
     handleKeyPress(event) {
         if (event.key === 'Enter') {
             this.redirectUser();
@@ -270,7 +277,6 @@ class Search extends React.Component {
         }
     }
 
-
     render() {
         const {
             datasets, drugs, drugValue, genomicsValue, genomics,
@@ -285,7 +291,7 @@ class Search extends React.Component {
                             {' '}
                             <span style={{ color: '#cd5686' }}>XevaDB:</span>
                             {' '}
-                                A Database For PDX Pharmacogenomic Data
+                            A Database For PDX Pharmacogenomic Data
                             {' '}
                         </h1>
                         <div className="two-col">
@@ -402,6 +408,5 @@ class Search extends React.Component {
         );
     }
 }
-
 
 export default withRouter(Search);

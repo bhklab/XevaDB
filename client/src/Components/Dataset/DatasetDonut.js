@@ -24,6 +24,16 @@ const Wrapper = styled.div`
 `;
 
 class DatasetDonut extends React.Component {
+    static parseDataset(dataset) {
+        if (dataset === 'SU2C UHN (Breast Cancer)') {
+            return 'UHN (Breast Cancer)';
+        }
+        if (dataset === 'SU2C McGill (Breast Cancer)') {
+            return 'McGill (Breast Cancer)';
+        }
+        return dataset;
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -38,7 +48,7 @@ class DatasetDonut extends React.Component {
         axios.get('/api/v1/dataset/models', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 const data = response.data.data.map((element) => ({
-                    id: element.dataset_name,
+                    id: DatasetDonut.parseDataset(element.dataset_name),
                     value: element.patient_id,
                     parameter: element.dataset_id,
                     totalModels: element.totalModels,
@@ -86,6 +96,5 @@ class DatasetDonut extends React.Component {
         );
     }
 }
-
 
 export default DatasetDonut;

@@ -57,7 +57,6 @@ const DatasetTable = (props) => {
     );
 };
 
-
 DatasetTable.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     dataLength: PropTypes.number.isRequired,
