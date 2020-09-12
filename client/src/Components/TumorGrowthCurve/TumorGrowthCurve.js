@@ -312,7 +312,6 @@ const tumorCurve = (data, plotId, minmax) => {
         .attr('y', (d, i) => height / 2 - 45 + (i * 50))
         .text((d, i) => expTypes[i]);
 
-
     // set domain and range scaling
     const xrange = d3.scaleLinear()
         .domain([0, minmax.maxTime])
@@ -361,6 +360,7 @@ const tumorCurve = (data, plotId, minmax) => {
     svg.append('text')
         .attr('text-anchor', 'middle')
         .attr('fill', 'black')
+        .attr('id', 'volume-text')
         .attr('transform', `translate(${-60},${height / 2})rotate(-90)`)
         .text('Volume (mm³)');
 
@@ -445,7 +445,6 @@ const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) 
                 .data(meanVolume)
                 .enter();
 
-
             const linepath = d3.line()
                 .x((d, i) => xrange(timeUnion[n][i]))
                 .y((d, i) => yrange(meanVolume[i]));
@@ -483,7 +482,6 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
     const paths = graph.selectAll('.model-path')
         .data(() => data)
         .enter();
-
 
     // line function, to join dots
     const linepath = d3.line()
@@ -789,6 +787,14 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
         rect.on('click', () => {
             // y range variable.
             let yrange = calculateNormalizedRange(isNormalized, minVolNorm, maxVolNorm, maxVolume);
+            // changing the text on y axis.
+            if (val.match(/(volNorm|volNormText)/)) {
+                d3.select('#volume-text')
+                    .text('Normalized volume (mm³)');
+            } else if (val.match(/(volRaw|volRawText)/)) {
+                d3.select('#volume-text')
+                    .text('Volume (mm³)');
+            }
             // conditioning.
             if (val.match(/(allCurves|allCurvesText|errorBar|errorBarText)/g)) {
                 // if error bar selection the set the variable.
@@ -848,7 +854,6 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
     });
 };
 
-
 // main function to plot the growth curve.
 const TumorGrowthCurve = (props) => {
     const { patientParam, drugParam, data } = props;
@@ -869,7 +874,6 @@ const TumorGrowthCurve = (props) => {
         }
     });
 
-
     return (
         <div>
             <TopNav />
@@ -878,11 +882,11 @@ const TumorGrowthCurve = (props) => {
 
                 <div className="curve-wrapper" style={{ marginTop: '100px' }}>
                     <h1>
-                            Drug ID =
+                        Drug ID =
                         {' '}
                         <span style={{ color: '#cd5686' }}>{drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
                         {' '}
-                            and Patient ID =
+                        and Patient ID =
                         {' '}
                         <span style={{ color: '#cd5686' }}>{patientParam}</span>
                     </h1>
@@ -900,12 +904,10 @@ const TumorGrowthCurve = (props) => {
     );
 };
 
-
 TumorGrowthCurve.propTypes = {
     patientParam: PropTypes.string.isRequired,
     drugParam: PropTypes.string.isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
-
 
 export default TumorGrowthCurve;
