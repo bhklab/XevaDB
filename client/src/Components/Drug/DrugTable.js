@@ -75,7 +75,7 @@ class DrugTable extends React.Component {
                 sortable: true,
             },
             {
-                Header: 'Source',
+                Header: 'PubChem',
                 Cell: (val) => {
                     const pubchemLink = val.original.source.split(' + ');
                     const { length } = pubchemLink;
@@ -91,6 +91,7 @@ class DrugTable extends React.Component {
 
                     // looping through the pubchemLink and adding image and url based on the data.
                     pubchemLink.forEach((row, i) => {
+                        const pid = row.split('/').pop();
                         if (row !== 'NA') {
                             link.push(
                                 <span key={row}>
@@ -99,17 +100,18 @@ class DrugTable extends React.Component {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         href={`${row}`}
+                                        style={{ textDecoration: 'none', color: '#3453b0' }}
                                     >
-                                        <img height={38} src={val.original.img} alt="pubchem links" />
+                                        {Number(pid)}
                                     </a>
-                                    { ((length > i + 1) && !isNa) ? <sup> + </sup> : ''}
+                                    {((length > i + 1) && !isNa) ? <span> + </span> : ''}
                                 </span>,
                             );
                         }
                     });
                     return link;
                 },
-                sortable: false,
+                sortable: true,
             },
         ];
 
