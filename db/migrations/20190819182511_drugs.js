@@ -4,12 +4,6 @@ exports.up = function (knex, Promise) {
         table.increments('drug_id')
             .primary();
         table.string('drug_name').notNullable();
-        table.string('standard_name');
-        table.string('targets');
-        table.string('treatment_type');
-        table.string('class');
-        table.string('class_name');
-        table.string('source');
     });
 };
 
