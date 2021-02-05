@@ -5,6 +5,12 @@ exports.up = function (knex, Promise) {
             .primary();
         table.string('model')
             .notNullable();
+        table.integer('patient_id')
+            .notNullable()
+            .unsigned()
+            .references('patient_id')
+            .inTable('patients')
+            .index();
     });
 };
 
