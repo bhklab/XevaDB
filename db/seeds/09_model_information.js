@@ -7,7 +7,6 @@ const file_location = `${data_path}/model_information.csv`
 const file = fs.readFileSync(file_location, 'utf8')
 const dataObj = csv.toObject(file)
 
-console.log(dataObj);
 
 exports.seed = function (knex, Promise) {
   return knex('model_information').del()
