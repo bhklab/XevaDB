@@ -76,7 +76,7 @@ router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreening);
 
 // Authorization APIs.
 router.post('/v1/login', awtauthentication.createLogin);
-router.post('/v1/register', awtauthentication.createRegister);
+router.post('/v1/register', awtauthentication.registerUser);
 
 
 // APIs related to batch response.

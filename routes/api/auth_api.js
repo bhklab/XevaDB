@@ -18,7 +18,7 @@ const schema = Joi.object({
 
 
 // Register User
-const createRegister = async (request, response) => {
+const registerUser = async (request, response) => {
     const { username } = request.body;
     const { password } = request.body;
 
@@ -103,5 +103,5 @@ const createLogin = function (request, response) {
 
 module.exports = {
     createLogin,
-    createRegister,
+    registerUser,
 };
