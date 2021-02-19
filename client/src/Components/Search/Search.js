@@ -11,6 +11,7 @@ import axios from 'axios';
 import Popup from 'reactjs-popup';
 import { StyleBar, customStyles, StyleButton } from './SearchStyle';
 import { GeneList } from '../../utils/GeneList';
+import colors from '../../styles/colors';
 
 class Search extends React.Component {
     static parseDataset(dataset) {
@@ -289,7 +290,7 @@ class Search extends React.Component {
                     <div className="select-component" onKeyPress={this.handleKeyPress}>
                         <h1>
                             {' '}
-                            <span style={{ color: '#cd5686' }}>XevaDB:</span>
+                            <span style={{ color: `${colors.pink_header}` }}>XevaDB:</span>
                             {' '}
                             A Database For PDX Pharmacogenomic Data
                             {' '}
@@ -393,7 +394,7 @@ class Search extends React.Component {
                                             position="right center"
                                         >
                                             <div style={{
-                                                color: '#3453b0', fontFamily: 'Raleway', fontSize: '17px', fontWeight: '500',
+                                                color: `${colors.blue_header}`, fontFamily: 'Raleway', fontSize: '17px', fontWeight: '500',
                                             }}
                                             >
                                                 Complete all the fields!!
