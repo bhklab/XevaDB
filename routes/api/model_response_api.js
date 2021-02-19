@@ -12,7 +12,7 @@ const getModelResponseBasedOnDataset = function (request, response) {
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if ((response.locals.user === 'unknown' && param_dataset < 7 && param_dataset > 0)
-            || (response.locals.user.verified === 'verified' && param_dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
+        || (response.locals.user.verified === 'verified' && param_dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
     ) {
         const distinctPatients = knex('model_information')
             .distinct('patients.patient')
@@ -70,7 +70,7 @@ const getModelResponseBasedOnDataset = function (request, response) {
                             data[value - 1][element.patient] = {};
                         }
                         data[value - 1][element.patient][element.response_type] = element.value;
-                    } else if (element.drug_name === 'untreated' || element.drug_name === 'WATER' || element.drug_name === 'Control') {
+                    } else if (element.drug_name.match(/(untreated|water|control)/i)) {
                         untreated.Drug = element.drug_name;
                         if (!(element.patient in untreated)) {
                             untreated[element.patient] = {};
@@ -88,7 +88,7 @@ const getModelResponseBasedOnDataset = function (request, response) {
                     }
                 });
 
-                if (Object.entries(untreated).length === 1 && untreated.constructor === Object) {}
+                if (Object.entries(untreated).length === 1 && untreated.constructor === Object) { }
                 else { data.unshift(untreated); }
 
                 // array of all the patients belonging to a particular dataset.
@@ -132,7 +132,7 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if ((response.locals.user === 'unknown' && param_dataset < 7 && param_dataset > 0)
-            || (response.locals.user.verified === 'verified' && param_dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
+        || (response.locals.user.verified === 'verified' && param_dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
     ) {
         const distinctPatients = knex('model_information')
             .distinct('patients.patient')
@@ -206,7 +206,7 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
                         value += 1;
                     }
                 });
-                if (Object.entries(untreated).length === 1 && untreated.constructor === Object) {}
+                if (Object.entries(untreated).length === 1 && untreated.constructor === Object) { }
                 else { data.unshift(untreated); }
 
                 // array of all the patients belonging to a particular dataset.
@@ -268,7 +268,7 @@ const getModelResponseStats = function (request, response) {
         // check if it verified and the dataset id is greater than 0
         // or if it's not verified (unkown) then the dataset id should be less than 7.
         if ((response.locals.user === 'unknown' && dataset < 7 && dataset > 0)
-                 || (response.locals.user.verified === 'verified' && dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
+            || (response.locals.user.verified === 'verified' && dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
         ) {
             knex.select()
                 .from('model_response')
