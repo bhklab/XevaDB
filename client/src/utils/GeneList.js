@@ -24,7 +24,9 @@ export const GeneList = [
     'General: Invasion and metastasis=MMP1 MMP2 MMP3 MMP7 MMP9 MMP10 MMP11 MMP12 MMP13 MMP14 MMP15 MMP16 MMP17 MMP19 MMP21 MMP23B MMP24 MMP25 MMP26 MMP27 MMP28 ITGB3 ITGAV PTK2 CDH1 SPARC WFDC2',
 ];
 
+export const HeatMapGenes = ['TP53', 'MDM2', 'MDM4', 'BRAF', 'BRCA1', 'KRAS', 'MAPK1', 'SOX9', 'PTEN', 'PIK3CA', 'NRAS', 'MTOR', 'MYC', 'NFKB1', 'NOTCH1', 'MAPK1', 'KIT', 'KRAS', 'JAK1', 'JAK2', 'ERBB2', 'FGFR1'];
 
 export default {
     GeneList,
+    HeatMapGenes,
 };
