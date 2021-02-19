@@ -10,7 +10,7 @@ import Select from 'react-select';
 import axios from 'axios';
 import Popup from 'reactjs-popup';
 import { StyleBar, customStyles, StyleButton } from './SearchStyle';
-import { GeneList } from '../../util/GeneList';
+import { GeneList } from '../../utils/GeneList';
 
 class Search extends React.Component {
     static parseDataset(dataset) {
