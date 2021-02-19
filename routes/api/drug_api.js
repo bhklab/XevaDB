@@ -11,6 +11,11 @@ const getDrugs = function (request, response) {
         .select('drug_name', 'standard_name', 'targets', 'treatment_type', 'class', 'class_name', 'source')
         .from('drugs')
         .leftJoin(
+            'drug_annotations',
+            'drugs.drug_id',
+            'drug_annotations.drug_id'
+        )
+        .leftJoin(
             'model_information',
             'drugs.drug_id',
             'model_information.drug_id',
@@ -38,6 +43,11 @@ const getDrugGroupedByClass = function (request, response) {
             'drugs',
             'model_information.drug_id',
             'drugs.drug_id',
+        )
+        .leftJoin(
+            'drug_annotations',
+            'drugs.drug_id',
+            'drug_annotations.drug_id'
         )
         .select('class_name')
         .whereBetween('model_information.dataset_id', datasetArray)
