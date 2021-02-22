@@ -5,7 +5,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-import { mutationTypeMap, cnaMap, rnaMap } from '../../util/MutationViewsUtil';
+import { mutationTypeMap, cnaMap, rnaMap } from '../../utils/MutationViewsUtil';
 import PatientContext, { PatientConsumer } from '../Context/PatientContext';
 
 class Oncoprint extends React.Component {
@@ -531,8 +531,8 @@ class Oncoprint extends React.Component {
             const y_axis = d3.axisLeft()
                 .scale(yrange_axis)
                 .ticks(4); // change to dynamic ticks.
-                // .tickSize(2)
-                // .tickFormat(d3.format('.0f'));
+            // .tickSize(2)
+            // .tickFormat(d3.format('.0f'));
 
             svg.append('g')
                 .attr('class', 'y_axis')
@@ -744,17 +744,17 @@ class Oncoprint extends React.Component {
         const retunType = (i) => {
             let type = {};
             switch (i) {
-            case 0:
-                type = mutationTypeMap;
-                break;
-            case 1:
-                type = cnaMap;
-                break;
-            case 2:
-                type = rnaMap;
-                break;
-            default:
-                type = mutationTypeMap;
+                case 0:
+                    type = mutationTypeMap;
+                    break;
+                case 1:
+                    type = cnaMap;
+                    break;
+                case 2:
+                    type = rnaMap;
+                    break;
+                default:
+                    type = mutationTypeMap;
             }
             return type;
         };

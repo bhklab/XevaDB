@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import PatientContext, { PatientConsumer } from '../Context/PatientContext';
 // import DensityPlot from '../DensityPlot/DensityPlot';
 import BoxPlot from '../BoxPlot/BoxPlot';
+import colors from '../../styles/colors';
 
 class HeatMap extends Component {
     constructor(props) {
@@ -57,19 +58,19 @@ class HeatMap extends Component {
         const width = patient.length * rectWidth + 100;
 
         const targetEval = [
-            { CR: '#0033CC' },
-            { PR: '#1a9850' },
-            { SD: '#fed976' },
-            { PD: '#e41a1c' },
+            { CR: `${colors.blue_heatmap}` },
+            { PR: `${colors.green_heatmap}` },
+            { SD: `${colors.yellow_heatmap}` },
+            { PD: `${colors.red_heatmap}` },
         ];
 
         const targetColor = {
-            CR: '#0033CC',
-            PR: '#1a9850',
-            SD: '#fed976',
-            PD: '#e41a1c',
-            empty: 'lightgray',
-            NA: 'lightgray',
+            CR: `${colors.blue_heatmap}`,
+            PR: `${colors.green_heatmap}`,
+            SD: `${colors.yellow_heatmap}`,
+            PD: `${colors.red_heatmap}`,
+            empty: `${colors.lightgray}`,
+            NA: `${colors.lightgray}`,
         };
 
         // making tooltips
@@ -162,14 +163,14 @@ class HeatMap extends Component {
                 const selectedOption = d3.select('select').property('value');
                 let response = '';
                 switch (selectedOption) {
-                case 'Slope':
-                    response = 'slope';
-                    break;
-                case 'Best Average Response':
-                    response = 'best.average.response';
-                    break;
-                default:
-                    response = selectedOption;
+                    case 'Slope':
+                        response = 'slope';
+                        break;
+                    case 'Best Average Response':
+                        response = 'best.average.response';
+                        break;
+                    default:
+                        response = selectedOption;
                 }
                 reference.setState({
                     responseValue: response,
@@ -216,18 +217,18 @@ class HeatMap extends Component {
             // Set the color for the start (0%)
             linearGradient.append('stop')
                 .attr('offset', '0%')
-                .attr('stop-color', '#d8b365');
+                .attr('stop-color', `${colors.amber_gradient}`);
 
             // Set the color for the start (50%)
             linearGradient.append('stop')
                 .attr('offset', min < 0 ? '50%' : '100%')
-                .attr('stop-color', '#f7f7f7');
+                .attr('stop-color', `${colors.white_gradient}`);
 
             // Set the color for the end (100%)
             if (min < 0) {
                 linearGradient.append('stop')
                     .attr('offset', '100%')
-                    .attr('stop-color', '#5ab4ac');
+                    .attr('stop-color', `${colors.green_gradient}`);
             }
 
             // Draw the rectangle and fill with gradient
@@ -300,7 +301,7 @@ class HeatMap extends Component {
                 .attr('cy', i)
                 .attr('r', 6)
                 .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
-                .style('fill', '#5b8c85')
+                .style('fill', `${colors.green_gradient}`)
                 .attr('transform', `translate(0,${yScale(val) + 15 - i})`)
                 .style('visibility', 'hidden');
         });
@@ -360,7 +361,7 @@ class HeatMap extends Component {
         // scale for coloring.
         const linearColorScale = d3.scaleLinear()
             .domain([min, 0, max])
-            .range(['#5ab4ac', '#f7f7f7', '#d8b365']);
+            .range([`${colors.green_gradient}`, `${colors.white_gradient}`, `${colors.amber_gradient}`]);
         // this will fill the rectangles with different color based on the data.
         drawrectangle.attr('fill', (d) => {
             if (responseType === 'mRECIST') {
@@ -398,8 +399,8 @@ class HeatMap extends Component {
             const tooltipDiv = tooltip
                 .style('left', `${x + 10}px`)
                 .style('top', `${y + 10}px`)
-                .style('color', '#000000')
-                .style('background-color', '#ffffff');
+                .style('color', `${colors.black}`)
+                .style('background-color', `${colors.white}`);
 
             // tooltip data.
             const tooltipData = [
@@ -465,7 +466,7 @@ class HeatMap extends Component {
             .attr('width', rectWidth - 2)
             .attr('height', rectHeight - 2)
             .attr('x', (d, i) => i * rectWidth)
-            .attr('fill', 'rgb(0,0,0)')
+            .attr('fill', `${colors.black}`)
             .attr('y', rectHeight)
             .style('opacity', 0)
             // eslint-disable-next-line func-names
@@ -517,7 +518,7 @@ class HeatMap extends Component {
             .attr('x2', (d, i) => i * (rectWidth) - 3)
             .attr('y1', 2)
             .attr('y2', 200)
-            .attr('stroke', 'black')
+            .attr('stroke', `${colors.black}`)
             .attr('stroke-width', 1)
             .style('stroke-dasharray', '3 2')
             .style('opacity', 0.2);
@@ -530,7 +531,7 @@ class HeatMap extends Component {
             .attr('width', rectWidth - 2)
             .attr('height', 200)
             .attr('x', (d, i) => i * rectWidth - 2)
-            .attr('fill', 'rgb(0,0,0)')
+            .attr('fill', `${colors.black}`)
             .attr('y', 0)
             .style('opacity', 0);
 
@@ -547,8 +548,8 @@ class HeatMap extends Component {
             .call(yAxis)
             .selectAll('text')
             .attr('fill', (d) => {
-                if (d === 'untreated' || d === 'WATER' || d === 'Control') { return '#3453b0'; }
-                return 'black';
+                if (d === 'untreated' || d === 'WATER' || d === 'Control') { return `${colors.blue_header}`; }
+                return `${colors.black}`;
             })
             .attr('font-weight', (d) => {
                 if (d === 'untreated' || d === 'WATER' || d === 'Control') { return '700'; }
@@ -569,8 +570,8 @@ class HeatMap extends Component {
                     .style('left', `${d3.event.pageX - 100}px`)
                     .style('top', `${d3.event.pageY + 15}px`)
                     .attr('id', 'tooltiptextdrug')
-                    .style('color', '#000000')
-                    .style('background-color', '#ffffff')
+                    .style('color', `${colors.black}`)
+                    .style('background-color', `${colors.white}`)
                     .text('Click to Sort');
 
                 const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[.]/g, '')
@@ -667,7 +668,7 @@ class HeatMap extends Component {
                 .attr('transform', `translate(${patient.length * rectWidth + 20},${35})`)
                 .call(xAxisVertical)
                 .selectAll('text')
-                .attr('fill', 'black')
+                .attr('fill', `${colors.black}`)
                 .style('font-size', 8)
                 .attr('stroke', 'none');
 
@@ -683,7 +684,7 @@ class HeatMap extends Component {
                 .attr('height', rectHeight * drug.length)
                 .attr('width', drugScale(maxDrug))
                 .attr('fill', 'white')
-                .style('stroke', 'black')
+                .style('stroke', `${colors.black}`)
                 .style('stroke-width', 1);
 
 
@@ -703,7 +704,7 @@ class HeatMap extends Component {
                         .attr('x', xRange)
                         .attr('y', drugHeightScale(42 + iterator * 40))
                         .attr('fill', targetColor[type])
-                        .style('stroke', 'black')
+                        .style('stroke', `${colors.black}`)
                         .style('stroke-width', strokeWidth);
                 });
             };
@@ -742,7 +743,7 @@ class HeatMap extends Component {
                     .attr('height', boxHeight)
                     .attr('width', patient.length * 20)
                     .attr('fill', 'white')
-                    .style('stroke', 'black')
+                    .style('stroke', `${colors.black}`)
                     .style('stroke-width', 1);
 
                 // setting scale to map max patient_id value to range (height of the box.)
@@ -783,7 +784,7 @@ class HeatMap extends Component {
                             .attr('x', iterator * 20)
                             .attr('y', yRange)
                             .attr('fill', targetColor[type])
-                            .style('stroke', 'black')
+                            .style('stroke', `${colors.black}`)
                             .style('stroke-width', strokeWidth);
                     });
                 };
