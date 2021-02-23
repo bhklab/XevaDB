@@ -3,23 +3,23 @@ const express = require('express');
 const router = express.Router();
 
 // setting the path of the drugscreening api to variable so that we can use it later.
-const datasets = require('./api/dataset_api');
-const drugs = require('./api/drug_api');
-const tissues = require('./api/tissue_api');
-const genes = require('./api/gene_api');
-const patients = require('./api/patient_api');
-const models = require('./api/model_api');
-const batches = require('./api/batch_api');
-const mixed = require('./api/mixed_api');
-const modelInformation = require('./api/model_information_api');
-const modelResponse = require('./api/model_response_api');
-const mutation = require('./api/mutation_api');
+const datasets = require('./api/dataset');
+const drugs = require('./api/drug');
+const tissues = require('./api/tissue');
+const genes = require('./api/gene');
+const patients = require('./api/patient');
+const models = require('./api/model');
+const batches = require('./api/batch');
+const mixed = require('./api/mixed');
+const modelInformation = require('./api/model_information');
+const modelResponse = require('./api/model_response');
+const mutation = require('./api/mutation');
 const drugScreening = require('./api/drug_screening');
-const rnasequencing = require('./api/rnaseq_api');
-const copyNumberVariation = require('./api/copy_number_variation_api');
-const awtauthentication = require('./api/auth_api');
-const batchResponse = require('./api/batch_response_api');
-const verifytoken = require('./api/verify_token_api');
+const rnasequencing = require('./api/rnaseq');
+const copyNumberVariation = require('./api/copy_number_variation');
+const awtauthentication = require('./api/auth');
+const batchResponse = require('./api/batch_response');
+const verifytoken = require('./api/verify_token');
 
 
 // APIs related to dataset table.
