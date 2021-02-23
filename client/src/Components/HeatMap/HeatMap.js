@@ -69,7 +69,6 @@ class HeatMap extends Component {
             PR: `${colors.green_heatmap}`,
             SD: `${colors.yellow_heatmap}`,
             PD: `${colors.red_heatmap}`,
-            empty: `${colors.lightgray}`,
             NA: `${colors.lightgray}`,
         };
 
@@ -100,7 +99,7 @@ class HeatMap extends Component {
         if (responseType === 'mRECIST') {
             for (let i = 0; i < drug.length; i++) {
                 drugEvaluations[drug[i]] = {
-                    CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, empty: 0,
+                    CR: 0, PR: 0, SD: 0, PD: 0, NA: 0,
                 };
             }
         }
@@ -110,7 +109,7 @@ class HeatMap extends Component {
         if (responseType === 'mRECIST') {
             for (let j = 0; j < patient.length; j++) {
                 patientEvaluations[patient[j]] = {
-                    CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, empty: 0, total: 0,
+                    CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, total: 0,
                 };
             }
         }
@@ -123,10 +122,9 @@ class HeatMap extends Component {
             const keys = Object.entries(d);
             let currentMaxDrug = 0;
             keys.forEach((key) => {
-                if (key[1] === '') { key[1] = 'empty'; }
                 drugEvaluations[drugAlt][key[1][responseType]]++;
                 patientEvaluations[key[0]][key[1][responseType]]++;
-                if (key[1] !== 'NA' || key[1] !== 'empty') {
+                if (key[1] !== 'NA') {
                     currentMaxDrug++;
                     patientEvaluations[key[0]].total++;
                 }
@@ -337,7 +335,7 @@ class HeatMap extends Component {
                 const rectValue = patient.map((value) => {
                     let val = '';
                     if (d[value].length === 0) {
-                        val = 'empty';
+                        val = 'NA';
                     } else if (typeof (d[value]) === 'object' && d[value] !== null) {
                         val = d[value][responseType];
                     }
@@ -366,7 +364,7 @@ class HeatMap extends Component {
         drawrectangle.attr('fill', (d) => {
             if (responseType === 'mRECIST') {
                 return targetColor[d];
-            } if (responseType !== 'mRECIST' && (d === 'empty' || d === 'NA')) {
+            } if (responseType !== 'mRECIST' && d === 'NA') {
                 return 'lightgray';
             }
             return linearColorScale(d);
@@ -376,7 +374,7 @@ class HeatMap extends Component {
         drugEvaluations = {};
         for (let i = 0; i < drug.length; i++) {
             drugEvaluations[drug[i]] = {
-                CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, empty: 0,
+                CR: 0, PR: 0, SD: 0, PD: 0, NA: 0,
             };
         }
 
@@ -384,7 +382,7 @@ class HeatMap extends Component {
         patientEvaluations = {};
         for (let j = 0; j < patient.length; j++) {
             patientEvaluations[patient[j]] = {
-                CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, empty: 0, total: 0,
+                CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, total: 0,
             };
         }
 
@@ -443,7 +441,7 @@ class HeatMap extends Component {
                 const rectValue = patient.map((value) => {
                     let val = '';
                     if (d[value].length === 0) {
-                        val = 'empty';
+                        val = 'NA';
                     } else if (typeof (d[value]) === 'object' && d[value] !== null) {
                         val = d[value][responseType];
                     }
@@ -548,11 +546,11 @@ class HeatMap extends Component {
             .call(yAxis)
             .selectAll('text')
             .attr('fill', (d) => {
-                if (d === 'untreated' || d === 'WATER' || d === 'Control') { return `${colors.blue_header}`; }
+                if (d.match(/(untreated|water|control)/i)) { return `${colors.blue_header}`; }
                 return `${colors.black}`;
             })
             .attr('font-weight', (d) => {
-                if (d === 'untreated' || d === 'WATER' || d === 'Control') { return '700'; }
+                if (d.match(/(untreated|water|control)/i)) { return '700'; }
                 return '500';
             })
             .attr('id', (d) => `tick-${d.replace(/\s/g, '').replace(/\+/g, '')}`)
