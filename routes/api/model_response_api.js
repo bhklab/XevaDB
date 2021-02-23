@@ -64,7 +64,12 @@ const getModelResponseBasedOnDataset = function (request, response) {
 
                 // this will create enteries for heatmap.
                 const usersRows = JSON.parse(JSON.stringify(row[1]));
-                usersRows.forEach((element) => {
+                usersRows.forEach((element, i) => {
+                    // if the value is not present assign it NA.
+                    if (element.value === '') {
+                        element.value = 'NA'
+                    }
+                    // creating final data object.
                     if (element.drug_name === drug) {
                         if (!(element.patient in data[value - 1])) {
                             data[value - 1][element.patient] = {};
