@@ -11,4 +11,6 @@ export default {
     lightgray: '#D3D3D3',
     black: '#000000',
     white: '#ffffff',
+    violet_oncoprint: '#8B00C9',
+    brown_oncoprint: '#8B4513',
 };

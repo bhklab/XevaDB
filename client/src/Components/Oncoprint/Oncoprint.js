@@ -7,6 +7,7 @@ import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import { mutationTypeMap, cnaMap, rnaMap } from '../../utils/MutationViewsUtil';
 import PatientContext, { PatientConsumer } from '../Context/PatientContext';
+import colors from '../../styles/colors';
 
 class Oncoprint extends React.Component {
     constructor(props) {
@@ -66,12 +67,12 @@ class Oncoprint extends React.Component {
 
         // aberration data
         const aberration = [
-            { value: 'missense', color: '#1a9850' },
-            { value: 'inframe', color: '#8B4513' },
-            { value: 'truncating', color: '#000000' },
-            { value: 'other', color: '#8B00C9' },
-            { value: 'del', color: '#0033CC' },
-            { value: 'amp', color: '#e41a1c' },
+            { value: 'missense', color: `${colors.green_heatmap}` },
+            { value: 'inframe', color: `${colors.brown_oncoprint}` },
+            { value: 'truncating', color: `${colors.black}` },
+            { value: 'other', color: `${colors.violet_oncoprint}` },
+            { value: 'del', color: `${colors.blue_heatmap}` },
+            { value: 'amp', color: `${colors.red_heatmap}` },
         ];
 
         // height and width for the SVG based on the number of genes_mut and patient/sample ids.
@@ -89,10 +90,10 @@ class Oncoprint extends React.Component {
         let rect_alterations_mut = [];
         if (data_mut.length > 0) {
             rect_alterations_mut = [
-                { value: 'Missense Mutation', color: '#1a9850' },
-                { value: 'Inframe Mutation', color: '#8B4513' },
-                { value: 'Truncating Mutation', color: '#000000' },
-                { value: 'Other Mutations', color: '#8B00C9' },
+                { value: 'Missense Mutation', color: `${colors.green_heatmap}` },
+                { value: 'Inframe Mutation', color: `${colors.brown_oncoprint}` },
+                { value: 'Truncating Mutation', color: `${colors.black}` },
+                { value: 'Other Mutations', color: `${colors.violet_oncoprint}` },
             ];
         }
         // only if rnaseq data is available.
@@ -107,8 +108,8 @@ class Oncoprint extends React.Component {
         let rect_alterations_cnv = [];
         if (data_cnv.length > 0) {
             rect_alterations_cnv = [
-                { value: 'Deletion', color: '#0033CC' },
-                { value: 'Amplification', color: '#e41a1c' },
+                { value: 'Deletion', color: `${colors.blue_heatmap}` },
+                { value: 'Amplification', color: `${colors.red_heatmap}` },
             ];
         }
 
@@ -198,8 +199,8 @@ class Oncoprint extends React.Component {
                             .style('left', `${d3.event.pageX - 100}px`)
                             .style('top', `${d3.event.pageY + 15}px`)
                             .attr('id', 'tooltiptextgene')
-                            .style('color', '#000000')
-                            .style('background-color', '#ffffff')
+                            .style('color', `${colors.black}`)
+                            .style('background-color', `${colors.white}`)
                             .text('Click to Sort');
 
                         d3.selectAll(`.oprint-hlight-${genes[i]}`)
@@ -651,8 +652,8 @@ class Oncoprint extends React.Component {
             const tooltipDiv = tooltip
                 .style('left', `${x + 10}px`)
                 .style('top', `${y + 10}px`)
-                .style('color', '#000000')
-                .style('background-color', '#ffffff');
+                .style('color', `${colors.black}`)
+                .style('background-color', `${colors.white}`);
 
             // tooltip data.
             const tooltipData = [
