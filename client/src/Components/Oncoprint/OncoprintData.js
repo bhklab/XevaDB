@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import Oncoprint from './Oncoprint';
 import Spinner from '../SpinnerUtil/Spinner';
 import Error from '../Error/Error';
+import { OncoprintGenes } from '../../utils/OncoprintGenes';
 
 class OncoprintData extends React.Component {
     constructor(props) {
@@ -41,9 +42,9 @@ class OncoprintData extends React.Component {
 
     componentDidMount() {
         if (this.state.dataset > 0) {
-            const mutation_data = axios.get(`/api/v1/mutation/${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const rnaseq_data = axios.get(`/api/v1/rnaseq/${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const cnv_data = axios.get(`/api/v1/cnv/${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const mutation_data = axios.get(`/api/v1/mutation?genes=${OncoprintGenes}&dataset=${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const rnaseq_data = axios.get(`/api/v1/rnaseq?genes=${OncoprintGenes}&dataset=${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const cnv_data = axios.get(`/api/v1/cnv?genes=${OncoprintGenes}&dataset=${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
 
             Promise.all([mutation_data, rnaseq_data, cnv_data])
                 .then((response) => {
@@ -60,11 +61,17 @@ class OncoprintData extends React.Component {
     }
 
     updateResults(onco) {
-        // total patients.
-        const dataset = onco[0].data;
-        // grabbing the total patients from hmap.
-        let hmap_patients = [];
-        hmap_patients = dataset.pop();
+        // total patients for the dataset.
+        let hmap_patients = onco[0].data.pop();
+
+        // removing last element from each array element of result
+        if (onco.length > 1) {
+            onco.forEach((value, i) => {
+                if (i !== 0) {
+                    value.data.pop();
+                }
+            });
+        }
 
         // this is according to the object and heatmap sequence.
         onco.forEach((value, i) => { // can't break in forEach use for if wanna break.
@@ -137,7 +144,6 @@ class OncoprintData extends React.Component {
         });
     }
 
-
     render() {
         const {
             genes_mut, genes_rna, genes_cnv,
@@ -191,6 +197,5 @@ class OncoprintData extends React.Component {
 OncoprintData.propTypes = {
     dataset: PropTypes.string.isRequired,
 };
-
 
 export default OncoprintData;
