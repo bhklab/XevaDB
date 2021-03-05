@@ -185,12 +185,17 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
                 // this will create enteries for heatmap.
                 const usersRows = JSON.parse(JSON.stringify(row[1]));
                 usersRows.forEach((element) => {
+                    // if the value is not present assign it NA.
+                    if (element.value === '') {
+                        element.value = 'NA'
+                    }
+                    // creating final data object.
                     if (element.drug_name === drug) {
                         if (!(element.patient in data[value - 1])) {
                             data[value - 1][element.patient] = {};
                         }
                         data[value - 1][element.patient][element.response_type] = element.value;
-                    } else if (element.drug_name === 'untreated' || element.drug_name === 'WATER' || element.drug_name === 'Control') {
+                    } else if (element.drug_name.match(/(untreated|water|control)/i)) {
                         untreated.Drug = element.drug_name;
                         if (!(element.patient in untreated)) {
                             untreated[element.patient] = {};
