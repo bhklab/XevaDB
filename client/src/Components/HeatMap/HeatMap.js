@@ -58,17 +58,17 @@ class HeatMap extends Component {
         const width = patient.length * rectWidth + 100;
 
         const targetEval = [
-            { CR: `${colors.blue_heatmap}` },
-            { PR: `${colors.green_heatmap}` },
-            { SD: `${colors.yellow_heatmap}` },
-            { PD: `${colors.red_heatmap}` },
+            { CR: `${colors.blue}` },
+            { PR: `${colors.green}` },
+            { SD: `${colors.yellow}` },
+            { PD: `${colors.red}` },
         ];
 
         const targetColor = {
-            CR: `${colors.blue_heatmap}`,
-            PR: `${colors.green_heatmap}`,
-            SD: `${colors.yellow_heatmap}`,
-            PD: `${colors.red_heatmap}`,
+            CR: `${colors.blue}`,
+            PR: `${colors.green}`,
+            SD: `${colors.yellow}`,
+            PD: `${colors.red}`,
             NA: `${colors.lightgray}`,
         };
 

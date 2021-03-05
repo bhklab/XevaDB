@@ -50,7 +50,7 @@ const mutationStyleMap = {
         style: 'missense_mutation',
         mainType: 'missense',
         priority: 3,
-        color: `${colors.green_heatmap}`,
+        color: `${colors.green}`,
     },
     inframe: {
         label: 'IF',
@@ -58,7 +58,7 @@ const mutationStyleMap = {
         style: 'inframe_mutation',
         mainType: 'inframe',
         priority: 4,
-        color: `${colors.brown_oncoprint}`,
+        color: `${colors.brown}`,
     },
     truncating: {
         label: 'Truncating',
@@ -122,7 +122,7 @@ const mutationStyleMap = {
         style: 'inframe_mutation',
         mainType: 'inframe',
         priority: 5,
-        color: `${colors.brown_oncoprint}`,
+        color: `${colors.brown}`,
     },
     in_frame_del: {
         label: 'IF del',
@@ -130,7 +130,7 @@ const mutationStyleMap = {
         style: 'inframe_mutation',
         mainType: 'inframe',
         priority: 4,
-        color: `${colors.brown_oncoprint}`,
+        color: `${colors.brown}`,
     },
     splice_site: {
         label: 'Splice',
@@ -146,7 +146,7 @@ const mutationStyleMap = {
         style: 'fusion',
         mainType: 'other',
         priority: 12,
-        color: `${colors.violet_oncoprint}`,
+        color: `${colors.violet}`,
     },
     silent: {
         label: 'Silent',
@@ -154,7 +154,7 @@ const mutationStyleMap = {
         style: 'other_mutation',
         mainType: 'other',
         priority: 13,
-        color: `${colors.violet_oncoprint}`,
+        color: `${colors.violet}`,
     },
     // this
     default: {
@@ -163,7 +163,7 @@ const mutationStyleMap = {
         style: 'other_mutation',
         mainType: 'other',
         priority: 13,
-        color: `${colors.violet_oncoprint}`,
+        color: `${colors.violet}`,
     },
     // mutations mapped to "other" will be labelled
     // with their original data value
@@ -171,7 +171,7 @@ const mutationStyleMap = {
         style: 'other_mutation',
         mainType: 'other',
         priority: 13,
-        color: `${colors.violet_oncoprint}`,
+        color: `${colors.violet}`,
     },
 };
 
@@ -232,40 +232,40 @@ Mapping btw the copy number (data) values and view values.
 */
 export const cnaMap = {
     '-2': {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue_heatmap}`, xevalabel: 'del', priority: 2,
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
     },
     '-1': {
-        label: 'ShallowDel', style: 'cna-hetloss', tooltip: 'Shallow deletion', color: `${colors.blue_heatmap}`, xevalabel: 'del', priority: 2,
+        label: 'ShallowDel', style: 'cna-hetloss', tooltip: 'Shallow deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
     },
     0: {
         label: 'Diploid', style: 'cna-diploid', tooltip: 'Diploid / normal', color: 'lightgray', xevalabel: 'empty', priority: 16,
     },
     1: {
-        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: `${colors.red_heatmap}`, xevalabel: 'amp', priority: 1,
+        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: `${colors.red}`, xevalabel: 'amp', priority: 1,
     },
     2: {
-        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: `${colors.red_heatmap}`, xevalabel: 'amp', priority: 1,
+        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: `${colors.red}`, xevalabel: 'amp', priority: 1,
     },
     'del0.8': {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue_heatmap}`, xevalabel: 'del', priority: 2,
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
     },
     deletion: {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue_heatmap}`, xevalabel: 'del', priority: 2,
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
     },
     'shallow deletion': {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue_heatmap}`, xevalabel: 'del', priority: 2,
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
     },
     'deep deletion': {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue_heatmap}`, xevalabel: 'del', priority: 2,
+        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
     },
     gain: {
-        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: `${colors.red_heatmap}`, xevalabel: 'amp', priority: 1,
+        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: `${colors.red}`, xevalabel: 'amp', priority: 1,
     },
     amp: {
-        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: `${colors.red_heatmap}`, xevalabel: 'amp', priority: 1,
+        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: `${colors.red}`, xevalabel: 'amp', priority: 1,
     },
     amplification: {
-        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: `${colors.red_heatmap}`, xevalabel: 'amp', priority: 1,
+        label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: `${colors.red}`, xevalabel: 'amp', priority: 1,
     },
     unknown: {
         label: 'NA', style: 'cna-unknown', tooltip: 'CNA data is not available for this gene', xevalabel: 'empty', priority: 16,

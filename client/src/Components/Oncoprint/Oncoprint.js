@@ -67,12 +67,12 @@ class Oncoprint extends React.Component {
 
         // aberration data
         const aberration = [
-            { value: 'missense', color: `${colors.green_heatmap}` },
-            { value: 'inframe', color: `${colors.brown_oncoprint}` },
+            { value: 'missense', color: `${colors.green}` },
+            { value: 'inframe', color: `${colors.brown}` },
             { value: 'truncating', color: `${colors.black}` },
-            { value: 'other', color: `${colors.violet_oncoprint}` },
-            { value: 'del', color: `${colors.blue_heatmap}` },
-            { value: 'amp', color: `${colors.red_heatmap}` },
+            { value: 'other', color: `${colors.violet}` },
+            { value: 'del', color: `${colors.blue}` },
+            { value: 'amp', color: `${colors.red}` },
         ];
 
         // height and width for the SVG based on the number of genes_mut and patient/sample ids.
@@ -90,10 +90,10 @@ class Oncoprint extends React.Component {
         let rect_alterations_mut = [];
         if (data_mut.length > 0) {
             rect_alterations_mut = [
-                { value: 'Missense Mutation', color: `${colors.green_heatmap}` },
-                { value: 'Inframe Mutation', color: `${colors.brown_oncoprint}` },
+                { value: 'Missense Mutation', color: `${colors.green}` },
+                { value: 'Inframe Mutation', color: `${colors.brown}` },
                 { value: 'Truncating Mutation', color: `${colors.black}` },
-                { value: 'Other Mutations', color: `${colors.violet_oncoprint}` },
+                { value: 'Other Mutations', color: `${colors.violet}` },
             ];
         }
         // only if rnaseq data is available.
@@ -108,8 +108,8 @@ class Oncoprint extends React.Component {
         let rect_alterations_cnv = [];
         if (data_cnv.length > 0) {
             rect_alterations_cnv = [
-                { value: 'Deletion', color: `${colors.blue_heatmap}` },
-                { value: 'Amplification', color: `${colors.red_heatmap}` },
+                { value: 'Deletion', color: `${colors.blue}` },
+                { value: 'Amplification', color: `${colors.red}` },
             ];
         }
 
