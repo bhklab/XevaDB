@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import colors from '../../styles/colors';
 
 const HeaderStyle = styled.header`
     *{
@@ -25,14 +26,14 @@ const LinkStyle = styled.div`
     width: 60%;
 
     a {
-        color: #3453b0;
+        color: ${colors.blue_header};
         text-decoration: none;
         letter-spacing:1px;
         font-family: 'Raleway', sans-serif;
         font-weight:700;
         font-size: 24px;
         &:hover {
-            color: #cd5686;
+            color: ${colors.pink_header};
             cursor:pointer;
         }
     }
