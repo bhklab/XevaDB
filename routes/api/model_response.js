@@ -4,16 +4,14 @@
 /* eslint-disable camelcase */
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
-
+const { isVerified } = require('./util');
 
 // this will get the evaluations based one the param id which is the dataset id.
 const getModelResponseBasedOnDataset = function (request, response) {
     const param_dataset = request.params.dataset;
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
-    if ((response.locals.user === 'unknown' && param_dataset < 7 && param_dataset > 0)
-        || (response.locals.user.verified === 'verified' && param_dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
-    ) {
+    if (isVerified(response, param_dataset)) {
         const distinctPatients = knex('model_information')
             .distinct('patients.patient')
             .from('model_information')
@@ -136,9 +134,7 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
     }
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
-    if ((response.locals.user === 'unknown' && param_dataset < 7 && param_dataset > 0)
-        || (response.locals.user.verified === 'verified' && param_dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
-    ) {
+    if (isVerified(response, param_dataset)) {
         const distinctPatients = knex('model_information')
             .distinct('patients.patient')
             .from('model_information')
@@ -272,9 +268,7 @@ const getModelResponseStats = function (request, response) {
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
         // check if it verified and the dataset id is greater than 0
         // or if it's not verified (unkown) then the dataset id should be less than 7.
-        if ((response.locals.user === 'unknown' && dataset < 7 && dataset > 0)
-            || (response.locals.user.verified === 'verified' && dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
-        ) {
+        if (isVerified(response, dataset)) {
             knex.select()
                 .from('model_response')
                 .leftJoin(

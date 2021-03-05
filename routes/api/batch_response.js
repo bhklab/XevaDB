@@ -1,4 +1,5 @@
 const knex = require('../../db/knex1');
+const { isVerified } = require('./util');
 
 // get the stats like AUC, Slope etc
 // based on drug and patient (model_id).
@@ -37,9 +38,7 @@ const getBatchResponseStats = function (request, response) {
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
         // check if it verified and the dataset id is greater than 0
         // or if it's not verified (unkown) then the dataset id should be less than 7.
-        if ((response.locals.user === 'unknown' && dataset < 7 && dataset > 0)
-                 || (response.locals.user.verified === 'verified' && dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
-        ) {
+        if (isVerified(response, dataset)) {
             knex.select()
                 .from('batch_response')
                 .leftJoin(

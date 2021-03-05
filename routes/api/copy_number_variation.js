@@ -2,15 +2,13 @@
 /* eslint-disable func-names */
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
-
+const { isVerified } = require('./util');
 
 // This will get the copy_number_variation for the selected dataset id.
 const getCopyNumberVariationBasedOnDataset = function (request, response) {
     const paramDataset = request.params.dataset;
 
-    if ((response.locals.user === 'unknown' && paramDataset < 7 && paramDataset > 0)
-            || (response.locals.user.verified === 'verified' && paramDataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
-    ) {
+    if (isVerified(response, paramDataset)) {
         // grabbing the copy_number_variation data based on patients and limiting genes to 1-30.
         knex.select('genes.gene_name', 'patients.patient', 'copy_number_variation.value')
             .from('copy_number_variation')
@@ -86,12 +84,10 @@ const getCopyNumberVariationBasedPerDatasetBasedOnGenes = function (request, res
     const paramDataset = request.query.dataset;
     const genes = paramGene.split(',');
 
-    if ((response.locals.user === 'unknown' && paramDataset < 7 && paramDataset > 0)
-            || (response.locals.user.verified === 'verified' && paramDataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
-    ) {
-    // get the distinct patients or total patients from model information table.
-    // as some patient ids are missing from oncoprint
-    // because data is not available for that patient/model.
+    if (isVerified(response, paramDataset)) {
+        // get the distinct patients or total patients from model information table.
+        // as some patient ids are missing from oncoprint
+        // because data is not available for that patient/model.
         const modelInformationDistinctPatient = knex('model_information')
             .distinct('patients.patient')
             .from('model_information')

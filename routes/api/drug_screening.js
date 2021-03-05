@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
-
+const { isVerified } = require('./util');
 
 // this will get the drug screening data based on drug and patient id.
 const getDrugScreening = function (request, response) {
@@ -30,7 +30,7 @@ const getDrugScreening = function (request, response) {
         )
         .where('drugs.drug_name', drug)
         .andWhere('patients.patient', patient);
-        // .andWhere('batch_information.type', 'treatment')
+    // .andWhere('batch_information.type', 'treatment')
 
 
     grabBatchId.then((batch) => {
@@ -38,9 +38,7 @@ const getDrugScreening = function (request, response) {
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
         // check if it verified and the dataset id is greater than 0
         // or if it's not verified (unkown) then the dataset id should be less than 7.
-        if ((response.locals.user === 'unknown' && dataset < 7 && dataset > 0)
-                || (response.locals.user.verified === 'verified' && dataset > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
-        ) {
+        if (isVerified(response, dataset)) {
             knex.select('drug_screening.time', 'drug_screening.volume', 'drug_screening.volume_normal',
                 'drugs.drug_name as drug', 'patients.patient as patient_id',
                 'batch_information.type', 'batches.batch', 'models.model as model_id')

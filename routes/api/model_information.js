@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
-
+const { isVerified } = require('./util');
 
 // getting a list of all the distinct drugs and patient_id based on the dataset.
 const postDrugandPatientBasedOnDataset = function (request, response) {
@@ -25,9 +25,7 @@ const postDrugandPatientBasedOnDataset = function (request, response) {
     }
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
-    if ((response.locals.user === 'unknown' && request.body.label < 7 && request.body.label > 0)
-            || (response.locals.user.verified === 'verified' && request.body.label > 0 && ((response.locals.user.exp - response.locals.user.iat) === 7200))
-    ) {
+    if (isVerified(response, request.body.label)) {
         const drugs = knex.select('drugs.drug_name as drug', 'drugs.drug_id as drug_id')
             .from(distinctDrug)
             .leftJoin(
