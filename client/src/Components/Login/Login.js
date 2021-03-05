@@ -10,6 +10,7 @@ import {
     Paper, SubmitStyle, LogoStyle, PaperGradient, LogoBack,
 } from './LoginStyle';
 import logo from '../../images/logo.png';
+import colors from '../../styles/colors';
 
 
 class Login extends React.Component {
@@ -95,7 +96,7 @@ class Login extends React.Component {
                                     component="h1"
                                     variant="h5"
                                     style={{
-                                        color: '#3f51b5', marginTop: '4.5vh', fontWeight: '700', fontSize: '30px',
+                                        color: `${colors.blue_header}`, marginTop: '4.5vh', fontWeight: '700', fontSize: '30px',
                                     }}
                                 >
                                     Sign in

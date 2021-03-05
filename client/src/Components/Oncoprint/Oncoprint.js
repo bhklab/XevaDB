@@ -303,7 +303,7 @@ class Oncoprint extends React.Component {
                 .attr('class', 'alter-rect nseq')
                 .attr('width', rect_width - 6)
                 .attr('height', rect_height - 6)
-                .attr('fill', 'white')
+                .attr('fill', `${colors.white}`)
                 .attr('stroke', 'lightgray')
                 .attr('stroke-width', '1px')
                 .attr('x', j * (rect_width) + 1)
@@ -401,8 +401,8 @@ class Oncoprint extends React.Component {
                 .attr('y', 0)
                 .attr('height', (rect_height) * (genes.length) - 6)
                 .attr('width', xrange_gene(max_width))
-                .attr('fill', 'white')
-                .style('stroke', 'black')
+                .attr('fill', `${colors.white}`)
+                .style('stroke', `${colors.black}`)
                 .style('stroke-width', stroke_width);
 
 
@@ -450,18 +450,18 @@ class Oncoprint extends React.Component {
             svg.append('g')
                 .attr('class', 'x_axis')
                 .attr('fill', 'none')
-                .attr('stroke', 'black')
+                .attr('stroke', `${colors.black}`)
                 .attr('stroke-width', 1)
                 .attr('transform', `translate(${hmap_patients.length * rect_width + 20} -0 )`)
                 .call(x_axis)
                 .selectAll('text')
-                .attr('fill', 'black')
+                .attr('fill', `${colors.black}`)
                 .style('font-size', 8)
                 .attr('stroke', 'none');
 
             svg.selectAll('.tick')
                 .select('text')
-                .attr('fill', 'black')
+                .attr('fill', `${colors.black}`)
                 .attr('stroke', 'none');
         }
 
@@ -538,18 +538,18 @@ class Oncoprint extends React.Component {
             svg.append('g')
                 .attr('class', 'y_axis')
                 .attr('fill', 'none')
-                .attr('stroke', 'black')
+                .attr('stroke', `${colors.black}`)
                 .attr('stroke-width', 1)
                 .attr('transform', `translate(-10,${-(35 - yrange_patient(max_height)) - 5})`)
                 .call(y_axis)
                 .selectAll('text')
-                .attr('fill', 'black')
+                .attr('fill', `${colors.black}`)
                 .style('font-size', 8)
                 .attr('stroke', 'none');
 
             svg.selectAll('.tick')
                 .select('text')
-                .attr('fill', 'black')
+                .attr('fill', `${colors.black}`)
                 .attr('stroke', 'none');
 
             // removing the 0 tick
@@ -576,7 +576,7 @@ class Oncoprint extends React.Component {
             .attr('x2', (d, i) => i * (rect_width) - 3)
             .attr('y1', 0)
             .attr('y2', 200)
-            .attr('stroke', 'black')
+            .attr('stroke', `${colors.black}`)
             .attr('stroke-width', 1)
             .style('stroke-dasharray', '3 2')
             .style('opacity', 0.2);
@@ -614,7 +614,7 @@ class Oncoprint extends React.Component {
                         .attr('transform', 'translate(1,1)')
                         .attr('width', 14)
                         .attr('height', 14);
-                    return 'white';
+                    return `${colors.white}`;
                 }
                 return d.color;
             })
@@ -692,7 +692,7 @@ class Oncoprint extends React.Component {
                     .attr('class', `oprint-hlight-${hmap_patients[j]} oprint-hlight-${genes[i]}`)
                     .attr('width', rect_width - 2)
                     .attr('height', rect_height - 2)
-                    .attr('fill', 'black')
+                    .attr('fill', `${colors.black}`)
                     .attr('x', j * (rect_width))
                     .attr('y', i * (rect_height))
                     .style('opacity', 0)

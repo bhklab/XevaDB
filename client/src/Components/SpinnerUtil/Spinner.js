@@ -2,7 +2,7 @@ import React from 'react';
 import { HashLoader } from 'react-spinners';
 import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
-
+import colors from '../../styles/colors';
 
 const override = css`
     display: block;
@@ -19,7 +19,7 @@ const SpinnerUtil = (props) => {
                 css={override}
                 sizeUnit="px"
                 size={100}
-                color="#cd5686"
+                color={colors.pink_header}
             />
         </div>
     ) : (<div />);

@@ -681,7 +681,7 @@ class HeatMap extends Component {
                 .attr('y', 35)
                 .attr('height', rectHeight * drug.length)
                 .attr('width', drugScale(maxDrug))
-                .attr('fill', 'white')
+                .attr('fill', `${colors.white}`)
                 .style('stroke', `${colors.black}`)
                 .style('stroke-width', 1);
 
@@ -740,7 +740,7 @@ class HeatMap extends Component {
                     .attr('y', -130)
                     .attr('height', boxHeight)
                     .attr('width', patient.length * 20)
-                    .attr('fill', 'white')
+                    .attr('fill', `${colors.white}`)
                     .style('stroke', `${colors.black}`)
                     .style('stroke-width', 1);
 

@@ -5,9 +5,10 @@ import ReactTable from 'react-table';
 import TableWrapper from '../Drug/DrugTableStyle';
 import Spinner from '../SpinnerUtil/Spinner';
 import 'react-table/react-table.css';
+import colors from '../../styles/colors';
 
 const h1Style = {
-    color: '#3453b0',
+    color: `${colors.blue_header}`,
     margin: '50px',
 };
 
@@ -23,7 +24,7 @@ const DatasetTable = (props) => {
             search: false,
             sortable: false,
             Cell: (row) => (
-                <Link to={`/dataset/${row.original.parameter}`} style={{ color: '#3453b0', textDecoration: 'none' }}>
+                <Link to={`/dataset/${row.original.parameter}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
                     {row.original.id}
                 </Link>
             ),

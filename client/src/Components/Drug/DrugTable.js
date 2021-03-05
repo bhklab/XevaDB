@@ -5,9 +5,10 @@ import TableWrapper from './DrugTableStyle';
 import pubchem from '../../images/pclogo_220.gif';
 import Spinner from '../SpinnerUtil/Spinner';
 import 'react-table/react-table.css';
+import colors from '../../styles/colors';
 
 const h1Style = {
-    color: '#3453b0',
+    color: `${colors.blue_header}`,
     margin: '50px',
 };
 
@@ -100,7 +101,7 @@ class DrugTable extends React.Component {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         href={`${row}`}
-                                        style={{ textDecoration: 'none', color: '#3453b0' }}
+                                        style={{ textDecoration: 'none', color: `${colors.blue_header}` }}
                                     >
                                         {Number(pid)}
                                     </a>

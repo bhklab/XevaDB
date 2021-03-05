@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import colors from '../../styles/colors';
 
 class DensityPlot extends React.Component {
     constructor(props) {
@@ -103,7 +104,7 @@ class DensityPlot extends React.Component {
             .attr('transform', `translate(0,${height})`)
             .call(d3.axisBottom(x).tickSize(0).tickFormat(''))
             .selectAll('path')
-            .attr('stroke', '#ff2100')
+            .attr('stroke', `${colors.red_heatmap}`)
             .attr('stroke-width', 0.25);
 
         // add the y Axis
@@ -122,9 +123,9 @@ class DensityPlot extends React.Component {
         svg.append('path')
             .attr('class', 'mypath')
             .datum(density)
-            .attr('fill', '#ffffff')
+            .attr('fill', `${colors.white}`)
             .attr('opacity', '.8')
-            .attr('stroke', '#ff2100')
+            .attr('stroke', `${colors.red_heatmap}`)
             .attr('stroke-width', 0.25)
             .attr('stroke-linejoin', 'round')
             .attr('d', d3.line()

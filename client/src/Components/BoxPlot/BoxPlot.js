@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import colors from '../../styles/colors';
 
 // parsing the initial data.
 const parseData = (data, response, drugs) => {
@@ -92,9 +93,9 @@ const createRectangle = (svg, width, height) => {
         .attr('y', 0)
         .attr('width', width)
         .attr('height', height)
-        .attr('stroke', 'black')
+        .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 1.0)
-        .style('fill', 'white');
+        .style('fill', `${colors.white}`);
 
     return rect;
 };
@@ -214,7 +215,7 @@ const verticalLine = (width, min, max, svg, y, scale) => {
         .attr('x2', width / 2)
         .attr('y1', y(scale(min)))
         .attr('y2', y(scale(max)))
-        .attr('stroke', 'black')
+        .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50);
 };
 
@@ -226,7 +227,7 @@ const horizontalLine = (height, min, max, svg, x, scale) => {
         .attr('y2', height / 2)
         .attr('x1', x(scale(min)))
         .attr('x2', x(scale(max)))
-        .attr('stroke', 'black')
+        .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50);
 };
 
@@ -239,9 +240,9 @@ const createPatientBox = (svg, margin, width, q3, q1, y, element, scale) => {
         .attr('y', y(scale(q3)))
         .attr('height', (y(scale(q1)) - y(scale(q3))))
         .attr('width', width)
-        .attr('stroke', 'black')
+        .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50)
-        .style('fill', '#69b3a2')
+        .style('fill', `${colors.green_gradient}`)
         .attr('id', `box${element}`);
 };
 
@@ -254,9 +255,9 @@ const createDrugBox = (svg, margin, height, q3, q1, x, element, scale) => {
         .attr('y', margin.top)
         .attr('height', height)
         .attr('width', (x(scale(q3)) - x(scale(q1))))
-        .attr('stroke', 'black')
+        .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50)
-        .style('fill', '#69b3a2')
+        .style('fill', `${colors.green_gradient}`)
         .attr('id', `box${element}`);
 };
 
@@ -272,7 +273,7 @@ const createPatientRest = (svg, min, median, max, width, y, scale) => {
         .attr('x2', width + 1)
         .attr('y1', (d) => (y(scale(d))))
         .attr('y2', (d) => (y(scale(d))))
-        .attr('stroke', 'black')
+        .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50);
 };
 
@@ -288,7 +289,7 @@ const createDrugRest = (svg, min, median, max, height, x, scale) => {
         .attr('x2', (d) => (x(scale(d))))
         .attr('y1', 1)
         .attr('y2', height + 1)
-        .attr('stroke', 'black')
+        .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50);
 };
 

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import colors from '../../styles/colors'
 
 const DonutNav = styled.div`
     display: flex;
@@ -19,13 +19,13 @@ const DonutNav = styled.div`
     padding-bottom:5px;
     a{
         padding: 10px;
-        color: #3453b0;
+        color: ${colors.blue_header};
         letter-spacing: 2px;
         font-weight: bold;
         font-size: 20px;
         text-decoration: none;
         &:hover {
-            color: #cd5686;
+            color: ${colors.pink_header};
         }
         text-align:center;
     }

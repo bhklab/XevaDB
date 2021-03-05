@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import colors from '../../styles/colors';
 
 const StyleBar = styled.div`
     margin-top: 30vh;
@@ -48,12 +49,12 @@ const StyleBar = styled.div`
             min-width: 600px;
             max-width: 70%;
             font-size: 15px;
-            color: #3453b0;
+            color: ${colors.blue_header};
             
             input {
-                color: #3453b0;
+                color: ${colors.blue_header};
                 font-size: 14px;
-                border: 1px solid #3453b0;
+                border: 1px solid ${colors.blue_header};
                 border-radius: 4px;
                 outline-style: none;
                 padding: 2px;
@@ -70,10 +71,10 @@ const StyleBar = styled.div`
                 min-height: 120px;
                 outline-style: none;
                 border-radius: 10px;
-                color: #3453b0;
+                color: ${colors.blue_header};
                 font-weight: 300;
                 font-size: 15px;
-                border: 1px solid #3453b0;
+                border: 1px solid ${colors.blue_header};
                 padding: 10px;
                 overflow-wrap: break-word;
                 box-sizing: border-box;
@@ -88,11 +89,11 @@ const StyleBar = styled.div`
             text-align: left;
             font-weight: 550;
             a {
-                color: #3453b0;
+                color: ${colors.blue_header};
                 text-decoration: none;
             }
             a:hover {
-                color: #cd5686;
+                color: ${colors.pink_header};
                 cursor: pointer;
             }
             font-style: italic;
@@ -111,7 +112,7 @@ const StyleBar = styled.div`
     }
 
     h1 {
-      color: #3453b0;
+      color: ${colors.blue_header};
       text-align: center;
       font-size: 36px;
     }    
@@ -158,10 +159,10 @@ const StyleBar = styled.div`
 
 
 const StyleButton = styled.button`
-    background-color: #3453b0;
+    background-color: ${colors.blue_header};
     border: none;
     border-radius: 6px;
-    color: #ffffff;
+    color: ${colors.white};
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
@@ -176,9 +177,9 @@ const StyleButton = styled.button`
     &:hover {
         opacity: 1;
         cursor: pointer;
-        color:  #3453b0;
-        background-color: #ffffff;
-        border: 1px solid #3453b0;
+        color:  ${colors.blue_header};
+        background-color: ${colors.white};
+        border: 1px solid ${colors.blue_header};
     }
 `;
 
@@ -186,15 +187,15 @@ const StyleButton = styled.button`
 const customStyles = {
     placeholder: (provided) => ({
         ...provided,
-        color: '#3453b0',
+        color: `${colors.blue_header}`,
         fontWeight: '400',
         fontSize: '15px',
     }),
 
     control: (provided) => ({
         ...provided,
-        '&:hover': { borderColor: '#3453b0' },
-        border: '1px solid #3453b0',
+        '&:hover': { borderColor: `${colors.blue_header}` },
+        border: `1px solid ${colors.blue_header}`,
         boxShadow: 'none',
         padding: '0px 5px',
         borderRadius: '5px',
@@ -203,27 +204,27 @@ const customStyles = {
 
     indicatorSeparator: (provided) => ({
         ...provided,
-        background: '#3453b0',
-        '&:hover': { background: '#3453b0' },
+        background: `${colors.blue_header}`,
+        '&:hover': { background: `${colors.blue_header}` },
         height: '30px',
     }),
 
     dropdownIndicator: (provided) => ({
         ...provided,
-        color: '#3453b0',
+        color: `${colors.blue_header}`,
         '&:hover': {
-            color: '#3453b0',
+            color: `${colors.blue_header}`,
             cursor: 'pointer',
         },
     }),
 
     option: (provided) => ({
         ...provided,
-        color: '#3453b0',
-        background: '#ffffff',
+        color: `${colors.blue_header}`,
+        background: `${colors.white}`,
         margin: '0px 0px',
         '&:hover': {
-            background: '#fee8c8',
+            background: `${colors.white_red}`,
         },
         fontSize: '14px',
         textAlign: 'left',
@@ -231,26 +232,26 @@ const customStyles = {
 
     singleValue: (provided) => ({
         ...provided,
-        color: '#3453b0',
+        color: `${colors.blue_header}`,
         fontSize: '15px',
     }),
 
     multiValue: (provided) => ({
         ...provided,
-        color: '#3453b0',
+        color: `${colors.blue_header}`,
         fontSize: '15px',
     }),
 
     input: (provided) => ({
         ...provided,
-        color: '#3453b0',
+        color: `${colors.blue_header}`,
     }),
 
     clearIndicator: (provided) => ({
         ...provided,
-        color: '#3453b0',
+        color: `${colors.blue_header}`,
         '&:hover': {
-            color: '#3453b0',
+            color: `${colors.blue_header}`,
         },
     }),
 

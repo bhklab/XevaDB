@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import colors from '../../styles/colors';
 
 const ErrorStyle = styled.h1`
     margin: 400px;
-    color: #3453b0 !important;
+    color: ${colors.blue_header} !important;
     font-size: 40px !important;
 `;
 

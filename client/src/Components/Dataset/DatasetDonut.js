@@ -6,6 +6,7 @@ import Footer from '../Footer/Footer';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
 import DatasetTable from './DatasetTable';
+import colors from '../../styles/colors';
 
 const Wrapper = styled.div`
     display: flex;
@@ -13,7 +14,7 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 200px;
-    color: #3453b0;
+    color: ${colors.blue_header};
     margin-bottom: 100px;
 
     h1 {

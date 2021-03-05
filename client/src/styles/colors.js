@@ -13,4 +13,9 @@ export default {
     white: '#ffffff',
     violet_oncoprint: '#8B00C9',
     brown_oncoprint: '#8B4513',
+    fade_blue: '#EAEFF9',
+    white_smoke: '#F5F5F5',
+    moderate_blue: '#5974c4',
+    dark_gray: '#999999',
+    white_red: '#ffeaed',
 };

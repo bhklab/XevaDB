@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import colors from '../../styles/colors';
 
 const StyleTable = styled.div`
 
     table, th, td {
-        border: 1px solid #999999;
+        border: 1px solid ${colors.dark_gray};
     }
 
     #stats-table {
@@ -14,16 +15,16 @@ const StyleTable = styled.div`
     }
 
     th {
-        color: #5974c4;
+        color: ${colors.moderate_blue};
         text-align: left;
         font-family: 'Raleway', sans-serif;
         padding: 10px;
         height: 40px;
-        background-color: #ddd;
+        background-color: ${colors.lightgray};
     }
 
     td {
-        color: #cd5686;
+        color: ${colors.pink_header};
         padding: 10px;
         white-space: normal;
         max-width: 200px;
@@ -31,7 +32,7 @@ const StyleTable = styled.div`
     }
 
     tr:hover {
-        background-color: #f5f5f5;
+        background-color: ${colors.white_smoke};
     }
 
 `;

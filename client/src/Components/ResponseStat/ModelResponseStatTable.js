@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { CSVLink } from 'react-csv';
 import StyleTable from './ModelResponseStyle';
 import BatchStatTable from './BatchResponseStatTable';
+import colors from '../../styles/colors';
 
 class StatTable extends React.Component {
     constructor(props) {
@@ -148,7 +149,7 @@ class StatTable extends React.Component {
                 <div className="curve-wrapper" style={{ marginTop: '0px', padding: '30px 0px' }}>
                     <h1 id="titlemodel">Statistics (Model Response)</h1>
                     <CSVLink data={data} headers={this.getCSVHeader(data)}>
-                        <h3 style={{ color: '#cd5686' }}> Download Model Response Data </h3>
+                        <h3 style={{ color: `${colors.pink_header}` }}> Download Model Response Data </h3>
                     </CSVLink>
                     <StyleTable>
                         <table id="stats-table">

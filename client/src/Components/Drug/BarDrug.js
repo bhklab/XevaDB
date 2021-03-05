@@ -7,6 +7,7 @@ import DrugTable from './DrugTable';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
 import BarPlot from '../BarPlot/BarPlot';
+import colors from '../../styles/colors';
 
 const Wrapper = styled.div`
     display: flex;
@@ -20,7 +21,7 @@ const Wrapper = styled.div`
         font-family:'Raleway', sans-serif;
         font-weight:700;
         text-align:center;
-        color: #3453b0
+        color: ${colors.blue_header}
     }
 `;
 

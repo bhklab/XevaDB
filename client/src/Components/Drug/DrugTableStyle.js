@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import colors from '../../styles/colors';
 
 const TableWrapper = styled.div`
     padding:10px 20px 30px 20px;
@@ -21,24 +21,24 @@ const TableWrapper = styled.div`
     }
 
     .ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
-        background: #EAEFF9
+        background: ${colors.fade_blue}
     }
 
     .ReactTable .rt-thead {
-        color:  #3453b0;
+        color:  ${colors.blue_header};
         font-size: 18px;
         font-weight: 600;
         box-shadow:none !important;
     }
 
     .ReactTable .rt-tbody{
-        color:  #3453b0;
+        color:  ${colors.blue_header};
         font-size: 16px;
         box-shadow:none !important;
     }
 
     .-previous, .-next, .-btn {
-      background: #3453b0;
+      background: ${colors.blue_header};
       color:white !important;
     }
 
@@ -48,13 +48,13 @@ const TableWrapper = styled.div`
     }
 
     .ReactTable .-pagination .-pageJump input, input{
-        color: #3453b0;
+        color: ${colors.blue_header};
         box-shadow:none !important;
-        background: #EAEFF9 !important;
+        background: ${colors.fade_blue} !important;
     }
 
     .ReactTable .-pagination select {
-        color: #3453b0;
+        color: ${colors.blue_header};
     }
 `;
 
