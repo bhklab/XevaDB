@@ -56,7 +56,7 @@ class StatTable extends React.Component {
         const { data } = this.state;
         if (data[0] && data[0].dataset_id !== 7) {
             this.setState({
-                tableHeader: ['Patient', 'Model', 'Drug',
+                tableHeader: ['Type', 'Model', 'Drug',
                     'mRECIST', 'Best Average Response', 'Slope', 'AUC', 'Survival (Days)'],
             });
         }
@@ -109,7 +109,7 @@ class StatTable extends React.Component {
 
             const dataRow = (
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
-                    <td>{patient}</td>
+                    <td>{drug.match(/(untreated|water|control)/i) ? 'Control' : 'Treatment'}</td>
                     <td>{model}</td>
                     <td>{drug}</td>
                     <td>{mRECIST}</td>
