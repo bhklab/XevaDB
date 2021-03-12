@@ -136,9 +136,9 @@ class OncoprintData extends React.Component {
             data_mut: data.data_mut ? data.data_mut : [],
             data_rna: data.data_rna ? data.data_rna : [],
             data_cnv: data.data_cnv ? data.data_cnv : [],
-            dimensions: { height: 35, width: 20 },
+            dimensions: { height: 30, width: 15 },
             margin: {
-                top: 50, right: 200, bottom: 0, left: 250,
+                top: 50, right: 200, bottom: 0, left: 300,
             },
             loading: false,
         });

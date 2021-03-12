@@ -173,7 +173,7 @@ class Oncoprint extends React.Component {
 
         // geneNames
         const geneNames = skeleton.append('g')
-            .attr('id', 'gene-names');
+            .attr('id', 'gene_names');
 
         // gene names on the y axis
         const geneAxis = () => {
@@ -182,7 +182,7 @@ class Oncoprint extends React.Component {
                     .attr('class', genes[i])
                     .attr('dx', -25)
                     .style('text-anchor', 'end')
-                    .style('font-size', '12px')
+                    .style('font-size', '11px')
                     .attr('dy', i * (rect_height) + 20)
                     .attr('font-weight', '500')
                     .text(genes[i])
@@ -490,7 +490,7 @@ class Oncoprint extends React.Component {
 
             const yrange_patient = d3.scaleLinear() // #TODO: scale.linear
                 .domain([0, max_height])
-                .range([35, 0]);
+                .range([`${dimensions.height}`, 0]);
 
             // function to caculate alterations.
             const patientAlterationReactangle = (iterator) => {
@@ -504,7 +504,7 @@ class Oncoprint extends React.Component {
                     j = j > 1 ? j / j : j;
 
                     // setting y range.
-                    y_range = (yrange_patient(patient_alterations[i][type.value])) - ((35 * j) - y_range);
+                    y_range = (yrange_patient(patient_alterations[i][type.value])) - ((`${dimensions.height}` * j) - y_range);
 
                     // color setting.
                     const { color } = type;
@@ -512,11 +512,11 @@ class Oncoprint extends React.Component {
                     // rectangle coloring.
                     patient_alter.append('rect')
                         .attr('class', `patient-rect${type}`)
-                        .attr('height', 35 - yrange_patient(patient_alterations[i][type.value]))
+                        .attr('height', `${dimensions.height}` - yrange_patient(patient_alterations[i][type.value]))
                         .attr('width', rect_width - 5)
                         .attr('fill', color)
                         .attr('y', y_range)
-                        .attr('x', i * 20 + 1)
+                        .attr('x', i * `${dimensions.width}` + 1)
                         .attr('transform', 'translate(0,-40)');
                 });
             };
@@ -638,7 +638,7 @@ class Oncoprint extends React.Component {
             .attr('x', (hmap_patients.length * rect_width + 140))
             .attr('y', (d, i) => (genes.length * 10 + 12) + i * 25)
             .text((d) => d.value)
-            .attr('font-size', '14px');
+            .attr('font-size', '12px');
 
 
         // creating tooltip.
