@@ -7,16 +7,16 @@ import DrugSummary from './SummaryPages/DrugSummary';
 import DrugTable from './Drug/DrugTable';
 import Footer from './Footer/Footer';
 import GrowthCurveData from './TumorGrowthCurve/GrowthCurveData';
-import HeatMapData from './HeatMap/HeatMapData';
+import HeatMapData from './Plots/HeatMap/HeatMapData';
 import Home from './Home/Home';
 import Login from './Login/Login';
-import OncoprintData from './Oncoprint/OncoprintData';
+import OncoprintData from './Plots/Oncoprint/OncoprintData';
 import Search from './Search/Search';
 import SearchResult from './Search/SearchResult';
 import StatTable from './ResponseStat/ModelResponseStatTable';
 import TissueSummary from './SummaryPages/TissueSummary';
 import TopNav from './TopNav/TopNav';
-import TumorGrowthCurve from './TumorGrowthCurve/TumorGrowthCurve';
+import TumorGrowthCurve from './Plots/TumorGrowthCurve/TumorGrowthCurve';
 
 
 export {

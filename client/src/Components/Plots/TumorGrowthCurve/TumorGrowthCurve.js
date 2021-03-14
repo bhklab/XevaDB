@@ -8,10 +8,10 @@ import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import GlobalStyles from '../../GlobalStyles';
-import TopNav from '../TopNav/TopNav';
-import StatTable from '../ResponseStat/ModelResponseStatTable';
-import colors from '../../styles/colors';
+import GlobalStyles from '../../../GlobalStyles';
+import TopNav from '../../TopNav/TopNav';
+import StatTable from '../../ResponseStat/ModelResponseStatTable';
+import colors from '../../../styles/colors';
 
 // this will initialize a tooltip.
 const initializeToolTop = () => d3.select('.wrapper')

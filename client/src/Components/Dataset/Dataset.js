@@ -1,6 +1,6 @@
 import React from 'react';
-import HeatMapData from '../HeatMap/HeatMapData';
-import OncoprintData from '../Oncoprint/OncoprintData';
+import HeatMapData from '../Plots/HeatMap/HeatMapData';
+import OncoprintData from '../Plots/Oncoprint/OncoprintData';
 import Footer from '../Footer/Footer';
 import { PatientProvider } from '../Context/PatientContext';
 
