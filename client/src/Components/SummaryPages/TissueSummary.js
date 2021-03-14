@@ -24,7 +24,7 @@ const Wrapper = styled.div`
 `;
 
 
-class DonutTissue extends React.Component {
+class TissueSummary extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -84,4 +84,4 @@ class DonutTissue extends React.Component {
     }
 }
 
-export default DonutTissue;
+export default TissueSummary;

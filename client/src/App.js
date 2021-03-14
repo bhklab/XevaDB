@@ -7,9 +7,7 @@ import {
     Dataset,
     DatasetSummary,
     Documentation,
-    DonutDrug,
-    DonutTissue,
-    DrugTable,
+    DrugSummary,
     Footer,
     GrowthCurveData,
     HeatMapData,
@@ -18,6 +16,7 @@ import {
     OncoprintData,
     SearchResult,
     StatTable,
+    TissueSummary,
 } from './Components/index';
 
 
@@ -51,13 +50,13 @@ const App = () => {
                     <Route path="/datasets" exact component={DatasetSummary} />
                     <Route path="/dataset/:id" exact component={Dataset} />
                     <Route path="/doc" exact component={Documentation} />
-                    <Route path="/drugs" exact component={DonutDrug} />
-                    <Route path="/drug/:id" exact component={DrugTable} />
+                    <Route path="/drugs" exact component={DrugSummary} />
+                    {/* <Route path="/drug/:id" exact component={DrugTable} /> */}
                     <Route path="/home" exact component={CounterNav} />
                     <Route path="/login" exact component={Login} />
                     <Route path="/maps" exact component={Merge} />
                     <Route path="/search" exact component={SearchResult} />
-                    <Route path="/tissues" exact component={DonutTissue} />
+                    <Route path="/tissues" exact component={TissueSummary} />
                     <Route path="/stat" exact component={StatTable} />
                     <Route render={() => <h1> 404 Error </h1>} />
                 </Switch>

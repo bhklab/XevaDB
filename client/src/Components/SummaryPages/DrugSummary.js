@@ -3,7 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 // import DonutChart from '../DonutChart/DonutChart';
 import Footer from '../Footer/Footer';
-import DrugTable from './DrugTable';
+import DrugTable from '../Drug/DrugTable';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
 import BarPlot from '../BarPlot/BarPlot';
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
     }
 `;
 
-class DonutDrug extends React.Component {
+class DrugSummary extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -97,4 +97,4 @@ class DonutDrug extends React.Component {
     }
 }
 
-export default DonutDrug;
+export default DrugSummary;

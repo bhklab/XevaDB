@@ -3,8 +3,8 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import Oncoprint from '../Oncoprint/Oncoprint';
-import Spinner from '../SpinnerUtil/Spinner';
-import Error from '../Error/Error';
+import Spinner from '../Utils/Spinner';
+import Error from '../Utils/Error';
 
 class SearchResultOncoprint extends React.Component {
     constructor(props) {

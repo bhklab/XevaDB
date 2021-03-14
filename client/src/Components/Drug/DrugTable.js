@@ -3,7 +3,7 @@ import axios from 'axios';
 import ReactTable from 'react-table';
 import TableWrapper from './DrugTableStyle';
 import pubchem from '../../images/pclogo_220.gif';
-import Spinner from '../SpinnerUtil/Spinner';
+import Spinner from '../Utils/Spinner';
 import 'react-table/react-table.css';
 import colors from '../../styles/colors';
 
