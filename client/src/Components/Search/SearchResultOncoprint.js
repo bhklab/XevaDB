@@ -2,7 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import Oncoprint from '../Oncoprint/Oncoprint';
+import Oncoprint from '../Plots/Oncoprint/Oncoprint';
 import Spinner from '../Utils/Spinner';
 import Error from '../Utils/Error';
 
@@ -45,7 +45,7 @@ class SearchResultOncoprint extends React.Component {
             queryData.push(axios.get(`/api/v1/mutation?genes=${geneParam}&dataset=${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } }));
             genomics.push('Mutation');
         }
-        if (genomicsParam.includes('RNASeq') || genomicsParam.includes('Expression')) {
+        if (genomicsParam.match(/(RNASeq|Expression)/)) {
             queryData.push(axios.get(`/api/v1/rnaseq?genes=${geneParam}&dataset=${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } }));
             genomics.push('RNASeq');
         }
@@ -136,16 +136,16 @@ class SearchResultOncoprint extends React.Component {
         this.setState({
             threshold,
             hmapPatients,
-            patientMut: patient.patient_mut ? patient.patient_mut : patientMut,
-            patientRna: patient.patient_rna ? patient.patient_rna : patientRna,
-            patientCnv: patient.patient_cnv ? patient.patient_cnv : patientCnv,
-            genesMut: genes.genes_mut ? genes.genes_mut : genesMut,
-            genesRna: genes.genes_rna ? genes.genes_rna : genesRna,
-            genesCnv: genes.genes_cnv ? genes.genes_cnv : genesCnv,
-            dataMut: data.data_mut ? data.data_mut : dataMut,
-            dataRna: data.data_rna ? data.data_rna : dataRna,
-            dataCnv: data.data_cnv ? data.data_cnv : dataCnv,
-            dimensions: { height: 35, width: 20 },
+            patientMut: patient.patient_mut || patientMut,
+            patientRna: patient.patient_rna || patientRna,
+            patientCnv: patient.patient_cnv || patientCnv,
+            genesMut: genes.genes_mut || genesMut,
+            genesRna: genes.genes_rna || genesRna,
+            genesCnv: genes.genes_cnv || genesCnv,
+            dataMut: data.data_mut || dataMut,
+            dataRna: data.data_rna || dataRna,
+            dataCnv: data.data_cnv || dataCnv,
+            dimensions: { height: 32, width: 16 },
             margin: {
                 top: 75, right: 200, bottom: 100, left: 250,
             },

@@ -2,7 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import HeatMap from '../HeatMap/HeatMap';
+import HeatMap from '../Plots/HeatMap/HeatMap';
 
 class SearchResultHeatMap extends React.Component {
     constructor(props) {
@@ -62,7 +62,7 @@ class SearchResultHeatMap extends React.Component {
             drugId: drug,
             patientIdDrug: patient,
             drugData: dataset,
-            dimensions: { height: 35, width: 20 },
+            dimensions: { height: 32, width: 16 },
             margin: {
                 top: 300, right: 200, bottom: 0, left: 250,
             },

@@ -18,29 +18,31 @@ class HeatMap extends Component {
             modifiedPatients: [],
             responseValue: 'mRECIST',
         };
+        this.HeatMap = this.HeatMap.bind(this);
         this.makeHeatMap = this.makeHeatMap.bind(this);
         this.rankHeatMap = this.rankHeatMap.bind(this);
         this.rankHeatMapBasedOnOncoprintChanges = this.rankHeatMapBasedOnOncoprintChanges.bind(this);
     }
 
     componentDidMount() {
-        this.makeHeatMap();
+        this.HeatMap();
+    }
+
+    HeatMap() {
+        const { node } = this;
+        const { data } = this.props;
+        const { drugId, patientId } = this.props;
+        const { dimensions, margin } = this.props;
+        const { className } = this.props;
+        const { dataset } = this.props;
+        const { responseValue: responseType } = this.state;
+        this.makeHeatMap(data, patientId, drugId, dataset, className, dimensions, margin, node, responseType);
     }
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatMap() {
-        const { node } = this;
-        const { data } = this.props;
-        const { drugId: drug } = this.props;
-        let { patientId: patient } = this.props;
-        const { dimensions } = this.props;
-        const { margin } = this.props;
-        const { className: plotId } = this.props;
-        const { dataset } = this.props;
-        const { responseValue: responseType } = this.state;
-
+    makeHeatMap(data, patient, drug, dataset, plotId, dimensions, margin, node, responseType) {
         // variable to get the function stored.
-        const heatmap = this.makeHeatmap;
+        const heatmap = this.makeHeatMap;
         const reference = this;
         this.node = node;
 
@@ -537,7 +539,7 @@ class HeatMap extends Component {
 
         drugName.attr('stroke-width', '0')
             .style('font-family', '\'Raleway\',sans-serif')
-            .style('font-size', '11px')
+            .style('font-size', '12px')
             .attr('font-weight', '500')
             .call(yAxis)
             .selectAll('text')
@@ -597,10 +599,10 @@ class HeatMap extends Component {
             });
 
         // calling the x-axis to set the axis and we have also transformed the text.
-        patient = skeleton.append('g')
+        const patientId = skeleton.append('g')
             .attr('id', 'patient_id');
 
-        patient.attr('stroke-width', '0')
+        patientId.attr('stroke-width', '0')
             .style('font-size', '11px')
             .style('font-family', '\'Raleway\',sans-serif')
             .style('text-anchor', (dataset === '7' ? 'start' : 'middle'))
@@ -865,7 +867,7 @@ class HeatMap extends Component {
 
         // finally calling the makeHeatMap function in order passing
         // new dataset in order to make new heatmap based on ranking.
-        this.makeHeatmap(newDataset, newSortedPatients, drugId, datasetId, className, dimensions, margin, node, responseType);
+        this.makeHeatMap(newDataset, newSortedPatients, drugId, datasetId, className, dimensions, margin, node, responseType);
 
         // making the circle visible on click of the drug.
         d3.select(`#circle-${drug.replace(/\s/g, '').replace(/\+/g, '')}`)
@@ -896,7 +898,7 @@ class HeatMap extends Component {
         if (globalPatients.length > 0) {
             d3.select(`#heatmap-${className}`).remove();
             d3.select('#heatmap-tooltip').remove();
-            this.makeHeatmap(newDataset, globalPatients, drugId, dataset, className, dimensions, margin, node, responseType);
+            this.makeHeatMap(newDataset, globalPatients, drugId, dataset, className, dimensions, margin, node, responseType);
         }
     }
 
@@ -924,7 +926,7 @@ class HeatMap extends Component {
                         }}
                     />
                 </div>
-                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper">
+                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper" id="heatmap">
                     {
                         responseValue !== 'mRECIST' ? <BoxPlot response={responseValue} data={data} patients={modifiedPatients} drugs={drugs} /> : <div />
                     }

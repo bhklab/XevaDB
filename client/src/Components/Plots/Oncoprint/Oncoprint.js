@@ -24,20 +24,11 @@ class Oncoprint extends React.Component {
     Oncoprint(modifiedPatients) {
         let { hmap_patients } = this.props;
         hmap_patients = modifiedPatients || hmap_patients;
-        const { node } = this;
-        const { className } = this.props;
-        const { dimensions } = this.props;
-        const { margin } = this.props;
-        const { threshold } = this.props;
-        const { data_mut } = this.props;
-        const { data_rna } = this.props;
-        const { data_cnv } = this.props;
-        const { genes_mut } = this.props;
-        const { genes_rna } = this.props;
-        const { genes_cnv } = this.props;
-        const { patient_mut } = this.props;
-        const { patient_rna } = this.props;
-        const { patient_cnv } = this.props;
+        const { node, className } = this;
+        const { dimensions, margin, threshold } = this.props;
+        const { data_mut, data_rna, data_cnv } = this.props;
+        const { genes_mut, genes_rna, genes_cnv } = this.props;
+        const { patient_mut, patient_rna, patient_cnv } = this.props;
 
         this.makeOncoprint(node, className, dimensions, margin, threshold, hmap_patients,
             data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv);
