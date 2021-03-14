@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {
     CounterNav,
     Dataset,
-    DatasetDonut,
+    DatasetSummary,
     Documentation,
     DonutDrug,
     DonutTissue,
@@ -22,11 +22,11 @@ import {
 
 
 const Merge = () => (
-    <div>
+    <>
         <HeatMapData />
         <OncoprintData />
         <Footer />
-    </div>
+    </>
 );
 
 
@@ -48,7 +48,7 @@ const App = () => {
                 <Switch>
                     <Route path="/" exact component={Home} />
                     <Route path="/curve" exact component={GrowthCurveData} />
-                    <Route path="/datasets" exact component={DatasetDonut} />
+                    <Route path="/datasets" exact component={DatasetSummary} />
                     <Route path="/dataset/:id" exact component={Dataset} />
                     <Route path="/doc" exact component={Documentation} />
                     <Route path="/drugs" exact component={DonutDrug} />

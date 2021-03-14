@@ -11,10 +11,6 @@ class DonutChart extends React.Component {
         this.makeDonutChart = this.makeDonutChart.bind(this);
     }
 
-    componentDidMount() {
-        // this.DonutChart()
-    }
-
     componentDidUpdate() {
         this.DonutChart();
     }
@@ -209,7 +205,7 @@ class DonutChart extends React.Component {
                         return 'NSCLC';
                     } return d.data.id;
                 })
-            // .attr('font-weight', 'bold')
+                // .attr('font-weight', 'bold')
                 .style('text-anchor', 'middle')
                 .style('font-size', 14)
                 .attr('fill', 'white')

@@ -5,7 +5,7 @@ import DonutChart from '../DonutChart/DonutChart';
 import Footer from '../Footer/Footer';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
-import DatasetTable from './DatasetTable';
+import DatasetTable from '../Dataset/DatasetTable';
 import colors from '../../styles/colors';
 
 const Wrapper = styled.div`
@@ -24,7 +24,7 @@ const Wrapper = styled.div`
     }
 `;
 
-class DatasetDonut extends React.Component {
+class DatasetSummary extends React.Component {
     static parseDataset(dataset) {
         if (dataset === 'SU2C UHN (Breast Cancer)') {
             return 'UHN (Breast Cancer)';
@@ -49,7 +49,7 @@ class DatasetDonut extends React.Component {
         axios.get('/api/v1/dataset/models', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 const data = response.data.data.map((element) => ({
-                    id: DatasetDonut.parseDataset(element.dataset_name),
+                    id: DatasetSummary.parseDataset(element.dataset_name),
                     value: element.patient_id,
                     parameter: element.dataset_id,
                     totalModels: element.totalModels,
@@ -98,4 +98,4 @@ class DatasetDonut extends React.Component {
     }
 }
 
-export default DatasetDonut;
+export default DatasetSummary;
