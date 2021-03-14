@@ -6,7 +6,7 @@ import Footer from '../Footer/Footer';
 import DrugTable from '../Drug/DrugTable';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
-import BarPlot from '../BarPlot/BarPlot';
+import BarPlot from '../Plots/BarPlot';
 import colors from '../../styles/colors';
 
 const Wrapper = styled.div`

@@ -2,7 +2,7 @@ import CounterNav from './CounterNav/CounterNav';
 import Dataset from './Dataset/Dataset';
 import DatasetSummary from './SummaryPages/DatasetSummary';
 import Documentation from './Documentation/Documentation';
-import DonutChart from './DonutChart/DonutChart';
+import DonutChart from './Plots/DonutChart';
 import DrugSummary from './SummaryPages/DrugSummary';
 import DrugTable from './Drug/DrugTable';
 import Footer from './Footer/Footer';
