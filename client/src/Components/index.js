@@ -4,7 +4,6 @@ import DatasetDonut from './Dataset/DatasetDonut';
 import Documentation from './Documentation/Documentation';
 import DonutChart from './DonutChart/DonutChart';
 import DonutDrug from './Drug/BarDrug';
-import DonutPatient from './DonutChart/DonutPatient';
 import DonutTissue from './Tissue/DonutTissue';
 import DrugTable from './Drug/DrugTable';
 import Footer from './Footer/Footer';
@@ -27,7 +26,6 @@ export {
     Documentation,
     DonutChart,
     DonutDrug,
-    DonutPatient,
     DonutTissue,
     DrugTable,
     Footer,
