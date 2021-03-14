@@ -3,8 +3,8 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import HeatMap from './HeatMap';
-import GlobalStyles from '../../GlobalStyles';
-import TopNav from '../TopNav/TopNav';
+import GlobalStyles from '../../../GlobalStyles';
+import TopNav from '../../TopNav/TopNav';
 
 class HeatMapData extends React.Component {
     constructor(props) {
@@ -71,9 +71,9 @@ class HeatMapData extends React.Component {
             drugId: drug,
             patientId: patient,
             data: dataset,
-            dimensions: { height: 35, width: 20 },
+            dimensions: { height: 32, width: 16 },
             margin: {
-                top: 200, right: 200, bottom: 0, left: 250,
+                top: 200, right: 200, bottom: 0, left: 300,
             },
         });
     }
@@ -90,11 +90,10 @@ class HeatMapData extends React.Component {
                 <GlobalStyles />
                 {
                     data.length > 0 ? (
-                        <div className="wrapper" style={{ margin: 'auto' }}>
+                        <div>
                             <HeatMap
                                 data={data}
                                 drugId={drugId}
-                                className="heatmap"
                                 patientId={patientId}
                                 dimensions={dimensions}
                                 margin={margin}

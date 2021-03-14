@@ -6,10 +6,10 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-import PatientContext, { PatientConsumer } from '../Context/PatientContext';
+import PatientContext, { PatientConsumer } from '../../Context/PatientContext';
 // import DensityPlot from '../DensityPlot/DensityPlot';
-import BoxPlot from '../BoxPlot/BoxPlot';
-import colors from '../../styles/colors';
+import BoxPlot from '../BoxPlot';
+import colors from '../../../styles/colors';
 
 class HeatMap extends Component {
     constructor(props) {
@@ -18,31 +18,27 @@ class HeatMap extends Component {
             modifiedPatients: [],
             responseValue: 'mRECIST',
         };
-        this.HeatMap = this.HeatMap.bind(this);
-        this.makeHeatmap = this.makeHeatmap.bind(this);
+        this.makeHeatMap = this.makeHeatMap.bind(this);
         this.rankHeatMap = this.rankHeatMap.bind(this);
         this.rankHeatMapBasedOnOncoprintChanges = this.rankHeatMapBasedOnOncoprintChanges.bind(this);
     }
 
     componentDidMount() {
-        this.HeatMap();
-    }
-
-    HeatMap() {
-        const { node } = this;
-        const { data } = this.props;
-        const { drugId } = this.props;
-        const { patientId } = this.props;
-        const { dimensions } = this.props;
-        const { margin } = this.props;
-        const { className } = this.props;
-        const { dataset } = this.props;
-        const { responseValue: responseType } = this.state;
-        this.makeHeatmap(data, patientId, drugId, dataset, className, dimensions, margin, node, responseType);
+        this.makeHeatMap();
     }
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatmap(data, patient, drug, dataset, plotId, dimensions, margin, node, responseType) {
+    makeHeatMap() {
+        const { node } = this;
+        const { data } = this.props;
+        const { drugId: drug } = this.props;
+        let { patientId: patient } = this.props;
+        const { dimensions } = this.props;
+        const { margin } = this.props;
+        const { className: plotId } = this.props;
+        const { dataset } = this.props;
+        const { responseValue: responseType } = this.state;
+
         // variable to get the function stored.
         const heatmap = this.makeHeatmap;
         const reference = this;
@@ -541,7 +537,7 @@ class HeatMap extends Component {
 
         drugName.attr('stroke-width', '0')
             .style('font-family', '\'Raleway\',sans-serif')
-            .style('font-size', '12px')
+            .style('font-size', '11px')
             .attr('font-weight', '500')
             .call(yAxis)
             .selectAll('text')
@@ -601,11 +597,11 @@ class HeatMap extends Component {
             });
 
         // calling the x-axis to set the axis and we have also transformed the text.
-        const patientId = skeleton.append('g')
+        patient = skeleton.append('g')
             .attr('id', 'patient_id');
 
-        patientId.attr('stroke-width', '0')
-            .style('font-size', '12px')
+        patient.attr('stroke-width', '0')
+            .style('font-size', '11px')
             .style('font-family', '\'Raleway\',sans-serif')
             .style('text-anchor', (dataset === '7' ? 'start' : 'middle'))
             .call(xAxis)
@@ -663,7 +659,7 @@ class HeatMap extends Component {
                 .tickFormat(d3.format('.0f'));
 
             skeleton.append('g')
-                .attr('transform', `translate(${patient.length * rectWidth + 20},${35})`)
+                .attr('transform', `translate(${patient.length * rectWidth + 20},${dimensions.height})`)
                 .call(xAxisVertical)
                 .selectAll('text')
                 .attr('fill', `${colors.black}`)
@@ -678,7 +674,7 @@ class HeatMap extends Component {
             drugEval.append('rect')
                 .attr('class', 'drug_eval_rect')
                 .attr('x', patient.length * rectWidth + 20)
-                .attr('y', 35)
+                .attr('y', `${dimensions.height}`)
                 .attr('height', rectHeight * drug.length)
                 .attr('width', drugScale(maxDrug))
                 .attr('fill', `${colors.white}`)
@@ -739,7 +735,7 @@ class HeatMap extends Component {
                     .attr('x', 0)
                     .attr('y', -130)
                     .attr('height', boxHeight)
-                    .attr('width', patient.length * 20)
+                    .attr('width', patient.length * `${dimensions.width}`)
                     .attr('fill', `${colors.white}`)
                     .style('stroke', `${colors.black}`)
                     .style('stroke-width', 1);
@@ -778,8 +774,8 @@ class HeatMap extends Component {
                         patientEval.append('rect')
                             .attr('class', 'patient_eval_cr')
                             .attr('height', height)
-                            .attr('width', 16)
-                            .attr('x', iterator * 20)
+                            .attr('width', `${dimensions.width - 4}`)
+                            .attr('x', iterator * `${dimensions.width}`)
                             .attr('y', yRange)
                             .attr('fill', targetColor[type])
                             .style('stroke', `${colors.black}`)

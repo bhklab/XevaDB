@@ -5,9 +5,9 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import Oncoprint from './Oncoprint';
-import Spinner from '../SpinnerUtil/Spinner';
-import Error from '../Error/Error';
-import { OncoprintGenes } from '../../utils/OncoprintGenes';
+import Spinner from '../../Utils/Spinner';
+import Error from '../../Utils/Error';
+import { OncoprintGenes } from '../../../utils/OncoprintGenes';
 
 class OncoprintData extends React.Component {
     constructor(props) {
