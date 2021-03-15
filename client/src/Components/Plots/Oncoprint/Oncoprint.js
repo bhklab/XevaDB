@@ -24,20 +24,18 @@ class Oncoprint extends React.Component {
     Oncoprint(modifiedPatients) {
         let { hmap_patients } = this.props;
         hmap_patients = modifiedPatients || hmap_patients;
-        const { node, className } = this;
+        const { className } = this;
         const { dimensions, margin, threshold } = this.props;
         const { data_mut, data_rna, data_cnv } = this.props;
         const { genes_mut, genes_rna, genes_cnv } = this.props;
         const { patient_mut, patient_rna, patient_cnv } = this.props;
 
-        this.makeOncoprint(node, className, dimensions, margin, threshold, hmap_patients,
+        this.makeOncoprint(className, dimensions, margin, threshold, hmap_patients,
             data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv);
     }
 
 
-    makeOncoprint(node, plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
-        // reference.
-        this.node = node;
+    makeOncoprint(plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
         let isAlteration = false;
 
         // to merge two arrays and give the unique values.
@@ -130,7 +128,7 @@ class Oncoprint extends React.Component {
 
         /** SETTING SVG ATTRIBUTES and Oncoprint SKELETON * */
         // make the svg element
-        const svg = d3.select(node)
+        const svg = d3.select('#oncoprint')
             .append('svg')
             .attr('id', `oncoprint-${plotId}`) // set an id so that I can remove+replace on refresh
             .attr('xmlns', 'http://www.w3.org/2000/svg')
@@ -257,7 +255,7 @@ class Oncoprint extends React.Component {
         // this will take four parameters and color the rectangle accordingly
         const colorReactangles = (value, color, i, j, mutationType) => {
             // setting a = 12 if value is mut
-            const a = value === 'mut' ? 12 : 0;
+            const a = value === 'mut' ? 10 : 0;
             // setting the color based on value param.
             if (value !== 'empty' && value === 'mut') {
                 gene_alterations[genes[i]][mutationType]++;
@@ -843,7 +841,7 @@ class Oncoprint extends React.Component {
         return (
             // eslint-disable-next-line no-return-assign
             <div>
-                <div ref={(node) => { this.node = node; }} className="oprint-wrapper" />
+                <div className="oprint-wrapper" id="oncoprint" />
                 <PatientConsumer>{(value) => { this.rankOncoprintBasedOnHeatMapChanges(value); }}</PatientConsumer>
             </div>
         );

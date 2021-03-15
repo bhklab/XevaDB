@@ -71,7 +71,7 @@ class HeatMapData extends React.Component {
             drugId: drug,
             patientId: patient,
             data: dataset,
-            dimensions: { height: 32, width: 16 },
+            dimensions: { height: 30, width: 15 },
             margin: {
                 top: 200, right: 200, bottom: 0, left: 300,
             },

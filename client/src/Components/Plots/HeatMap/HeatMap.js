@@ -29,22 +29,20 @@ class HeatMap extends Component {
     }
 
     HeatMap() {
-        const { node } = this;
         const { data } = this.props;
         const { drugId, patientId } = this.props;
         const { dimensions, margin } = this.props;
         const { className } = this.props;
         const { dataset } = this.props;
         const { responseValue: responseType } = this.state;
-        this.makeHeatMap(data, patientId, drugId, dataset, className, dimensions, margin, node, responseType);
+        this.makeHeatMap(data, patientId, drugId, dataset, className, dimensions, margin, responseType);
     }
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatMap(data, patient, drug, dataset, plotId, dimensions, margin, node, responseType) {
+    makeHeatMap(data, patient, drug, dataset, plotId, dimensions, margin, responseType) {
         // variable to get the function stored.
         const heatmap = this.makeHeatMap;
         const reference = this;
-        this.node = node;
 
         // height and width for the SVG based on the number of drugs and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
@@ -173,7 +171,7 @@ class HeatMap extends Component {
                 }, () => {
                     d3.select(`#heatmap-${plotId}`).remove();
                     d3.select('#heatmap-tooltip').remove();
-                    heatmap(data, patient, drug, dataset, plotId, dimensions, margin, node, response);
+                    heatmap(data, patient, drug, dataset, plotId, dimensions, margin, response);
                 });
             });
         }
@@ -277,7 +275,7 @@ class HeatMap extends Component {
         /** SETTING SVG ATTRIBUTES * */
 
         // make the SVG element.
-        const svg = d3.select(node)
+        const svg = d3.select('#heatmap')
             .append('svg')
             .attr('id', `heatmap-${plotId}`)
             .attr('xmlns', 'http://wwww.w3.org/2000/svg')
@@ -539,7 +537,7 @@ class HeatMap extends Component {
 
         drugName.attr('stroke-width', '0')
             .style('font-family', '\'Raleway\',sans-serif')
-            .style('font-size', '12px')
+            .style('font-size', '11px')
             .attr('font-weight', '500')
             .call(yAxis)
             .selectAll('text')
@@ -803,7 +801,6 @@ class HeatMap extends Component {
     rankHeatMap(drug, i, dataset, responseType) {
         // grabbing the clicked data value.
         const data = dataset[i];
-        const { node } = this;
         const { dimensions } = this.props;
         const { drugId } = this.props;
         const { margin } = this.props;
@@ -867,7 +864,7 @@ class HeatMap extends Component {
 
         // finally calling the makeHeatMap function in order passing
         // new dataset in order to make new heatmap based on ranking.
-        this.makeHeatMap(newDataset, newSortedPatients, drugId, datasetId, className, dimensions, margin, node, responseType);
+        this.makeHeatMap(newDataset, newSortedPatients, drugId, datasetId, className, dimensions, margin, responseType);
 
         // making the circle visible on click of the drug.
         d3.select(`#circle-${drug.replace(/\s/g, '').replace(/\+/g, '')}`)
@@ -875,7 +872,6 @@ class HeatMap extends Component {
     }
 
     rankHeatMapBasedOnOncoprintChanges(value) {
-        const { node } = this;
         const { data } = this.props;
         const { drugId } = this.props;
         const { globalPatients } = value;
@@ -898,7 +894,7 @@ class HeatMap extends Component {
         if (globalPatients.length > 0) {
             d3.select(`#heatmap-${className}`).remove();
             d3.select('#heatmap-tooltip').remove();
-            this.makeHeatMap(newDataset, globalPatients, drugId, dataset, className, dimensions, margin, node, responseType);
+            this.makeHeatMap(newDataset, globalPatients, drugId, dataset, className, dimensions, margin, responseType);
         }
     }
 
@@ -926,7 +922,7 @@ class HeatMap extends Component {
                         }}
                     />
                 </div>
-                <div ref={(node) => { this.node = node; }} className="heatmap-wrapper" id="heatmap">
+                <div className="heatmap-wrapper" id="heatmap">
                     {
                         responseValue !== 'mRECIST' ? <BoxPlot response={responseValue} data={data} patients={modifiedPatients} drugs={drugs} /> : <div />
                     }
