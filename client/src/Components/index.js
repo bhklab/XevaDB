@@ -6,7 +6,7 @@ import DonutChart from './Plots/DonutChart';
 import DrugSummary from './SummaryPages/DrugSummary';
 import DrugTable from './Drug/DrugTable';
 import Footer from './Footer/Footer';
-import GrowthCurveData from './TumorGrowthCurve/GrowthCurveData';
+import GrowthCurveData from './Plots/TumorGrowthCurve/GrowthCurveData';
 import HeatMapData from './Plots/HeatMap/HeatMapData';
 import Home from './Home/Home';
 import Login from './Login/Login';

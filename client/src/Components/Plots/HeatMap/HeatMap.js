@@ -659,7 +659,7 @@ class HeatMap extends Component {
                 .tickFormat(d3.format('.0f'));
 
             skeleton.append('g')
-                .attr('transform', `translate(${patient.length * rectWidth + 20},${dimensions.height})`)
+                .attr('transform', `translate(${patient.length * rectWidth + 20},${rectHeight})`)
                 .call(xAxisVertical)
                 .selectAll('text')
                 .attr('fill', `${colors.black}`)
@@ -674,7 +674,7 @@ class HeatMap extends Component {
             drugEval.append('rect')
                 .attr('class', 'drug_eval_rect')
                 .attr('x', patient.length * rectWidth + 20)
-                .attr('y', `${dimensions.height}`)
+                .attr('y', `${rectHeight}`)
                 .attr('height', rectHeight * drug.length)
                 .attr('width', drugScale(maxDrug))
                 .attr('fill', `${colors.white}`)
@@ -735,7 +735,7 @@ class HeatMap extends Component {
                     .attr('x', 0)
                     .attr('y', -130)
                     .attr('height', boxHeight)
-                    .attr('width', patient.length * `${dimensions.width}`)
+                    .attr('width', patient.length * `${rectWidth}`)
                     .attr('fill', `${colors.white}`)
                     .style('stroke', `${colors.black}`)
                     .style('stroke-width', 1);
@@ -774,8 +774,8 @@ class HeatMap extends Component {
                         patientEval.append('rect')
                             .attr('class', 'patient_eval_cr')
                             .attr('height', height)
-                            .attr('width', `${dimensions.width - 4}`)
-                            .attr('x', iterator * `${dimensions.width}`)
+                            .attr('width', `${rectWidth - 4}`)
+                            .attr('x', iterator * `${rectWidth}`)
                             .attr('y', yRange)
                             .attr('fill', targetColor[type])
                             .style('stroke', `${colors.black}`)
