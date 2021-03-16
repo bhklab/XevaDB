@@ -28,8 +28,8 @@ class StatTable extends React.Component {
 
     componentDidMount() {
         const { drugParam, patientParam } = this.props;
-        const getModelResponse = axios.get(`/api/v1/stats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
-        const getBatchResponse = axios.get(`/api/v1/batchstat?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const getModelResponse = axios.get(`/api/v1/modelstats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const getBatchResponse = axios.get(`/api/v1/batchstats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
 
         Promise.all([getBatchResponse, getModelResponse]).then((response) => {
             this.parseData(response);
@@ -89,7 +89,7 @@ class StatTable extends React.Component {
         // creating each table row.
         const createTableRow = (eachdata, index) => {
             const {
-                patient, model, drug,
+                model, drug,
                 bar, mRECIST, slope, AUC,
                 survival, link, row,
             } = eachdata;
@@ -109,7 +109,7 @@ class StatTable extends React.Component {
 
             const dataRow = (
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
-                    <td>{drug.match(/(untreated|water|control)/i) ? 'Control' : 'Treatment'}</td>
+                    <td>{drug.match(/(untreated|water|control|h2o)/i) ? 'Control' : 'Treatment'}</td>
                     <td>{model}</td>
                     <td>{drug}</td>
                     <td>{mRECIST}</td>

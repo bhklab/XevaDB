@@ -311,7 +311,8 @@ const getModelResponseStats = function (request, response) {
                     this.where('drugs.drug_name', drug)
                         .orWhere('drugs.drug_name', 'water')
                         .orWhere('drugs.drug_name', 'untreated')
-                        .orWhere('drugs.drug_name', 'control');
+                        .orWhere('drugs.drug_name', 'control')
+                        .orWhere('drugs.drug_name', 'H2O');
                 })
                 .andWhere('batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)
                 .then((data) => {

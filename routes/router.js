@@ -57,7 +57,7 @@ router.post('/v1/drugpatient/dataset', verifytoken, modelInformation.postDrugand
 // APIs for model response table.
 router.get('/v1/response/:dataset', verifytoken, modelResponse.getModelResponseBasedOnDataset);
 router.get('/v1/response', verifytoken, modelResponse.getModelResponseBasedPerDatasetBasedOnDrugs);
-router.get('/v1/stats', verifytoken, modelResponse.getModelResponseStats);
+router.get('/v1/modelstats', verifytoken, modelResponse.getModelResponseStats);
 
 // APIs related to mutation table.
 router.get('/v1/mutation/:dataset', mixed.isValidId, verifytoken, mutation.getMutationBasedOnDataset);
@@ -80,7 +80,7 @@ router.post('/v1/register', awtauthentication.registerUser);
 
 
 // APIs related to batch response.
-router.get('/v1/batchstat', verifytoken, batchResponse.getBatchResponseStats);
+router.get('/v1/batchstats', verifytoken, batchResponse.getBatchResponseStats);
 
 
 module.exports = router;
