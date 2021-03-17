@@ -109,7 +109,7 @@ class StatTable extends React.Component {
 
             const dataRow = (
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
-                    <td>{drug.match(/(untreated|water|control|h2o)/i) ? 'Control' : 'Treatment'}</td>
+                    <td>{drug.match(/(^untreated$|^water$|^control$|^h2o$|h2o)/i) ? 'Control' : 'Treatment'}</td>
                     <td>{model}</td>
                     <td>{drug}</td>
                     <td>{mRECIST}</td>

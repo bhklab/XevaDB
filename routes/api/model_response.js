@@ -73,7 +73,7 @@ const getModelResponseBasedOnDataset = function (request, response) {
                             data[value - 1][element.patient] = {};
                         }
                         data[value - 1][element.patient][element.response_type] = element.value;
-                    } else if (element.drug_name.match(/(untreated|water|control)/i)) {
+                    } else if (element.drug_name.match(/(^untreated$|^water$|^control$|^h2o$)/i)) {
                         untreated.Drug = element.drug_name;
                         if (!(element.patient in untreated)) {
                             untreated[element.patient] = {};
@@ -195,7 +195,7 @@ const getModelResponseBasedPerDatasetBasedOnDrugs = function (request, response)
                             data[value - 1][element.patient] = {};
                         }
                         data[value - 1][element.patient][element.response_type] = element.value;
-                    } else if (element.drug_name.match(/(untreated|water|control)/i)) {
+                    } else if (element.drug_name.match(/(^untreated$|^water$|^control$|^h2o$)/i)) {
                         untreated.Drug = element.drug_name;
                         if (!(element.patient in untreated)) {
                             untreated[element.patient] = {};

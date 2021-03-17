@@ -542,11 +542,11 @@ class HeatMap extends Component {
             .call(yAxis)
             .selectAll('text')
             .attr('fill', (d) => {
-                if (d.match(/(untreated|water|control)/i)) { return `${colors.blue_header}`; }
+                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return `${colors.blue_header}`; }
                 return `${colors.black}`;
             })
             .attr('font-weight', (d) => {
-                if (d.match(/(untreated|water|control)/i)) { return '700'; }
+                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return '700'; }
                 return '500';
             })
             .attr('id', (d) => `tick-${d.replace(/\s/g, '').replace(/\+/g, '')}`)
