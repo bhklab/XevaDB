@@ -90,7 +90,7 @@ class HeatMapData extends React.Component {
                 <GlobalStyles />
                 {
                     data.length > 0 ? (
-                        <div>
+                        <div className="wrapper">
                             <HeatMap
                                 data={data}
                                 drugId={drugId}
@@ -98,6 +98,7 @@ class HeatMapData extends React.Component {
                                 dimensions={dimensions}
                                 margin={margin}
                                 dataset={datasetParam}
+                                className="heatmap"
                             />
                         </div>
                     ) : ''

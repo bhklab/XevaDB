@@ -47,10 +47,10 @@ const initialize = () => {
     const margin = {
         top: 1, right: 1, bottom: 1, left: 1,
     };
-    const patientWidth = 20 - margin.left - margin.right;
+    const patientWidth = 15 - margin.left - margin.right;
     const patientHeight = 100 - margin.top - margin.bottom;
     const drugWidth = 70 - margin.left - margin.right;
-    const drugHeight = 35 - margin.top - margin.bottom;
+    const drugHeight = 30 - margin.top - margin.bottom;
 
     return {
         margin,
@@ -68,7 +68,7 @@ const createTopSvg = (width, height, id, svgId) => {
         .append('svg')
         .attr('width', width)
         .attr('height', height)
-        .attr('transform', 'translate(220, 150)')
+        .attr('transform', 'translate(270, 150)')
         .attr('id', `boxplotsvg${svgId}`);
 
     return svg;
@@ -153,9 +153,9 @@ const mapXScale = (width, min, max) => {
 const yAxis = (linearscale, width, height, margin, id) => {
     const svg = d3.select('#boxplot')
         .append('svg')
-        .attr('width', width + margin.left + margin.right + 10)
+        .attr('width', width + margin.left + margin.right + 15)
         .attr('height', height + margin.top + margin.bottom)
-        .attr('transform', 'translate(220, 150)')
+        .attr('transform', 'translate(270, 150)')
         .attr('id', `svg-${id}`);
 
     const axis = d3.axisLeft()

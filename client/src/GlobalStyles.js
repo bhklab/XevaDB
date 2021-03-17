@@ -43,7 +43,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .heatmap-wrapper, .doc-wrapper {
-    margin-top: 200px;
+    margin-top: 150px;
   }
 
   .oprint-wrapper {
