@@ -4,7 +4,7 @@
 /* eslint-disable no-extend-native */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-plusplus */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -12,6 +12,7 @@ import GlobalStyles from '../../../GlobalStyles';
 import TopNav from '../../TopNav/TopNav';
 import StatTable from '../../ResponseStat/ModelResponseStatTable';
 import colors from '../../../styles/colors';
+import ExportPng from '../../Utils/ExportPng';
 
 // this will initialize a tooltip.
 const initializeToolTop = () => d3.select('.wrapper')
@@ -266,13 +267,13 @@ const tumorCurve = (data, plotId, minmax) => {
     const expTypes = ['control', 'treatment'];
 
     // positioning variables
-    const width = 970;
+    const width = 900;
     const height = 500;
     const margin = {
         top: 50,
-        right: 260,
-        bottom: 250,
-        left: 130,
+        right: 200,
+        bottom: 100,
+        left: 200,
     };
 
     // make the svg element
@@ -858,6 +859,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
 const TumorGrowthCurve = (props) => {
     const { patientParam, drugParam, data } = props;
     const plotId = 'plot';
+    const componentRef = useRef();
 
     // function will be triggered once the component is mounted/updated.
     useEffect(() => {
@@ -890,7 +892,8 @@ const TumorGrowthCurve = (props) => {
                         {' '}
                         <span style={{ color: `${colors.pink_header}` }}>{patientParam}</span>
                     </h1>
-                    <svg id="svg-curve" width={1300} height={620} />
+                    <ExportPng componentRef={componentRef} />
+                    <div id="svg-curve" ref={componentRef} />
                 </div>
 
                 <StatTable patientParam={patientParam} drugParam={drugParam} />
