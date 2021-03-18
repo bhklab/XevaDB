@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import bgImg from './images/bgImg7.png';
-
+import colors from './styles/colors';
 
 const GlobalStyles = createGlobalStyle`
 
@@ -22,10 +22,10 @@ const GlobalStyles = createGlobalStyle`
     min-height: 100vh;
     flex-direction: column;
     
-    min-width:100vw;
-    width:auto;
-    position:relative;
-    margin:0px;
+    min-width: 100vw;
+    width: auto;
+    position: relative;
+    margin: 0px;
   }
 
   .wrapper {
@@ -33,59 +33,57 @@ const GlobalStyles = createGlobalStyle`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 150px;
 
     h1 {
       font-family:'Raleway', sans-serif;
-      font-weight:700;
-      text-align:center;
-      color: #3453b0;
+      font-weight: 700;
+      text-align: center;
+      color: ${colors.blue_header};
     }
   }
 
-  .heatmap-wrapper, .doc-wrapper {
-    margin-top: 150px;
-  }
-
   .oprint-wrapper {
-    margin-bottom:100px;
+    margin-bottom: 100px;
   }
 
   .heatmap-wrapper, .oprint-wrapper {
-    min-width:1417px;
+    min-width: 1417px;
   }
+
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
   .donut-wrapper, .doc-wrapper { //put all wrappers here and wrap them with wrapper
-    background:white;
-    font-family:'Raleway', sans-serif;
+    background: ${colors.white}
+    font-family: 'Raleway', sans-serif;
   }
 
   .donut-wrapper {
-    margin-bottom:20px;
-    min-width:1300px;
+    margin-bottom: 20px;
+    min-width: 1300px;
   }
 
   .heatmap, .oprint {
-    height:700px;
-    overflow:auto;
+    height: 700px;
+    overflow: auto;
   }
 
   .curve-wrapper {
-    min-width:1300px;
-    display:flex;
+    min-width: 1300px;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
     a {
-      text-decoration:none;
-      font-size:16px;
-      padding:20px;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 20px;
       font-family: 'Raleway', sans-serif;
-      color: #3453b0;
+      color: ${colors.blue_header};
     }
 
     .no-graph {
-      padding:50px;
+      padding: 50px;
     }
   }
 `;

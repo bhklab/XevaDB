@@ -880,9 +880,8 @@ const TumorGrowthCurve = (props) => {
         <div>
             <TopNav />
             <GlobalStyles />
-            <div className="wrapper" style={{ margin: 'auto', fontSize: '16px' }}>
-
-                <div className="curve-wrapper" style={{ marginTop: '100px' }}>
+            <div className="wrapper">
+                <div className="curve-wrapper">
                     <h1>
                         Drug ID =
                         {' '}
@@ -895,13 +894,10 @@ const TumorGrowthCurve = (props) => {
                     <ExportPng componentRef={componentRef} />
                     <div id="svg-curve" ref={componentRef} />
                 </div>
-
                 <StatTable patientParam={patientParam} drugParam={drugParam} />
-
                 <div className="curve-wrapper" style={{ marginTop: '20px', padding: '10px 0px' }}>
                     <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
                 </div>
-
             </div>
         </div>
     );
