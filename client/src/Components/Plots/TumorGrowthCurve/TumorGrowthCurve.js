@@ -891,7 +891,7 @@ const TumorGrowthCurve = (props) => {
                         {' '}
                         <span style={{ color: `${colors.pink_header}` }}>{patientParam}</span>
                     </h1>
-                    <ExportPng componentRef={componentRef} />
+                    <ExportPng componentRef={componentRef} fileName={`DrugId = ${drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}, PatientId = ${patientParam}`} />
                     <div id="svg-curve" ref={componentRef} />
                 </div>
                 <StatTable patientParam={patientParam} drugParam={drugParam} />

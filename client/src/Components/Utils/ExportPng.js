@@ -7,19 +7,18 @@ import downloadIcon from '../../images/download.svg';
 const StyledButton = styled.div`
     font-weight: 500;
     display: inline !important;
-    align-self: flex-end;
-    margin-right: 70px;
-    margin-bottom: 30px;
+    // align-self: flex-end;
+    margin: 40px 0px 0px 0px;
     
     button {
         background-color: ${colors.blue_header} !important;
         color: ${colors.white} !important;
-        padding: 6px !important;
-        padding-left: 10px !important;
+        padding: 6px 6px 8px 8px !important;
         margin-right: 5px;
         border-radius: 6px;
         border: 1px;
         font-size: 1.0em;
+        width: 170px;
         :hover {
         color: ${colors.blue_header} !important;
         background-color: ${colors.lightgray} !important;
@@ -28,16 +27,16 @@ const StyledButton = styled.div`
     }
     img {
         display: inline-block;
-        height: 18px;
-        width: 25px;
+        height: 20px;
+        width: 30px;
     }
 `;
 
 const ExportPng = (props) => {
-    const { componentRef } = props;
+    const { componentRef, fileName } = props;
     return (
         <StyledButton>
-            <button onClick={() => exportComponentAsPNG(componentRef)} type="button">
+            <button onClick={() => exportComponentAsPNG(componentRef, { fileName })} type="button">
                 Export as PNG
                 <img src={downloadIcon} alt="download icon" />
             </button>
