@@ -14,18 +14,16 @@ const GlobalStyles = createGlobalStyle`
     background-attachment: fixed;
     background-position: center;
     margin: auto;
-    width:100%;
+    width: 100%;
   }
 
   #root {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-    
     min-width: 100vw;
     width: auto;
     position: relative;
-    margin: 0px;
   }
 
   .wrapper {
@@ -43,28 +41,23 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 
-  .oprint-wrapper {
-    margin-bottom: 100px;
+  .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
+  .donut-wrapper, .doc-wrapper {
+    background: ${colors.white}
+    font-family: 'Raleway', sans-serif;
   }
 
   .heatmap-wrapper, .oprint-wrapper {
-    min-width: 1417px;
+    max-width: 1400px;
   }
 
-  .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
-  .donut-wrapper, .doc-wrapper { //put all wrappers here and wrap them with wrapper
-    background: ${colors.white}
-    font-family: 'Raleway', sans-serif;
+  .oprint-wrapper {
+    margin-bottom: 100px;
   }
 
   .donut-wrapper {
     margin-bottom: 20px;
     min-width: 1300px;
-  }
-
-  .heatmap, .oprint {
-    height: 700px;
-    overflow: auto;
   }
 
   .curve-wrapper {
