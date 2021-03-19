@@ -6,23 +6,6 @@ import Footer from '../Footer/Footer';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
 import DatasetTable from '../Dataset/DatasetTable';
-import colors from '../../styles/colors';
-
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 200px;
-    color: ${colors.blue_header};
-    margin-bottom: 100px;
-
-    h1 {
-        font-family:'Raleway', sans-serif;
-        font-weight:700;
-        text-align:center;
-    }
-`;
 
 class DatasetSummary extends React.Component {
     static parseDataset(dataset) {
@@ -74,7 +57,7 @@ class DatasetSummary extends React.Component {
             <div>
                 <TopNav />
                 <GlobalStyles />
-                <Wrapper>
+                <div className="wrapper">
                     <div className="donut-wrapper">
                         <h1> Number of Patients Per Dataset </h1>
                         <DonutChart
@@ -85,13 +68,13 @@ class DatasetSummary extends React.Component {
                             chartId="donut_datasets"
                         />
                     </div>
-                    <div className="donut-wrapper">
+                    <div className="donut-wrapper summary-table">
                         <DatasetTable
                             data={data}
                             dataLength={data.length}
                         />
                     </div>
-                </Wrapper>
+                </div>
                 <Footer />
             </div>
         );

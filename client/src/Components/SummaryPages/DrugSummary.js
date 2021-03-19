@@ -1,29 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
-// import DonutChart from '../DonutChart/DonutChart';
 import Footer from '../Footer/Footer';
 import DrugTable from '../Drug/DrugTable';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
 import BarPlot from '../Plots/BarPlot';
-import colors from '../../styles/colors';
 
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 200px;
-    margin-bottom: 100px;
-    
-    h1 {
-        font-family:'Raleway', sans-serif;
-        font-weight:700;
-        text-align:center;
-        color: ${colors.blue_header}
-    }
-`;
 
 class DrugSummary extends React.Component {
     constructor(props) {
@@ -71,7 +53,7 @@ class DrugSummary extends React.Component {
             <div>
                 <TopNav />
                 <GlobalStyles />
-                <Wrapper>
+                <div className="wrapper">
                     <div className="donut-wrapper">
                         <h1> Number of Models Per Drug class </h1>
                         {
@@ -87,11 +69,11 @@ class DrugSummary extends React.Component {
                                 )
                         }
                     </div>
-                    <div className="donut-wrapper">
+                    <div className="donut-wrapper summary-table">
                         <DrugTable />
                     </div>
-                </Wrapper>
-                <Footer />
+                    <Footer />
+                </div>
             </div>
         );
     }

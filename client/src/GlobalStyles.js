@@ -55,9 +55,13 @@ const GlobalStyles = createGlobalStyle`
     margin-bottom: 100px;
   }
 
-  .donut-wrapper {
-    margin-bottom: 20px;
+  .donut-wrapper, .summary-table {
+    margin-bottom: 30px;
     min-width: 1300px;
+  }
+
+  .summary-table {
+    margin-bottom: 150px;
   }
 
   .curve-wrapper {

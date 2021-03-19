@@ -1,27 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
 import DonutChart from '../Plots/DonutChart';
 import Footer from '../Footer/Footer';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
-import colors from '../../styles/colors';
-
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 200px;
-    color: ${colors.blue_header};
-    margin-bottom: 100px;
-
-    h1 {
-        font-family:'Raleway', sans-serif;
-        font-weight:700;
-        text-align:center;
-    }
-`;
 
 
 class TissueSummary extends React.Component {
@@ -66,8 +48,8 @@ class TissueSummary extends React.Component {
             <div>
                 <TopNav />
                 <GlobalStyles />
-                <Wrapper>
-                    <div className="donut-wrapper">
+                <div className="wrapper">
+                    <div className="donut-wrapper summary-table">
                         <h1> PDXs Per Tissue Type </h1>
                         <DonutChart
                             dimensions={dimensions}
@@ -77,7 +59,7 @@ class TissueSummary extends React.Component {
                             arcRadius={arc}
                         />
                     </div>
-                </Wrapper>
+                </div>
                 <Footer />
             </div>
         );
