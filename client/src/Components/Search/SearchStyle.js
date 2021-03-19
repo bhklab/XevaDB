@@ -14,7 +14,7 @@ const StyleBar = styled.div`
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
-        border-radius:25px;
+        border-radius: 25px;
         max-height: 700px;
     }
 

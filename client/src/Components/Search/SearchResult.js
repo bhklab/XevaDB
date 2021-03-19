@@ -58,7 +58,7 @@ class SearchResult extends React.Component {
             <div>
                 <TopNav />
                 <GlobalStyles />
-                <div className="wrapper" style={{ margin: 'auto' }}>
+                <div className="wrapper">
                     <PatientProvider value={providerData}>
                         <SearchResultHeatMap
                             drugParam={drugParam}

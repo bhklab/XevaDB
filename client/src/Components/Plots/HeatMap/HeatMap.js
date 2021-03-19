@@ -916,9 +916,10 @@ class HeatMap extends Component {
                             display: 'block',
                             align: 'right',
                             height: '30px',
-                            marginTop: '290px',
+                            marginTop: '90px',
                             position: 'absolute',
-                            right: '80px',
+                            right: '20px',
+                            width: '140px',
                         }}
                     />
                 </div>
