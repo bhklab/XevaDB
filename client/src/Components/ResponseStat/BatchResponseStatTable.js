@@ -2,7 +2,9 @@
 /* eslint-disable class-methods-use-this */
 import React from 'react';
 import PropTypes from 'prop-types';
-import StyleTable from './ModelResponseStyle';
+import { CSVLink } from 'react-csv';
+import { StyleTable, StyledLink } from './ResponseStyle';
+import downloadIcon from '../../images/download.svg';
 
 class BatchStatTable extends React.Component {
     constructor(props) {
@@ -13,11 +15,10 @@ class BatchStatTable extends React.Component {
         };
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
+        this.parseData = this.parseData.bind(this);
     }
 
-    createTable() {
-        // this will create newData array of objects for the table.
-        const { data } = this.props;
+    parseData(data) {
         const newData = [];
         let total = 0;
         let batchId = '';
@@ -32,7 +33,11 @@ class BatchStatTable extends React.Component {
             newData[total - 1][eachdata.response_type] = eachdata.value;
         });
 
-        const table = newData.map((eachdata, index) => {
+        return newData;
+    }
+
+    createTable(data) {
+        return data.map((eachdata, index) => {
             const {
                 batch, angle, TGI, abc,
             } = eachdata;
@@ -45,7 +50,6 @@ class BatchStatTable extends React.Component {
                 </tr>
             );
         });
-        return table;
     }
 
     createTableHeader() {
@@ -56,14 +60,24 @@ class BatchStatTable extends React.Component {
     }
 
     render() {
+        const { data } = this.props;
+        const parsedData = this.parseData(data);
+        const header = this.createTableHeader();
+        const table = this.createTable(parsedData);
         return (
-            <div className="curve-wrapper" style={{ marginTop: '0px', padding: '60px 0px 20px 0px' }}>
+            <div className="curve-wrapper">
                 <h1 id="title">Statistics (Batch Response)</h1>
+                <StyledLink>
+                    <CSVLink data={data} filename="batchresponse.csv" style={{ float: 'right', display: 'inline-block' }}>
+                        Batch Response Data
+                        <img src={downloadIcon} alt="download icon!" />
+                    </CSVLink>
+                </StyledLink>
                 <StyleTable>
                     <table id="stats-table">
                         <tbody>
-                            <tr>{this.createTableHeader()}</tr>
-                            {this.createTable()}
+                            <tr>{header}</tr>
+                            {table}
                         </tbody>
                     </table>
                 </StyleTable>

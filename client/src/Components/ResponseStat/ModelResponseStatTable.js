@@ -5,9 +5,10 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { CSVLink } from 'react-csv';
-import StyleTable from './ModelResponseStyle';
+import { StyleTable, StyledLink } from './ResponseStyle';
 import BatchStatTable from './BatchResponseStatTable';
-import colors from '../../styles/colors';
+import downloadIcon from '../../images/download.svg';
+
 
 class StatTable extends React.Component {
     constructor(props) {
@@ -109,7 +110,7 @@ class StatTable extends React.Component {
 
             const dataRow = (
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
-                    <td>{drug.match(/(^untreated$|^water$|^control$|^h2o$|h2o)/i) ? 'Control' : 'Treatment'}</td>
+                    <td>{drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? 'Control' : 'Treatment'}</td>
                     <td>{model}</td>
                     <td>{drug}</td>
                     <td>{mRECIST}</td>
@@ -142,20 +143,26 @@ class StatTable extends React.Component {
 
     render() {
         const { batchData, data } = this.state;
+        const csvHeader = this.getCSVHeader(data);
+        const tableHeader = this.createTableHeader();
+        const table = this.createTable();
 
         return (
             <>
                 <BatchStatTable data={batchData} />
-                <div className="curve-wrapper" style={{ marginTop: '0px', padding: '30px 0px' }}>
+                <div className="curve-wrapper">
                     <h1 id="titlemodel">Statistics (Model Response)</h1>
-                    <CSVLink data={data} headers={this.getCSVHeader(data)}>
-                        <h3 style={{ color: `${colors.pink_header}` }}> Download Model Response Data </h3>
-                    </CSVLink>
+                    <StyledLink>
+                        <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv" style={{ float: 'right', display: 'inline-block' }}>
+                            Model Response Data
+                            <img src={downloadIcon} alt="download icon!" />
+                        </CSVLink>
+                    </StyledLink>
                     <StyleTable>
                         <table id="stats-table">
                             <tbody>
-                                <tr>{this.createTableHeader()}</tr>
-                                {this.createTable()}
+                                <tr>{tableHeader}</tr>
+                                {table}
                             </tbody>
                         </table>
                     </StyleTable>
