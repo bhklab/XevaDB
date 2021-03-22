@@ -60,7 +60,7 @@ const GlobalStyles = createGlobalStyle`
     min-width: 1300px;
   }
 
-  .summary-table {
+  .summary-table, .stats-table {
     margin-bottom: 150px;
   }
 
@@ -74,7 +74,7 @@ const GlobalStyles = createGlobalStyle`
     a {
       text-decoration: none;
       font-size: 16px;
-      padding: 20px;
+      padding: 10px;
       font-family: 'Raleway', sans-serif;
       color: ${colors.blue_header};
     }

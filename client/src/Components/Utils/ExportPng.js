@@ -11,16 +11,16 @@ const StyledButton = styled.div`
     margin: 40px 0px 0px 0px;
     
     button {
-        background-color: ${colors.blue_header} !important;
+        background-color: ${colors.moderate_blue} !important;
         color: ${colors.white} !important;
         padding: 6px 6px 8px 8px !important;
         margin-right: 5px;
         border-radius: 6px;
         border: 1px;
-        font-size: 1.0em;
+        font-size: 1.1em;
         width: 170px;
         :hover {
-        color: ${colors.blue_header} !important;
+        color: ${colors.moderate_blue} !important;
         background-color: ${colors.lightgray} !important;
         cursor: pointer;
         }
@@ -37,7 +37,7 @@ const ExportPng = (props) => {
     return (
         <StyledButton>
             <button onClick={() => exportComponentAsPNG(componentRef, { fileName })} type="button">
-                Export as PNG
+                Export Graph
                 <img src={downloadIcon} alt="download icon" />
             </button>
         </StyledButton>

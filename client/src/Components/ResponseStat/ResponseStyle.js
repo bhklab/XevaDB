@@ -1,7 +1,34 @@
 import styled from 'styled-components';
 import colors from '../../styles/colors';
 
-const StyleTable = styled.div`
+
+export const StyledLink = styled.div`
+    font-weight: 500;
+    margin-bottom: 10px;
+    width: 800px;
+
+    img {
+        height: 15px;
+        width: 25px;
+        margin-left: 5px;
+    }
+    a:link {
+        background-color: ${colors.moderate_blue} !important;
+        color: ${colors.white} !important;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 1em;
+    }
+    a:hover {
+        color: ${colors.moderate_blue} !important;
+        background-color: ${colors.lightgray} !important;
+    }
+`;
+
+
+export const StyleTable = styled.div`
+
+    margin-bottom: 40px;
 
     table, th, td {
         border: 1px solid ${colors.dark_gray};
@@ -34,7 +61,4 @@ const StyleTable = styled.div`
     tr:hover {
         background-color: ${colors.white_smoke};
     }
-
 `;
-
-export default StyleTable;
