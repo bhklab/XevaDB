@@ -68,7 +68,7 @@ const createTopSvg = (width, height, id, svgId) => {
         .append('svg')
         .attr('width', width)
         .attr('height', height)
-        .attr('transform', 'translate(220, 150)')
+        .attr('transform', 'translate(220, 50)')
         .attr('id', `boxplotsvg${svgId}`);
 
     return svg;
@@ -155,7 +155,7 @@ const yAxis = (linearscale, width, height, margin, id) => {
         .append('svg')
         .attr('width', width + margin.left + margin.right + 15)
         .attr('height', height + margin.top + margin.bottom)
-        .attr('transform', 'translate(220, 150)')
+        .attr('transform', 'translate(220, 50)')
         .attr('id', `svg-${id}`);
 
     const axis = d3.axisLeft()

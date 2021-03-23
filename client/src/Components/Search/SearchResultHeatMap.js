@@ -64,7 +64,7 @@ class SearchResultHeatMap extends React.Component {
             drugData: dataset,
             dimensions: { height: 30, width: 15 },
             margin: {
-                top: 300, right: 200, bottom: 0, left: 250,
+                top: 200, right: 200, bottom: 0, left: 250,
             },
         });
     }

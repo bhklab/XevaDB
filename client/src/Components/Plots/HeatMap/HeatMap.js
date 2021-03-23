@@ -171,6 +171,15 @@ class HeatMap extends Component {
                 }, () => {
                     d3.select(`#heatmap-${plotId}`).remove();
                     d3.select('#heatmap-tooltip').remove();
+                    if (selectedOption !== 'mRECIST') {
+                        margin = {
+                            top: 100, right: 200, bottom: 0, left: 250,
+                        };
+                    } else {
+                        margin = {
+                            top: 200, right: 200, bottom: 0, left: 250,
+                        };
+                    }
                     heatmap(data, patient, drug, dataset, plotId, dimensions, margin, response);
                 });
             });
