@@ -144,6 +144,7 @@ class StatTable extends React.Component {
 
     render() {
         const { batchData, data } = this.state;
+        const datasetId = data[0] && data[0].dataset_id;
         const csvHeader = this.getCSVHeader(data);
         const tableHeader = this.createTableHeader();
         const table = this.createTable();
@@ -153,7 +154,7 @@ class StatTable extends React.Component {
                 <BatchStatTable data={batchData} />
                 <div className="curve-wrapper">
                     <h1 id="titlemodel">Statistics (Model Response)</h1>
-                    <StyledLink>
+                    <StyledLink width={datasetId === 7 ? '925px' : '800px'}>
                         <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv" style={{ float: 'right', display: 'inline-block' }}>
                             Model Response Data
                             <img src={downloadIcon} alt="download icon!" />

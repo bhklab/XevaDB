@@ -5,7 +5,7 @@ import colors from '../../styles/colors';
 export const StyledLink = styled.div`
     font-weight: 500;
     margin-bottom: 10px;
-    width: 800px;
+    width: ${(props) => props.width || '800px'}
 
     img {
         height: 15px;
