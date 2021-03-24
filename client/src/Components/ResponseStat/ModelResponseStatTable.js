@@ -8,6 +8,7 @@ import { CSVLink } from 'react-csv';
 import { StyleTable, StyledLink } from './ResponseStyle';
 import BatchStatTable from './BatchResponseStatTable';
 import downloadIcon from '../../images/download.svg';
+import colors from '../../styles/colors';
 
 
 class StatTable extends React.Component {
@@ -17,7 +18,7 @@ class StatTable extends React.Component {
         this.state = {
             data: [],
             batchData: [],
-            tableHeader: ['Patient', 'Model', 'Drug',
+            tableHeader: ['Type', 'Model', 'Drug',
                 'mRECIST', 'Best Average Response', 'Slope', 'AUC',
                 'Survival (Days)', 'Link', 'Row Number'],
         };
@@ -109,7 +110,7 @@ class StatTable extends React.Component {
             };
 
             const dataRow = (
-                <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
+                <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`} style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}>
                     <td>{drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? 'Control' : 'Treatment'}</td>
                     <td>{model}</td>
                     <td>{drug}</td>

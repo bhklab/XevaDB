@@ -38,6 +38,7 @@ const GlobalStyles = createGlobalStyle`
       font-weight: 700;
       text-align: center;
       color: ${colors.blue_header};
+      font-size: 1.6em;
     }
   }
 

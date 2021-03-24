@@ -51,12 +51,14 @@ export const StyleTable = styled.div`
     }
 
     td {
-        color: ${colors.pink_header};
+        color: ${colors.jet_black};
         padding: 10px;
         white-space: normal;
         max-width: 200px;
         overflow: scroll;
     }
+
+    tr: ${(props) => console.log(props)}
 
     tr:hover {
         background-color: ${colors.white_smoke};

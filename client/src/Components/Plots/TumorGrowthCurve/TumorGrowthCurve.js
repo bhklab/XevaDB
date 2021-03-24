@@ -537,12 +537,14 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
     // create a white line to let user hover over with opacity 0 and event listeners.
     createLine(4, 0, `${colors.white}`)
         .on('mouseover', (d) => {
+            const background = d.exp_type === 'control' ? `${colors.pink_header}` : `${colors.blue_header}`;
             // creating tooltip.
             createToolTip(d, 'line', tooltip);
             // changing attributes of the line on mouseover.
-            tableSelect(d, 5, 1.0, `${colors.white_smoke}`, `${colors.moderate_blue}`, `${colors.white_smoke}`, `${colors.moderate_blue}`);
+            tableSelect(d, 5, 1.0, `${colors.white_smoke}`, background, `${colors.white_smoke}`, background);
         })
         .on('mouseout', (d) => {
+            const background = d.exp_type === 'control' ? `${colors.white_red}` : `${colors.fade_blue}`;
             // remove all the divs with id tooltiptext.
             d3.selectAll('#tooltiptext').remove();
             // tooltip on mousever setting the div to hidden.
@@ -550,10 +552,11 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
                 .style('visibility', 'hidden');
             // changing attributes back to normal of the line on mouseout.
             if (!(d3.select(`#path-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}`).classed('selected'))) {
-                tableSelect(d, 3, 0.7, `${colors.pink_header}`, `${colors.white}`, `${colors.moderate_blue}`, `${colors.white}`);
+                tableSelect(d, 3, 0.7, `${colors.jet_black}`, background, `${colors.moderate_blue}`, background);
             }
         })
         .on('click', (d) => {
+            const background = d.exp_type === 'control' ? `${colors.pink_header}` : `${colors.blue_header}`;
             d3.event.preventDefault();
             let selectedCurve = false;
             const selection = d3.select(`#path-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}`);
@@ -567,7 +570,7 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
                         const previousSelection = d3.select(`.${val.classList[0]}`);
                         const model = previousSelection.data()[0];
                         previousSelection.classed('selected', false);
-                        tableSelect(model, 3, 0.7, `${colors.pink_header}`, `${colors.white}`, `${colors.moderate_blue}`, `${colors.white}`);
+                        tableSelect(model, 3, 0.7, background, `${colors.white}`, background, `${colors.white}`);
                         if (val.classList[0] === selection.attr('class')) {
                             selectedCurve = true;
                         }
@@ -578,10 +581,10 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
             // highlight and classed according to selection.
             if (!(selection.classed('selected')) && !selectedCurve) {
                 selection.classed('selected', true);
-                tableSelect(d, 5, 1.0, `${colors.white_smoke}`, `${colors.moderate_blue}`, `${colors.white_smoke}`, `${colors.moderate_blue}`);
+                tableSelect(d, 5, 1.0, `${colors.white_smoke}`, background, `${colors.white_smoke}`, background);
             } else if (selection.classed('selected')) {
                 selection.classed('selected', false);
-                tableSelect(d, 3, 0.7, `${colors.pink_header}`, `${colors.white}`, `${colors.moderate_blue}`, `${colors.white}`);
+                tableSelect(d, 3, 0.7, background, `${colors.white}`, background, `${colors.white}`);
             }
         });
 
@@ -809,8 +812,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
                     if (val.className) {
                         d3.select(`.${val.className}`)
                             .selectAll('td')
-                            .style('color', `${colors.pink_header}`)
-                            .style('background', `${colors.white}`);
+                            .style('color', `${colors.jet_black}`);
                         d3.select(`.${val.className}`)
                             .selectAll('a')
                             .style('color', `${colors.moderate_blue}`)

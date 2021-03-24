@@ -8,6 +8,7 @@ export default {
     red: '#e41a1c',
     violet: '#8B00C9',
     brown: '#8B4513',
+    jet_black: '#343434',
     pink_header: '#cd5686',
     blue_header: '#3453b0',
     fade_blue: '#EAEFF9',
