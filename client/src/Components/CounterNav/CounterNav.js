@@ -16,6 +16,7 @@ class CounterNav extends React.Component {
             datasets: 0,
             tissues: 0,
             models: 0,
+            types: ['datasets', 'tissues', 'patients', 'models', 'drugs'],
         };
     }
 
@@ -35,58 +36,29 @@ class CounterNav extends React.Component {
 
     render() {
         const {
-            datasets, tissues, patients, drugs, models,
+            datasets, tissues, patients,
+            drugs, models, types,
         } = this.state;
         return (
             <div>
                 <TopNav />
                 <GlobalStyles />
                 <DonutNav>
-                    <Link to="/datasets">
-                        <CountUp
-                            start={0}
-                            end={datasets}
-                            duration={3}
-                            useEasing
-                        />
-                        <h4> DATASETS </h4>
-                    </Link>
-                    <Link to="/tissues">
-                        <CountUp
-                            start={0}
-                            end={tissues}
-                            duration={3}
-                            useEasing
-                        />
-                        <h4> TISSUES </h4>
-                    </Link>
-                    <Link to="/">
-                        <CountUp
-                            start={0}
-                            end={patients}
-                            duration={3}
-                            useEasing
-                        />
-                        <h4> PATIENTS </h4>
-                    </Link>
-                    <Link to="/">
-                        <CountUp
-                            start={0}
-                            end={models}
-                            duration={3}
-                            useEasing
-                        />
-                        <h4> MODELS </h4>
-                    </Link>
-                    <Link to="/drugs">
-                        <CountUp
-                            start={0}
-                            end={drugs}
-                            duration={3}
-                            useEasing
-                        />
-                        <h4> DRUGS </h4>
-                    </Link>
+                    {
+                        types.map((type) => (
+                            <Link to={type}>
+                                <CountUp
+                                    start={0}
+                                    end={eval(type)}
+                                    duration={3}
+                                    useEasing
+                                />
+                                <h4>
+                                    {type.toUpperCase()}
+                                </h4>
+                            </Link>
+                        ))
+                    }
                 </DonutNav>
             </div>
         );
