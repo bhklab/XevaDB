@@ -50,8 +50,8 @@ class HeatMap extends Component {
         const rectWidth = dimensions.width;
 
         // this height and width is used for setting the body.
-        const height = drug.length * rectHeight + 100;
-        const width = patient.length * rectWidth + 100;
+        const height = drug.length * rectHeight;
+        const width = patient.length * rectWidth;
 
         const targetEval = [
             { CR: `${colors.blue}` },
@@ -108,6 +108,21 @@ class HeatMap extends Component {
                     CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, total: 0,
                 };
             }
+        }
+
+        // calculates the new margin for the heatmap.
+        function calcMargin(selectedOption) {
+            let margin = '';
+            if (selectedOption !== 'mRECIST') {
+                margin = {
+                    top: 100, right: 200, bottom: 100, left: 230,
+                };
+            } else {
+                margin = {
+                    top: 200, right: 200, bottom: 100, left: 230,
+                };
+            }
+            return margin;
         }
 
         /* this code will add to the drugEvaluations  and
@@ -171,15 +186,9 @@ class HeatMap extends Component {
                 }, () => {
                     d3.select(`#heatmap-${plotId}`).remove();
                     d3.select('#heatmap-tooltip').remove();
-                    if (selectedOption !== 'mRECIST') {
-                        margin = {
-                            top: 100, right: 200, bottom: 0, left: 250,
-                        };
-                    } else {
-                        margin = {
-                            top: 200, right: 200, bottom: 0, left: 250,
-                        };
-                    }
+
+                    margin = calcMargin(selectedOption);
+
                     heatmap(data, patient, drug, dataset, plotId, dimensions, margin, response);
                 });
             });
@@ -236,10 +245,10 @@ class HeatMap extends Component {
 
             // Draw the rectangle and fill with gradient
             svg.append('rect')
-                .attr('x', width + 30)
-                .attr('y', height / 4)
-                .attr('width', 28)
-                .attr('height', 129)
+                .attr('x', width + (rectWidth * 8))
+                .attr('y', height / 3)
+                .attr('width', rectHeight)
+                .attr('height', rectHeight * 4)
                 .style('fill', 'url(#linear-gradient)');
 
             // legend value.
@@ -251,10 +260,10 @@ class HeatMap extends Component {
                 .data(legendValue)
                 .enter()
                 .append('text')
-                .attr('x', width + 60)
-                .attr('y', (d, i) => [height / 4 + 15, height / 4 + 125][i])
+                .attr('x', width + (rectWidth * 8))
+                .attr('y', (d, i) => [height / 3 - 5, height / 3 + (rectHeight * 4) + 12][i])
                 .text((d) => d)
-                .attr('font-size', '15px')
+                .attr('font-size', '14px')
                 .style('text-anchor', 'start');
         }
 
@@ -305,7 +314,7 @@ class HeatMap extends Component {
                 .attr('r', 6)
                 .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
                 .style('fill', `${colors.green_gradient}`)
-                .attr('transform', `translate(0,${yScale(val) + 15 - i})`)
+                .attr('transform', `translate(0,${yScale(val) + rectWidth - i})`)
                 .style('visibility', 'hidden');
         });
 
@@ -507,7 +516,7 @@ class HeatMap extends Component {
         // Creating lines.
         const lines = skeleton.append('g')
             .attr('id', 'lines')
-            .attr('transform', () => `translate(2,${height - 62})`);
+            .attr('transform', () => `translate(2,${height})`);
 
         const temp = patient.slice(0);
         temp.push('');
@@ -520,7 +529,7 @@ class HeatMap extends Component {
             .attr('x1', (d, i) => i * (rectWidth) - 3)
             .attr('x2', (d, i) => i * (rectWidth) - 3)
             .attr('y1', 2)
-            .attr('y2', 200)
+            .attr('y2', rectHeight * 3)
             .attr('stroke', `${colors.black}`)
             .attr('stroke-width', 1)
             .style('stroke-dasharray', '3 2')
@@ -532,7 +541,7 @@ class HeatMap extends Component {
             .append('rect')
             .attr('class', (d) => `hlight-space-${d}`)
             .attr('width', rectWidth - 2)
-            .attr('height', 200)
+            .attr('height', rectHeight * 7)
             .attr('x', (d, i) => i * rectWidth - 2)
             .attr('fill', `${colors.black}`)
             .attr('y', 0)
@@ -632,18 +641,18 @@ class HeatMap extends Component {
                 .data(targetEval)
                 .enter()
                 .append('rect')
-                .attr('x', (patient.length * rectWidth + 120))
-                .attr('y', (d, i) => (drug.length * 10) + i * 25)
-                .attr('height', '15')
-                .attr('width', '15')
+                .attr('x', (width + (rectWidth * 8)))
+                .attr('y', (d, i) => (rectHeight * 9) + i * rectHeight)
+                .attr('height', rectWidth)
+                .attr('width', rectWidth)
                 .attr('fill', (d) => Object.values(d));
 
             targetRect.selectAll('text')
                 .data(targetEval)
                 .enter()
                 .append('text')
-                .attr('x', (patient.length * rectWidth + 140))
-                .attr('y', (d, i) => (drug.length * 10 + 12) + i * 25)
+                .attr('x', width + (rectWidth * 10))
+                .attr('y', (d, i) => (rectHeight * 9 + rectWidth - 2) + i * rectHeight)
                 .text((d) => Object.keys(d))
                 .attr('font-size', '14px');
 
@@ -658,7 +667,7 @@ class HeatMap extends Component {
 
             const drugScale = d3.scaleLinear()
                 .domain([0, maxDrug])
-                .range([0, 70]);
+                .range([0, rectWidth * 5]);
 
             // This will set an x-axis for the vertical graph.
             const xAxisVertical = d3.axisTop()
@@ -668,21 +677,16 @@ class HeatMap extends Component {
                 .tickFormat(d3.format('.0f'));
 
             skeleton.append('g')
-                .attr('transform', `translate(${patient.length * rectWidth + 20},${rectHeight})`)
+                .attr('transform', `translate(${patient.length * rectWidth + rectWidth},${rectHeight})`)
                 .call(xAxisVertical)
                 .selectAll('text')
                 .attr('fill', `${colors.black}`)
                 .style('font-size', 8)
                 .attr('stroke', 'none');
 
-
-            const drugHeightScale = d3.scaleLinear()
-                .domain([0, (44 + (drug.length - 1) * 40)])
-                .range([0, (rectHeight * drug.length) + 10]);
-
             drugEval.append('rect')
                 .attr('class', 'drug_eval_rect')
-                .attr('x', patient.length * rectWidth + 20)
+                .attr('x', patient.length * rectWidth + rectWidth)
                 .attr('y', `${rectHeight}`)
                 .attr('height', rectHeight * drug.length)
                 .attr('width', drugScale(maxDrug))
@@ -694,7 +698,7 @@ class HeatMap extends Component {
             // rectangle for vertical graph.
             const drugEvaluationRectangle = (iterator) => {
                 const responseEvalTypes = ['CR', 'PR', 'SD', 'PD'];
-                let xRange = patient.length * rectWidth + 20;
+                let xRange = patient.length * rectWidth + rectWidth;
                 let width = 0;
                 responseEvalTypes.forEach((type) => {
                     // x range for the rectangles.
@@ -702,10 +706,10 @@ class HeatMap extends Component {
                     width = drugScale(drugEvaluations[drug[iterator]][type]);
                     drugEval.append('rect')
                         .attr('class', `drug_eval_${type}`)
-                        .attr('height', 26)
+                        .attr('height', rectHeight - 4)
                         .attr('width', width)
                         .attr('x', xRange)
-                        .attr('y', drugHeightScale(42 + iterator * 40))
+                        .attr('y', rectHeight * (iterator + 1))
                         .attr('fill', targetColor[type])
                         .style('stroke', `${colors.black}`)
                         .style('stroke-width', strokeWidth);
