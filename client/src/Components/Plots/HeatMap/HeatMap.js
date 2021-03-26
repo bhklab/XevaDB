@@ -610,8 +610,10 @@ class HeatMap extends Component {
                     .style('visibility', 'hidden');
                 // remove all the divs with id tooltiptext.
                 d3.select('#tooltiptextdrug').remove();
+                // margin
+                margin = calcMargin(responseType);
                 // highlight.
-                this.rankHeatMap(d, i, data, responseType);
+                this.rankHeatMap(d, i, data, responseType, margin);
             });
 
         // calling the x-axis to set the axis and we have also transformed the text.
@@ -811,14 +813,10 @@ class HeatMap extends Component {
         }
     }
 
-    rankHeatMap(drug, i, dataset, responseType) {
+    rankHeatMap(drug, i, dataset, responseType, margin = this.props, { dimensions } = this.props,
+        { drugId } = this.props, { className } = this.props, { dataset: datasetId } = this.props) {
         // grabbing the clicked data value.
         const data = dataset[i];
-        const { dimensions } = this.props;
-        const { drugId } = this.props;
-        const { margin } = this.props;
-        const { className } = this.props;
-        const { dataset: datasetId } = this.props;
 
         // responses.
         const responses = ['CR', 'PR', 'SD', 'PD', '', 'NA'];
