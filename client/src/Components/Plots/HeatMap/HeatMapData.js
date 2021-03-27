@@ -73,7 +73,7 @@ class HeatMapData extends React.Component {
             data: dataset,
             dimensions: { height: 30, width: 15 },
             margin: {
-                top: 200, right: 250, bottom: 100, left: 250,
+                top: 200, right: 250, bottom: 50, left: 250,
             },
         });
     }

@@ -115,11 +115,11 @@ class HeatMap extends Component {
             let margin = '';
             if (selectedOption !== 'mRECIST') {
                 margin = {
-                    top: 100, right: 200, bottom: 100, left: 230,
+                    top: 100, right: 250, bottom: 50, left: 250,
                 };
             } else {
                 margin = {
-                    top: 200, right: 200, bottom: 100, left: 230,
+                    top: 200, right: 250, bottom: 50, left: 250,
                 };
             }
             return margin;

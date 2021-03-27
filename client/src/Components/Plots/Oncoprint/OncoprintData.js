@@ -138,7 +138,7 @@ class OncoprintData extends React.Component {
             data_cnv: data.data_cnv || [],
             dimensions: { height: 30, width: 15 },
             margin: {
-                top: 50, right: 200, bottom: 0, left: 250,
+                top: 50, right: 250, bottom: 50, left: 250,
             },
             loading: false,
         });
