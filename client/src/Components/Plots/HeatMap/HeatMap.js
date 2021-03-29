@@ -516,7 +516,7 @@ class HeatMap extends Component {
         // Creating lines.
         const lines = skeleton.append('g')
             .attr('id', 'lines')
-            .attr('transform', () => `translate(2,${height})`);
+            .attr('transform', () => `translate(2,${height + rectHeight})`);
 
         const temp = patient.slice(0);
         temp.push('');
@@ -541,7 +541,7 @@ class HeatMap extends Component {
             .append('rect')
             .attr('class', (d) => `hlight-space-${d}`)
             .attr('width', rectWidth - 2)
-            .attr('height', rectHeight * 7)
+            .attr('height', rectHeight)
             .attr('x', (d, i) => i * rectWidth - 2)
             .attr('fill', `${colors.black}`)
             .attr('y', 0)
