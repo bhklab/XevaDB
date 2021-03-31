@@ -13,6 +13,7 @@ import TopNav from '../../TopNav/TopNav';
 import StatTable from '../../ResponseStat/ModelResponseStatTable';
 import colors from '../../../styles/colors';
 import ExportPng from '../../Utils/ExportPng';
+import TimeChart from '../TimeChart';
 
 // this will initialize a tooltip.
 const initializeToolTop = () => d3.select('.wrapper')
@@ -272,7 +273,7 @@ const tumorCurve = (data, plotId, minmax) => {
     const margin = {
         top: 50,
         right: 200,
-        bottom: 100,
+        bottom: 50,
         left: 200,
     };
 
@@ -896,6 +897,7 @@ const TumorGrowthCurve = (props) => {
                     <ExportPng componentRef={componentRef} fileName={`DrugId = ${drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}, PatientId = ${patientParam}`} />
                     <div id="svg-curve" ref={componentRef} />
                 </div>
+                <TimeChart />
                 <StatTable patientParam={patientParam} drugParam={drugParam} />
                 <div className="curve-wrapper" style={{ marginTop: '20px', padding: '10px 0px' }}>
                     <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
