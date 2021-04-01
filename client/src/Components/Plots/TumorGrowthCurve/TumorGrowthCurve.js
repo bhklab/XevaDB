@@ -863,13 +863,13 @@ const TumorGrowthCurve = (props) => {
     const { patientParam, drugParam, data } = props;
     const plotId = 'plot';
     const componentRef = useRef();
+    // calling function to grab the min max values.
+    const minmax = calculateMinMax(data);
 
     // function will be triggered once the component is mounted/updated.
     useEffect(() => {
         if (data.length !== 0) {
             const tooltip = initializeToolTop();
-            // calling function to grab the min max values.
-            const minmax = calculateMinMax(data);
             // calling tumorCurve function passing the data, PlotID and node reference.
             const curve = tumorCurve(data, plotId, minmax);
             // plot each model
@@ -897,7 +897,7 @@ const TumorGrowthCurve = (props) => {
                     <ExportPng componentRef={componentRef} fileName={`DrugId = ${drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}, PatientId = ${patientParam}`} />
                     <div id="svg-curve" ref={componentRef} />
                 </div>
-                <TimeChart />
+                <TimeChart data={data} maxTime={minmax.maxTime} />
                 <StatTable patientParam={patientParam} drugParam={drugParam} />
                 <div className="curve-wrapper" style={{ marginTop: '20px', padding: '10px 0px' }}>
                     <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
