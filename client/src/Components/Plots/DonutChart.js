@@ -29,6 +29,7 @@ class DonutChart extends React.Component {
     // data should be like => {id: 'Gastric Cancer', value: 1007}
     makeDonutChart(data, height, width, left, top, bottom, right) {
         const { chartId } = this.props;
+        console.log(chartId);
 
         /** SETTING SVG ATTRIBUTES * */
         d3.select('svg').remove();
@@ -241,11 +242,18 @@ class DonutChart extends React.Component {
         donutRect.selectAll('text')
             .data(data)
             .enter()
+            .append('a')
+            .attr('xlink:href', (d, i) => {
+                if (chartId === 'donut_datasets') {
+                    return `/dataset/${data[i].parameter}`;
+                }
+            })
             .append('text')
             .attr('x', (width) - 250)
             .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
             .attr('fill', (d) => color(d.id))
             .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)} (${d.value})`);
+
     }
 
     render() {
