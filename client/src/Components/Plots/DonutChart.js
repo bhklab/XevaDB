@@ -18,23 +18,22 @@ class DonutChart extends React.Component {
     DonutChart() {
         const { dimensions } = this.props;
         const { margin } = this.props;
-        const { node } = this;
         const { data } = this.props;
         const { height, width } = dimensions;
         const {
             left, top, bottom, right,
         } = margin;
-        this.makeDonutChart(node, data, height, width, left, top, bottom, right);
+        this.makeDonutChart(data, height, width, left, top, bottom, right);
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(node, data, height, width, left, top, bottom, right) {
+    makeDonutChart(data, height, width, left, top, bottom, right) {
         const { chartId } = this.props;
 
         /** SETTING SVG ATTRIBUTES * */
         d3.select('svg').remove();
         // make the SVG element.
-        const svg = d3.select(node)
+        const svg = d3.select('#donut')
             .append('svg')
             .attr('id', `donutchart-${chartId}`)
             .attr('xmlns', 'http://wwww.w3.org/2000/svg')
@@ -53,19 +52,21 @@ class DonutChart extends React.Component {
 
         // color scheme for the pie/donut chart using the ordinal scale.
 
-        const colors = ['#E64B35FF', '#4DBBD5FF', '#00A087FF', '#3C5488FF', '#F39B7FFF', '#8491B4FF', '#91D1C2FF', '#B09C85FF',
-            '#0073C2FF', '#868686FF', '#CD534CFF', '#7AA6DCFF', '#003C67FF', '#3B3B3BFF', '#A73030FF', '#4A6990FF',
-            '#00468BBF', '#42B540BF', '#0099B4BF', '#925E9FBF', '#FDAF91BF', '#AD002ABF', '#ADB6B6BF',
+        const colors = ['#E64B35FF', '#4DBBD5FF', '#00A087FF', '#3C5488FF',
+            '#F39B7FFF', '#8491B4FF', '#91D1C2FF', '#B09C85FF',
+            '#0073C2FF', '#868686FF', '#CD534CFF', '#7AA6DCFF',
+            '#003C67FF', '#3B3B3BFF', '#A73030FF', '#4A6990FF',
+            '#00468BBF', '#42B540BF', '#0099B4BF', '#925E9FBF',
+            '#FDAF91BF', '#AD002ABF', '#ADB6B6BF',
         ];
 
         const color = d3.scaleOrdinal()
-            .domain(data)
+            .domain(data.map((val) => val.id))
             .range(colors);
-
 
         /* div element for the tooltip */
         // create a tooltip
-        const tooltip = d3.select(node)
+        const tooltip = d3.select('#donut')
             .append('div')
             .style('position', 'absolute')
             .style('visibility', 'hidden')
@@ -112,7 +113,7 @@ class DonutChart extends React.Component {
         // here we are appending path and use of d element to create the path.
         const piearc = arcs.append('path')
             .attr('d', arc)
-            .attr('fill', (d) => color(d.data.value))
+            .attr('fill', (d) => color(d.data.id))
             .attr('stroke', 'black')
             .style('stroke-width', '.5px');
 
@@ -165,7 +166,7 @@ class DonutChart extends React.Component {
                 .style('left', `${d3.event.pageX + 10}px`)
                 .style('top', `${d3.event.pageY + 10}px`)
                 .style('color', 'white')
-                .style('background-color', color(d.data.value));
+                .style('background-color', color(d.data.id));
         };
 
         const mouseout = function (d) {
@@ -235,7 +236,7 @@ class DonutChart extends React.Component {
             .attr('y', (d, i) => ((30 * i) - (data.length * 15)))
             .attr('width', 20)
             .attr('height', 20)
-            .attr('fill', (d) => color(d.value));
+            .attr('fill', (d) => color(d.id));
 
         donutRect.selectAll('text')
             .data(data)
@@ -243,14 +244,14 @@ class DonutChart extends React.Component {
             .append('text')
             .attr('x', (width) - 250)
             .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
-            .attr('fill', (d) => color(d.value))
+            .attr('fill', (d) => color(d.id))
             .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)} (${d.value})`);
     }
 
     render() {
         return (
             <div
-                ref={(node) => this.node = node}
+                id="donut"
                 className="donut-chart"
             />
         );

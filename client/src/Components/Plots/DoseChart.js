@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
+import { color } from 'd3';
 
 // creating the default margin in case not passed as props.
 const defaultMargin = {
@@ -71,14 +72,14 @@ const createText = (svg, margin, dimensions) => {
 };
 
 // this function will create the circles in chart.
-const createCircles = (svg, x, y) => {
+const createCircles = (svg, x, y, color) => {
     for (let i = 1; i < 11; i++) {
         svg.append('circle')
             .attr('cx', x * i)
             .attr('cy', y)
             .attr('r', 10)
             .attr('stroke', 'black')
-            .attr('fill', `${colors.moderate_blue}`);
+            .attr('fill', color);
     }
 
 };
@@ -91,11 +92,11 @@ const createChart = (data, margin, dimensions, maxTime) => {
     // this will create the outer rectangle for the chart.
     createReactangle(svg, dimensions.height / 2, dimensions.width / 1.25, margin.left * 2, margin.top, 'none', 'black', 1);
     // this will create an inner rectangle for the chart.
-    createReactangle(svg, dimensions.height / 7, dimensions.width / 1.25, margin.left * 2, (dimensions.height * 0.18 + margin.top));
+    createReactangle(svg, dimensions.height / 7, dimensions.width / 1.25, margin.left * 2, (dimensions.height * 0.18 + margin.top), `${colors.soft_black}`);
     // creating the x-axes.
     createAxis(svg, maxTime, margin, dimensions);
     // create circles for the dose.
-    createCircles(svg, margin.left * 2, (dimensions.height * 0.25 + margin.top));
+    createCircles(svg, margin.left * 2, dimensions.height * 0.25 + margin.top, `${colors.amber_gradient}`);
 };
 
 const TimeChart = (props) => {
