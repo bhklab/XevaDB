@@ -253,7 +253,6 @@ class DonutChart extends React.Component {
             .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
             .attr('fill', (d) => color(d.id))
             .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)} (${d.value})`);
-
     }
 
     render() {
