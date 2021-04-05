@@ -13,7 +13,7 @@ exports.up = function (knex, Promise) {
         table.string('treatment_type');
         table.string('class');
         table.string('class_name');
-        table.string('source');
+        table.string('pubchemid');
     });
 };
 
