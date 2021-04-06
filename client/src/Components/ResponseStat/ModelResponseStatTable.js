@@ -153,10 +153,10 @@ class StatTable extends React.Component {
             <>
                 <BatchStatTable data={batchData} />
                 <div className="curve-wrapper">
-                    <h1 id="titlemodel">Statistics (Model Response)</h1>
                     <StyledLink width={datasetId === 7 ? '925px' : '800px'}>
+                        <h1 id="titlemodel" style={{ display: 'inline-block', margin: '5px' }}>Model Response</h1>
                         <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv" style={{ float: 'right', display: 'inline-block' }}>
-                            Model Response Data
+                            Export Data
                             <img src={downloadIcon} alt="download icon!" />
                         </CSVLink>
                     </StyledLink>

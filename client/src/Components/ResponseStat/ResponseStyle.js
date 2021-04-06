@@ -4,9 +4,12 @@ import colors from '../../styles/colors';
 
 export const StyledLink = styled.div`
     font-weight: 500;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     width: ${(props) => props.width || '800px'}
-
+     
+    h1 {
+        font-size: 1.5em;
+    }
     img {
         height: 15px;
         width: 25px;

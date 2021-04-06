@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import bgImg from './images/bgImg7.png';
+import bgImg from './images/bg.png';
 import colors from './styles/colors';
 
 const GlobalStyles = createGlobalStyle`
@@ -38,7 +38,7 @@ const GlobalStyles = createGlobalStyle`
       font-weight: 700;
       text-align: center;
       color: ${colors.blue_header};
-      font-size: 1.6em;
+      font-size: 1.8em;
     }
   }
 
