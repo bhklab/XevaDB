@@ -12,6 +12,9 @@ const h1Style = {
     margin: '50px',
 };
 
+// base link for pubchem.
+const pubchemURL = 'https://pubchem.ncbi.nlm.nih.gov/compound/';
+
 class DrugTable extends React.Component {
     constructor(props) {
         super(props);
@@ -76,36 +79,36 @@ class DrugTable extends React.Component {
                 sortable: true,
             },
             {
-                Header: 'PubChem',
+                Header: 'PubChem CID',
                 Cell: (val) => {
-                    const pubchemLink = val.original.source.split(' + ');
+                    const pubchemLink = (val.original.pubchemid.split(','));
                     const { length } = pubchemLink;
                     const link = [];
                     let isNa = '';
 
                     // function checks if any of the value in the pubchemlink array is NA.
                     pubchemLink.forEach((row) => {
-                        if (row === 'NA') {
+                        if (row === 'NA' || row === '') {
                             isNa = true;
                         }
                     });
 
                     // looping through the pubchemLink and adding image and url based on the data.
                     pubchemLink.forEach((row, i) => {
-                        const pid = row.split('/').pop();
-                        if (row !== 'NA') {
+                        const pid = Number(row.split('/').pop());
+                        if (pid) {
                             link.push(
                                 <span key={row}>
                                     <a
                                         className="hover"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        href={`${row}`}
+                                        href={`${pubchemURL}${row}`}
                                         style={{ textDecoration: 'none', color: `${colors.blue_header}` }}
                                     >
-                                        {Number(pid)}
+                                        {pid}
                                     </a>
-                                    {((length > i + 1) && !isNa) ? <span> + </span> : ''}
+                                    {((length > i + 1) && !isNa) ? <span>, </span> : ''}
                                 </span>,
                             );
                         }

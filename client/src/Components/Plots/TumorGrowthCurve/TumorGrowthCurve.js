@@ -265,7 +265,7 @@ const plotErrorBars = (exp, times, newVolume, meanVolume, svg, xrange, yrange, y
 // setting up the svg and axis.
 const tumorCurve = (data, plotId, minmax) => {
     // expression types.
-    const expTypes = ['control', 'treatment'];
+    const expTypes = ['Control', 'Treatment'];
 
     // positioning variables
     const width = 900;
@@ -298,7 +298,7 @@ const tumorCurve = (data, plotId, minmax) => {
         .attr('class', 'legend')
         .attr('r', 5)
         .attr('fill', (d, i) => {
-            if (expTypes[i] === 'control') {
+            if (expTypes[i].match(/control/i)) {
                 return `${colors.pink_header}`;
             }
             return `${colors.moderate_blue}`;
