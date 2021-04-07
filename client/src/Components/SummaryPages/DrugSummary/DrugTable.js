@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import ReactTable from 'react-table';
-import TableWrapper from './DrugTableStyle';
+import TableWrapper from '../../Utils/TableStyle';
 import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
@@ -31,7 +31,7 @@ class DrugTable extends React.Component {
                     data: response.data,
                     loading: false,
                 });
-            });
+            }, []);
     }
 
     render() {
