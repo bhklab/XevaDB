@@ -39,9 +39,10 @@ class TopNav extends React.Component {
                     <LogoStyle src={logo} alt="logo" />
                 </Link>
                 <LinkStyle>
-                    <Link to="/"> Home </Link>
+                    {/* <Link to="/"> Home </Link> */}
                     <Link to="/datasets"> Datasets </Link>
                     <Link to="/drugs"> Drugs </Link>
+                    <Link to="/patients"> Patients </Link>
                     <Link to="/tissues"> Tissues </Link>
                     <Link to="/doc"> Documentation </Link>
                     <Link to={`${isLink}`}>

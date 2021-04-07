@@ -11,6 +11,7 @@ import HeatMapData from './Plots/HeatMap/HeatMapData';
 import Home from './Home/Home';
 import Login from './Login/Login';
 import OncoprintData from './Plots/Oncoprint/OncoprintData';
+import PatientSummary from './SummaryPages/PatientSummary/PatientSummary';
 import Search from './Search/Search';
 import SearchResult from './Search/SearchResult';
 import StatTable from './ResponseStat/ModelResponseStatTable';
@@ -33,6 +34,7 @@ export {
     Home,
     Login,
     OncoprintData,
+    PatientSummary,
     Search,
     SearchResult,
     StatTable,
