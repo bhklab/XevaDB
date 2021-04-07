@@ -32,6 +32,7 @@ export const StyledLink = styled.div`
 export const StyleTable = styled.div`
 
     margin-bottom: 40px;
+    max-width: 800px;
 
     table, th, td {
         border: 1px solid ${colors.dark_gray};

@@ -20,7 +20,7 @@ class StatTable extends React.Component {
             batchData: [],
             tableHeader: ['Type', 'Model', 'Drug',
                 'mRECIST', 'Best Average Response', 'Slope', 'AUC',
-                'Survival (Days)', 'Link', 'Row Number'],
+                'Survival (Days)'],
         };
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
@@ -153,7 +153,7 @@ class StatTable extends React.Component {
             <>
                 <BatchStatTable data={batchData} />
                 <div className="curve-wrapper">
-                    <StyledLink width={datasetId === 7 ? '925px' : '800px'}>
+                    <StyledLink>
                         <h1 id="titlemodel" style={{ display: 'inline-block', margin: '5px' }}>Model Response</h1>
                         <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv" style={{ float: 'right', display: 'inline-block' }}>
                             Export Data
