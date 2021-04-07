@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactTable from 'react-table';
+import { Link } from 'react-router-dom';
 import TableWrapper from '../../Utils/TableStyle';
 import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
@@ -13,11 +14,21 @@ const PatientTable = (props) => {
             Header: 'Patient ID',
             accessor: 'patient_id',
             minWidth: 160,
+            Cell: (row) => (
+                <Link to={`/patient/${row.original.patient_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                    {row.original.patient_id}
+                </Link>
+            ),
         },
         {
             Header: 'Patient',
             accessor: 'patient',
             minWidth: 160,
+            Cell: (row) => (
+                <Link to={`/patient/${row.original.patient_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                    {row.original.patient}
+                </Link>
+            ),
         },
     ];
 
