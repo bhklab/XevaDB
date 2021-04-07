@@ -1,11 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
-import DonutChart from '../Plots/DonutChart';
-import Footer from '../Footer/Footer';
-import GlobalStyles from '../../GlobalStyles';
-import TopNav from '../TopNav/TopNav';
-import DatasetTable from '../Dataset/DatasetTable';
+import DonutChart from '../../Plots/DonutChart';
+import Footer from '../../Footer/Footer';
+import GlobalStyles from '../../../GlobalStyles';
+import TopNav from '../../TopNav/TopNav';
+import DatasetTable from './DatasetTable';
 
 class DatasetSummary extends React.Component {
     static parseDataset(dataset) {

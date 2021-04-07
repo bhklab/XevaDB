@@ -2,10 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import ReactTable from 'react-table';
 import TableWrapper from './DrugTableStyle';
-import pubchem from '../../images/pclogo_220.gif';
-import Spinner from '../Utils/Spinner';
+import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
-import colors from '../../styles/colors';
+import colors from '../../../styles/colors';
 
 const h1Style = {
     color: `${colors.blue_header}`,
@@ -39,9 +38,9 @@ class DrugTable extends React.Component {
         const { data, loading } = this.state;
 
         // adding image to each of the object in array.
-        data.forEach((val) => {
-            val.img = pubchem;
-        });
+        // data.forEach((val) => {
+        //     val.img = pubchem;
+        // });
 
         // to capitalize first alphabet.
         const capitalize = (s) => {

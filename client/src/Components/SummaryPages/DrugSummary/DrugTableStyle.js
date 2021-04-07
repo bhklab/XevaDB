@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import colors from '../../styles/colors';
+import colors from '../../../styles/colors';
 
 const TableWrapper = styled.div`
     padding:10px 20px 30px 20px;

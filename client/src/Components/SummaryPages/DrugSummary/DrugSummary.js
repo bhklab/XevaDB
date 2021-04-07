@@ -1,10 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import Footer from '../Footer/Footer';
-import DrugTable from '../Drug/DrugTable';
-import GlobalStyles from '../../GlobalStyles';
-import TopNav from '../TopNav/TopNav';
-import BarPlot from '../Plots/BarPlot';
+import Footer from '../../Footer/Footer';
+import DrugTable from './DrugTable';
+import GlobalStyles from '../../../GlobalStyles';
+import TopNav from '../../TopNav/TopNav';
+import BarPlot from '../../Plots/BarPlot';
 
 
 class DrugSummary extends React.Component {

@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
-import TableWrapper from '../Drug/DrugTableStyle';
-import Spinner from '../Utils/Spinner';
+import TableWrapper from '../DrugSummary/DrugTableStyle';
+import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
-import colors from '../../styles/colors';
+import colors from '../../../styles/colors';
 
 const h1Style = {
     color: `${colors.blue_header}`,
