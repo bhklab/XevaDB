@@ -40,7 +40,7 @@ router.get('/v1/tissue/models', verifytoken, tissues.getModelsGroupedByTissue);
 router.get('/v1/genes', genes.getGenes);
 
 // APIs related to patients table.
-router.get('/v1/patients', patients.getPatients);
+router.get('/v1/patients', verifytoken, patients.getPatients);
 
 // APIs related to batches table.
 router.get('/v1/batches', batches.getBatches);

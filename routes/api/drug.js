@@ -13,7 +13,7 @@ const getDrugs = function (request, response) {
         .leftJoin(
             'drug_annotations',
             'drugs.drug_id',
-            'drug_annotations.drug_id'
+            'drug_annotations.drug_id',
         )
         .leftJoin(
             'model_information',
