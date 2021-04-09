@@ -7,6 +7,9 @@ const HeaderStyle = styled.header`
         padding: 0px;
         box-sizing: border-box;
     }
+    button {
+        background-color: ${colors.blue_header}
+    }
     display: flex;
     justify-content: space-around;
     align-items: center;
