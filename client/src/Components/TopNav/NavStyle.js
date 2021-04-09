@@ -10,10 +10,10 @@ const HeaderStyle = styled.header`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    min-height: 80px;
-    max-height: 100px;
+    min-height: 10vh;
+    max-height: 10vh;
     font-family: 'Raleway', sans-serif;
-    background-color: rgb(255,255,255,0.8);
+    background-color: ${colors.white_red};
     position: absolute;
     top: 0;
     left: 0;
@@ -30,72 +30,71 @@ const LinkStyle = styled.div`
         text-decoration: none;
         letter-spacing:1px;
         font-family: 'Raleway', sans-serif;
-        font-weight:700;
-        font-size: 24px;
+        font-weight: 700;
+        font-size: 1.20em;
         &:hover {
             color: ${colors.pink_header};
-            cursor:pointer;
+            cursor: pointer;
         }
     }
 
-    
     a:nth-child(1) {
-        margin-left : 600px;
+        margin-left: 600px;
     }
 
     a:nth-child(6) {
-        margin-right : -200px;
+        margin-right: -200px;
     }
 
     @media screen and (max-width: 2100px) {
         a {
-            font-size: 20px;
+            font-size: 1.20em;
         }
 
         a:nth-child(1) {
-            margin-left : 100px;
+            margin-left: 100px;
         }
 
         a:nth-child(6) {
-        margin-right : -100px;
+        margin-right: -100px;
         }
     }
 
     @media screen and (max-width: 1300px) {
         a {
-            font-size: 18px;
+            font-size: 1.15em;
         }
         
         a:nth-child(1) {
-            margin-left : 10px;
+            margin-left: 10px;
         }
     }
 
     @media screen and (max-width: 1000px) {
         a {
-           font-size: 14px;
+           font-size: 1.05em;
         }
 
         a:nth-child(1) {
-            margin-left : 0px;
+            margin-left: 0px;
         }
     }
 
     @media screen and (max-width: 700px) {
         a {
-           font-size: 10px;
+           font-size: 0.9em;
         }
 
         a:nth-child(1) {
-            margin-left : 0px;
+            margin-left: 0px;
         }
     }
 `;
 
 const LogoStyle = styled.img`
-    width:calc(5em + 2vw);
-    margin-top:2px;
-    z-index:999;
+    width: calc(5em + 2vw);
+    margin-top: 2px;
+    z-index: 999;
 `;
 
 

@@ -1,9 +1,10 @@
 import React from 'react';
+import colors from '../../styles/colors';
 
 
 const styles = {
-    color: '#3453b0',
-    fontSize: 18,
+    color: `${colors.blue_header}`,
+    fontSize: '1.20em',
     textAlign: 'center',
     paddingTop: '30px',
     minHeight: '50px',
@@ -13,9 +14,8 @@ const styles = {
     flexDirection: 'column',
     position: 'absolute',
     minWidth: '100vw',
-    backgroundColor: 'rgb(255,255,255,0.8)',
+    backgroundColor: `${colors.white_red}`,
     fontFamily: 'Raleway, sans-serif',
-
 };
 
 
