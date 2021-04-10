@@ -178,8 +178,6 @@ class OncoprintData extends React.Component {
                 return <Error message="There is no data available for PDXE (Gastric Cancer)" />;
             } else if (error) {
                 return <Error message="Page not found!!" />;
-            } else {
-                data = (<div className="oprint-wrapper"><Spinner loading={loading} /></div>);
             }
             return data;
         }
@@ -187,7 +185,7 @@ class OncoprintData extends React.Component {
         return (
             <div className="wrapper" style={{ margin: 'auto' }}>
                 {
-                    renderingData()
+                    loading ? <Spinner loading={loading} /> : renderingData()
                 }
             </div>
         );

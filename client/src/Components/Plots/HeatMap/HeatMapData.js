@@ -2,6 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import Spinner from '../../Utils/Spinner';
 import HeatMap from './HeatMap';
 import GlobalStyles from '../../../GlobalStyles';
 import TopNav from '../../TopNav/TopNav';
@@ -17,6 +18,7 @@ class HeatMapData extends React.Component {
             datasetParam: 0,
             dimensions: {},
             margin: {},
+            loading: true,
         };
         // binding the functions declared.
         this.parseData = this.parseData.bind(this);
@@ -75,12 +77,13 @@ class HeatMapData extends React.Component {
             margin: {
                 top: 200, right: 250, bottom: 50, left: 250,
             },
+            loading: false,
         });
     }
 
     render() {
         const {
-            data, drugId,
+            data, drugId, loading,
             patientId, dimensions,
             margin, datasetParam,
         } = this.state;
@@ -88,9 +91,9 @@ class HeatMapData extends React.Component {
             <div>
                 <TopNav />
                 <GlobalStyles />
-                {
-                    data.length > 0 ? (
-                        <div className="wrapper">
+                <div className="wrapper">
+                    {loading ? <Spinner loading={loading} />
+                        : (
                             <HeatMap
                                 data={data}
                                 drugId={drugId}
@@ -100,9 +103,8 @@ class HeatMapData extends React.Component {
                                 dataset={datasetParam}
                                 className="heatmap"
                             />
-                        </div>
-                    ) : ''
-                }
+                        )}
+                </div>
             </div>
         );
     }
