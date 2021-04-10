@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Footer from '../../Footer/Footer';
+import Spinner from '../../Utils/Spinner';
 import DrugTable from './DrugTable';
 import GlobalStyles from '../../../GlobalStyles';
 import TopNav from '../../TopNav/TopNav';
@@ -15,6 +16,7 @@ class DrugSummary extends React.Component {
             dimensions: {},
             margin: {},
             arc: {},
+            loading: true,
         };
     }
 
@@ -40,13 +42,14 @@ class DrugSummary extends React.Component {
                         top: 50, right: 150, bottom: 200, left: 150,
                     },
                     arc: { outerRadius: 260, innerRadius: 150 },
+                    loading: false,
                 });
             });
     }
 
     render() {
         const {
-            data, arc,
+            data, arc, loading,
             dimensions, margin,
         } = this.state;
         return (
@@ -57,7 +60,7 @@ class DrugSummary extends React.Component {
                     <div className="donut-wrapper">
                         <h1> Number of Models Per Drug class </h1>
                         {
-                            data.length === 0 ? <div />
+                            loading ? <Spinner loading={loading} />
                                 : (
                                     <BarPlot
                                         dimensions={dimensions}

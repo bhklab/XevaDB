@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Spinner from '../../Utils/Spinner';
 import TopNav from '../../TopNav/TopNav';
 import GlobalStyles from '../../../GlobalStyles';
 import Footer from '../../Footer/Footer';
@@ -7,12 +8,14 @@ import PatientTable from './PatientTable';
 
 const PatientSummary = () => {
     const [patientData, setPatientDataState] = useState([]);
+    const [loading, setLoader] = useState(true);
 
     useEffect(() => {
         axios.get('/api/v1/patients', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 const { data } = response.data;
                 setPatientDataState(data);
+                setLoader(false);
             });
     }, []);
 
@@ -22,10 +25,13 @@ const PatientSummary = () => {
             <GlobalStyles />
             <div className="wrapper">
                 <div className="donut-wrapper summary-table">
-                    <PatientTable data={patientData} />
+                    {
+                        loading ? (<Spinner loading={loading} />)
+                            : (<PatientTable data={patientData} />)
+                    }
                 </div>
-                <Footer />
             </div>
+            <Footer />
         </>
     );
 };

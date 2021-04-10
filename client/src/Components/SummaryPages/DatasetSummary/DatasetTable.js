@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import TableWrapper from '../../Utils/TableStyle';
-import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 
@@ -14,7 +13,6 @@ const h1Style = {
 
 const DatasetTable = (props) => {
     const { data, dataLength } = props;
-    const loading = !(dataLength > 0);
 
     const columns = [
         {
@@ -42,19 +40,16 @@ const DatasetTable = (props) => {
     ];
 
     return (
-        loading ? (<Spinner loading={loading} />)
-            : (
-                <TableWrapper className="wrap">
-                    <h1 style={h1Style}> List of Datasets </h1>
-                    <ReactTable
-                        data={data}
-                        columns={columns}
-                        className="-highlight"
-                        showPagination={false}
-                        pageSize={dataLength > 0 ? dataLength + 1 : 7}
-                    />
-                </TableWrapper>
-            )
+        <TableWrapper className="wrap">
+            <h1 style={h1Style}> List of Datasets </h1>
+            <ReactTable
+                data={data}
+                columns={columns}
+                className="-highlight"
+                showPagination={false}
+                pageSize={dataLength > 0 ? dataLength + 1 : 7}
+            />
+        </TableWrapper>
     );
 };
 

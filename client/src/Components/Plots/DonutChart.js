@@ -11,7 +11,7 @@ class DonutChart extends React.Component {
         this.makeDonutChart = this.makeDonutChart.bind(this);
     }
 
-    componentDidUpdate() {
+    componentDidMount() {
         this.DonutChart();
     }
 

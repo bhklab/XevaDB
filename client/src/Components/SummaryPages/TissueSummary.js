@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import DonutChart from '../Plots/DonutChart';
+import Spinner from '../Utils/Spinner';
 import Footer from '../Footer/Footer';
 import GlobalStyles from '../../GlobalStyles';
 import TopNav from '../TopNav/TopNav';
@@ -14,6 +15,7 @@ class TissueSummary extends React.Component {
             dimensions: {},
             margin: {},
             arc: {},
+            loading: true,
         };
     }
 
@@ -34,6 +36,7 @@ class TissueSummary extends React.Component {
                         top: 320, right: 100, bottom: 100, left: 380,
                     },
                     arc: { outerRadius: 260, innerRadius: 150 },
+                    loading: false,
                 });
             });
     }
@@ -41,7 +44,7 @@ class TissueSummary extends React.Component {
 
     render() {
         const {
-            data, arc,
+            data, arc, loading,
             dimensions, margin,
         } = this.state;
         return (
@@ -51,13 +54,18 @@ class TissueSummary extends React.Component {
                 <div className="wrapper">
                     <div className="donut-wrapper summary-table">
                         <h1> PDXs Per Tissue Type </h1>
-                        <DonutChart
-                            dimensions={dimensions}
-                            margin={margin}
-                            chartId="donut_tissues"
-                            data={data}
-                            arcRadius={arc}
-                        />
+                        {
+                            loading ? <Spinner loading={loading} />
+                                : (
+                                    <DonutChart
+                                        dimensions={dimensions}
+                                        margin={margin}
+                                        chartId="donut_tissues"
+                                        data={data}
+                                        arcRadius={arc}
+                                    />
+                                )
+                        }
                     </div>
                 </div>
                 <Footer />

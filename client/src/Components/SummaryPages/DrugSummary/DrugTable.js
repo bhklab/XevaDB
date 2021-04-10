@@ -119,11 +119,12 @@ class DrugTable extends React.Component {
         ];
 
         return (
-            loading
-                ? (<Spinner loading={loading} />)
-                : (
-                    <TableWrapper className="wrap">
-                        <h1 style={h1Style}> List of Drugs </h1>
+            <TableWrapper className="wrap">
+                <h1 style={h1Style}> List of Drugs </h1>
+                {loading
+                    ? (
+                        <Spinner loading={loading} />
+                    ) : (
                         <ReactTable
                             data={data}
                             columns={columns}
@@ -131,8 +132,8 @@ class DrugTable extends React.Component {
                             defaultPageSize={10}
                             filterable
                         />
-                    </TableWrapper>
-                )
+                    )}
+            </TableWrapper>
         );
     }
 }

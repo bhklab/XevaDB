@@ -5,6 +5,7 @@ import Footer from '../../Footer/Footer';
 import GlobalStyles from '../../../GlobalStyles';
 import TopNav from '../../TopNav/TopNav';
 import DatasetTable from './DatasetTable';
+import Spinner from '../../Utils/Spinner';
 
 class DatasetSummary extends React.Component {
     static parseDataset(dataset) {
@@ -24,6 +25,7 @@ class DatasetSummary extends React.Component {
             dimensions: {},
             margin: {},
             arc: {},
+            loading: true,
         };
     }
 
@@ -43,13 +45,14 @@ class DatasetSummary extends React.Component {
                         top: 320, right: 100, bottom: 100, left: 380,
                     },
                     arc: { outerRadius: 260, innerRadius: 150 },
+                    loading: false,
                 });
             });
     }
 
     render() {
         const {
-            data, arc,
+            data, arc, loading,
             dimensions, margin,
         } = this.state;
         return (
@@ -59,19 +62,31 @@ class DatasetSummary extends React.Component {
                 <div className="wrapper">
                     <div className="donut-wrapper">
                         <h1> Number of Patients Per Dataset </h1>
-                        <DonutChart
-                            dimensions={dimensions}
-                            margin={margin}
-                            data={data}
-                            arcRadius={arc}
-                            chartId="donut_datasets"
-                        />
+                        {
+                            loading
+                                ? <Spinner loading={loading} />
+                                : (
+                                    <DonutChart
+                                        dimensions={dimensions}
+                                        margin={margin}
+                                        data={data}
+                                        arcRadius={arc}
+                                        chartId="donut_datasets"
+                                    />
+                                )
+                        }
                     </div>
                     <div className="donut-wrapper summary-table">
-                        <DatasetTable
-                            data={data}
-                            dataLength={data.length}
-                        />
+                        {
+                            loading
+                                ? <Spinner loading={loading} />
+                                : (
+                                    <DatasetTable
+                                        data={data}
+                                        dataLength={data.length}
+                                    />
+                                )
+                        }
                     </div>
                 </div>
                 <Footer />
