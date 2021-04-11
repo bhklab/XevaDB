@@ -19,6 +19,7 @@ import {
     SearchResult,
     StatTable,
     TissueSummary,
+    TopNav,
 } from './Components/index';
 
 
@@ -64,6 +65,10 @@ const App = () => {
                     <Route path="/stat" exact component={StatTable} />
                     <Route render={() => <h1> 404 Error </h1>} />
                 </Switch>
+                <Route
+                    path="/"
+                    render={(props) => props.location.pathname !== '/login' && (<TopNav />)}
+                />
             </Router>
         </div>
     );

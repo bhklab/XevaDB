@@ -4,7 +4,6 @@ import DonutChart from '../Plots/DonutChart';
 import Spinner from '../Utils/Spinner';
 import Footer from '../Footer/Footer';
 import GlobalStyles from '../../GlobalStyles';
-import TopNav from '../TopNav/TopNav';
 
 
 class TissueSummary extends React.Component {
@@ -49,7 +48,6 @@ class TissueSummary extends React.Component {
         } = this.state;
         return (
             <div>
-                <TopNav />
                 <GlobalStyles />
                 <div className="wrapper">
                     <div className="donut-wrapper summary-table">

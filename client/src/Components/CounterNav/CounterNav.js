@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import DonutNav from './CounterStyle';
 import GlobalStyles from '../../GlobalStyles';
-import TopNav from '../TopNav/TopNav';
 
 class CounterNav extends React.Component {
     constructor(props) {
@@ -41,7 +40,6 @@ class CounterNav extends React.Component {
         } = this.state;
         return (
             <div>
-                <TopNav />
                 <GlobalStyles />
                 <DonutNav>
                     {

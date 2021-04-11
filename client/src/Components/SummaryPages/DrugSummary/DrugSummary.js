@@ -4,7 +4,6 @@ import Footer from '../../Footer/Footer';
 import Spinner from '../../Utils/Spinner';
 import DrugTable from './DrugTable';
 import GlobalStyles from '../../../GlobalStyles';
-import TopNav from '../../TopNav/TopNav';
 import BarPlot from '../../Plots/BarPlot';
 
 
@@ -54,7 +53,6 @@ class DrugSummary extends React.Component {
         } = this.state;
         return (
             <div>
-                <TopNav />
                 <GlobalStyles />
                 <div className="wrapper">
                     <div className="donut-wrapper">

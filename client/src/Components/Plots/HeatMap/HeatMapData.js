@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import Spinner from '../../Utils/Spinner';
 import HeatMap from './HeatMap';
 import GlobalStyles from '../../../GlobalStyles';
-import TopNav from '../../TopNav/TopNav';
 
 class HeatMapData extends React.Component {
     constructor(props) {
@@ -89,7 +88,6 @@ class HeatMapData extends React.Component {
         } = this.state;
         return (
             <div>
-                <TopNav />
                 <GlobalStyles />
                 <div className="wrapper">
                     {loading ? <Spinner loading={loading} />

@@ -91,7 +91,6 @@ class Login extends React.Component {
 
                         <PaperGradient>
                             <Paper>
-
                                 <Typography
                                     component="h1"
                                     variant="h5"

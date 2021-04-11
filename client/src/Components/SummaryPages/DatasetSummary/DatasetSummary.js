@@ -3,7 +3,6 @@ import axios from 'axios';
 import DonutChart from '../../Plots/DonutChart';
 import Footer from '../../Footer/Footer';
 import GlobalStyles from '../../../GlobalStyles';
-import TopNav from '../../TopNav/TopNav';
 import DatasetTable from './DatasetTable';
 import Spinner from '../../Utils/Spinner';
 
@@ -57,7 +56,6 @@ class DatasetSummary extends React.Component {
         } = this.state;
         return (
             <div>
-                <TopNav />
                 <GlobalStyles />
                 <div className="wrapper">
                     <div className="donut-wrapper">

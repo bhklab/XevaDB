@@ -2,7 +2,6 @@ import React from 'react';
 import SearchResultHeatMap from './SearchResultHeatMap';
 import SearchResultOncoprint from './SearchResultOncoprint';
 import GlobalStyles from '../../GlobalStyles';
-import TopNav from '../TopNav/TopNav';
 import { PatientProvider } from '../Context/PatientContext';
 
 class SearchResult extends React.Component {
@@ -56,7 +55,6 @@ class SearchResult extends React.Component {
         };
         return (
             <div>
-                <TopNav />
                 <GlobalStyles />
                 <div className="wrapper">
                     <PatientProvider value={providerData}>

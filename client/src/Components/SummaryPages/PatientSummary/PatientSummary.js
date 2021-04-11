@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Spinner from '../../Utils/Spinner';
-import TopNav from '../../TopNav/TopNav';
 import GlobalStyles from '../../../GlobalStyles';
 import Footer from '../../Footer/Footer';
 import PatientTable from './PatientTable';
@@ -21,7 +20,6 @@ const PatientSummary = () => {
 
     return (
         <>
-            <TopNav />
             <GlobalStyles />
             <div className="wrapper">
                 <div className="donut-wrapper summary-table">
