@@ -46,7 +46,7 @@ router.get('/v1/patients', verifytoken, patients.getPatients);
 router.get('/v1/batches', batches.getBatches);
 
 // APIs related to models table.
-router.get('/v1/models', models.getModels);
+router.get('/v1/models', verifytoken, models.getModels);
 
 // mixed APIs.
 router.get('/v1/counter', verifytoken, mixed.getCounter);
