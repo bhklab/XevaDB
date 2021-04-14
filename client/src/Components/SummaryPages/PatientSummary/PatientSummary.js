@@ -9,13 +9,35 @@ const PatientSummary = () => {
     const [patientData, setPatientDataState] = useState([]);
     const [loading, setLoader] = useState(true);
 
+    const transformData = (data) => {
+        const transformedData = [];
+
+        data.forEach((row) => {
+            if (row.patient in transformedData) {
+                transformedData[row.patient].count += 1;
+            } else {
+                transformedData[row.patient] = {
+                    patient_id: row.patient_id,
+                    patient: row.patient,
+                    count: 1,
+                };
+            }
+        });
+
+        return transformedData;
+    };
+
+    const fetchData = async () => {
+        // api request to get the required data.
+        const models = await axios.get('/api/v1/models', { headers: { Authorization: localStorage.getItem('user') } });
+
+        // transforming data.
+        setPatientDataState(Object.values(transformData(models.data.data)));
+        setLoader(false);
+    };
+
     useEffect(() => {
-        axios.get('/api/v1/patients', { headers: { Authorization: localStorage.getItem('user') } })
-            .then((response) => {
-                const { data } = response.data;
-                setPatientDataState(data);
-                setLoader(false);
-            });
+        fetchData();
     }, []);
 
     return (
@@ -25,7 +47,7 @@ const PatientSummary = () => {
                 <div className="donut-wrapper summary-table">
                     {
                         loading ? (<Spinner loading={loading} />)
-                            : (<PatientTable data={patientData} />)
+                            : (<PatientTable patientData={patientData} />)
                     }
                 </div>
             </div>

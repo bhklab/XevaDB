@@ -2,12 +2,11 @@ import React from 'react';
 import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import TableWrapper from '../../Utils/TableStyle';
-import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 
 const PatientTable = (props) => {
-    const { data } = props;
+    const { patientData } = props;
 
     const columns = [
         {
@@ -30,13 +29,18 @@ const PatientTable = (props) => {
                 </Link>
             ),
         },
+        {
+            Header: 'No. of Models',
+            accessor: 'count',
+            minWidth: 160,
+        },
     ];
 
     return (
         <TableWrapper className="wrap">
             <h1> List of Patients </h1>
             <ReactTable
-                data={data}
+                data={patientData}
                 columns={columns}
                 className="-highlight"
                 defaultPageSize={10}
