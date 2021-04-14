@@ -4,16 +4,13 @@ import DonutChart from '../Plots/DonutChart';
 import Spinner from '../Utils/Spinner';
 import Footer from '../Footer/Footer';
 import GlobalStyles from '../../GlobalStyles';
-
+import HumanBody from '../../images/human.png';
 
 class TissueSummary extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             data: [],
-            dimensions: {},
-            margin: {},
-            arc: {},
             loading: true,
         };
     }
@@ -30,11 +27,6 @@ class TissueSummary extends React.Component {
                 });
                 this.setState({
                     data: newValues,
-                    dimensions: { width: 600, height: 300 },
-                    margin: {
-                        top: 320, right: 100, bottom: 100, left: 380,
-                    },
-                    arc: { outerRadius: 260, innerRadius: 150 },
                     loading: false,
                 });
             });
@@ -42,28 +34,13 @@ class TissueSummary extends React.Component {
 
 
     render() {
-        const {
-            data, arc, loading,
-            dimensions, margin,
-        } = this.state;
         return (
             <div>
                 <GlobalStyles />
                 <div className="wrapper">
-                    <div className="donut-wrapper summary-table">
+                    <div className="patient-wrapper">
                         <h1> PDXs Per Tissue Type </h1>
-                        {
-                            loading ? <Spinner loading={loading} />
-                                : (
-                                    <DonutChart
-                                        dimensions={dimensions}
-                                        margin={margin}
-                                        chartId="donut_tissues"
-                                        data={data}
-                                        arcRadius={arc}
-                                    />
-                                )
-                        }
+                        <img src={HumanBody} alt="Human Body" />
                     </div>
                 </div>
                 <Footer />
