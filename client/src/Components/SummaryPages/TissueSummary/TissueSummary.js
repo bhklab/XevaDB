@@ -49,12 +49,24 @@ class TissueSummary extends React.Component {
                             <h1> PDXs Per Tissue Type </h1>
                             <img src={HumanBody} alt="Human Body" />
                             <div>
-                                <img src={Breast} alt="Breast" />
-                                <img src={Skin} alt="Skin" />
-                                <img src={Lung} alt="Lung" />
-                                <img src={Liver} alt="Liver" />
-                                <img src={Pancreas} alt="Pancreas" />
-                                <img src={LargeIntestine} alt="LargeIntenstine" />
+                                <div>
+                                    <img src={Breast} alt="Breast" />
+                                </div>
+                                <div>
+                                    <img src={Skin} alt="Skin" />
+                                </div>
+                                <div>
+                                    <img src={Lung} alt="Lung" />
+                                </div>
+                                <div>
+                                    <img src={Liver} alt="Liver" />
+                                </div>
+                                <div>
+                                    <img src={Pancreas} alt="Pancreas" />
+                                </div>
+                                <div>
+                                    <img src={LargeIntestine} alt="LargeIntenstine" />
+                                </div>
                             </div>
                         </StyleComponent>
                     </div>

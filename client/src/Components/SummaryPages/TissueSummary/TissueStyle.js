@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const StyleComponent = styled.div`
     img {
-        margin-top: 25px;
+        margin-top: 50px;
         height: 750px;
         width: 625px;
         display: block;
@@ -10,46 +10,48 @@ const StyleComponent = styled.div`
         margin-right: auto;
     }
 
+    
+
     div > img {
         height: 60px;
         width: 60px;
         margin: 20px;
-        position: absolute;
-        top: 0px;
         opacity: 0.5;
-
+        position: absolute;
+        top: 35%;
+        left: 25%
         :hover {
             opacity: 1.0;
             transform: scale(1.25)
         }
     }
 
-    img:nth-child(1) {
+    div:nth-child(1) {
+        position: absolute;
         top: 25%;
-        left: 30%
+        left: 30%;
     }
 
-    img:nth-child(2) {
+    div:nth-child(2) {
+        position: absolute;
         top: 25%;
         left: 60%
     }
 
-    img:nth-child(3) {
-        top: 35%;
-        left: 25%
-    }
-
-    img:nth-child(4) {
+    div:nth-child(4) {
+        position: absolute;
         top: 35%;
         left: 65%
     }
 
-    img:nth-child(5) {
+    div:nth-child(5) {
+        position: absolute;
         top: 45%;
         left: 30%
     }
 
-    img:nth-child(6) {
+    div:nth-child(6) {
+        position: absolute;
         top: 45%;
         left: 61%
     }
