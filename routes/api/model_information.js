@@ -60,6 +60,29 @@ const postDrugandPatientBasedOnDataset = function (request, response) {
 };
 
 
+const getModelInformation = function (request, response) {
+    // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
+    const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
+    // query
+    knex.select()
+        .from('model_information as mi')
+        .leftJoin('datasets as d', 'd.dataset_id', 'mi.dataset_id')
+        .leftJoin('models as m', 'm.model_id', 'mi.model_id')
+        .leftJoin('patients as p', 'p.patient_id', 'mi.patient_id')
+        .leftJoin('drugs as dg', 'dg.drug_id', 'mi.drug_id')
+        .whereBetween('mi.dataset_id', datasetArray)
+        .then((data) => response.status(200).json({
+            status: 'success',
+            data,
+        }))
+        .catch((error) => response.status(500).json({
+            status: 'could not find data from models table, getModels',
+            data: error,
+        }));
+};
+
+
 module.exports = {
     postDrugandPatientBasedOnDataset,
+    getModelInformation,
 };

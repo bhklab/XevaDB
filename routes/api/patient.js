@@ -8,7 +8,7 @@ const getPatients = function (request, response) {
     const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
     // query.
     knex.distinct('p.patient_id')
-        .select('patient', 'dataset_id')
+        .select('patient')
         .from('patients as p')
         .leftJoin('model_information as m', 'p.patient_id', 'm.patient_id')
         .whereBetween('m.dataset_id', datasetArray)
