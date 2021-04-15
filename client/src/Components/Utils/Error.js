@@ -5,7 +5,7 @@ import colors from '../../styles/colors';
 const ErrorStyle = styled.h1`
     margin: 400px;
     color: ${colors.blue_header} !important;
-    font-size: 40px !important;
+    font-size: 2.5rem !important;
 `;
 
 const Error = ({ message }) => {
