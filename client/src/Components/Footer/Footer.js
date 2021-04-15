@@ -14,7 +14,7 @@ const styles = {
     flexDirection: 'column',
     position: 'absolute',
     minWidth: '100vw',
-    backgroundColor: `${colors.white_red}`,
+    backgroundColor: `${colors.white}`,
     fontFamily: 'Raleway, sans-serif',
 };
 

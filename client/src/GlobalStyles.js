@@ -1,20 +1,20 @@
 import { createGlobalStyle } from 'styled-components';
-import bgImg from './images/bg.png';
 import colors from './styles/colors';
 
 const GlobalStyles = createGlobalStyle`
 
   body {
     background: linear-gradient(
-      to right top,
-      rgba(255, 255, 255, 0.3), 
-      rgba(255, 255, 255, 0.3)
-    ),url('${bgImg}');
+      to right top, 
+      ${colors.fade_blue}, 
+      ${colors.white_red}
+    );
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
     margin: auto;
     width: 100%;
+    font-size: 16px;
   }
 
   #root {
@@ -31,19 +31,19 @@ const GlobalStyles = createGlobalStyle`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 150px;
+    margin-top: 8rem;
 
     h1 {
       font-family:'Raleway', sans-serif;
       font-weight: 700;
       text-align: center;
       color: ${colors.blue_header};
-      font-size: 1.8em;
+      font-size: 1.75rem;
     }
   }
 
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
-  .donut-wrapper, .doc-wrapper {
+  .donut-wrapper, .doc-wrapper, .tissue-wrapper {
     background: ${colors.white}
     font-family: 'Raleway', sans-serif;
   }
@@ -56,9 +56,14 @@ const GlobalStyles = createGlobalStyle`
     margin-bottom: 100px;
   }
 
-  .donut-wrapper, .summary-table {
+  .donut-wrapper, .summary-table, .tissue-wrapper {
     margin-bottom: 30px;
     min-width: 1300px;
+  }
+
+  .tissue-wrapper {
+    margin-bottom: 150px;
+    padding-bottom: 100px;
   }
 
   .summary-table, .stats-table {

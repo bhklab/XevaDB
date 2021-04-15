@@ -19,7 +19,7 @@ const StyleBar = styled.div`
     }
 
     .select-component {
-        background: rgb(255,255,255,0.8);
+        background: ${colors.white};
         width: 45%;
         min-width: 750px;
         margin-top: 0px;

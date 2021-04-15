@@ -560,7 +560,7 @@ class HeatMap extends Component {
             .call(yAxis)
             .selectAll('text')
             .attr('fill', (d) => {
-                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return `${colors.blue_header}`; }
+                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return `${colors.pink_header}`; }
                 return `${colors.black}`;
             })
             .attr('font-weight', (d) => {

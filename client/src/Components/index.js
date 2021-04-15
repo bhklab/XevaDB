@@ -16,7 +16,7 @@ import PatientSummary from './SummaryPages/PatientSummary/PatientSummary';
 import Search from './Search/Search';
 import SearchResult from './Search/SearchResult';
 import StatTable from './ResponseStat/ModelResponseStatTable';
-import TissueSummary from './SummaryPages/TissueSummary';
+import TissueSummary from './SummaryPages/TissueSummary/TissueSummary';
 import TopNav from './TopNav/TopNav';
 import TumorGrowthCurve from './Plots/TumorGrowthCurve/TumorGrowthCurve';
 

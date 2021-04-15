@@ -8,7 +8,10 @@ const HeaderStyle = styled.header`
         box-sizing: border-box;
     }
     button {
-        background-color: ${colors.blue_header}
+        background-color: ${colors.blue_header};
+        &:hover {
+            background-color: ${colors.pink_header} !important;
+        }
     }
     display: flex;
     justify-content: space-around;
@@ -16,7 +19,7 @@ const HeaderStyle = styled.header`
     min-height: 10vh;
     max-height: 10vh;
     font-family: 'Raleway', sans-serif;
-    background-color: ${colors.white_red};
+    background-color: ${colors.white};
     position: absolute;
     top: 0;
     left: 0;

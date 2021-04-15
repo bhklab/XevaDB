@@ -1,36 +1,40 @@
 import styled from 'styled-components';
-
+import colors from '../../styles/colors';
 
 const Paper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 300px;
-    width: 400px;
     margin: auto;
     margin-top: 20vh;
+
+    a {
+        color: ${colors.blue_header}
+    }
 `;
 
 const PaperGradient = styled.div`
-    background-image: linear-gradient(
-        to right,
-        #CBC5EA,
-        #EAEAEA
-    );
-    height: 400px;
-    width: 530px;
-    border-radius: 5px;
-    margin:auto;
+    background: ${colors.fade_blue}
+    height: 50vh;
+    width: 35vw;
+    border-radius: 10px;
+    margin: auto;
 `;
 
 const SubmitStyle = styled.div`
     margin-top: 2vh;
+    button {
+        background: ${colors.blue_header}
+        &:hover {
+            background: ${colors.pink_header}
+        }
+    }
 `;
 
 const LogoStyle = styled.img`
     width:calc(5em + 2vw);
-    margin-top:2px;
-    z-index:999;
+    margin-top: 2px;
+    z-index: 999;
     position: relative;
     margin-left: calc(100vw - (3vw + 5em))
 `;
@@ -38,8 +42,8 @@ const LogoStyle = styled.img`
 const LogoBack = styled.div`
     background-image: linear-gradient(
         to right,
-        #CBC5EA,
-        #EAEAEA
+        ${colors.fade_blue},
+        ${colors.white_smoke}
     );
 `;
 

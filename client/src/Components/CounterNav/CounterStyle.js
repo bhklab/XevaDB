@@ -3,7 +3,7 @@ import colors from '../../styles/colors';
 
 const DonutNav = styled.div`
     display: flex;
-    background-color: ${colors.white_red};
+    background-color: ${colors.white};
     min-height: 9vh;
     max-height: 9vh;
     position: fixed;
