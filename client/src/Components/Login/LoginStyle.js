@@ -6,7 +6,7 @@ const Paper = styled.div`
     flex-direction: column;
     align-items: center;
     margin: auto;
-    margin-top: 20vh;
+    margin-top: 16vh;
 
     a {
         color: ${colors.blue_header}
@@ -15,8 +15,8 @@ const Paper = styled.div`
 
 const PaperGradient = styled.div`
     background: ${colors.fade_blue}
-    height: 50vh;
-    width: 35vw;
+    height: 400px;
+    width: 550px;
     border-radius: 10px;
     margin: auto;
 `;
@@ -32,14 +32,16 @@ const SubmitStyle = styled.div`
 `;
 
 const LogoStyle = styled.img`
-    width:calc(5em + 2vw);
-    margin-top: 2px;
+    width: calc(5em + 2vw);
+    height: 7vh;
+    margin-top: 1vh;
     z-index: 999;
     position: relative;
     margin-left: calc(100vw - (3vw + 5em))
 `;
 
 const LogoBack = styled.div`
+    height: 9vh;
     background-image: linear-gradient(
         to right,
         ${colors.fade_blue},
