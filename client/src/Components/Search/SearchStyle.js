@@ -4,50 +4,64 @@ import colors from '../../styles/colors';
 const StyleBar = styled.div`
     margin-top: 30vh;
     font-family: 'Raleway', sans-serif;
-    display:flex;
-    margin:auto;
+    display: flex;
+    margin: auto;
+
+    h1 {
+        color: ${colors.blue_header};
+        text-align: center;
+        font-size: 24px;
+    }  
     
     .search-container {
-        max-width: 1000px;
-        text-align:center;
+        height: 550px;
+        width: 750px;
+        text-align: center;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
-        border-radius: 25px;
-        max-height: 700px;
     }
 
     .select-component {
         background: ${colors.white};
-        width: 45%;
-        min-width: 750px;
-        margin-top: 0px;
-        max-height: 550px;
+        margin: 0px;
         display: flex;
         flex-wrap: wrap;
-        margin: 35px;
-        padding: 10px 25px 50px 25px;
-        
+        padding: 10px 50px 20px 50px;
         justify-content: space-around;
         border-radius: 20px;
 
-        .div-dataset, .div-drug {
-            max-width: 49%;
-            min-width: 295px;
+        .two-col {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%
         }
+
+        .div-dataset, .div-drug {
+            min-width: 49%;
+            max-width: 49%
+            margin-bottom: 20px;
+        }
+
+        .div-dataset {
+            margin-right: 1%
+        }
+
+        .div-drug {
+            margin-left: 1%
+        }
+
         .div-genomics, .div-gene {
-            margin: 10px;
-            min-width: 600px;
-            max-width: 70%;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
         .div-rnaseq {
             text-align: left;
-            padding-left: 5px;
-            margin: 5px;
-            min-width: 600px;
-            max-width: 70%;
+            width: 100%;
             font-size: 15px;
             color: ${colors.blue_header};
             
@@ -59,15 +73,16 @@ const StyleBar = styled.div`
                 outline-style: none;
                 padding: 2px;
                 margin-left: 4px;
+                margin-bottom: 20px;
             }
         }
 
         .div-gene-enter {
-            margin-top: 15px;
-            min-width: 620px;
+            width: 100%
             max-height: 150px;
+            margin-bottom: 10px;
             textarea {
-                min-width: 600px;
+                width: 100%
                 min-height: 120px;
                 outline-style: none;
                 border-radius: 10px;
@@ -83,8 +98,7 @@ const StyleBar = styled.div`
         }
 
         .sample {
-            margin: 10px 0px 0px 15px;
-            min-width: 600px;
+            width: 100%;
             font-size: 16px;
             text-align: left;
             font-weight: 550;
@@ -98,52 +112,40 @@ const StyleBar = styled.div`
             }
             font-style: italic;
         }
-
-    }
-
-    .two-col {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-items: flex-end;
-        min-width: 610px;
-        max-width: 70%;
-        margin-bottom:10px;
-    }
-
-    h1 {
-      color: ${colors.blue_header};
-      text-align: center;
-      font-size: 36px;
-    }    
+    }  
 
    @media screen and (max-width: 1700px) {
         h1 {
             font-size: 22px;
         }
+
         .select-component {
-            width: 55%;
+            padding: 10px 50px 50px 50px;
+            max-width: 80%;
             max-height: 400px;
-            min-width: 650px;
         }
-        .search-container {
-            max-height: 500px;
+
+        .div-genomics, .div-gene, .div-dataset, .div-drug {
+            margin-bottom: 15px !important;
         }
+
+        div > input {
+            margin-bottom: 15px !important;
+        }
+
         .div-gene-enter {
-            min-height: 100px !important;
-            margin: 10px !important;
+            min-height: 80px !important;
             textarea {
-                min-height: 100px !important;
-                max-height: 100px;
+                min-height: 90px !important;
+                max-height: 90px;
             }
         }
-        .div-genomics, .div-gene {
-            margin: 5px !important;
-        }
+
         .sample {
             font-size: 14px !important;
             margin: 0px 0px -10px 10px !important;
         }
+        
         .stylebutton {
             font-size: 28px;
             padding: 6px 10px 6px 10px;
@@ -163,17 +165,16 @@ const StyleButton = styled.button`
     border: none;
     border-radius: 6px;
     color: ${colors.white};
-    padding: 10px 20px;
+    padding: 8px 16px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 32px;
+    font-size: 30px;
     font-family: 'Raleway', sans-serif;
-    font-weight:700;
-    margin: auto;
+    font-weight: 700;
     transition: .3s;
     outline-style: none;
-    margin-top: 0px;
+    margin: 0px;
     &:hover {
         opacity: 1;
         cursor: pointer;
