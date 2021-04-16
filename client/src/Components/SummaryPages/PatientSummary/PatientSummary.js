@@ -13,24 +13,33 @@ const PatientSummary = () => {
         const transformedData = [];
 
         data.forEach((row) => {
-            if (row.patient in transformedData) {
-                transformedData[row.patient].count += 1;
+            const patient = transformedData[row.patient];
+            const model = transformedData[row.model];
+            const drug = transformedData[row.drug_name];
+
+            if (patient && !patient.models.includes(model)) {
+                transformedData[row.patient].model_count += 1;
+            }
+            if (patient && !patient.drugs.includes(drug)) {
+                transformedData[row.patient].drug_count += 1;
             } else {
                 transformedData[row.patient] = {
-                    patient_id: row.patient_id,
+                    dataset_id: row.dataset_id,
+                    dataset: row.dataset_name,
                     patient: row.patient,
-                    count: 1,
+                    model_count: 1,
+                    drug_count: 1,
+                    models: [row.model],
+                    drugs: [row.drug_name],
                 };
             }
         });
-
         return transformedData;
     };
 
     const fetchData = async () => {
         // api request to get the required data.
-        const models = await axios.get('/api/v1/models', { headers: { Authorization: localStorage.getItem('user') } });
-
+        const models = await axios.get('/api/v1/modelinformation', { headers: { Authorization: localStorage.getItem('user') } });
         // transforming data.
         setPatientDataState(Object.values(transformData(models.data.data)));
         setLoader(false);
@@ -44,7 +53,7 @@ const PatientSummary = () => {
         <>
             <GlobalStyles />
             <div className="wrapper">
-                <div className="donut-wrapper summary-table">
+                <div className="summary-table" style={{ marginTop: '4vh' }}>
                     {
                         loading ? (<Spinner loading={loading} />)
                             : (<PatientTable patientData={patientData} />)

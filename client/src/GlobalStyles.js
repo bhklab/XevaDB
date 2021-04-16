@@ -43,7 +43,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
-  .donut-wrapper, .doc-wrapper, .tissue-wrapper {
+  .donut-wrapper, .doc-wrapper, .tissue-wrapper, .summary-table {
     background: ${colors.white}
     font-family: 'Raleway', sans-serif;
   }

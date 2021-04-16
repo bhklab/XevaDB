@@ -70,7 +70,7 @@ class DrugSummary extends React.Component {
                                 )
                         }
                     </div>
-                    <div className="donut-wrapper summary-table">
+                    <div className="summary-table">
                         <DrugTable />
                     </div>
                     <Footer />

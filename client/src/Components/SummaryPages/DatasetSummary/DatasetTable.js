@@ -40,7 +40,7 @@ const DatasetTable = (props) => {
     ];
 
     return (
-        <TableWrapper className="wrap">
+        <TableWrapper>
             <h1 style={h1Style}> List of Datasets </h1>
             <ReactTable
                 data={data}

@@ -10,12 +10,12 @@ const PatientTable = (props) => {
 
     const columns = [
         {
-            Header: 'Patient ID',
-            accessor: 'patient_id',
+            Header: 'Dataset',
+            accessor: 'dataset',
             minWidth: 160,
             Cell: (row) => (
-                <Link to={`/patient/${row.original.patient_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
-                    {row.original.patient_id}
+                <Link to={`/dataset/${row.original.dataset_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                    {row.original.dataset}
                 </Link>
             ),
         },
@@ -31,13 +31,18 @@ const PatientTable = (props) => {
         },
         {
             Header: 'No. of Models',
-            accessor: 'count',
+            accessor: 'model_count',
+            minWidth: 160,
+        },
+        {
+            Header: 'No. of Drugs',
+            accessor: 'drug_count',
             minWidth: 160,
         },
     ];
 
     return (
-        <TableWrapper className="wrap">
+        <TableWrapper>
             <h1> List of Patients </h1>
             <ReactTable
                 data={patientData}

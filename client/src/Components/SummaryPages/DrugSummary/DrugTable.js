@@ -119,7 +119,7 @@ class DrugTable extends React.Component {
         ];
 
         return (
-            <TableWrapper className="wrap">
+            <TableWrapper>
                 <h1 style={h1Style}> List of Drugs </h1>
                 {loading
                     ? (

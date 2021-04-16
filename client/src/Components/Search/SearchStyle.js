@@ -111,6 +111,7 @@ const StyleBar = styled.div`
                 cursor: pointer;
             }
             font-style: italic;
+            margin: 0px 0px -10px 10px !important;
         }
     }  
 
@@ -143,12 +144,11 @@ const StyleBar = styled.div`
 
         .sample {
             font-size: 14px !important;
-            margin: 0px 0px -10px 10px !important;
         }
         
         .stylebutton {
             font-size: 28px;
-            padding: 6px 10px 6px 10px;
+            padding: 8px 10px 8px 10px;
         }
    }
 

@@ -74,7 +74,7 @@ class DatasetSummary extends React.Component {
                                 )
                         }
                     </div>
-                    <div className="donut-wrapper summary-table">
+                    <div className="summary-table">
                         {
                             loading
                                 ? <Spinner loading={loading} />
