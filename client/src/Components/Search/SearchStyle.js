@@ -7,6 +7,10 @@ const StyleBar = styled.div`
     display: flex;
     margin: auto;
 
+    span {
+        font-size: 26px;
+    }
+
     h1 {
         color: ${colors.blue_header};
         text-align: center;
