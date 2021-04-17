@@ -62,7 +62,6 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .tissue-wrapper {
-    margin-bottom: 150px;
     padding-bottom: 100px;
   }
 

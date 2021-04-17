@@ -26,7 +26,8 @@ const postDrugandPatientBasedOnDataset = function (request, response) {
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if (isVerified(response, request.body.label)) {
-        const drugs = knex.select('drugs.drug_name as drug', 'drugs.drug_id as drug_id')
+        const drugs = knex
+            .select('drugs.drug_name as drug', 'drugs.drug_id as drug_id')
             .from(distinctDrug)
             .leftJoin(
                 'drugs',
@@ -34,7 +35,8 @@ const postDrugandPatientBasedOnDataset = function (request, response) {
                 'drugs.drug_id',
             );
 
-        const patients = knex.select('patients.patient as patient', 'patients.patient_id as patient_id')
+        const patients = knex
+            .select('patients.patient as patient', 'patients.patient_id as patient_id')
             .from(distinctPatient)
             .leftJoin(
                 'patients',
@@ -76,7 +78,7 @@ const getModelInformation = function (request, response) {
             data,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from models table, getModels',
+            status: 'could not find data from model information table, getModelInformation',
             data: error,
         }));
 };

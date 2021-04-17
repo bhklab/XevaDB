@@ -21,7 +21,7 @@ const styles = {
 
 const Footer = () => (
     <div style={styles}>
-        ©BHKLab 2019
+        ©BHKLab 2020
     </div>
 );
 
