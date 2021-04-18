@@ -10,7 +10,7 @@ const PatientSummary = () => {
     const [loading, setLoader] = useState(true);
 
     const transformData = (data) => {
-        const transformedData = [];
+        const transformedData = {};
 
         data.forEach((row) => {
             const patient = transformedData[row.patient];

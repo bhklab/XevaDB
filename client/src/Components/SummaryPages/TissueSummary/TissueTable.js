@@ -14,7 +14,7 @@ const TissueTable = ({ data }) => {
         },
         {
             Header: 'Patient',
-            accessor: 'patient',
+            accessor: 'patient_count',
             minWidth: 160,
         },
         {
@@ -36,7 +36,7 @@ const TissueTable = ({ data }) => {
                 data={data}
                 columns={columns}
                 className="-highlight"
-                defaultPageSize={10}
+                defaultPageSize={7}
                 filterable
             />
         </TableWrapper>

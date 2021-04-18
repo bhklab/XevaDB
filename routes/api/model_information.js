@@ -72,6 +72,7 @@ const getModelInformation = function (request, response) {
         .leftJoin('models as m', 'm.model_id', 'mi.model_id')
         .leftJoin('patients as p', 'p.patient_id', 'mi.patient_id')
         .leftJoin('drugs as dg', 'dg.drug_id', 'mi.drug_id')
+        .leftJoin('tissues as t', 't.tissue_id', 'mi.tissue_id')
         .whereBetween('mi.dataset_id', datasetArray)
         .then((data) => response.status(200).json({
             status: 'success',
