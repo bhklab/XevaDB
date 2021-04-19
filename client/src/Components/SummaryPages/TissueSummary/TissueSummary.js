@@ -38,6 +38,7 @@ const TissueSummary = () => {
             } else if (!tissue) {
                 transformedData[element.tissue_name] = {
                     tissue: element.tissue_name,
+                    tissue_id: element.tissue_id,
                     patients: [element.patient],
                     models: [element.model],
                     drugs: [element.drug_name],

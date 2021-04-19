@@ -14,19 +14,20 @@ const PatientSummary = () => {
 
         data.forEach((row) => {
             const patient = transformedData[row.patient];
-            const model = transformedData[row.model];
-            const drug = transformedData[row.drug_name];
 
-            if (patient && !patient.models.includes(model)) {
+            if (patient && !patient.models.includes(row.model)) {
                 transformedData[row.patient].model_count += 1;
+                patient.models.push(row.model);
             }
-            if (patient && !patient.drugs.includes(drug)) {
+            if (patient && !patient.drugs.includes(row.drug)) {
                 transformedData[row.patient].drug_count += 1;
+                patient.drugs.push(row.drug_name);
             } else {
                 transformedData[row.patient] = {
                     dataset_id: row.dataset_id,
                     dataset: row.dataset_name,
                     patient: row.patient,
+                    patient_id: row.patient_id,
                     model_count: 1,
                     drug_count: 1,
                     models: [row.model],

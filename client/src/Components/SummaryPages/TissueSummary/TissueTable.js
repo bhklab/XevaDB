@@ -11,9 +11,14 @@ const TissueTable = ({ data }) => {
             Header: 'Tissue',
             accessor: 'tissue',
             minWidth: 160,
+            Cell: (row) => (
+                <Link to={`/tissue/${row.original.tissue_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                    {row.original.tissue}
+                </Link>
+            ),
         },
         {
-            Header: 'Patient',
+            Header: 'No. of Patients',
             accessor: 'patient_count',
             minWidth: 160,
         },
