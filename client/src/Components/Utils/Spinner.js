@@ -10,11 +10,15 @@ const override = css`
     margin-top: 300px;
 `;
 
+const style = {
+    height: '500px',
+    width: '1300px',
+};
 
 const SpinnerUtil = (props) => {
     const { loading } = props;
     return loading ? (
-        <div style={{ height: '500px', width: '1300px' }}>
+        <div style={style}>
             <HashLoader
                 css={override}
                 sizeUnit="px"
@@ -25,10 +29,8 @@ const SpinnerUtil = (props) => {
     ) : (<div />);
 };
 
-
 SpinnerUtil.propTypes = {
     loading: PropTypes.bool.isRequired,
 };
-
 
 export default SpinnerUtil;

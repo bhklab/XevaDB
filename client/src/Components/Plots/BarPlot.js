@@ -141,7 +141,7 @@ const BarPlot = (props) => {
 
         // create bars.
         createBars(svg, data, xScale, yScale, height, color);
-    });
+    }, []);
 
 
     return (
