@@ -30,7 +30,6 @@ router.get('/v1/dataset/models', verifytoken, datasets.getModelsPatientsGroupedB
 // APIs related to drugs table.
 router.get('/v1/drugs', verifytoken, drugs.getDrugs);
 router.get('/v1/drug/class', verifytoken, drugs.getDrugGroupedByClass);
-// router.get('/v1/drug/class', drugs.getDrugGroupedByClass);
 
 // APIs related to tissues table.
 router.get('/v1/tissues', tissues.getTissues);
@@ -54,6 +53,7 @@ router.get('/v1/counter', verifytoken, mixed.getCounter);
 // APIs for the model information table.
 router.post('/v1/drugpatient/dataset', verifytoken, modelInformation.postDrugandPatientBasedOnDataset);
 router.get('/v1/modelinformation', verifytoken, modelInformation.getModelInformation);
+router.get('/v1/modelinformation/:patient', verifytoken, modelInformation.getModelInformationBasedOnPatient);
 
 // APIs for model response table.
 router.get('/v1/response/:dataset', verifytoken, modelResponse.getModelResponseBasedOnDataset);
