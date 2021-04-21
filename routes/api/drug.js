@@ -3,9 +3,10 @@ const knex = require('../../db/knex1');
 
 
 // get all the data from drug table.
-const getDrugs = function (request, response) {
+const getDrugs = (request, response) => {
     // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
     const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
+
     // selecting drug list based on dataset list.
     knex.distinct('drugs.drug_id')
         .select('drug_name', 'standard_name', 'targets', 'treatment_type', 'class', 'class_name', 'pubchemid')
@@ -33,9 +34,10 @@ const getDrugs = function (request, response) {
 
 
 // this will get the drugs grouped by class.
-const getDrugGroupedByClass = function (request, response) {
+const getDrugGroupedByClass = (request, response) => {
     // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
     const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
+
     // select the number of patients and models grouped by drug class name.
     knex('model_information')
         .count('model_information.patient_id as model_ids')
@@ -47,7 +49,7 @@ const getDrugGroupedByClass = function (request, response) {
         .leftJoin(
             'drug_annotations',
             'drugs.drug_id',
-            'drug_annotations.drug_id'
+            'drug_annotations.drug_id',
         )
         .select('class_name')
         .whereBetween('model_information.dataset_id', datasetArray)
@@ -57,7 +59,7 @@ const getDrugGroupedByClass = function (request, response) {
             data: className,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from drug table, getDrugClass',
+            status: 'could not find data from getDrugGroupedByClass',
             data: error,
         }));
 };

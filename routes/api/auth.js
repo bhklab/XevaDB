@@ -1,8 +1,4 @@
-/* eslint-disable no-shadow */
 /* eslint-disable consistent-return */
-/* eslint-disable no-plusplus */
-/* eslint-disable func-names */
-/* eslint-disable camelcase */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -39,8 +35,8 @@ const registerUser = async (request, response) => {
     knex.select()
         .from('users')
         .where('user_name', username)
-        .then((data) => {
-            if (JSON.parse(JSON.stringify(data)).length > 0) {
+        .then((user) => {
+            if (JSON.parse(JSON.stringify(user)).length > 0) {
                 return response.status(400).send('Username Exists.');
             }
             // create a new user.
@@ -55,21 +51,21 @@ const registerUser = async (request, response) => {
                         .where({
                             user_id: data[0],
                         })
-                        .then((data) => response.status(200).json({
+                        .then((users) => response.status(200).json({
                             status: 'success',
-                            data,
+                            data: users,
                         }));
                 })
-                .catch((error) => response.status(500).json({
-                    status: 'could not find data from batch table, getBatches',
-                    data: error,
+                .catch((err) => response.status(500).json({
+                    status: 'could not find data from register User',
+                    data: err,
                 }));
         });
 };
 
 
 // Create Login
-const createLogin = function (request, response) {
+const createLogin = (request, response) => {
     const { username } = request.body;
     const { password } = request.body;
 

@@ -1,16 +1,15 @@
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 
-// get the stats like AUC, Slope etc
-// based on drug and patient (model_id).
-const getBatchResponseStats = function (request, response) {
-    // grabbing the drug parameters and dataset parameters.
-    let paramDrug = request.query.drug;
-    const paramPatient = request.query.patient;
 
+// get the stats like AUC, Slope etc
+// from batch response table based on drug and patient (model_id).
+const getBatchResponseStats = (request, response) => {
+    // grabbing the drug parameters and dataset parameters.
     // this will remove the spaces in the drug name and replace
     // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
-    paramDrug = paramDrug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
+    const paramDrug = request.query.drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
+    const paramPatient = request.query.patient;
 
     // grabs the batch id based on the patient id and drug param passed.
     const batchId = knex.select('batch_id', 'model_information.dataset_id')
@@ -51,7 +50,7 @@ const getBatchResponseStats = function (request, response) {
                     response.send(data);
                 })
                 .catch((error) => response.status(500).json({
-                    status: 'an error has occured in stats route at getModelResponseStats',
+                    status: 'an error has occured in stats route at getBatchResponseStats',
                     data: error,
                 }));
         }

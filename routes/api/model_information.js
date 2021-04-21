@@ -36,7 +36,7 @@ const distinctPatient = (dataset) => (
 
 
 // getting a list of all the distinct drugs and patient_id based on the dataset.
-const postDrugandPatientBasedOnDataset = function (request, response) {
+const postDrugandPatientBasedOnDataset = (request, response) => {
     const dataset = request.body.label;
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
@@ -78,7 +78,7 @@ const postDrugandPatientBasedOnDataset = function (request, response) {
 
 
 // getting all the information/data related to model information.
-const getModelInformation = function (request, response) {
+const getModelInformation = (request, response) => {
     // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
     const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
     // query
@@ -95,7 +95,7 @@ const getModelInformation = function (request, response) {
 
 
 // getting all the information/data related to model information based on the patient id.
-const getModelInformationBasedOnPatient = function (request, response) {
+const getModelInformationBasedOnPatient = (request, response) => {
     // dataset param.
     const patientId = request.params.patient;
     // query to grab the data based on the dataset id.
@@ -105,7 +105,7 @@ const getModelInformationBasedOnPatient = function (request, response) {
             data,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from model information table, getModelInformation',
+            status: 'could not find data from model information table, getModelInformationBasedOnPatient',
             data: error,
         }));
 };

@@ -5,7 +5,7 @@ const knex = require('../../db/knex1');
 
 
 // this is the function for grabing the total for counter.
-const getCounter = function (request, response) {
+const getCounter = (request, response) => {
     // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
     const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
     // count distinct tissues, drugs, datasets, models and patients.
@@ -42,8 +42,8 @@ const getCounter = function (request, response) {
 
 
 // checks the validity of the dataset id.
-const isValidId = function (request, response, next) {
-    if (!isNaN(request.params.dataset)) return next();
+const isValidId = (request, response, next) => {
+    if (!isNaN(request.params.dataset || request.params.patient)) return next();
     next(new Error('Invalid Id, Please enter a valid integer Id'));
 };
 
