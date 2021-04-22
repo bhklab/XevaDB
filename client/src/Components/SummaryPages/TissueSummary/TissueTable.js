@@ -36,7 +36,7 @@ const TissueTable = ({ data }) => {
 
     return (
         <TableWrapper>
-            <h1> List of Patients </h1>
+            <h1> List of Tissues </h1>
             <ReactTable
                 data={data}
                 columns={columns}
