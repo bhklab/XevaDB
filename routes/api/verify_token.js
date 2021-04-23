@@ -3,6 +3,11 @@
 const jwt = require('jsonwebtoken');
 
 
+/**
+ * @param {Object} request - request object with authorization header.
+ * @param {Object} response - response object.
+ * @param {Object} next - calls the next function with user payload.
+ */
 module.exports = function (request, response, next) {
     // authorization token.
     const token = request.headers.authorization;
