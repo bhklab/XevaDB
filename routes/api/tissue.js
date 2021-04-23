@@ -3,7 +3,7 @@ const knex = require('../../db/knex1');
 
 
 // get all the data from the tissues table.
-const getTissues = function (request, response) {
+const getTissues = (request, response) => {
     knex.select()
         .from('tissues')
         .then((tissue) => response.status(200).json({
@@ -18,7 +18,7 @@ const getTissues = function (request, response) {
 
 
 // this is grouping different modelids based on the different tissues.
-const getModelsGroupedByTissue = function (request, response) {
+const getModelsGroupedByTissue = (request, response) => {
     // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
     const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
     // select models grouped by tissues.

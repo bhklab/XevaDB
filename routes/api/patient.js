@@ -3,7 +3,7 @@ const knex = require('../../db/knex1');
 
 
 // get all the data from the patients table.
-const getPatients = function (request, response) {
+const getPatients = (request, response) => {
     // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
     const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
     // query.
