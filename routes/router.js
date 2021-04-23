@@ -3,22 +3,23 @@ const express = require('express');
 const router = express.Router();
 
 // setting the path of the drugscreening api to variable so that we can use it later.
+const awtauthentication = require('./api/auth');
+const batchResponse = require('./api/batch_response');
+const batches = require('./api/batch');
+const copyNumberVariation = require('./api/copy_number_variation');
+const counter = require('./api/counter');
 const datasets = require('./api/dataset');
 const drugs = require('./api/drug');
-const tissues = require('./api/tissue');
+const drugScreening = require('./api/drug_screening');
 const genes = require('./api/gene');
-const patients = require('./api/patient');
 const models = require('./api/model');
-const batches = require('./api/batch');
-const mixed = require('./api/mixed');
 const modelInformation = require('./api/model_information');
 const modelResponse = require('./api/model_response');
 const mutation = require('./api/mutation');
-const drugScreening = require('./api/drug_screening');
+const patients = require('./api/patient');
 const rnasequencing = require('./api/rnaseq');
-const copyNumberVariation = require('./api/copy_number_variation');
-const awtauthentication = require('./api/auth');
-const batchResponse = require('./api/batch_response');
+const tissues = require('./api/tissue');
+const utils = require('./api/util');
 const verifytoken = require('./api/verify_token');
 
 
@@ -47,29 +48,29 @@ router.get('/v1/batches', batches.getBatches);
 // APIs related to models table.
 router.get('/v1/models', verifytoken, models.getModels);
 
-// mixed APIs.
-router.get('/v1/counter', verifytoken, mixed.getCounter);
+// counter APIs.
+router.get('/v1/counter', verifytoken, counter.getCounter);
 
 // APIs for the model information table.
 router.post('/v1/drugpatient/dataset', verifytoken, modelInformation.postDrugandPatientBasedOnDataset);
 router.get('/v1/modelinformation', verifytoken, modelInformation.getModelInformation);
-router.get('/v1/modelinformation/:patient', mixed.isValidId, verifytoken, modelInformation.getModelInformationBasedOnPatient);
+router.get('/v1/modelinformation/:patient', utils.isValidId, verifytoken, modelInformation.getModelInformationBasedOnPatient);
 
 // APIs for model response table.
-router.get('/v1/response/:dataset', mixed.isValidId, verifytoken, modelResponse.getModelResponseBasedOnDataset);
+router.get('/v1/response/:dataset', utils.isValidId, verifytoken, modelResponse.getModelResponseBasedOnDataset);
 router.get('/v1/response', verifytoken, modelResponse.getModelResponseBasedPerDatasetBasedOnDrugs);
 router.get('/v1/modelstats', verifytoken, modelResponse.getModelResponseStats);
 
 // APIs related to mutation table.
-router.get('/v1/mutation/:dataset', mixed.isValidId, verifytoken, mutation.getMutationBasedOnDataset);
+router.get('/v1/mutation/:dataset', utils.isValidId, verifytoken, mutation.getMutationBasedOnDataset);
 router.get('/v1/mutation', verifytoken, mutation.getMutationBasedPerDatasetBasedOnGenes);
 
 // APIs related to rnasequencing table.
-router.get('/v1/rnaseq/:dataset', mixed.isValidId, verifytoken, rnasequencing.getRnaSeqBasedOnDataset);
+router.get('/v1/rnaseq/:dataset', utils.isValidId, verifytoken, rnasequencing.getRnaSeqBasedOnDataset);
 router.get('/v1/rnaseq', verifytoken, rnasequencing.getRnaSeqBasedPerDatasetBasedOnGenes);
 
 // APIs related to copy_number_variation table.
-router.get('/v1/cnv/:dataset', mixed.isValidId, verifytoken, copyNumberVariation.getCopyNumberVariationBasedOnDataset);
+router.get('/v1/cnv/:dataset', utils.isValidId, verifytoken, copyNumberVariation.getCopyNumberVariationBasedOnDataset);
 router.get('/v1/cnv', verifytoken, copyNumberVariation.getCopyNumberVariationBasedPerDatasetBasedOnGenes);
 
 // APIs related to drug screening table.
@@ -78,7 +79,6 @@ router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreening);
 // Authorization APIs.
 router.post('/v1/login', awtauthentication.createLogin);
 router.post('/v1/register', awtauthentication.registerUser);
-
 
 // APIs related to batch response.
 router.get('/v1/batchstats', verifytoken, batchResponse.getBatchResponseStats);
