@@ -37,7 +37,7 @@ const registerUser = async (request, response) => {
         .where('user_name', username)
         .then((user) => {
             if (JSON.parse(JSON.stringify(user)).length > 0) {
-                return response.status(400).send('Username Exists.');
+                return response.status(400).send('User already Exists.');
             }
             // create a new user.
             knex('users')

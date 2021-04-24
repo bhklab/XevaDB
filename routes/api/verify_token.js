@@ -14,7 +14,7 @@ module.exports = function (request, response, next) {
 
     // if token is not sent the authorization fails.
     if (!token) {
-        return response.status(401).send('Access Denied');
+        return response.status(401).send('Access Denied, missing authorization token!');
     }
 
     // check if the token is valid or not.
