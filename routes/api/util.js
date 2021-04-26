@@ -16,7 +16,6 @@ const isVerified = (response, datasetId) => (
  * @param {Object} next
  * checks the validity of the param id.
  */
-// checks the validity of the dataset id.
 const isValidId = (request, response, next) => (
     Number(request.params.dataset || request.params.patient)
         ? next()
@@ -24,7 +23,15 @@ const isValidId = (request, response, next) => (
 );
 
 
+/**
+ * @param {string} user
+ * @returns {Array} returns an array of values based the user argument.
+ */
+const getDatasetArray = (user) => (user === 'unknown' ? [1, 6] : [1, 8]);
+
+
 module.exports = {
     isVerified,
     isValidId,
+    getDatasetArray,
 };

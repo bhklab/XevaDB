@@ -1,15 +1,18 @@
-/* eslint-disable func-names */
 const knex = require('../../db/knex1');
+const { getDatasetArray } = require('./util');
 
-
-// get all the data from the dataset table.
+/**
+ * @param {Object} request - request object with authorization header.
+ * @param {Object} response - response object.
+ * @returns {Object} - list of the datasets.
+ */
 const getDatasets = (request, response) => {
-    // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
-    const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
+    // user variable.
+    const { user } = response.locals;
     // select the datasets.
     knex.select()
         .from('datasets')
-        .whereBetween('datasets.dataset_id', datasetArray)
+        .whereBetween('datasets.dataset_id', getDatasetArray(user))
         .then((dataset) => response.status(200).json({
             status: 'success',
             data: dataset,
