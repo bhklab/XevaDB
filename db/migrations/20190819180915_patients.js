@@ -8,6 +8,12 @@ exports.up = (knex) => (
                         .primary();
                     table.string('patient')
                         .notNullable();
+                    table.integer('dataset_id')
+                        .notNullable()
+                        .unsigned()
+                        .references('dataset_id')
+                        .inTable('datasets')
+                        .index();
                 });
             }
             return query;
