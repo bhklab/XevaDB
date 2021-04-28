@@ -1,13 +1,23 @@
 
-exports.up = function (knex, Promise) {
-    return knex.schema.createTable('genes', (table) => {
-        table.increments('gene_id')
-            .primary();
-        table.string('gene_name')
-            .notNullable();
-    });
-};
+exports.up = (knex) => (
+    knex.schema.hasTable('genes')
+        .then((exists) => {
+            let query = '';
+            if (!exists) {
+                query = knex.schema.createTable('genes', (table) => {
+                    table.increments('gene_id')
+                        .primary();
+                    table.string('gene_name')
+                        .notNullable();
+                });
+            }
+            return query;
+        })
+        .catch((err) => {
+            throw err;
+        })
+);
 
-exports.down = function (knex, Promise) {
-    return knex.schema.dropTable('genes');
-};
+exports.down = (knex) => (
+    knex.schema.dropTable('genes')
+);

@@ -1,12 +1,22 @@
-exports.up = function (knex, Promise) {
-    return knex.schema.createTable('patients', (table) => {
-        table.increments('patient_id')
-            .primary();
-        table.string('patient')
-            .notNullable();
-    });
-};
+exports.up = (knex) => (
+    knex.schema.hasTable('patients')
+        .then((exists) => {
+            let query = '';
+            if (!exists) {
+                query = knex.schema.createTable('patients', (table) => {
+                    table.increments('patient_id')
+                        .primary();
+                    table.string('patient')
+                        .notNullable();
+                });
+            }
+            return query;
+        })
+        .catch((err) => {
+            throw err;
+        })
+);
 
-exports.down = function (knex, Promise) {
-    return knex.schema.dropTable('patients');
-};
+exports.down = (knex) => (
+    knex.schema.dropTable('patients')
+);
