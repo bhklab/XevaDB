@@ -1,16 +1,25 @@
+exports.up = (knex) => (
+    knex.schema.hasTable('')
+        .then((exists) => {
+            let query = '';
+            if (!exists) {
+                query = knex.schema.createTable('users', (table) => {
+                    table.increments('user_id')
+                        .primary();
+                    table.string('user_name')
+                        .notNullable();
+                    table.string('user_pwd')
+                        .notNullable();
+                });
+            }
+            return query;
+        })
+        .catch((err) => {
+            throw err;
+        })
+);
 
-exports.up = function (knex, Promise) {
-    return knex.schema.createTable('users', (table) => {
-        table.increments('user_id')
-            .primary();
-        table.string('user_name')
-            .notNullable();
-        table.string('user_pwd')
-            .notNullable();
-    });
-};
 
-
-exports.down = function (knex, Promise) {
-    return knex.schema.dropTable('users');
-};
+exports.down = (knex) => (
+    knex.schema.dropTable('users')
+);
