@@ -34,6 +34,7 @@
     "multistream": "^2.1.1",
     "mysql": "^2.17.1",
     "nodemon": "^1.19.4",
+    "npm": "^7.11.1",
     "prop-types": "^15.7.2",
     "request": "^2.88.0",
     "swagger-ui-express": "^4.0.7"
