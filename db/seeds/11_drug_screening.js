@@ -1,21 +1,18 @@
-const csv = require('csvjson')
-const fs = require('fs')
-const data_path = require('../path')
+const csv = require('csvtojson');
+const path = require('path');
+const dataPath = require('../path');
 
-const options = {
-  delimiter: ',', // optional
-  quote: '"', // optional
+
+const csvFilePath = path.join(dataPath, 'drug_screening.csv');
+const parserParams = {
+    delimiter: ',', // optional
+    quote: '"', // optional
+    ignoreEmpty: true,
 };
 
-const file_location = `${data_path}/drug_screening.csv`
 
-const file = fs.readFileSync(file_location, 'utf8')
-const dataObj = csv.toObject(file, options)
-
-
-exports.seed = function (knex, Promise) {
-  return knex('drug_screening').del()
-    .then(function () {
-      return knex('drug_screening').insert(dataObj);
-    });
-};
+exports.seed = (knex) => (
+    knex('drug_screening').del()
+        .then(() => csv(parserParams).fromFile(csvFilePath))
+        .then((data) => knex('drug_screening').insert(data))
+);
