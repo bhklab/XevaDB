@@ -4,7 +4,7 @@ exports.up = (knex) => (
         .then((exists) => {
             let query = '';
             if (!exists) {
-                query = knex.schema.createTable('batchs', (table) => {
+                query = knex.schema.createTable('batches', (table) => {
                     table.increments('batch_id')
                         .primary();
                     table.string('batch')
