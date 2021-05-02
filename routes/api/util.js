@@ -27,11 +27,11 @@ const isValidId = (request, response, next) => (
  * @param {string} user
  * @returns {Array} returns an array of values based the user argument.
  */
-const getDatasetArray = (user) => (user === 'unknown' ? [1, 6] : [1, 8]);
+const getAllowedDatasetIds = (user) => (user === 'unknown' ? [1, 6] : [1, 8]);
 
 
 module.exports = {
     isVerified,
     isValidId,
-    getDatasetArray,
+    getAllowedDatasetIds,
 };
