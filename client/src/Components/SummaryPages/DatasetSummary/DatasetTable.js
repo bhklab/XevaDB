@@ -22,14 +22,14 @@ const DatasetTable = (props) => {
             search: false,
             sortable: false,
             Cell: (row) => (
-                <Link to={`/dataset/${row.original.parameter}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
-                    {row.original.id}
+                <Link to={`/dataset/${row.original.dataset_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                    {row.original.dataset_name}
                 </Link>
             ),
         },
         {
             Header: 'Number of Patients',
-            accessor: 'value',
+            accessor: 'totalPatients',
             minWidth: 120,
         },
         {
