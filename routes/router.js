@@ -41,8 +41,7 @@ router.get('/v1/counter', verifytoken, counter.getCounter);
 
 // APIs related to dataset table.
 router.get('/v1/datasets', verifytoken, datasets.getDatasets);
-router.get('/v1/dataset/patients', datasets.getPatientsGroupedByDataset);
-router.get('/v1/dataset/models', verifytoken, datasets.getModelsPatientsGroupedByDataset);
+router.get('/v1/datasets/detail', verifytoken, datasets.getDatasetsDetailedInformation);
 
 // APIs related to drugs table.
 router.get('/v1/drugs', verifytoken, drugs.getDrugs);

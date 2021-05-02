@@ -1,9 +1,37 @@
 const knex = require('../../db/knex1');
-const { getDatasetArray } = require('./util');
+const { getAllowedDatasetIds } = require('./util');
+
 
 /**
- * @param {Object} request - request object with authorization header.
- * @param {Object} response - response object.
+ * @param {Object} data - input data.
+ * @returns {Object} - transformed data.
+ */
+const transformDatasetDetail = (data) => {
+    const transformedData = {};
+    data.forEach((value) => {
+        if (!transformedData[value.dataset_name]) {
+            transformedData[value.dataset_name] = {
+                id: value.dataset_id,
+                name: value.dataset_name,
+                tissue: value.tissue_name,
+                patients: [value.patient],
+                models: [value.model],
+            };
+        }
+        if (!transformedData[value.dataset_name].models.includes(value.model)) {
+            transformedData[value.dataset_name].models.push(value.model);
+        }
+        if (!transformedData[value.dataset_name].patients.includes(value.patient)) {
+            transformedData[value.dataset_name].patients.push(value.patient);
+        }
+    });
+    return transformedData;
+};
+
+
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
  * @returns {Object} - list of the datasets.
  */
 const getDatasets = (request, response) => {
@@ -12,10 +40,18 @@ const getDatasets = (request, response) => {
     // select the datasets.
     knex.select()
         .from('datasets')
-        .whereBetween('datasets.dataset_id', getDatasetArray(user))
-        .then((dataset) => response.status(200).json({
+        .whereBetween('datasets.dataset_id', getAllowedDatasetIds(user))
+        .then((data) => (
+            data.map((value) => (
+                {
+                    id: value.dataset_id,
+                    name: value.dataset_name,
+                }
+            ))
+        ))
+        .then((datasets) => response.status(200).json({
             status: 'success',
-            data: dataset,
+            datasets,
         }))
         .catch((error) => response.status(500).json({
             status: 'could not find data from dataset table, getDatasets',
@@ -24,59 +60,29 @@ const getDatasets = (request, response) => {
 };
 
 
-// get all the count of distinct patient ids grouped by datasets,
-// this uses the modelinformation table.
-const getPatientsGroupedByDataset = (request, response) => {
-    knex.countDistinct('model_information.patient_id as patient_id')
-        .select('model_information.dataset_id', 'datasets.dataset_name')
-        .from('model_information')
-        .leftJoin(
-            'datasets',
-            'model_information.dataset_id',
-            'datasets.dataset_id',
-        )
-        .groupBy('dataset_id')
-        .then((dataset) => response.status(200).json({
-            status: 'success',
-            data: dataset,
-        }))
-        .catch((error) => response.status(500).json({
-            status: 'could not find data from getPatientsGroupedByDataset',
-            data: error,
-        }));
-};
-
-
-// get all the count of distinct model ids and patient ids grouped by datasets,
-// this uses the modelinformation table.
-const getModelsPatientsGroupedByDataset = (request, response) => {
-    // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
-    const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - list of the datasets.
+ */
+const getDatasetsDetailedInformation = (request, response) => {
+    // user variable.
+    const { user } = response.locals;
     // select the number of patients and models grouped by dataset.
-    knex.countDistinct('model_response.model_id as totalModels')
-        .countDistinct('model_information.patient_id as patient_id')
-        .select('datasets.dataset_name', 'datasets.dataset_id')
-        .from('model_response')
-        .leftJoin(
-            'models',
-            'model_response.model_id',
-            'models.model_id',
-        )
-        .leftJoin(
-            'model_information',
-            'models.model_id',
-            'model_information.model_id',
-        )
-        .leftJoin(
-            'datasets',
-            'model_information.dataset_id',
-            'datasets.dataset_id',
-        )
-        .whereBetween('datasets.dataset_id', datasetArray)
-        .groupBy('datasets.dataset_id')
-        .then((dataset) => response.status(200).json({
+    knex.select(
+        'd.dataset_id', 'd.dataset_name', 'm.model_id', 'm.model',
+        't.tissue_id', 't.tissue_name', 'p.patient_id', 'p.patient',
+    )
+        .from('datasets as d')
+        .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'dt.dataset_id')
+        .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id')
+        .leftJoin('patients as p', 'p.dataset_id', 'd.dataset_id')
+        .leftJoin('models as m', 'm.patient_id', 'p.patient_id')
+        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .then((data) => Object.values(transformDatasetDetail(data)))
+        .then((datasets) => response.status(200).json({
             status: 'success',
-            data: dataset,
+            datasets,
         }))
         .catch((error) => response.status(500).json({
             status: 'could not find data from getModelsPatientsGroupedByDataset',
@@ -87,6 +93,5 @@ const getModelsPatientsGroupedByDataset = (request, response) => {
 
 module.exports = {
     getDatasets,
-    getPatientsGroupedByDataset,
-    getModelsPatientsGroupedByDataset,
+    getDatasetsDetailedInformation,
 };
