@@ -69,10 +69,7 @@ const getDatasetsDetailedInformation = (request, response) => {
     // user variable.
     const { user } = response.locals;
     // select the number of patients and models grouped by dataset.
-    knex.select(
-        'd.dataset_id', 'd.dataset_name', 'm.model_id', 'm.model',
-        't.tissue_id', 't.tissue_name', 'p.patient_id', 'p.patient',
-    )
+    knex.select()
         .from('datasets as d')
         .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'dt.dataset_id')
         .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id')
