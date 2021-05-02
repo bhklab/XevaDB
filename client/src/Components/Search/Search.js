@@ -83,9 +83,9 @@ class Search extends React.Component {
     componentDidMount() {
         axios.get('/api/v1/datasets', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
-                const datasets = response.data.data.map((item) => ({
-                    value: item.dataset_id,
-                    label: Search.parseDataset(item.dataset_name),
+                const datasets = response.data.datasets.map((item) => ({
+                    value: item.id,
+                    label: Search.parseDataset(item.name),
                 }));
                 this.setState({
                     datasets: [...datasets],
