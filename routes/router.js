@@ -63,7 +63,7 @@ router.get('/v1/modelinformation/:patient', utils.isValidId, verifytoken, modelI
 // APIs for model response table.
 router.get('/v1/modelresponse/:dataset', utils.isValidId, verifytoken, modelResponse.getModelResponseBasedOnDataset);
 router.get('/v1/modelresponse', verifytoken, modelResponse.getModelResponseBasedOnDatasetAndDrugList);
-router.get('/v1/modelresponsestats', verifytoken, modelResponse.getModelResponseStats);
+router.get('/v1/modelresponsestats', verifytoken, modelResponse.getModelResponseStatsBasedOnDrugAndPatient);
 
 // APIs related to mutation table.
 router.get('/v1/mutation/:dataset', utils.isValidId, verifytoken, mutation.getMutationBasedOnDataset);

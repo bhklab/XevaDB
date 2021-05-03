@@ -221,7 +221,7 @@ const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
  * @param {Object} response - response object
  * @returns {Object} - returns the stats like AUC, Slope etc based on drug and patient (model_id).
  */
-const getModelResponseStats = (request, response) => {
+const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
     // drug and dataset parameter.
     // this will remove the spaces in the drug name and replace
     // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
@@ -292,5 +292,5 @@ const getModelResponseStats = (request, response) => {
 module.exports = {
     getModelResponseBasedOnDataset,
     getModelResponseBasedOnDatasetAndDrugList,
-    getModelResponseStats,
+    getModelResponseStatsBasedOnDrugAndPatient,
 };
