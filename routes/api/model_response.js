@@ -24,16 +24,11 @@ const getControl = (datasetId) => {
  * @param {string} datasetParam - id of the dataset to be selected.
  * @returns {Object} - returns an object of mysql query builder to get the unique patient list.
  */
-const distinctPatientsQuery = (datasetParam) => knex('model_information')
+const distinctPatientsQuery = (datasetParam) => knex
     .distinct('patients.patient')
-    .from('model_information')
-    .leftJoin(
-        'patients',
-        'model_information.patient_id',
-        'patients.patient_id',
-    )
+    .from('patients')
     .where({
-        dataset_id: datasetParam,
+        'patients.dataset_id': datasetParam,
     });
 
 
@@ -42,24 +37,24 @@ const distinctPatientsQuery = (datasetParam) => knex('model_information')
  * @returns {Object} - returns an object of mysql query builder to get the model information.
  */
 const modelResponseQuery = (datasetParam) => knex
-    .select('patients.patient', 'drugs.drug_name', 'value', 'model_information.model_id', 'response_type')
+    .select('models.model_id', 'patients.patient', 'drugs.drug_name', 'value', 'response_type')
     .from('model_response')
     .rightJoin(
-        'model_information',
+        'models',
+        'models.model_id',
         'model_response.model_id',
-        'model_information.model_id',
     )
     .leftJoin(
         'patients',
-        'model_information.patient_id',
         'patients.patient_id',
+        'models.patient_id',
     )
     .leftJoin(
         'drugs',
-        'model_information.drug_id',
         'drugs.drug_id',
+        'model_response.drug_id',
     )
-    .where('model_information.dataset_id', datasetParam)
+    .where('patients.dataset_id', datasetParam)
     .orderBy('drug_name')
     .orderBy('patient');
 
@@ -143,11 +138,14 @@ const transformData = (row) => {
 
 /**
  * @param {Object} request - request object with dataset param.
+ * @param {number} request.params.dataset - id of the dataset to be queried.
  * @param {Object} response - response object
  * @returns {Object} - sends the model response data based on the dataset.
  */
 const getModelResponseBasedOnDataset = (request, response) => {
+    // dataset parameter.
     const datasetParam = request.params.dataset;
+    // patients and model response.
     const patients = distinctPatientsQuery(datasetParam);
     const modelResponse = modelResponseQuery(datasetParam);
 
@@ -175,11 +173,13 @@ const getModelResponseBasedOnDataset = (request, response) => {
 
 /**
  * @param {Object} request - request object with dataset param.
+ * @param {number} request.params.dataset - id of the dataset to be queried.
+ * @param {string} request.params.drug - string of comma separated drugs.
  * @param {Object} response - response object
- * @returns {Object} - function returns the model evaluations
+ * @returns {Object} - function returns the model response
  * based on dataset and drug query parameters.
 */
-const getModelResponseBasedPerDatasetBasedOnDrugs = (request, response) => {
+const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
     // drug and dataset parameters.
     const drugParam = request.query.drug;
     const datasetParam = request.query.dataset;
@@ -292,6 +292,6 @@ const getModelResponseStats = (request, response) => {
 
 module.exports = {
     getModelResponseBasedOnDataset,
-    getModelResponseBasedPerDatasetBasedOnDrugs,
+    getModelResponseBasedOnDatasetAndDrugList,
     getModelResponseStats,
 };

@@ -79,7 +79,7 @@ const getModelsDetailedInformation = function (request, response) {
             models,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from models table, getModels',
+            status: 'could not find data from models table, getModelsDetailedInformation',
             data: error,
         }));
 };

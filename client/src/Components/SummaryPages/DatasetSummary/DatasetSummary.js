@@ -63,6 +63,7 @@ class DatasetSummary extends React.Component {
                                                 {
                                                     id: element.dataset_name,
                                                     value: element.totalPatients,
+                                                    parameter: element.dataset_id,
                                                 }
                                             ))
                                         }
