@@ -115,9 +115,45 @@ const getModelsGroupedByTissueType = (request, response) => {
         }));
 };
 
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - list of the drugs with drug annotations.
+ */
+const getModelsGroupedByDrugClass = (request, response) => {
+    // user variable.
+    const { user } = response.locals;
+
+    // select the number of patients and models grouped by drug class name.
+    knex('model_information')
+        .countDistinct('model_information.model_id as model_ids')
+        .leftJoin(
+            'drugs',
+            'model_information.drug_id',
+            'drugs.drug_id',
+        )
+        .leftJoin(
+            'drug_annotations',
+            'drugs.drug_id',
+            'drug_annotations.drug_id',
+        )
+        .select('class_name')
+        .whereBetween('model_information.dataset_id', getAllowedDatasetIds(user))
+        .groupBy('class_name')
+        .then((className) => response.status(200).json({
+            status: 'success',
+            data: className,
+        }))
+        .catch((error) => response.status(500).json({
+            status: 'could not find data from getDrugGroupedByClass',
+            data: error,
+        }));
+};
+
 
 module.exports = {
     getModels,
     getModelsDetailedInformation,
     getModelsGroupedByTissueType,
+    getModelsGroupedByDrugClass,
 };

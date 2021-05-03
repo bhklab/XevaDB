@@ -22,7 +22,7 @@ class DrugSummary extends React.Component {
     componentDidMount() {
         const newValues = [];
         // passing on token as the header to the api call.
-        axios.get('/api/v1/drug/class', { headers: { Authorization: localStorage.getItem('user') } })
+        axios.get('/api/v1/models/groupbydrugclass', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 response.data.data.forEach((data) => {
                     const value = {};
