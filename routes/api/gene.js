@@ -2,7 +2,11 @@
 const knex = require('../../db/knex1');
 
 
-// get all the data from the genes table.
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - list of the genes in the database.
+ */
 const getGenes = (request, response) => {
     knex.select()
         .from('genes')

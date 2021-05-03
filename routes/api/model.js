@@ -118,7 +118,7 @@ const getModelsGroupedByTissueType = (request, response) => {
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
- * @returns {Object} - list of the drugs with drug annotations.
+ * @returns {Object} - model count grouped by drug class.
  */
 const getModelsGroupedByDrugClass = (request, response) => {
     // user variable.
@@ -145,7 +145,7 @@ const getModelsGroupedByDrugClass = (request, response) => {
             data: className,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from getDrugGroupedByClass',
+            status: 'could not find data from getModelsGroupedByDrugClass',
             data: error,
         }));
 };
