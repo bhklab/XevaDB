@@ -37,6 +37,7 @@ const transformDatasetDetail = (data) => {
 const getDatasets = (request, response) => {
     // user variable.
     const { user } = response.locals;
+
     // select the datasets.
     knex.select()
         .from('datasets')
@@ -63,11 +64,13 @@ const getDatasets = (request, response) => {
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
- * @returns {Object} - list of the datasets.
+ * @returns {Object} - list of the datasets with detailed information including
+ * patient information, tissue information, model information.
  */
 const getDatasetsDetailedInformation = (request, response) => {
     // user variable.
     const { user } = response.locals;
+
     // select the number of patients and models grouped by dataset.
     knex.select()
         .from('datasets as d')
@@ -82,7 +85,7 @@ const getDatasetsDetailedInformation = (request, response) => {
             datasets,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from getModelsPatientsGroupedByDataset',
+            status: 'could not find data from getDatasetsDetailedInformation',
             data: error,
         }));
 };
