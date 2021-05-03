@@ -41,7 +41,7 @@ router.get('/v1/counter', verifytoken, counter.getCounter);
 
 // APIs related to dataset table.
 router.get('/v1/datasets', verifytoken, datasets.getDatasets);
-router.get('/v1/datasets/detail', verifytoken, datasets.getDatasetsDetailedInformation);
+router.get('/v1/datasets/details', verifytoken, datasets.getDatasetsDetailedInformation);
 
 // APIs related to drugs table.
 router.get('/v1/drugs', verifytoken, drugs.getDrugs);
@@ -52,6 +52,8 @@ router.get('/v1/genes', genes.getGenes);
 
 // APIs related to models table.
 router.get('/v1/models', verifytoken, models.getModels);
+router.get('/v1/models/details', verifytoken, models.getModelsDetailedInformation);
+router.get('/v1/models/groupbytissue', verifytoken, models.getModelsGroupedByTissueType);
 
 // APIs for the model information table.
 router.post('/v1/drugpatient/dataset', verifytoken, modelInformation.postDrugandPatientBasedOnDataset);
@@ -76,7 +78,6 @@ router.get('/v1/rnaseq', verifytoken, rnasequencing.getRnaSeqBasedPerDatasetBase
 
 // APIs related to tissues table.
 router.get('/v1/tissues', tissues.getTissues);
-router.get('/v1/tissue/models', verifytoken, tissues.getModelsGroupedByTissue);
 
 // APIs related to drug screening table.
 router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreening);
