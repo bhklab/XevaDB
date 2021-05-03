@@ -216,6 +216,8 @@ const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
 
 /**
  * @param {Object} request - request object with dataset param.
+ * @param {string} request.params.drug - drug name.
+ * @param {string} request.params.patient - patient name.
  * @param {Object} response - response object
  * @returns {Object} - returns the stats like AUC, Slope etc based on drug and patient (model_id).
  */
@@ -241,18 +243,18 @@ const getModelResponseStats = (request, response) => {
                 .from('model_response')
                 .leftJoin(
                     'model_information',
-                    'model_response.model_id',
                     'model_information.model_id',
+                    'model_response.model_id',
                 )
                 .leftJoin(
                     'patients',
-                    'model_information.patient_id',
                     'patients.patient_id',
+                    'model_information.patient_id',
                 )
                 .leftJoin(
                     'drugs',
-                    'model_information.drug_id',
                     'drugs.drug_id',
+                    'model_information.drug_id',
                 )
                 .leftJoin(
                     'batch_information',
@@ -261,8 +263,8 @@ const getModelResponseStats = (request, response) => {
                 )
                 .leftJoin(
                     'models',
-                    'model_information.model_id',
                     'models.model_id',
+                    'model_information.model_id',
                 )
                 .leftJoin(
                     'model_sheets',
@@ -272,10 +274,7 @@ const getModelResponseStats = (request, response) => {
                 .where('patients.patient', patient)
                 .andWhere(function () {
                     this.where('drugs.drug_name', drug)
-                        .orWhere('drugs.drug_name', 'water')
-                        .orWhere('drugs.drug_name', 'untreated')
-                        .orWhere('drugs.drug_name', 'control')
-                        .orWhere('drugs.drug_name', 'H2O');
+                        .orWhereIn('drugs.drug_name', ['water', 'untreated', 'control', 'H2O']);
                 })
                 .andWhere('batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)
                 .then((data) => {
