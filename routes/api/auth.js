@@ -13,7 +13,11 @@ const schema = Joi.object({
 });
 
 
-// Register User
+/**
+ * To register a new user.
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ */
 const registerUser = async (request, response) => {
     const { username } = request.body;
     const { password } = request.body;
@@ -64,7 +68,11 @@ const registerUser = async (request, response) => {
 };
 
 
-// Create Login
+/**
+ * Login
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ */
 const createLogin = (request, response) => {
     const { username } = request.body;
     const { password } = request.body;

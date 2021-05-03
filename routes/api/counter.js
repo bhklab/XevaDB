@@ -23,7 +23,11 @@ const datasets = (datasetArray) => knex('datasets')
     .whereBetween('dataset_id', datasetArray);
 
 
-// this is the function for grabing the total for counter.
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - get the total count for the different data types ie tissue, model, drugs etc.
+ */
 const getCounter = (request, response) => {
     // user variable.
     const { user } = response.locals;
@@ -41,7 +45,7 @@ const getCounter = (request, response) => {
             data,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find the data',
+            status: 'could not find the data, getCounter',
             data: error,
         }));
 };
