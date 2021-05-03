@@ -2,7 +2,11 @@
 const knex = require('../../db/knex1');
 
 
-// get all the data from the batches table.
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - list of the batches.
+ */
 const getBatches = (request, response) => {
     knex.select()
         .from('batches')

@@ -1,17 +1,22 @@
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
+const { getAllowedDatasetIds } = require('./util');
 
 
-// get all the data from the patients table.
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - list of the patients.
+ */
 const getPatients = (request, response) => {
-    // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
-    const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
+    // user variable.
+    const { user } = response.locals;
+
     // query.
-    knex.distinct('p.patient_id')
-        .select('patient')
-        .from('patients as p')
-        .leftJoin('model_information as m', 'p.patient_id', 'm.patient_id')
-        .whereBetween('m.dataset_id', datasetArray)
+    knex.select()
+        .from('patients')
+        .whereBetween('dataset_id', getAllowedDatasetIds(user))
+        .orderBy('patient_id')
         .then((patient) => response.status(200).json({
             status: 'success',
             data: patient,
