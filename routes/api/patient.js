@@ -17,9 +17,9 @@ const getPatients = (request, response) => {
         .from('patients')
         .whereBetween('dataset_id', getAllowedDatasetIds(user))
         .orderBy('patient_id')
-        .then((patient) => response.status(200).json({
+        .then((patients) => response.status(200).json({
             status: 'success',
-            data: patient,
+            data: patients,
         }))
         .catch((error) => response.status(500).json({
             status: 'could not find data from patients table, getPatients',

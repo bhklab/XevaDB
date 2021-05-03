@@ -21,8 +21,8 @@ const getDrugs = (request, response) => {
         .leftJoin('datasets as d', 'd.dataset_id', 'dd.dataset_id')
         .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .orderBy('dg.drug_name', 'asc')
-        .then((drug) => {
-            response.send(drug);
+        .then((drugs) => {
+            response.send(drugs);
         })
         .catch((error) => response.status(500).json({
             status: 'could not find data from drug table, getDrugs',

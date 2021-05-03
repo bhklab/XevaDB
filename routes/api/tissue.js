@@ -10,9 +10,9 @@ const knex = require('../../db/knex1');
 const getTissues = (request, response) => {
     knex.select()
         .from('tissues')
-        .then((tissue) => response.status(200).json({
+        .then((tissues) => response.status(200).json({
             status: 'success',
-            data: tissue,
+            data: tissues,
         }))
         .catch((error) => response.status(500).json({
             status: 'could not find data from tissue table, getTissues',

@@ -10,9 +10,9 @@ const knex = require('../../db/knex1');
 const getGenes = (request, response) => {
     knex.select()
         .from('genes')
-        .then((gene) => response.status(200).json({
+        .then((genes) => response.status(200).json({
             status: 'success',
-            data: gene,
+            data: genes,
         }))
         .catch((error) => response.status(500).json({
             status: 'could not find data from genes table, getGenes',

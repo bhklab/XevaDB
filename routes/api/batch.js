@@ -10,9 +10,9 @@ const knex = require('../../db/knex1');
 const getBatches = (request, response) => {
     knex.select()
         .from('batches')
-        .then((batch) => response.status(200).json({
+        .then((batches) => response.status(200).json({
             status: 'success',
-            data: batch,
+            data: batches,
         }))
         .catch((error) => response.status(500).json({
             status: 'could not find data from batch table, getBatches',
