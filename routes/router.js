@@ -56,9 +56,10 @@ router.get('/v1/models/groupbytissue', verifytoken, models.getModelsGroupedByTis
 router.get('/v1/models/groupbydrugclass', verifytoken, models.getModelsGroupedByDrugClass);
 
 // APIs for the model information table.
-router.post('/v1/drugpatient/dataset', verifytoken, modelInformation.postDrugandPatientBasedOnDataset);
 router.get('/v1/modelinformation', verifytoken, modelInformation.getModelInformation);
 router.get('/v1/modelinformation/:patient', utils.isValidId, verifytoken, modelInformation.getModelInformationBasedOnPatient);
+// TODO: maybe not use this end point and use end point to get the data related to a single dataset.
+router.post('/v1/drugspatients/dataset', verifytoken, modelInformation.postDrugsandPatientsBasedOnDataset);
 
 // APIs for model response table.
 router.get('/v1/modelresponse/:dataset', utils.isValidId, verifytoken, modelResponse.getModelResponseBasedOnDataset);

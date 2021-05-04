@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
-
+const { getAllowedDatasetIds } = require('./util');
 
 // query to get the data from model information table.
 const getModelInformationData = knex.select()
@@ -20,23 +20,27 @@ const distinctDrug = (dataset) => (
         .where({
             dataset_id: dataset,
         })
-        .as('model_information')
+        .as('distinct_drugs')
 );
 
 
 // query to grab the distinct patient ids based on the dataset id.
 const distinctPatient = (dataset) => (
     knex.distinct('patient_id')
-        .from('model_information')
+        .from('patients')
         .where({
             dataset_id: dataset,
         })
-        .as('model_information')
+        .as('distinct_patients')
 );
 
 
-// getting a list of all the distinct drugs and patient_id based on the dataset.
-const postDrugandPatientBasedOnDataset = (request, response) => {
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - returns a list of drugs and patients based on the dataset.
+ */
+const postDrugsandPatientsBasedOnDataset = (request, response) => {
     const dataset = request.body.label;
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
@@ -46,7 +50,7 @@ const postDrugandPatientBasedOnDataset = (request, response) => {
             .from(distinctDrug(dataset))
             .leftJoin(
                 'drugs',
-                'model_information.drug_id',
+                'distinct_drugs.drug_id',
                 'drugs.drug_id',
             );
 
@@ -55,7 +59,7 @@ const postDrugandPatientBasedOnDataset = (request, response) => {
             .from(distinctPatient(dataset))
             .leftJoin(
                 'patients',
-                'model_information.patient_id',
+                'distinct_patients.patient_id',
                 'patients.patient_id',
             );
 
@@ -77,12 +81,18 @@ const postDrugandPatientBasedOnDataset = (request, response) => {
 };
 
 
-// getting all the information/data related to model information.
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - model information data.
+ */
 const getModelInformation = (request, response) => {
-    // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
-    const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
+    // user variable.
+    const { user } = response.locals;
+
     // query
-    getModelInformationData.whereBetween('mi.dataset_id', datasetArray)
+    getModelInformationData
+        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => response.status(200).json({
             status: 'success',
             data,
@@ -94,12 +104,22 @@ const getModelInformation = (request, response) => {
 };
 
 
-// getting all the information/data related to model information based on the patient id.
+/**
+ * @param {Object} request - request object.
+ * @param {string} request.params.patient - patient id.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - model information data based on the patient id.
+ */
 const getModelInformationBasedOnPatient = (request, response) => {
-    // dataset param.
+    // user variable.
+    const { user } = response.locals;
+    // patient param.
     const patientId = request.params.patient;
-    // query to grab the data based on the dataset id.
-    getModelInformationData.where('mi.patient_id', patientId)
+
+    // query to grab the data based on the patient id.
+    getModelInformationData
+        .where('p.patient_id', patientId)
+        .andWhereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => response.status(200).json({
             status: 'success',
             data,
@@ -112,7 +132,7 @@ const getModelInformationBasedOnPatient = (request, response) => {
 
 
 module.exports = {
-    postDrugandPatientBasedOnDataset,
+    postDrugsandPatientsBasedOnDataset,
     getModelInformation,
     getModelInformationBasedOnPatient,
 };
