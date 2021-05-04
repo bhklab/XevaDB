@@ -31,7 +31,7 @@ class StatTable extends React.Component {
     componentDidMount() {
         const { drugParam, patientParam } = this.props;
         const getModelResponse = axios.get(`/api/v1/modelresponsestats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
-        const getBatchResponse = axios.get(`/api/v1/batchstats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const getBatchResponse = axios.get(`/api/v1/batchresponsestats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
 
         Promise.all([getBatchResponse, getModelResponse]).then((response) => {
             this.parseData(response);

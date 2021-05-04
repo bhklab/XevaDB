@@ -27,7 +27,7 @@ router.post('/v1/login', awtauthentication.createLogin);
 router.post('/v1/register', awtauthentication.registerUser);
 
 // APIs related to batch response.
-router.get('/v1/batchstats', verifytoken, batchResponse.getBatchResponseStats);
+router.get('/v1/batchresponsestats', verifytoken, batchResponse.getBatchResponseStatsBasedOnDrugAndPatient);
 
 // APIs related to batches table.
 router.get('/v1/batches', batches.getBatches);

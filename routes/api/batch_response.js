@@ -2,9 +2,15 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 
 
-// get the stats like AUC, Slope etc
-// from batch response table based on drug and patient (model_id).
-const getBatchResponseStats = (request, response) => {
+/**
+ * @param {Object} request - request object.
+ * @param {string} request.query.drug - query drug parameter.
+ * @param {string} request.query.patient - patient query parameter.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - get the stats like AUC, Slope etc
+ * from batch response table based on drug and patient (model_id).
+ */
+const getBatchResponseStatsBasedOnDrugAndPatient = (request, response) => {
     // grabbing the drug parameters and dataset parameters.
     // this will remove the spaces in the drug name and replace
     // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
@@ -59,5 +65,5 @@ const getBatchResponseStats = (request, response) => {
 
 
 module.exports = {
-    getBatchResponseStats,
+    getBatchResponseStatsBasedOnDrugAndPatient,
 };
