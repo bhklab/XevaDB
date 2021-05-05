@@ -45,7 +45,7 @@ const mutation = knex.select('genes.gene_name', 'patients.patient', 'mutation.va
  * @param {Object} response - response object with authorization header.
  * @returns {Object} - mutation data based on the dataset id.
  */
-const getMutationBasedOnDataset = function (request, response) {
+const getMutationDataBasedOnDataset = function (request, response) {
     const datasetParam = request.params.dataset;
 
     if (isVerified(response, datasetParam)) {
@@ -105,7 +105,7 @@ const getMutationBasedOnDataset = function (request, response) {
  * @returns {Object} - mutation data based on
  *  dataset and drug query parameters.
  */
-const getMutationBasedPerDatasetBasedOnGenes = function (request, response) {
+const getMutationDataBasedOnDatasetAndGenes = function (request, response) {
     const paramGene = request.query.genes;
     const datasetParam = request.query.dataset;
     const genes = paramGene.split(',');
@@ -165,6 +165,6 @@ const getMutationBasedPerDatasetBasedOnGenes = function (request, response) {
 
 
 module.exports = {
-    getMutationBasedOnDataset,
-    getMutationBasedPerDatasetBasedOnGenes,
+    getMutationDataBasedOnDataset,
+    getMutationDataBasedOnDatasetAndGenes,
 };

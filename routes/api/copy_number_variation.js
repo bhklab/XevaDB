@@ -45,7 +45,7 @@ const copyNumberVariationQuery = knex.select('genes.gene_name', 'patients.patien
  * @param {Object} response - response object with authorization header.
  * @returns {Object} - copy number variation data based on the dataset id.
  */
-const getCopyNumberVariationBasedOnDataset = function (request, response) {
+const getCopyNumberVariationDataBasedOnDataset = function (request, response) {
     // dataset parameter.
     const datasetParam = request.params.dataset;
 
@@ -97,7 +97,7 @@ const getCopyNumberVariationBasedOnDataset = function (request, response) {
  * @returns {Object} - copy number variation data based on
  *  dataset and drug query parameters.
  */
-const getCopyNumberVariationBasedPerDatasetBasedOnGenes = function (request, response) {
+const getCopyNumberVariationBasedOnDatasetAndGenes = function (request, response) {
     const paramGene = request.query.genes;
     const datasetParam = request.query.dataset;
     const genes = paramGene.split(',');
@@ -157,6 +157,6 @@ const getCopyNumberVariationBasedPerDatasetBasedOnGenes = function (request, res
 
 
 module.exports = {
-    getCopyNumberVariationBasedOnDataset,
-    getCopyNumberVariationBasedPerDatasetBasedOnGenes,
+    getCopyNumberVariationDataBasedOnDataset,
+    getCopyNumberVariationBasedOnDatasetAndGenes,
 };

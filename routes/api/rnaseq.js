@@ -47,14 +47,14 @@ const rna_seq = knex.select('genes.gene_name', 'patients.patient', 'rna_sequenci
  * @param {Object} response - response object with authorization header.
  * @returns {Object} - rna sequencing data based on the dataset id.
  */
-const getRnaSeqBasedOnDataset = function (request, response) {
+const getRnaSeqDataBasedOnDataset = function (request, response) {
     const datasetParam = request.params.dataset;
 
     if (isVerified(response, datasetParam)) {
         // grabbing the rna_sequencing data based on patients and limiting genes to 1-30.
 
         rna_seq.where('model_information.dataset_id', datasetParam)
-            .andWhereBetween('rna_sequencing.gene_id', [1, 40])
+            .andWhereBetween('rna_sequencing.gene_id', [1, 30])
             .orderBy('genes.gene_id')
             .orderBy('sequencing.sequencing_uid')
             .then((rnaseq_data) => {
@@ -96,7 +96,7 @@ const getRnaSeqBasedOnDataset = function (request, response) {
  * @returns {Object} - rna sequencing data based on
  *  dataset and drug query parameters.
  */
-const getRnaSeqBasedPerDatasetBasedOnGenes = function (request, response) {
+const getRnaSeqBasedOnDatasetAndGenes = function (request, response) {
     const paramGene = request.query.genes;
     const datasetParam = request.query.dataset;
     const genes = paramGene.split(',');
@@ -154,6 +154,6 @@ const getRnaSeqBasedPerDatasetBasedOnGenes = function (request, response) {
 
 
 module.exports = {
-    getRnaSeqBasedOnDataset,
-    getRnaSeqBasedPerDatasetBasedOnGenes,
+    getRnaSeqDataBasedOnDataset,
+    getRnaSeqBasedOnDatasetAndGenes,
 };
