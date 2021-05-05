@@ -5,45 +5,56 @@
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
+const { distinctPatients, geneList } = require('./helper');
 
-// This will get the rna sequencing data for the selected dataset id.
+
+// rna sequencing data.
+const rna_seq = knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
+    .from('rna_sequencing')
+    .rightJoin(
+        'genes',
+        'rna_sequencing.gene_id',
+        'genes.gene_id',
+    )
+    .leftJoin(
+        'modelid_moleculardata_mapping',
+        'rna_sequencing.sequencing_uid',
+        'modelid_moleculardata_mapping.sequencing_uid',
+    )
+    .leftJoin(
+        knex.select()
+            .from('model_information')
+            .groupBy('model_information.patient_id')
+            .as('model_information'),
+        'modelid_moleculardata_mapping.model_id',
+        'model_information.model_id',
+    )
+    .leftJoin(
+        'patients',
+        'model_information.patient_id',
+        'patients.patient_id',
+    )
+    .leftJoin(
+        'sequencing',
+        'modelid_moleculardata_mapping.sequencing_uid',
+        'sequencing.sequencing_uid',
+    );
+
+
+/**
+ * @param {Object} request - request object.
+ * @param {number} request.params.dataset - dataset id.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - rna sequencing data based on the dataset id.
+ */
 const getRnaSeqBasedOnDataset = function (request, response) {
-    const paramDataset = request.params.dataset;
+    const datasetParam = request.params.dataset;
 
-    if (isVerified(response, paramDataset)) {
+    if (isVerified(response, datasetParam)) {
         // grabbing the rna_sequencing data based on patients and limiting genes to 1-30.
-        knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
-            .from('rna_sequencing')
-            .rightJoin(
-                'genes',
-                'rna_sequencing.gene_id',
-                'genes.gene_id',
-            )
-            .leftJoin(
-                'modelid_moleculardata_mapping',
-                'rna_sequencing.sequencing_uid',
-                'modelid_moleculardata_mapping.sequencing_uid',
-            )
-            .leftJoin(
-                knex.select()
-                    .from('model_information')
-                    .groupBy('model_information.patient_id')
-                    .as('model_information'),
-                'modelid_moleculardata_mapping.model_id',
-                'model_information.model_id',
-            )
-            .leftJoin(
-                'patients',
-                'model_information.patient_id',
-                'patients.patient_id',
-            )
-            .leftJoin(
-                'sequencing',
-                'modelid_moleculardata_mapping.sequencing_uid',
-                'sequencing.sequencing_uid',
-            )
-            .where('model_information.dataset_id', paramDataset)
-            .andWhereBetween('rna_sequencing.gene_id', [1, 30])
+
+        rna_seq.where('model_information.dataset_id', datasetParam)
+            .andWhereBetween('rna_sequencing.gene_id', [1, 40])
             .orderBy('genes.gene_id')
             .orderBy('sequencing.sequencing_uid')
             .then((rnaseq_data) => {
@@ -77,36 +88,22 @@ const getRnaSeqBasedOnDataset = function (request, response) {
 };
 
 
-// this will get the rna sequencing data based on
-// dataset and drug query parameters.
+/**
+ * @param {Object} request - request object.
+ * @param {string} request.query.genes - list of genes to query.
+ * @param {number} request.query.dataset - dataset id to query from.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - rna sequencing data based on
+ *  dataset and drug query parameters.
+ */
 const getRnaSeqBasedPerDatasetBasedOnGenes = function (request, response) {
     const paramGene = request.query.genes;
-    const paramDataset = request.query.dataset;
+    const datasetParam = request.query.dataset;
     const genes = paramGene.split(',');
 
-    if (isVerified(response, paramDataset)) {
-        // get the distinct patients or total patients from model information table.
-        // as some patient ids are missing from oncoprint because
-        // data is not available for that patient/model.
-        const modelInformationDistinctPatient = knex('model_information')
-            .distinct('patients.patient')
-            .from('model_information')
-            .leftJoin(
-                'patients',
-                'model_information.patient_id',
-                'patients.patient_id',
-            )
-            .where({
-                dataset_id: paramDataset,
-            });
-
-        // to get the gene list based on gene_id param.
-        const geneList = knex.select('gene_id')
-            .from('genes')
-            .whereIn('gene_name', genes);
-
+    if (isVerified(response, datasetParam)) {
         // rna_sequencing data.
-        Promise.all([modelInformationDistinctPatient, geneList])
+        Promise.all([distinctPatients(datasetParam), geneList(genes)])
             .then((row) => {
                 const data = [];
                 // patients
@@ -116,37 +113,7 @@ const getRnaSeqBasedPerDatasetBasedOnGenes = function (request, response) {
                 value = value.map((value) => value.gene_id);
 
                 // grabbing the rna_sequencing data for the genes.
-                knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
-                    .from('rna_sequencing')
-                    .rightJoin(
-                        'genes',
-                        'rna_sequencing.gene_id',
-                        'genes.gene_id',
-                    )
-                    .leftJoin(
-                        'modelid_moleculardata_mapping',
-                        'rna_sequencing.sequencing_uid',
-                        'modelid_moleculardata_mapping.sequencing_uid',
-                    )
-                    .leftJoin(
-                        knex.select()
-                            .from('model_information')
-                            .groupBy('model_information.patient_id')
-                            .as('model_information'),
-                        'modelid_moleculardata_mapping.model_id',
-                        'model_information.model_id',
-                    )
-                    .leftJoin(
-                        'patients',
-                        'model_information.patient_id',
-                        'patients.patient_id',
-                    )
-                    .leftJoin(
-                        'sequencing',
-                        'modelid_moleculardata_mapping.sequencing_uid',
-                        'sequencing.sequencing_uid',
-                    )
-                    .where('model_information.dataset_id', paramDataset)
+                rna_seq.where('model_information.dataset_id', datasetParam)
                     .whereIn('rna_sequencing.gene_id', value)
                     .orderBy('genes.gene_id')
                     .orderBy('sequencing.sequencing_uid')
