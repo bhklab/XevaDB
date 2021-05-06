@@ -2,19 +2,17 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
-
 const createSvg = (width, height, left, right, top, bottom) => {
     const svg = d3.select('#barplot')
         .append('svg')
         .attr('width', width + left + right)
         .attr('height', height + top + bottom)
+        .attr('id', 'barplotsvg')
         .append('g')
-        .attr('transform', `translate(${left},${top})`)
-        .attr('id', 'barplotsvg');
+        .attr('transform', `translate(${left},${top})`);
 
     return svg;
 };
-
 
 const createXScale = (width, data) => {
     const scale = d3.scaleBand()
@@ -25,7 +23,6 @@ const createXScale = (width, data) => {
     return scale;
 };
 
-
 const createYScale = (height) => {
     const scale = d3.scaleLinear()
         .domain([0, 1700])
@@ -34,7 +31,6 @@ const createYScale = (height) => {
 
     return scale;
 };
-
 
 const colorScale = (data, colors) => {
     const values = data.map((element) => element.id);
@@ -45,7 +41,6 @@ const colorScale = (data, colors) => {
 
     return scale;
 };
-
 
 const createXAxis = (svg, xScale, height) => {
     const axis = d3.axisBottom()
@@ -61,7 +56,6 @@ const createXAxis = (svg, xScale, height) => {
         .style('font-size', 13);
 };
 
-
 const createYAxis = (svg, yScale) => {
     const axis = d3.axisLeft()
         .scale(yScale)
@@ -71,7 +65,6 @@ const createYAxis = (svg, yScale) => {
         .call(axis)
         .style('font-size', 13);
 };
-
 
 const createBars = (svg, data, xScale, yScale, height, color) => {
     svg.selectAll('bars')
@@ -86,7 +79,6 @@ const createBars = (svg, data, xScale, yScale, height, color) => {
         .attr('fill', (d) => color(d.id));
 };
 
-
 const appendBarText = (svg, data, xScale, yScale) => {
     data.forEach((element) => {
         svg.append('text')
@@ -99,7 +91,6 @@ const appendBarText = (svg, data, xScale, yScale) => {
             .text(element.value);
     });
 };
-
 
 const BarPlot = (props) => {
     // getting the prop data.
@@ -124,7 +115,7 @@ const BarPlot = (props) => {
 
     useEffect(() => {
         // remove the element if already present.
-        d3.selectAll('#barplotsvg').remove();
+        d3.select('#barplotsvg').remove();
 
         // svg canvas.
         const svg = createSvg(width, height, left, right, top, bottom);
@@ -141,8 +132,7 @@ const BarPlot = (props) => {
 
         // create bars.
         createBars(svg, data, xScale, yScale, height, color);
-    }, []);
-
+    });
 
     return (
         <div
@@ -151,7 +141,6 @@ const BarPlot = (props) => {
         />
     );
 };
-
 
 BarPlot.propTypes = {
     dimensions: PropTypes.shape({
@@ -166,6 +155,5 @@ BarPlot.propTypes = {
     }).isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
-
 
 export default BarPlot;
