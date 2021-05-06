@@ -135,7 +135,6 @@ const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) =
 
         // array of all the patients belonging to a particular dataset.
         data.push(patientsArray);
-
         // sending the response.
         response.send(data);
     } else {

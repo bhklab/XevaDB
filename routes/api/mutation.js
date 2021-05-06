@@ -118,33 +118,32 @@ const getMutationDataBasedOnDatasetAndGenes = async (request, response) => {
         const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
 
         // grabbing the mutation data for the genes.
-        mutation
+        const mutationData = await mutation
             .where('model_information.dataset_id', datasetParam)
             .whereIn('mutation.gene_id', genesArray)
             .orderBy('genes.gene_id')
-            .orderBy('sequencing.sequencing_uid')
-            .then((mutation_data) => {
-                let gene_id = '';
-                let i = 0;
-                const usersRows = JSON.parse(JSON.stringify(mutation_data));
-                usersRows.forEach((element) => {
-                    if (element.gene_name !== gene_id) {
-                        gene_id = element.gene_name;
-                        data[i] = {};
-                        data[i].gene_id = element.gene_name;
-                        data[i][element.patient] = element.value;
-                        i++;
-                    } else {
-                        data[i - 1][element.patient] = element.value;
-                    }
-                });
+            .orderBy('sequencing.sequencing_uid');
 
-                // array of all the patients belonging to a particular dataset.
-                data.push(patientsArray);
+        // parsing data for the final mutation data.
+        let gene_id = '';
+        let i = 0;
+        const usersRows = JSON.parse(JSON.stringify(mutationData));
+        usersRows.forEach((element) => {
+            if (element.gene_name !== gene_id) {
+                gene_id = element.gene_name;
+                data[i] = {};
+                data[i].gene_id = element.gene_name;
+                data[i][element.patient] = element.value;
+                i++;
+            } else {
+                data[i - 1][element.patient] = element.value;
+            }
+        });
 
-                // sending the response.
-                response.send(data);
-            });
+        // array of all the patients belonging to a particular dataset.
+        data.push(patientsArray);
+        // sending the response.
+        response.send(data);
     } else {
         response.status(500).json({
             status: 'Could not find data from mutation table, getMutationBasedPerDatasetBasedOnDrugs',

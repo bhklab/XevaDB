@@ -9,7 +9,7 @@ const { distinctPatients, geneList } = require('./helper');
 
 
 // rna sequencing data.
-const rna_seq = knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
+const rnaSeq = knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
     .from('rna_sequencing')
     .rightJoin(
         'genes',
@@ -52,7 +52,7 @@ const getRnaSeqDataBasedOnDataset = async (request, response) => {
 
     if (isVerified(response, datasetParam)) {
         // grabbing the rna_sequencing data based on patients and limiting genes to 1-30.
-        const rnaSeqData = await rna_seq.where('model_information.dataset_id', datasetParam)
+        const rnaSeqData = await rnaSeq.where('model_information.dataset_id', datasetParam)
             .andWhereBetween('rna_sequencing.gene_id', [1, 30])
             .orderBy('genes.gene_id')
             .orderBy('sequencing.sequencing_uid');
@@ -107,7 +107,7 @@ const getRnaSeqBasedOnDatasetAndGenes = async (request, response) => {
         const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
 
         // grabbing the rna_sequencing data for the genes.
-        const rnaSeqData = rna_seq.where('model_information.dataset_id', datasetParam)
+        const rnaSeqData = await rnaSeq.where('model_information.dataset_id', datasetParam)
             .whereIn('rna_sequencing.gene_id', genesArray)
             .orderBy('genes.gene_id')
             .orderBy('sequencing.sequencing_uid');
@@ -130,7 +130,6 @@ const getRnaSeqBasedOnDatasetAndGenes = async (request, response) => {
 
         // array of all the patients belonging to a particular dataset.
         data.push(patientsArray);
-
         // sending the response.
         response.send(data);
     } else {
