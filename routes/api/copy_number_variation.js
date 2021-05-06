@@ -45,41 +45,38 @@ const copyNumberVariationQuery = knex.select('genes.gene_name', 'patients.patien
  * @param {Object} response - response object with authorization header.
  * @returns {Object} - copy number variation data based on the dataset id.
  */
-const getCopyNumberVariationDataBasedOnDataset = function (request, response) {
+const getCopyNumberVariationDataBasedOnDataset = async (request, response) => {
     // dataset parameter.
     const datasetParam = request.params.dataset;
 
+    // if verification passes.
     if (isVerified(response, datasetParam)) {
         // grabbing the copy_number_variation data based on patients and limiting genes to 1-30.
-        copyNumberVariationQuery
+        const copyNumberVariationData = await copyNumberVariationQuery
             .where('model_information.dataset_id', datasetParam)
             .andWhereBetween('copy_number_variation.gene_id', [1, 30])
             .orderBy('genes.gene_id')
-            .orderBy('sequencing.sequencing_uid')
-            .then((copy_number_variation_data) => {
-                let gene_id = '';
-                let i = 0;
-                const data = [];
-                const usersRows = JSON.parse(JSON.stringify(copy_number_variation_data));
-                usersRows.forEach((element) => {
-                    if (element.gene_name !== gene_id) {
-                        gene_id = element.gene_name;
-                        data[i] = {};
-                        data[i].gene_id = element.gene_name;
-                        data[i][element.patient] = element.value;
-                        i++;
-                    } else {
-                        data[i - 1][element.patient] = element.value;
-                    }
-                });
+            .orderBy('sequencing.sequencing_uid');
 
-                // sending the response.
-                response.send(data);
-            })
-            .catch((error) => response.status(500).json({
-                status: 'could not find data from copy_number_variation table, getcopy_number_variationBasedOnDataset',
-                data: error,
-            }));
+        // transforming the data.
+        let gene_id = '';
+        let i = 0;
+        const data = [];
+        const usersRows = JSON.parse(JSON.stringify(copyNumberVariationData));
+        usersRows.forEach((element) => {
+            if (element.gene_name !== gene_id) {
+                gene_id = element.gene_name;
+                data[i] = {};
+                data[i].gene_id = element.gene_name;
+                data[i][element.patient] = element.value;
+                i++;
+            } else {
+                data[i - 1][element.patient] = element.value;
+            }
+        });
+
+        // sending the response.
+        response.send(data);
     } else {
         response.status(500).json({
             status: 'Could not find data from copy number table, getCopyNumberVariationBasedOnDataset',
@@ -97,56 +94,50 @@ const getCopyNumberVariationDataBasedOnDataset = function (request, response) {
  * @returns {Object} - copy number variation data based on
  *  dataset and drug query parameters.
  */
-const getCopyNumberVariationBasedOnDatasetAndGenes = function (request, response) {
+const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) => {
     const paramGene = request.query.genes;
     const datasetParam = request.query.dataset;
-    const genes = paramGene.split(',');
 
     if (isVerified(response, datasetParam)) {
-        // copy_number_variation data.
-        Promise.all([distinctPatients(datasetParam), geneList(genes)])
-            .then((row) => {
-                const data = [];
-                // patients
-                const patientRows = JSON.parse(JSON.stringify(row[0]));
-                // parsing the gene_list in order to get an array of genes.
-                let value = JSON.parse(JSON.stringify(row[1]));
-                value = value.map((val) => val.gene_id);
+        // copy_number_variation data array.
+        const data = [];
+        // getting the unique list of patients and genes.
+        const patients = await distinctPatients(datasetParam);
+        const genes = await geneList(paramGene.split(','));
 
-                // grabbing the copy_number_variation data for the genes.
-                copyNumberVariationQuery
-                    .where('model_information.dataset_id', datasetParam)
-                    .whereIn('copy_number_variation.gene_id', value)
-                    .orderBy('genes.gene_id')
-                    .orderBy('sequencing.sequencing_uid')
-                    .then((copy_number_variation_data) => {
-                        let gene_id = '';
-                        let i = 0;
-                        const usersRows = JSON.parse(JSON.stringify(copy_number_variation_data));
-                        usersRows.forEach((element) => {
-                            if (element.gene_name !== gene_id) {
-                                gene_id = element.gene_name;
-                                data[i] = {};
-                                data[i].gene_id = element.gene_name;
-                                data[i][element.patient] = element.value;
-                                i++;
-                            } else {
-                                data[i - 1][element.patient] = element.value;
-                            }
-                        });
+        // patients and genes array.
+        const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
+        const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
 
-                        // array of all the patients belonging to a particular dataset.
-                        const patient = patientRows.map((element) => element.patient);
-                        data.push(patient);
 
-                        // sending the response.
-                        response.send(data);
-                    });
-            })
-            .catch((error) => response.status(500).json({
-                status: 'could not find data from copy_number_variation table, getcopy_number_variationBasedPerDatasetBasedOnDrugs',
-                data: error,
-            }));
+        // grabbing the copy_number_variation data for the genes.
+        const copyNumberVariationData = await copyNumberVariationQuery
+            .where('model_information.dataset_id', datasetParam)
+            .whereIn('copy_number_variation.gene_id', genesArray)
+            .orderBy('genes.gene_id')
+            .orderBy('sequencing.sequencing_uid');
+
+        // transforming the data into the required format.
+        let gene_id = '';
+        let i = 0;
+        const usersRows = JSON.parse(JSON.stringify(copyNumberVariationData));
+        usersRows.forEach((element) => {
+            if (element.gene_name !== gene_id) {
+                gene_id = element.gene_name;
+                data[i] = {};
+                data[i].gene_id = element.gene_name;
+                data[i][element.patient] = element.value;
+                i++;
+            } else {
+                data[i - 1][element.patient] = element.value;
+            }
+        });
+
+        // array of all the patients belonging to a particular dataset.
+        data.push(patientsArray);
+
+        // sending the response.
+        response.send(data);
     } else {
         response.status(500).json({
             status: 'Could not find data from copy number table, getCopyNumberVariationBasedPerDatasetBasedOnGenes',
