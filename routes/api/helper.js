@@ -6,7 +6,7 @@ const knex = require('../../db/knex1');
  * @returns {Object} - knex query to grab an array of distinct patients
  * from a particular dataset.
  */
-const distinctPatients = (datasetId) => knex()
+const distinctPatients = (datasetId) => knex
     .distinct('patients.patient')
     .from('patients')
     .where({
