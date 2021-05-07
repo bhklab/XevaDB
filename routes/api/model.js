@@ -6,6 +6,7 @@ const { getAllowedDatasetIds } = require('./util');
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - list of the models.
  */
 const getModels = (request, response) => {
@@ -41,6 +42,7 @@ const getModels = (request, response) => {
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - list of the models with the dataset, tissue and patient object/information.
  */
 const getModelsDetailedInformation = function (request, response) {
@@ -88,6 +90,7 @@ const getModelsDetailedInformation = function (request, response) {
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - model count grouped by tissue type.
  */
 const getModelsGroupedByTissueType = (request, response) => {
@@ -118,6 +121,7 @@ const getModelsGroupedByTissueType = (request, response) => {
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - model count grouped by drug class.
  */
 const getModelsGroupedByDrugClass = (request, response) => {

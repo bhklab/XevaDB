@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
+const { distinctPatientsQuery } = require('./helper');
 
 
 /**
@@ -18,18 +19,6 @@ const getControl = (datasetId) => {
     }
     return control;
 };
-
-
-/**
- * @param {string} datasetParam - id of the dataset to be selected.
- * @returns {Object} - returns an object of mysql query builder to get the unique patient list.
- */
-const distinctPatientsQuery = (datasetParam) => knex
-    .distinct('patients.patient')
-    .from('patients')
-    .where({
-        'patients.dataset_id': datasetParam,
-    });
 
 
 /**

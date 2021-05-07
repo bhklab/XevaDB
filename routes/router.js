@@ -81,7 +81,7 @@ router.get('/v1/rnaseq/:dataset', utils.isValidId, verifytoken, rnasequencing.ge
 router.get('/v1/tissues', tissues.getTissues);
 
 // APIs related to drug screening table.
-router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreening);
+router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreeningDataBasedOnDrugAndPatient);
 
 
 module.exports = router;

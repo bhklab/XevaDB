@@ -2,10 +2,12 @@
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
-const { distinctPatients, distinctDrugs } = require('./helper');
+const { distinctPatientsQuery, distinctDrugsQuery } = require('./helper');
 
 
-// query to get the data from model information table.
+/**
+ * @returns {Object} - knex query to fetch the data from model information table.
+ */
 const getModelInformationData = () => knex.select()
     .from('model_information as mi')
     .leftJoin('datasets as d', 'd.dataset_id', 'mi.dataset_id')
@@ -18,6 +20,7 @@ const getModelInformationData = () => knex.select()
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {number} request.body.label - dataset id.
  * @returns {Object} - returns a list of drugs and patients based on the dataset.
  */
 const postDrugsandPatientsBasedOnDataset = (request, response) => {
@@ -27,7 +30,7 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
     if (isVerified(response, request.body.label)) {
         const drugs = knex
             .select('drugs.drug_name as drug', 'drugs.drug_id as drug_id')
-            .from(distinctDrugs(dataset).as('distinct_drugs'))
+            .from(distinctDrugsQuery(dataset).as('distinct_drugs'))
             .leftJoin(
                 'drugs',
                 'distinct_drugs.drug_id',
@@ -36,7 +39,7 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
 
         const patients = knex
             .select('patients.patient as patient', 'patients.patient_id as patient_id')
-            .from(distinctPatients(dataset).as('distinct_patients'))
+            .from(distinctPatientsQuery(dataset).as('distinct_patients'))
             .leftJoin(
                 'patients',
                 'distinct_patients.patient_id',
@@ -64,6 +67,7 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - model information data.
  */
 const getModelInformation = async (request, response) => {
@@ -94,6 +98,7 @@ const getModelInformation = async (request, response) => {
  * @param {Object} request - request object.
  * @param {string} request.params.patient - patient id.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - model information data based on the patient id.
  */
 const getModelInformationBasedOnPatient = (request, response) => {

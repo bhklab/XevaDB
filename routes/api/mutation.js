@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
-const { distinctPatients, geneList } = require('./helper');
+const { distinctPatientsQuery, geneListQuery } = require('./helper');
 
 
 // mutation data.
@@ -66,12 +66,13 @@ const transformData = (input) => {
  * @returns {Object} - mutation data based on the dataset id.
  */
 const getMutationDataBasedOnDataset = async (request, response) => {
+    // dataset param.
     const datasetParam = request.params.dataset;
 
     if (isVerified(response, datasetParam)) {
         try {
             // patients.
-            const patients = await distinctPatients(datasetParam);
+            const patients = await distinctPatientsQuery(datasetParam);
             const patientRows = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
 
             // grabbing the mutation data based on patients and limiting genes to 1-30.
@@ -111,14 +112,15 @@ const getMutationDataBasedOnDataset = async (request, response) => {
  *  dataset and drug query parameters.
  */
 const getMutationDataBasedOnDatasetAndGenes = async (request, response) => {
-    const paramGene = request.query.genes;
+    // gene and dataset param.
+    const geneParam = request.query.genes;
     const datasetParam = request.query.dataset;
 
     if (isVerified(response, datasetParam)) {
         try {
             // getting the unique list of patients and genes.
-            const patients = await distinctPatients(datasetParam);
-            const genes = await geneList(paramGene.split(','));
+            const patients = await distinctPatientsQuery(datasetParam);
+            const genes = await geneListQuery(geneParam.split(','));
 
             // patients and genes array.
             const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);

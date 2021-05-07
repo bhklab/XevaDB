@@ -6,6 +6,7 @@ const { getAllowedDatasetIds } = require('./util');
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - list of the patients.
  */
 const getPatients = (request, response) => {

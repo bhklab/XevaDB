@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
-const { distinctPatients, geneList } = require('./helper');
+const { distinctPatientsQuery, geneListQuery } = require('./helper');
 
 
 // copy number variation query.
@@ -118,8 +118,8 @@ const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) =
     if (isVerified(response, datasetParam)) {
         try {
             // getting the unique list of patients and genes.
-            const patients = await distinctPatients(datasetParam);
-            const genes = await geneList(geneParam.split(','));
+            const patients = await distinctPatientsQuery(datasetParam);
+            const genes = await geneListQuery(geneParam.split(','));
 
             // patients and genes array.
             const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);

@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
-const { distinctPatients, geneList } = require('./helper');
+const { distinctPatientsQuery, geneListQuery } = require('./helper');
 
 
 // rna sequencing data.
@@ -66,6 +66,7 @@ const transformData = (input) => {
  * @returns {Object} - rna sequencing data based on the dataset id.
  */
 const getRnaSeqDataBasedOnDataset = async (request, response) => {
+    // dataset param.
     const datasetParam = request.params.dataset;
 
     if (isVerified(response, datasetParam)) {
@@ -105,14 +106,15 @@ const getRnaSeqDataBasedOnDataset = async (request, response) => {
  *  dataset and drug query parameters.
  */
 const getRnaSeqBasedOnDatasetAndGenes = async (request, response) => {
-    const paramGene = request.query.genes;
+    // dataset and gene query parameters.
+    const geneParam = request.query.genes;
     const datasetParam = request.query.dataset;
 
     if (isVerified(response, datasetParam)) {
         try {
             // getting the unique list of patients and genes.
-            const patients = await distinctPatients(datasetParam);
-            const genes = await geneList(paramGene.split(','));
+            const patients = await distinctPatientsQuery(datasetParam);
+            const genes = await geneListQuery(geneParam.split(','));
 
             // patients and genes array.
             const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);

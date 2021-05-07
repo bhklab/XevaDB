@@ -6,7 +6,7 @@ const knex = require('../../db/knex1');
  * @returns {Object} - knex query to grab an array of distinct patients
  * from a particular dataset.
  */
-const distinctPatients = (datasetId) => knex
+const distinctPatientsQuery = (datasetId) => knex
     .distinct('patients.patient', 'patients.patient_id')
     .from('patients')
     .where({
@@ -19,7 +19,7 @@ const distinctPatients = (datasetId) => knex
  * @returns {Array} - an array of gene ids based on the genes array param.
  */
 // to select the gene ids based on the gene names.
-const geneList = (genes) => knex.select('gene_id')
+const geneListQuery = (genes) => knex.select('gene_id')
     .from('genes')
     .whereIn('gene_name', genes);
 
@@ -28,7 +28,7 @@ const geneList = (genes) => knex.select('gene_id')
  * @param {number} dataset - dataset id.
  * @returns {Array} - an array of the distinct drug ids based on the dataset id.
  */
-const distinctDrugs = (dataset) => (
+const distinctDrugsQuery = (dataset) => (
     knex.distinct('drug_id')
         .from('model_information')
         .where({
@@ -38,7 +38,7 @@ const distinctDrugs = (dataset) => (
 
 
 module.exports = {
-    distinctPatients,
-    geneList,
-    distinctDrugs,
+    distinctPatientsQuery,
+    geneListQuery,
+    distinctDrugsQuery,
 };
