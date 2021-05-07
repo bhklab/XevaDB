@@ -2,37 +2,17 @@
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
+const { distinctPatients, distinctDrugs } = require('./helper');
+
 
 // query to get the data from model information table.
-const getModelInformationData = knex.select()
+const getModelInformationData = () => knex.select()
     .from('model_information as mi')
     .leftJoin('datasets as d', 'd.dataset_id', 'mi.dataset_id')
     .leftJoin('models as m', 'm.model_id', 'mi.model_id')
     .leftJoin('patients as p', 'p.patient_id', 'mi.patient_id')
     .leftJoin('drugs as dg', 'dg.drug_id', 'mi.drug_id')
     .leftJoin('tissues as t', 't.tissue_id', 'mi.tissue_id');
-
-
-// query to grab the distinct drug ids based on the dataset id.
-const distinctDrug = (dataset) => (
-    knex.distinct('drug_id')
-        .from('model_information')
-        .where({
-            dataset_id: dataset,
-        })
-        .as('distinct_drugs')
-);
-
-
-// query to grab the distinct patient ids based on the dataset id.
-const distinctPatient = (dataset) => (
-    knex.distinct('patient_id')
-        .from('patients')
-        .where({
-            dataset_id: dataset,
-        })
-        .as('distinct_patients')
-);
 
 
 /**
@@ -47,7 +27,7 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
     if (isVerified(response, request.body.label)) {
         const drugs = knex
             .select('drugs.drug_name as drug', 'drugs.drug_id as drug_id')
-            .from(distinctDrug(dataset))
+            .from(distinctDrugs(dataset).as('distinct_drugs'))
             .leftJoin(
                 'drugs',
                 'distinct_drugs.drug_id',
@@ -56,7 +36,7 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
 
         const patients = knex
             .select('patients.patient as patient', 'patients.patient_id as patient_id')
-            .from(distinctPatient(dataset))
+            .from(distinctPatients(dataset).as('distinct_patients'))
             .leftJoin(
                 'patients',
                 'distinct_patients.patient_id',
@@ -86,21 +66,27 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
  * @param {Object} response - response object with authorization header.
  * @returns {Object} - model information data.
  */
-const getModelInformation = (request, response) => {
+const getModelInformation = async (request, response) => {
     // user variable.
     const { user } = response.locals;
 
-    // query
-    getModelInformationData
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
-        .then((data) => response.status(200).json({
+    // model information data query
+    try {
+        // model information data.
+        const modelInformationData = await getModelInformationData()
+            .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+            .orderBy('d.dataset_id');
+        // sending the response back.
+        response.status(200).json({
             status: 'success',
-            data,
-        }))
-        .catch((error) => response.status(500).json({
+            data: modelInformationData,
+        });
+    } catch (error) {
+        response.status(500).json({
             status: 'could not find data from model information table, getModelInformation',
             data: error,
-        }));
+        });
+    }
 };
 
 
@@ -117,7 +103,7 @@ const getModelInformationBasedOnPatient = (request, response) => {
     const patientId = request.params.patient;
 
     // query to grab the data based on the patient id.
-    getModelInformationData
+    getModelInformationData()
         .where('p.patient_id', patientId)
         .andWhereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => response.status(200).json({
