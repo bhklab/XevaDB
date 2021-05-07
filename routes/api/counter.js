@@ -1,6 +1,7 @@
 const knex = require('../../db/knex1');
 const { getAllowedDatasetIds } = require('./util');
 
+
 // count distinct tissues, drugs, datasets, models and patients.
 const tissues = (datasetArray) => knex.queryBuilder().countDistinct('tissue_id as tissues')
     .from('model_information')
@@ -26,6 +27,7 @@ const datasets = (datasetArray) => knex('datasets')
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - get the total count for the different data types ie tissue, model, drugs etc.
  */
 const getCounter = (request, response) => {

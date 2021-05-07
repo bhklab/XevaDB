@@ -38,7 +38,10 @@ const copyNumberVariationQuery = () => knex
     );
 
 
-// transforming the input data.
+/**
+ * @param {Array} input - an array of the input data.
+ * @returns {Array} - an array of the transformed data.
+ */
 const transformData = (input) => {
     // array to store mutation data .
     const data = [];
@@ -109,14 +112,14 @@ const getCopyNumberVariationDataBasedOnDataset = async (request, response) => {
  *  dataset and drug query parameters.
  */
 const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) => {
-    const paramGene = request.query.genes;
+    const geneParam = request.query.genes;
     const datasetParam = request.query.dataset;
 
     if (isVerified(response, datasetParam)) {
         try {
             // getting the unique list of patients and genes.
             const patients = await distinctPatients(datasetParam);
-            const genes = await geneList(paramGene.split(','));
+            const genes = await geneList(geneParam.split(','));
 
             // patients and genes array.
             const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);

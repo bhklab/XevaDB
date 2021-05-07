@@ -2,8 +2,16 @@
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 
+
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @param {string} request.query.drug - drug query parameter.
+ * @param {string} request.query.patient - patient query parameter.
+ * @returns {Object} - list of the datasets.
+ */
 // this will get the drug screening data based on drug and patient id.
-const getDrugScreening = (request, response) => {
+const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
     let { drug } = request.query;
     const { patient } = request.query;
 
@@ -100,5 +108,5 @@ const getDrugScreening = (request, response) => {
 
 
 module.exports = {
-    getDrugScreening,
+    getDrugScreeningDataBasedOnDrugAndPatient,
 };

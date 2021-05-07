@@ -14,8 +14,8 @@ const getBatchResponseStatsBasedOnDrugAndPatient = (request, response) => {
     // grabbing the drug parameters and dataset parameters.
     // this will remove the spaces in the drug name and replace
     // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
-    const paramDrug = request.query.drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
-    const paramPatient = request.query.patient;
+    const drugParam = request.query.drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
+    const patientParam = request.query.patient;
 
     // grabs the batch id based on the patient id and drug param passed.
     const batchId = knex.select('batch_id', 'model_information.dataset_id')
@@ -35,8 +35,8 @@ const getBatchResponseStatsBasedOnDrugAndPatient = (request, response) => {
             'batch_information.model_id',
             'model_information.model_id',
         )
-        .where('patients.patient', paramPatient)
-        .andWhere('drugs.drug_name', paramDrug);
+        .where('patients.patient', patientParam)
+        .andWhere('drugs.drug_name', drugParam);
 
     batchId.then((batch) => {
         // grab the dataset id.

@@ -32,6 +32,7 @@ const transformDatasetDetail = (data) => {
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - list of the datasets.
  */
 const getDatasets = (request, response) => {
@@ -64,6 +65,7 @@ const getDatasets = (request, response) => {
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - list of the datasets with detailed information including
  * patient information, tissue information, model information.
  */
