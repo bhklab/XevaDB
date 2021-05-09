@@ -1,6 +1,14 @@
 const knex = require('../../db/knex1');
+const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
 
+
+const datasetDetailQuery = () => knex.select()
+    .from('datasets as d')
+    .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'dt.dataset_id')
+    .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id')
+    .leftJoin('patients as p', 'p.dataset_id', 'd.dataset_id')
+    .leftJoin('models as m', 'm.patient_id', 'p.patient_id');
 
 /**
  * @param {Object} data - input data.
@@ -74,12 +82,7 @@ const getDatasetsDetailedInformation = (request, response) => {
     const { user } = response.locals;
 
     // select the number of patients and models grouped by dataset.
-    knex.select()
-        .from('datasets as d')
-        .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'dt.dataset_id')
-        .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id')
-        .leftJoin('patients as p', 'p.dataset_id', 'd.dataset_id')
-        .leftJoin('models as m', 'm.patient_id', 'p.patient_id')
+    datasetDetailQuery()
         .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => Object.values(transformDatasetDetail(data)))
         .then((datasets) => response.status(200).json({
@@ -93,7 +96,36 @@ const getDatasetsDetailedInformation = (request, response) => {
 };
 
 
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
+ * @returns {Object} - list of the datasets with detailed information including
+ * patient information, tissue information, model information.
+ */
+const getDatasetDetailedInformationBasedOnDatasetId = (request, response) => {
+    // dataset param.
+    const datasetParam = request.params.dataset;
+
+    if (isVerified(response, datasetParam)) {
+        // select the number of patients and models grouped by dataset.
+        datasetDetailQuery()
+            .where('d.dataset_id', datasetParam)
+            .then((data) => Object.values(transformDatasetDetail(data)))
+            .then((datasets) => response.status(200).json({
+                status: 'success',
+                datasets,
+            }))
+            .catch((error) => response.status(500).json({
+                status: 'could not find data from getDatasetDetailedInformationBasedOnDatasetId',
+                data: error,
+            }));
+    }
+};
+
+
 module.exports = {
     getDatasets,
     getDatasetsDetailedInformation,
+    getDatasetDetailedInformationBasedOnDatasetId,
 };
