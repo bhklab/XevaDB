@@ -49,6 +49,7 @@ const PatientTable = (props) => {
                 columns={columns}
                 className="-highlight"
                 defaultPageSize={10}
+                defaultSorted={[{ id: 'patient' }]}
                 filterable
             />
         </TableWrapper>

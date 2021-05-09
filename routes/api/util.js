@@ -17,7 +17,7 @@ const isVerified = (response, datasetId) => (
  * checks the validity of the param id.
  */
 const isValidId = (request, response, next) => (
-    Number(request.params.dataset || request.params.patient)
+    Number(request.params.dataset || request.params.patient || request.params.model)
         ? next()
         : next(new Error('Invalid Id, Please enter a valid integer id.'))
 );
