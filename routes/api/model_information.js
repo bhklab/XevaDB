@@ -101,15 +101,15 @@ const getModelInformation = async (request, response) => {
  * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - model information data based on the patient id.
  */
-const getModelInformationBasedOnPatient = (request, response) => {
+const getModelInformationBasedOnModelId = (request, response) => {
     // user variable.
     const { user } = response.locals;
-    // patient param.
-    const patientId = request.params.patient;
+    // model param.
+    const modelParam = request.params.model;
 
     // query to grab the data based on the patient id.
     getModelInformationData()
-        .where('p.patient_id', patientId)
+        .where('m.model_id', modelParam)
         .andWhereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => response.status(200).json({
             status: 'success',
@@ -125,5 +125,5 @@ const getModelInformationBasedOnPatient = (request, response) => {
 module.exports = {
     postDrugsandPatientsBasedOnDataset,
     getModelInformation,
-    getModelInformationBasedOnPatient,
+    getModelInformationBasedOnModelId,
 };
