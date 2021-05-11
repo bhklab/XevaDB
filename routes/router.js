@@ -73,6 +73,8 @@ router.get('/v1/mutation/:dataset', utils.isValidId, verifytoken, mutation.getMu
 
 // APIs related to patients table.
 router.get('/v1/patients', verifytoken, patients.getPatients);
+router.get('/v1/patients/details', verifytoken, patients.getPatientsDetailedInformation);
+router.get('/v1/patients/details/:patient', utils.isValidId, verifytoken, patients.getPatientDetailedInformationBasedOnPatientId);
 
 // APIs related to rnasequencing table.
 router.get('/v1/rnaseq', verifytoken, rnasequencing.getRnaSeqBasedOnDatasetAndGenes);

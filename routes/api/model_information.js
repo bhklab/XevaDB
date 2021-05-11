@@ -8,7 +8,7 @@ const { distinctPatientsQuery, distinctDrugsQuery } = require('./helper');
 /**
  * @returns {Object} - knex query to fetch the data from model information table.
  */
-const getModelInformationData = () => knex.select()
+const getModelInformationDataQuery = () => knex.select()
     .from('model_information as mi')
     .leftJoin('datasets as d', 'd.dataset_id', 'mi.dataset_id')
     .leftJoin('models as m', 'm.model_id', 'mi.model_id')
@@ -77,7 +77,7 @@ const getModelInformation = async (request, response) => {
     // model information data query
     try {
         // model information data.
-        const modelInformationData = await getModelInformationData()
+        const modelInformationData = await getModelInformationDataQuery()
             .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
             .orderBy('d.dataset_id');
         // sending the response back.
@@ -108,7 +108,7 @@ const getModelInformationBasedOnModelId = (request, response) => {
     const modelParam = request.params.model;
 
     // query to grab the data based on the patient id.
-    getModelInformationData()
+    getModelInformationDataQuery()
         .where('m.model_id', modelParam)
         .andWhereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => response.status(200).json({
@@ -126,4 +126,5 @@ module.exports = {
     postDrugsandPatientsBasedOnDataset,
     getModelInformation,
     getModelInformationBasedOnModelId,
+    getModelInformationDataQuery,
 };
