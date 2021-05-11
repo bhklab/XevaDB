@@ -26,6 +26,14 @@ const GlobalStyles = createGlobalStyle`
     position: relative;
   }
 
+  a {
+    text-decoration: none;
+    font-family: 'Raleway', sans-serif;
+    &:hover {
+      cursor: pointer !important;
+    }
+  }
+
   .wrapper {
     display: flex;
     flex-direction: column;
