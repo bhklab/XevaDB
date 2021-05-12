@@ -11,7 +11,7 @@ import HeatMapData from './Plots/HeatMap/HeatMapData';
 import Home from './Home/Home';
 import Login from './Login/Login';
 import OncoprintData from './Plots/Oncoprint/OncoprintData';
-import Patient from './IndividualPages/Patient';
+import Patient from './IndividualPages/Patient/Patient';
 import PatientSummary from './SummaryPages/PatientSummary/PatientSummary';
 import Search from './Search/Search';
 import SearchResult from './Search/SearchResult';

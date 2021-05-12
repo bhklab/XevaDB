@@ -10,6 +10,12 @@ const TableWrapper = styled.div`
         box-sizing: border-box;
     }
 
+    .rt-td:hover {
+        a {
+            color: ${colors.pink_header} !important;
+        }
+    }
+
     .ReactTable .rt-table {
         align-items: stretch;
         width: 100%;
@@ -22,7 +28,7 @@ const TableWrapper = styled.div`
     }
 
     .ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
-        background: ${colors.fade_blue}
+        background: ${colors.white_red}
     }
 
     .ReactTable .rt-thead {
