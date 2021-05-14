@@ -20,9 +20,9 @@ const defaultDimensions = {
 };
 
 // this will create the svg element for the chart
-const createSVGBody = (margin, dimensions) => {
+const createSVGBody = (margin, dimensions) => (
     // make the svg element
-    return d3.select('#timechart')
+    d3.select('#timechart')
         .append('svg')
         .attr('id', 'timechartplot')
         .attr('xmlns', 'http://www.w3.org/2000/svg')
@@ -30,8 +30,8 @@ const createSVGBody = (margin, dimensions) => {
         .attr('width', dimensions.width + margin.left + margin.right)
         .attr('height', dimensions.height + margin.top + margin.bottom)
         .append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
-};
+        .attr('transform', `translate(${margin.left},${margin.top})`)
+);
 
 // this will create the outer triangle for the chart.
 const createReactangle = (svg, height, width, x, y, color = 'black', stroke = 'black', strokeWidth = 1) => {
@@ -72,7 +72,7 @@ const createText = (svg, margin, dimensions) => {
 
 // this function will create the circles in chart.
 const createCircles = (svg, x, y, color) => {
-    for (let i = 1; i < 11; i++) {
+    for (let i = 1; i < 11; i += 1) {
         svg.append('circle')
             .attr('cx', x * i)
             .attr('cy', y)
@@ -80,7 +80,6 @@ const createCircles = (svg, x, y, color) => {
             .attr('stroke', 'black')
             .attr('fill', color);
     }
-
 };
 
 const createChart = (data, margin, dimensions, maxTime) => {

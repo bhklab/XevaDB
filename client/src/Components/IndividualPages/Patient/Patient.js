@@ -5,6 +5,7 @@ import Spinner from '../../Utils/Spinner';
 import GlobalStyles from '../../../GlobalStyles';
 import Footer from '../../Footer/Footer';
 import PatientTable from './PatientTable';
+import TreeDiagram from '../../Plots/TreeDiagram';
 
 // header constant.
 const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
@@ -64,7 +65,7 @@ const Patient = (props) => {
                     loading ? <Spinner loading={loading} /> : (
                         <>
                             <h1>
-                                Patient:
+                                Patient =
                                 {' '}
                                 <span style={{ color: `${colors.pink_header}` }}>
                                     {patientData[0].name}
@@ -73,6 +74,7 @@ const Patient = (props) => {
                             <div className="summary-table">
                                 <PatientTable patientData={patientData} />
                             </div>
+                            <TreeDiagram />
                         </>
                     )
                 }
