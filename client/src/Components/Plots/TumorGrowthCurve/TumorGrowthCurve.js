@@ -433,7 +433,7 @@ const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) 
             meanDots.append('circle')
                 .attr('id', `mean-dot-${expTypes[n]}-${batch}`)
                 .attr('class', `mean-dot ${batch}`)
-                .attr('r', 4)
+                .attr('r', 5)
                 .attr('fill', () => {
                     if (expTypes[n] === 'control') {
                         return `${colors.pink_header}`;
@@ -463,7 +463,7 @@ const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) 
                     }
                     return `${colors.moderate_blue}`;
                 })
-                .attr('stroke-width', 2);
+                .attr('stroke-width', 3.5);
         }
 
         // plot error bars

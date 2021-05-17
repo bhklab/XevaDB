@@ -92,6 +92,18 @@ const appendBarText = (svg, data, xScale, yScale) => {
     });
 };
 
+const appendYAxisLabel = (svg, height, left) => {
+    svg.append('text')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('font-family', 'sans-serif')
+        .attr('transform', `translate(${-left / 2}, ${height / 3})rotate(90)`)
+        .attr('font-size', '14px')
+        .style('text-anchor', 'start')
+        .attr('fill', 'black')
+        .text('Number of models');
+};
+
 const BarPlot = (props) => {
     // getting the prop data.
     const { dimensions, margin } = props;
@@ -132,6 +144,9 @@ const BarPlot = (props) => {
 
         // create bars.
         createBars(svg, data, xScale, yScale, height, color);
+
+        // append y-axis test/label.
+        appendYAxisLabel(svg, height, left);
     });
 
     return (
