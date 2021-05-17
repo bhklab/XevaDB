@@ -37,14 +37,16 @@ const createTree = (data, { height, width }) => {
     root.dx = 10;
     root.dy = width / (root.height + 1);
     // return the tree.
-    return d3.tree().nodeSize([root.dx, root.dy]).size([height, width])(root);
+    return d3.tree()
+        .nodeSize([root.dx, root.dy])
+        .size([height, width])(root);
 };
 
 // create the links for the tree.
 const createLinks = (svg, root) => {
     svg.append('g')
         .attr('fill', 'none')
-        .attr('stroke', '#555')
+        .attr('stroke', `${colors.pink_header}`)
         .attr('stroke-opacity', 0.4)
         .attr('stroke-width', 1.5)
         .selectAll('path')
@@ -69,7 +71,7 @@ const createNodes = (svg, root) => {
 
 const createCircles = (node) => {
     node.append('circle')
-        .attr('fill', (d) => (d.children ? '#555' : '#999'))
+        .attr('fill', (d) => (d.children ? `${colors.pink_header}` : `${colors.light_pink_header}`))
         .attr('r', 4.0);
 };
 
@@ -79,6 +81,7 @@ const appendText = (node) => {
         .attr('x', (d) => (d.children ? -10 : 10))
         .attr('text-anchor', (d) => (d.children ? 'end' : 'start'))
         .text((d) => d.data.data.name)
+        .attr('fill', `${colors.blue_header}`)
         .clone(true)
         .lower()
         .attr('stroke', 'white');

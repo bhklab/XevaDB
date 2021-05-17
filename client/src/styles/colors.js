@@ -11,6 +11,7 @@ export default {
     jet_black: '#343434',
     soft_black: '#414a4c',
     pink_header: '#cc8168',
+    light_pink_header: '#f0c6b9',
     blue_header: '#3e405a',
     fade_blue: '#ebebf5',
     white_smoke: '#F5F5F5',
