@@ -97,7 +97,7 @@ const createChart = (data, margin, dimensions, maxTime) => {
     createCircles(svg, margin.left * 2, dimensions.height * 0.25 + margin.top, `${colors.amber_gradient}`);
 };
 
-const TimeChart = (props) => {
+const DoseCurve = (props) => {
     const { data } = '';
     const margin = props.margin || defaultMargin;
     const dimensions = props.dimensions || defaultDimensions;
@@ -117,7 +117,7 @@ const TimeChart = (props) => {
     );
 };
 
-TimeChart.propTypes = {
+DoseCurve.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     margin: PropTypes.shape({
         top: PropTypes.number,
@@ -132,4 +132,4 @@ TimeChart.propTypes = {
     maxTime: PropTypes.number.isRequired,
 };
 
-export default TimeChart;
+export default DoseCurve;

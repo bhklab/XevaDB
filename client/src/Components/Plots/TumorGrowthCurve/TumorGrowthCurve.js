@@ -12,7 +12,7 @@ import GlobalStyles from '../../../GlobalStyles';
 import StatTable from '../../ResponseStat/ModelResponseStatTable';
 import colors from '../../../styles/colors';
 import ExportPng from '../../Utils/ExportPng';
-import DoseChart from '../DoseChart';
+import DoseCurve from '../DoseChart';
 
 // this will initialize a tooltip.
 const initializeToolTop = () => d3.select('.wrapper')
@@ -859,7 +859,9 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
 
 // main function to plot the growth curve.
 const TumorGrowthCurve = (props) => {
-    const { patientParam, drugParam, data } = props;
+    const {
+        patientParam, drugParam, data, datasetParam,
+    } = props;
     const plotId = 'plot';
     const componentRef = useRef();
     // calling function to grab the min max values.
@@ -895,7 +897,7 @@ const TumorGrowthCurve = (props) => {
                     <ExportPng componentRef={componentRef} fileName={`DrugId = ${drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}, PatientId = ${patientParam}`} />
                     <div id="svg-curve" ref={componentRef} />
                 </div>
-                <DoseChart data={data} maxTime={minmax.maxTime} />
+                {Number(datasetParam) === 7 ? <DoseCurve data={data} maxTime={minmax.maxTime} /> : ''}
                 <StatTable patientParam={patientParam} drugParam={drugParam} />
                 <div className="curve-wrapper" style={{ marginTop: '20px', padding: '10px 0px' }}>
                     <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>

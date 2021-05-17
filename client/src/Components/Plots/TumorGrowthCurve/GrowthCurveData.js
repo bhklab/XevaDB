@@ -25,6 +25,7 @@ class GrowthCurveData extends React.Component {
         return ({
             patientParam: params.get('patient'),
             drugParam: params.get('drug'),
+            datasetParam: params.get('dataset'),
         });
     }
 
@@ -96,12 +97,15 @@ class GrowthCurveData extends React.Component {
     }
 
     render() {
-        const { patientParam, drugParam, dataFormatted } = this.state;
+        const {
+            patientParam, drugParam, dataFormatted, datasetParam,
+        } = this.state;
         return (
             <div>
                 <TumorGrowthCurve
                     patientParam={patientParam}
                     drugParam={drugParam}
+                    datasetParam={datasetParam}
                     data={dataFormatted}
                 />
             </div>

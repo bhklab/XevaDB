@@ -62,8 +62,6 @@ export const StyleTable = styled.div`
         overflow: scroll;
     }
 
-    tr: ${(props) => console.log(props)}
-
     tr:hover {
         background-color: ${colors.white_smoke};
     }

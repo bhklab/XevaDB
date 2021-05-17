@@ -151,7 +151,7 @@ class HeatMap extends Component {
                 drugIndex++;
             }
             if ((d.length === 2 && d !== 'NA') || Number(d)) {
-                return `/curve?patient=${patientUse[i]}&drug=${drugUse}`;
+                return `/curve?patient=${patientUse[i]}&drug=${drugUse}&dataset=${dataset}`;
             }
         }
 
@@ -963,6 +963,5 @@ HeatMap.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     className: PropTypes.string.isRequired,
 };
-
 
 export default HeatMap;
