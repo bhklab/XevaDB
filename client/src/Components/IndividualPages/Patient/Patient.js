@@ -33,21 +33,30 @@ const transformData = (data) => {
 // transforming the patient data for the tree diagram.
 const transformTreeDiagramData = (data) => {
     // transforming data.
-    const transformedData = data.map((element) => (
-        {
-            name: element.model.name,
-            parent: element.name,
+    let transformedData = '';
+    // making hirerichal data.
+    data.forEach((element, i) => {
+        if (i === 0) {
+            transformedData = {
+                name: element.name,
+                dataset: element.dataset.name,
+                children: [
+                    {
+                        name: element.drug.name,
+                        children: [{ name: element.model.name }],
+                    },
+                ],
+            };
+        } else {
+            transformedData.children.push(
+                {
+                    name: element.drug.name,
+                    children: [{ name: element.model.name }],
+                },
+            );
         }
-    ));
-    // pushing patient id.
-    transformedData.push({ name: data[0].name, parent: '' });
-
-    // d3 function to create the root of the tree (data).
-    const root = d3.stratify()
-        .id((d) => d.name)
-        .parentId((d) => d.parent)(transformedData);
-
-    return root;
+    });
+    return transformedData;
 };
 
 /**

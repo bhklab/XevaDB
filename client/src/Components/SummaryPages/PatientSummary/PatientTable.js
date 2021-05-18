@@ -10,22 +10,22 @@ const PatientTable = (props) => {
 
     const columns = [
         {
-            Header: 'Patient',
-            accessor: 'patient',
-            minWidth: 160,
-            Cell: (row) => (
-                <Link to={`/patient/${row.original.patient_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
-                    {row.original.patient}
-                </Link>
-            ),
-        },
-        {
             Header: 'Dataset',
             accessor: 'dataset',
             minWidth: 160,
             Cell: (row) => (
                 <Link to={`/dataset/${row.original.dataset_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
                     {row.original.dataset}
+                </Link>
+            ),
+        },
+        {
+            Header: 'Patient',
+            accessor: 'patient',
+            minWidth: 160,
+            Cell: (row) => (
+                <Link to={`/patient/${row.original.patient_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                    {row.original.patient}
                 </Link>
             ),
         },

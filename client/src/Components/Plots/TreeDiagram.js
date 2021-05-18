@@ -6,15 +6,15 @@ import colors from '../../styles/colors';
 // creating the default margin in case not passed as props.
 const defaultMargin = {
     top: 50,
-    right: 200,
+    right: 300,
     bottom: 50,
     left: 100,
 };
 
 // creating the default dimensions in case not passed as props.
 const defaultDimensions = {
-    width: 650 - defaultMargin.left - defaultMargin.right,
-    height: 500 - defaultMargin.top - defaultMargin.bottom,
+    width: 1100 - defaultMargin.left - defaultMargin.right,
+    height: 600 - defaultMargin.top - defaultMargin.bottom,
 };
 
 // this will create the svg element for the chart
@@ -77,10 +77,11 @@ const createCircles = (node) => {
 
 const appendText = (node) => {
     node.append('text')
-        .attr('dy', '0.31em')
+        .attr('dy', '0.28em')
         .attr('x', (d) => (d.children ? -10 : 10))
         .attr('text-anchor', (d) => (d.children ? 'end' : 'start'))
-        .text((d) => d.data.data.name)
+        .attr('font-size', '.75em')
+        .text((d) => d.data.name)
         .attr('fill', `${colors.blue_header}`)
         .clone(true)
         .lower()
@@ -97,8 +98,9 @@ const createTreeDiagram = (margin, dimensions, data) => {
     createLinks(svg, tree);
     // create nodes.
     const node = createNodes(svg, tree);
-    // append text and create circles.
+    // create circles.
     createCircles(node);
+    // appending the drug text.
     appendText(node);
 };
 
@@ -118,10 +120,17 @@ const TreeDiagram = (props) => {
     return (
         <div className="curve-wrapper">
             <h1>
+                Dataset =
+                {' '}
+                <span style={{ color: `${colors.pink_header}` }}>
+                    {data.dataset}
+                </span>
+                {' '}
+                and
                 Patient =
                 {' '}
                 <span style={{ color: `${colors.pink_header}` }}>
-                    {data.data.name}
+                    {data.name}
                 </span>
             </h1>
             <div id="treediagram" />
