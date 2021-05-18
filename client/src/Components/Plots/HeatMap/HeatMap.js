@@ -78,8 +78,6 @@ class HeatMap extends Component {
             .style('border-width', '1px')
             .style('border-radius', '5px')
             .style('padding', '5px')
-            // .style('min-width', '150px')
-            // .style('min-height', '50px')
             .attr('top', 10)
             .attr('left', 20);
 

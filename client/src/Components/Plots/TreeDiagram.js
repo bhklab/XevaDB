@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 import colors from '../../styles/colors';
+import createToolTip from '../Utils/ToolTip';
 
 // creating the default margin in case not passed as props.
 const defaultMargin = {
@@ -15,6 +16,42 @@ const defaultMargin = {
 const defaultDimensions = {
     width: 1100 - defaultMargin.left - defaultMargin.right,
     height: 600 - defaultMargin.top - defaultMargin.bottom,
+};
+
+// mouse over event for the tree diagram text.
+const textMouseOverEvent = (data) => {
+    // tooltip data only if data height is zero (it's a leaf node).
+    if (data.height === 0) {
+        const toolTip = d3.select('#tooltip')
+            .style('visibility', 'visible')
+            .style('left', `${d3.event.pageX + 10}px`)
+            .style('top', `${d3.event.pageY + 10}px`)
+            .style('color', `${colors.black}`)
+            .style('background-color', `${colors.white}`);
+
+        const tooltipData = [
+            `Patient: ${data.parent.data.name}`, `Model: ${data.data.name}`,
+        ];
+        toolTip.selectAll('textDiv')
+            .data(tooltipData)
+            .enter()
+            .append('div')
+            .attr('id', 'tooltiptext')
+            .html((d) => {
+                const text = d.split(':');
+                return `<b>${text[0]}</b>: ${text[1]}`;
+            })
+            .attr('x', `${d3.event.pageX + 10}px`)
+            .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
+    }
+};
+
+// text mouse out event.
+const textMouseOutEvent = () => {
+    d3.select('#tooltip')
+        .style('visibility', 'hidden');
+    // remove all the divs with id tooltiptext.
+    d3.selectAll('#tooltiptext').remove();
 };
 
 // this will create the svg element for the chart
@@ -80,18 +117,25 @@ const appendText = (node) => {
         .attr('dy', '0.28em')
         .attr('x', (d) => (d.children ? -10 : 10))
         .attr('text-anchor', (d) => (d.children ? 'end' : 'start'))
-        .attr('font-size', '.75em')
+        .attr('font-size', '.85em')
         .text((d) => d.data.name)
+        .on('mouseover', (d) => {
+            textMouseOverEvent(d);
+        })
+        .on('mouseout', () => {
+            textMouseOutEvent();
+        })
         .attr('fill', `${colors.blue_header}`)
         .clone(true)
-        .lower()
-        .attr('stroke', 'white');
+        .lower();
 };
 
 // main function that creates the tree diagram.
 const createTreeDiagram = (margin, dimensions, data) => {
     // create the svg body for the chart.
     const svg = createSVGBody(margin, dimensions);
+    // create tooltip.
+    createToolTip('treediagram');
     // create tree.
     const tree = createTree(data, dimensions);
     // const links.
