@@ -29,13 +29,13 @@ const transformData = (data) => {
                     id: element.tissue_id,
                     name: element.tissue_name,
                 },
-                drugs: [{
-                    id: element.drug_id,
-                    name: element.drug_name,
-                }],
                 models: [{
                     id: element.model_id,
                     name: element.model,
+                    drug: {
+                        id: element.drug_id,
+                        name: element.drug_name,
+                    },
                 }],
             };
         }
@@ -44,12 +44,10 @@ const transformData = (data) => {
             transformedData[element.patient].models.push({
                 id: element.model_id,
                 name: element.model,
-            });
-        }
-        if (transformedData[element.patient].drugs.filter((drug) => drug.name === element.drug_name).length === 0) {
-            transformedData[element.patient].drugs.push({
-                id: element.drug_id,
-                name: element.drug_name,
+                drug: {
+                    id: element.drug_id,
+                    name: element.drug_name,
+                },
             });
         }
     });
@@ -57,7 +55,6 @@ const transformData = (data) => {
     // sorting the drugs and models based on the ids.
     finalData = Object.values(transformedData).map((row) => ({
         ...row,
-        drugs: row.drugs.sort((a, b) => a.id - b.id),
         models: row.models.sort((a, b) => a.id - b.id),
     }));
 
