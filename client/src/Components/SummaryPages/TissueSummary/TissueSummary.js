@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { select, selectAll } from 'd3';
 import StyleComponent from './TissueStyle';
 import Spinner from '../../Utils/Spinner';
 import Footer from '../../Footer/Footer';
@@ -12,8 +13,47 @@ import Liver from '../../../images/liver.png';
 import Pancreas from '../../../images/pancreas.png';
 import Skin from '../../../images/skin.png';
 import TissueTable from './TissueTable';
+import colors from '../../../styles/colors';
+import createToolTip from '../../Utils/ToolTip';
 
+// mouse over event on the images.
+const imageMouseOverEvent = (event, data) => {
+    const toolTip = select('#tooltip')
+        .style('visibility', 'visible')
+        .style('left', `${event.pageX + 10}px`)
+        .style('top', `${event.pageY + 10}px`)
+        .style('color', `${colors.black}`)
+        .style('background-color', `${colors.white}`);
 
+    const tooltipData = [
+        `Tissue: ${data.tissue}`,
+        `Dataset Count: ${data.dataset_count}`,
+        `Patient Count: ${data.patient_count}`,
+        `Model Count: ${data.model_count}`,
+        `Drug Count: ${data.drug_count}`,
+    ];
+    toolTip.selectAll('textDiv')
+        .data(tooltipData)
+        .enter()
+        .append('div')
+        .attr('id', 'tooltiptext')
+        .html((d) => {
+            const text = d.split(':');
+            return `<b>${text[0]}</b>: ${text[1]}`;
+        })
+        .attr('x', `${event.pageX + 10}px`)
+        .attr('y', (d, i) => (`${event.pageY + 10 + i * 10}px`));
+};
+
+// text mouse out event.
+const imageMouseOutEvent = () => {
+    select('#tooltip')
+        .style('visibility', 'hidden');
+    // remove all the divs with id tooltiptext.
+    selectAll('#tooltiptext').remove();
+};
+
+// tissue summary component.
 const TissueSummary = () => {
     const [tissueData, setTissueData] = useState([]);
     const [loading, setLoader] = useState(true);
@@ -35,6 +75,9 @@ const TissueSummary = () => {
             if (tissue && !tissue.models.includes(element.model)) {
                 tissue.model_count += 1;
                 tissue.models.push(element.model);
+            } if (tissue && !tissue.datasets.includes(element.dataset_name)) {
+                tissue.dataset_count += 1;
+                tissue.datasets.push(element.dataset_name);
             } else if (!tissue) {
                 transformedData[element.tissue_name] = {
                     tissue: element.tissue_name,
@@ -42,16 +85,16 @@ const TissueSummary = () => {
                     patients: [element.patient],
                     models: [element.model],
                     drugs: [element.drug_name],
+                    datasets: [element.dataset_name],
                     patient_count: 1,
                     model_count: 1,
                     drug_count: 1,
+                    dataset_count: 1,
                 };
             }
         });
-
         return transformedData;
     };
-
 
     const fetchData = async () => {
         // api request to get the required data.
@@ -64,6 +107,9 @@ const TissueSummary = () => {
 
     useEffect(() => {
         fetchData();
+
+        // create tooltip.
+        createToolTip('tissue-summary');
     }, []);
 
     return (
@@ -76,22 +122,64 @@ const TissueSummary = () => {
                         <img src={HumanBody} alt="Human Body" />
                         <div>
                             <div>
-                                <img src={Breast} alt="Breast" />
+                                <img
+                                    src={Breast}
+                                    alt="Breast"
+                                    onMouseOver={(event) => imageMouseOverEvent(event, tissueData[0])}
+                                    onFocus={(event) => imageMouseOverEvent(event, tissueData[0])}
+                                    onMouseOut={() => imageMouseOutEvent()}
+                                    onBlur={() => imageMouseOutEvent()}
+                                />
                             </div>
                             <div>
-                                <img src={Skin} alt="Skin" />
+                                <img
+                                    src={Skin}
+                                    alt="Skin"
+                                    onMouseOver={(event) => imageMouseOverEvent(event, tissueData[2])}
+                                    onFocus={(event) => imageMouseOverEvent(event, tissueData[2])}
+                                    onMouseOut={() => imageMouseOutEvent()}
+                                    onBlur={() => imageMouseOutEvent()}
+                                />
                             </div>
                             <div>
-                                <img src={Lung} alt="Lung" />
+                                <img
+                                    src={Lung}
+                                    alt="Lung"
+                                    onMouseOver={(event) => imageMouseOverEvent(event, tissueData[4])}
+                                    onFocus={(event) => imageMouseOverEvent(event, tissueData[4])}
+                                    onMouseOut={() => imageMouseOutEvent()}
+                                    onBlur={() => imageMouseOutEvent()}
+                                />
                             </div>
                             <div>
-                                <img src={Liver} alt="Liver" />
+                                <img
+                                    src={Liver}
+                                    alt="Liver"
+                                    onMouseOver={(event) => imageMouseOverEvent(event, tissueData)}
+                                    onFocus={(event) => imageMouseOverEvent(event, tissueData)}
+                                    onMouseOut={() => imageMouseOutEvent()}
+                                    onBlur={() => imageMouseOutEvent()}
+                                />
                             </div>
                             <div>
-                                <img src={Pancreas} alt="Pancreas" />
+                                <img
+                                    src={Pancreas}
+                                    alt="Pancreas"
+                                    onMouseOver={(event) => imageMouseOverEvent(event, tissueData[5])}
+                                    onFocus={(event) => imageMouseOverEvent(event, tissueData[5])}
+                                    onMouseOut={() => imageMouseOutEvent()}
+                                    onBlur={() => imageMouseOutEvent()}
+                                />
                             </div>
                             <div>
-                                <img src={LargeIntestine} alt="LargeIntenstine" />
+                                <img
+                                    src={LargeIntestine}
+                                    alt="LargeIntenstine"
+                                    onMouseOver={(event) => imageMouseOverEvent(event, tissueData[1])}
+                                    onFocus={(event) => imageMouseOverEvent(event, tissueData[1])}
+                                    onMouseOut={() => imageMouseOutEvent()}
+                                    onBlur={() => imageMouseOutEvent()}
+                                />
                             </div>
                         </div>
                     </StyleComponent>
@@ -100,6 +188,7 @@ const TissueSummary = () => {
                     {loading ? <Spinner loading={loading} /> : <TissueTable data={tissueData} />}
                 </div>
             </div>
+            <div id="tissue-summary" />
             <Footer />
         </div>
     );
