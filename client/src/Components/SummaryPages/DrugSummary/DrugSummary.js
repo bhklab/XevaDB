@@ -66,6 +66,7 @@ class DrugSummary extends React.Component {
                                         chartId="donut_drugs"
                                         data={data}
                                         arcRadius={arc}
+                                        label="Number of models"
                                     />
                                 )
                         }

@@ -75,12 +75,13 @@ const PatientSummary = () => {
                         loading ? <Spinner loading={loading} />
                             : (
                                 <BarPlot
-                                    data={barPlotData(patientData.slice(1, 50))}
+                                    data={barPlotData(patientData.slice(15, 35))}
+                                    label="Number of drugs"
                                 />
                             )
                     }
                 </div>
-                <div className="summary-table" style={{ marginTop: '4vh' }}>
+                <div className="summary-table">
                     {
                         loading ? (<Spinner loading={loading} />)
                             : (<PatientTable patientData={patientData} />)
