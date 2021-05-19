@@ -26,7 +26,7 @@ class DrugSummary extends React.Component {
             .then((response) => {
                 response.data.data.forEach((data) => {
                     const value = {};
-                    if (data.class_name !== '') {
+                    if (String(data.class_name) !== 'null') {
                         value.id = (data.class_name).replace('"', '').replace('/', '_');
                         value.value = data.model_ids;
                         newValues.push(value);
