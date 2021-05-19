@@ -30,7 +30,7 @@ const textMouseOverEvent = (data) => {
             .style('background-color', `${colors.white}`);
 
         const tooltipData = [
-            `Patient: ${data.parent.data.name}`, `Model: ${data.data.name}`,
+            `Drug: ${data.parent.data.name}`, `Model: ${data.data.name}`,
         ];
         toolTip.selectAll('textDiv')
             .data(tooltipData)

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import * as d3 from 'd3';
 import Spinner from '../../Utils/Spinner';
 import GlobalStyles from '../../../GlobalStyles';
 import Footer from '../../Footer/Footer';
@@ -12,19 +11,19 @@ const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
 
 // transforming the patient data.
 const transformData = (data) => {
-    const { dataset, tissue, drugs } = data;
+    const { dataset, tissue } = data;
     const patientId = data.id;
     const patientName = data.name;
     const finalData = [];
 
-    data.models.forEach((row, i) => {
+    data.models.forEach((row) => {
         finalData.push({
             id: patientId,
             name: patientName,
             dataset,
             tissue,
-            model: row,
-            drug: drugs[i],
+            model: { id: row.id, name: row.name },
+            drug: row.drug,
         });
     });
     return finalData;
@@ -36,27 +35,37 @@ const transformTreeDiagramData = (data) => {
     let transformedData = '';
     // making hirerichal data.
     data.forEach((element, i) => {
+        const drug = Object(element.drug) ? element.drug.name : '';
+        const dataset = element.dataset.name;
+        const model = element.model.name;
+
         if (i === 0) {
             transformedData = {
                 name: element.name,
-                dataset: element.dataset.name,
-                children: [
-                    {
-                        name: element.drug.name,
-                        children: [{ name: element.model.name }],
+                dataset,
+                children: {
+                    [`${drug}`]: {
+                        name: drug,
+                        children: [{ name: model }],
                     },
-                ],
-            };
-        } else {
-            transformedData.children.push(
-                {
-                    name: element.drug.name,
-                    children: [{ name: element.model.name }],
                 },
-            );
+            };
+        } else if (drug in transformedData.children) {
+            transformedData.children[drug].children.push({
+                name: model,
+            });
+        } else {
+            transformedData.children[drug] = {
+                name: drug,
+                children: [{ name: model }],
+            };
         }
     });
-    return transformedData;
+
+    return ({
+        ...transformedData,
+        children: Object.values({ ...transformedData.children }),
+    });
 };
 
 /**
