@@ -32,9 +32,9 @@ const createXScale = (width, data) => {
     return scale;
 };
 
-const createYScale = (height) => {
+const createYScale = (height, max) => {
     const scale = d3.scaleLinear()
-        .domain([0, 1700])
+        .domain([0, max + 5])
         .range([height, 0])
         .nice();
 
@@ -101,7 +101,7 @@ const appendBarText = (svg, data, xScale, yScale) => {
     });
 };
 
-const appendYAxisLabel = (svg, height, left) => {
+const appendYAxisLabel = (svg, height, left, label) => {
     svg.append('text')
         .attr('x', 0)
         .attr('y', 0)
@@ -110,7 +110,7 @@ const appendYAxisLabel = (svg, height, left) => {
         .attr('font-size', '14px')
         .style('text-anchor', 'start')
         .attr('fill', 'black')
-        .text('Number of models');
+        .text(`${label}`);
 };
 
 const BarPlot = (props) => {
@@ -122,6 +122,15 @@ const BarPlot = (props) => {
     const {
         left, right, top, bottom,
     } = margin;
+    const yAxisLabel = props.label;
+
+    // calulcates the max value in the data.
+    let max = 0;
+    data.forEach((val) => {
+        if (val.value > max) {
+            max = val.value;
+        }
+    });
 
     // sort data
     data = data.sort((b, a) => a.value - b.value);
@@ -144,7 +153,7 @@ const BarPlot = (props) => {
 
         // scales and axis.
         const xScale = createXScale(width, data);
-        const yScale = createYScale(height);
+        const yScale = createYScale(height, max);
         const color = colorScale(data, colorList);
         createXAxis(svg, xScale, height);
         createYAxis(svg, yScale);
@@ -156,7 +165,7 @@ const BarPlot = (props) => {
         createBars(svg, data, xScale, yScale, height, color);
 
         // append y-axis test/label.
-        appendYAxisLabel(svg, height, left);
+        appendYAxisLabel(svg, height, left, yAxisLabel);
     });
 
     return (
@@ -179,6 +188,7 @@ BarPlot.propTypes = {
         left: PropTypes.number,
     }).isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    yAxisLabel: PropTypes.string.isRequired,
 };
 
 export default BarPlot;
