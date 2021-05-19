@@ -1,7 +1,16 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
+// defaul parameters.
+const defaultMargin = {
+    top: 50, right: 150, bottom: 200, left: 150,
+};
+const defaultDimensions = { width: 850, height: 400 };
+const defaultArc = { outerRadius: 260, innerRadius: 150 };
+
+// create the svg canvas.
 const createSvg = (width, height, left, right, top, bottom) => {
     const svg = d3.select('#barplot')
         .append('svg')
@@ -106,7 +115,8 @@ const appendYAxisLabel = (svg, height, left) => {
 
 const BarPlot = (props) => {
     // getting the prop data.
-    const { dimensions, margin } = props;
+    const margin = props.margin || defaultMargin;
+    const dimensions = props.dimensions || defaultDimensions;
     let { data } = props;
     const { width, height } = dimensions;
     const {
