@@ -18,10 +18,10 @@ import {
     OncoprintData,
     SearchResult,
     StatTable,
+    Tissue,
     TissueSummary,
     TopNav,
 } from './Components/index';
-
 
 const Merge = () => (
     <>
@@ -30,7 +30,6 @@ const Merge = () => (
         <Footer />
     </>
 );
-
 
 const App = () => {
     // Google analytics setup.
@@ -62,6 +61,7 @@ const App = () => {
                     <Route path="/patients" exact component={PatientSummary} />
                     <Route path="/search" exact component={SearchResult} />
                     <Route path="/tissues" exact component={TissueSummary} />
+                    <Route path="/tissue/1" exact component={Tissue} />
                     <Route path="/stat" exact component={StatTable} />
                     <Route render={() => <h1> 404 Error </h1>} />
                 </Switch>
@@ -73,6 +73,5 @@ const App = () => {
         </div>
     );
 };
-
 
 export default App;
