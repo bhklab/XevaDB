@@ -554,16 +554,15 @@ class HeatMap extends Component {
         drugName.attr('stroke-width', '0')
             .style('font-family', '\'Raleway\',sans-serif')
             .style('font-size', '11px')
-            .attr('font-weight', '500')
             .call(yAxis)
             .selectAll('text')
             .attr('fill', (d) => {
                 if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return `${colors.pink_header}`; }
-                return `${colors.black}`;
+                return `${colors.blue_header}`;
             })
             .attr('font-weight', (d) => {
                 if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return '700'; }
-                return '500';
+                return '550';
             })
             .attr('id', (d) => `tick-${d.replace(/\s/g, '').replace(/\+/g, '')}`)
             // eslint-disable-next-line func-names
@@ -625,7 +624,8 @@ class HeatMap extends Component {
             .call(xAxis)
             .selectAll('text')
             .attr('transform', 'rotate(-90)')
-            .attr('font-weight', '500')
+            .attr('font-weight', '550')
+            .attr('fill', `${colors.blue_header}`)
             .attr('x', (dataset === '7' ? '-2.4em' : '0.6em'))
             .attr('y', '.15em');
 
@@ -651,9 +651,10 @@ class HeatMap extends Component {
                 .data(targetEval)
                 .enter()
                 .append('text')
-                .attr('x', width + (rectWidth * 10))
+                .attr('x', width + (rectWidth * 9.5))
                 .attr('y', (d, i) => (rectHeight * 9 + rectWidth - 2) + i * rectHeight)
                 .text((d) => Object.keys(d))
+                .attr('fill', `${colors.blue_header}`)
                 .attr('font-size', '14px');
 
 

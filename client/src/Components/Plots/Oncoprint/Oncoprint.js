@@ -173,7 +173,8 @@ class Oncoprint extends React.Component {
                     .style('text-anchor', 'end')
                     .style('font-size', '11px')
                     .attr('dy', i * (rect_height) + rect_width)
-                    .attr('font-weight', '500')
+                    .attr('font-weight', '550')
+                    .attr('fill', `${colors.blue_header}`)
                     .text(genes[i])
                     .on('mouseover', () => {
                         // tooltip on mousever setting the div to visible.
@@ -627,7 +628,8 @@ class Oncoprint extends React.Component {
             .attr('x', (hmap_patients.length * rect_width + rect_width * 9))
             .attr('y', (d, i) => (genes.length * 10.5) + i * rect_height * 0.75)
             .text((d) => d.value)
-            .attr('font-size', '12px');
+            .attr('font-size', '12px')
+            .attr('fill', `${colors.blue_header}`);
 
 
         // creating tooltip.
