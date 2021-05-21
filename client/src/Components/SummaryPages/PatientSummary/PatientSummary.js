@@ -45,7 +45,10 @@ const barPlotData = (data) => {
             value: element.drugs.length,
         }
     ));
-    return barData;
+    // sort the data based on the value.
+    const sortedData = barData.sort((a, b) => b.value - a.value).slice(1, 20);
+    // return the sorted data.
+    return sortedData;
 };
 
 // patient Summary Component
@@ -75,7 +78,7 @@ const PatientSummary = () => {
                         loading ? <Spinner loading={loading} />
                             : (
                                 <BarPlot
-                                    data={barPlotData(patientData.slice(15, 35))}
+                                    data={barPlotData(patientData)}
                                     label="Number of drugs"
                                 />
                             )
