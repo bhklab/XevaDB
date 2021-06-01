@@ -53,48 +53,49 @@ const imageMouseOutEvent = () => {
     selectAll('#tooltiptext').remove();
 };
 
+// transform data.
+const transformData = (data) => {
+    const transformedData = {};
+
+    data.forEach((element) => {
+        const tissue = transformedData[element.tissue_name];
+
+        if (tissue && !tissue.patients.includes(element.patient)) {
+            tissue.patient_count += 1;
+            tissue.patients.push(element.patient);
+        }
+        if (tissue && !tissue.drugs.includes(element.drug_name)) {
+            tissue.drug_count += 1;
+            tissue.drugs.push(element.drug_name);
+        }
+        if (tissue && !tissue.models.includes(element.model)) {
+            tissue.model_count += 1;
+            tissue.models.push(element.model);
+        } if (tissue && !tissue.datasets.includes(element.dataset_name)) {
+            tissue.dataset_count += 1;
+            tissue.datasets.push(element.dataset_name);
+        } else if (!tissue) {
+            transformedData[element.tissue_name] = {
+                tissue: element.tissue_name,
+                tissue_id: element.tissue_id,
+                patients: [element.patient],
+                models: [element.model],
+                drugs: [element.drug_name],
+                datasets: [element.dataset_name],
+                patient_count: 1,
+                model_count: 1,
+                drug_count: 1,
+                dataset_count: 1,
+            };
+        }
+    });
+    return transformedData;
+};
+
 // tissue summary component.
 const TissueSummary = () => {
     const [tissueData, setTissueData] = useState([]);
     const [loading, setLoader] = useState(true);
-
-    const transformData = (data) => {
-        const transformedData = {};
-
-        data.forEach((element) => {
-            const tissue = transformedData[element.tissue_name];
-
-            if (tissue && !tissue.patients.includes(element.patient)) {
-                tissue.patient_count += 1;
-                tissue.patients.push(element.patient);
-            }
-            if (tissue && !tissue.drugs.includes(element.drug_name)) {
-                tissue.drug_count += 1;
-                tissue.drugs.push(element.drug_name);
-            }
-            if (tissue && !tissue.models.includes(element.model)) {
-                tissue.model_count += 1;
-                tissue.models.push(element.model);
-            } if (tissue && !tissue.datasets.includes(element.dataset_name)) {
-                tissue.dataset_count += 1;
-                tissue.datasets.push(element.dataset_name);
-            } else if (!tissue) {
-                transformedData[element.tissue_name] = {
-                    tissue: element.tissue_name,
-                    tissue_id: element.tissue_id,
-                    patients: [element.patient],
-                    models: [element.model],
-                    drugs: [element.drug_name],
-                    datasets: [element.dataset_name],
-                    patient_count: 1,
-                    model_count: 1,
-                    drug_count: 1,
-                    dataset_count: 1,
-                };
-            }
-        });
-        return transformedData;
-    };
 
     const fetchData = async () => {
         // api request to get the required data.
