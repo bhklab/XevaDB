@@ -13,7 +13,8 @@ const transformTissueDetail = (data) => {
     const transformedData = {};
     data.forEach((value) => {
         const {
-            tissue_name, tissue_id, dataset_name, patient, model,
+            tissue_name, tissue_id, dataset_name,
+            patient, model, drug_name,
         } = value;
         // if the tissue is not available in the object.
         if (!transformedData[tissue_name]) {
@@ -25,6 +26,7 @@ const transformTissueDetail = (data) => {
                         name: dataset_name,
                         patients: [patient],
                         models: [model],
+                        drugs: [drug_name],
                     },
                 },
             };
@@ -35,6 +37,7 @@ const transformTissueDetail = (data) => {
                 name: dataset_name,
                 patients: [patient],
                 models: [model],
+                drugs: [drug_name],
             };
         }
 
@@ -44,6 +47,9 @@ const transformTissueDetail = (data) => {
         }
         if (!transformedData[tissue_name].datasets[dataset_name].patients.includes(patient)) {
             transformedData[tissue_name].datasets[dataset_name].patients.push(patient);
+        }
+        if (!transformedData[tissue_name].datasets[dataset_name].drugs.includes(drug_name)) {
+            transformedData[tissue_name].datasets[dataset_name].drugs.push(drug_name);
         }
     });
     return transformedData;
