@@ -1,7 +1,53 @@
+/* eslint-disable camelcase */
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
 const { getAllowedDatasetIds } = require('./util');
 const { getModelInformationDataQuery } = require('./model_information');
+
+
+/**
+ * @param {Object} data - input data.
+ * @returns {Object} - transformed data.
+ */
+const transformTissueDetail = (data) => {
+    const transformedData = {};
+    data.forEach((value) => {
+        const {
+            tissue_name, tissue_id, dataset_name, patient, model,
+        } = value;
+        // if the tissue is not available in the object.
+        if (!transformedData[tissue_name]) {
+            transformedData[tissue_name] = {
+                id: tissue_id,
+                name: tissue_name,
+                datasets: {
+                    [dataset_name]: {
+                        name: dataset_name,
+                        patients: [patient],
+                        models: [model],
+                    },
+                },
+            };
+        }
+        // if the dataset is not in the object, add a new dataset.
+        if (!transformedData[tissue_name].datasets[dataset_name]) {
+            transformedData[tissue_name].datasets[dataset_name] = {
+                name: dataset_name,
+                patients: [patient],
+                models: [model],
+            };
+        }
+
+        // add models and patients accordingly.
+        if (!transformedData[tissue_name].datasets[dataset_name].models.includes(model)) {
+            transformedData[tissue_name].datasets[dataset_name].models.push(model);
+        }
+        if (!transformedData[tissue_name].datasets[dataset_name].patients.includes(patient)) {
+            transformedData[tissue_name].datasets[dataset_name].patients.push(patient);
+        }
+    });
+    return transformedData;
+};
 
 
 /**
@@ -40,6 +86,7 @@ const getTissueDetailedInformationBasedOnTissueId = (request, response) => {
     getModelInformationDataQuery()
         .where('t.tissue_id', tissueParam)
         .andWhereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .then((data) => transformTissueDetail(data))
         .then((data) => response.status(200).json({
             status: 'success',
             data,
