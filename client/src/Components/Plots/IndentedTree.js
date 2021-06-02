@@ -28,7 +28,7 @@ const columns = [
     {
         label: 'Count',
         value: (d) => (d.children ? 0 : 1),
-        format: (value, d) => (d.children ? format(value) : ''),
+        format: (value, d) => (d.children && d.data.name.match(/Drugs|Models|Patients/) ? format(value) : ''),
         x: 340,
     },
 ];
@@ -42,7 +42,7 @@ const createSVGBody = (margin, dimensions, nodes) => (
         .attr('xmlns', 'http://www.w3.org/2000/svg')
         .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink')
         .attr('width', dimensions.width + margin.left + margin.right)
-        .attr('height', (nodes.length) * nodeSize)
+        .attr('height', (nodes.length + 1) * nodeSize + margin.top + margin.bottom)
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`)
 );
@@ -114,6 +114,7 @@ const appendData = (svg, root, node) => {
             .attr('x', x)
             .attr('text-anchor', 'end')
             .attr('fill', (d) => (d.children ? null : `${colors.blue_header}`))
+            .attr('font-weight', 600)
             .data(root.copy().sum(value).descendants())
             .text((d) => format(d.value, d));
     });
@@ -121,7 +122,6 @@ const appendData = (svg, root, node) => {
 
 // main function that creates the indented tree.
 const createIndetedTree = (margin, dimensions, data) => {
-    console.log(data);
     // creating the root.
     const root = createRoot(data);
     // nodes.
@@ -154,14 +154,13 @@ const IdentedTree = (props) => {
     });
 
     return (
-        <div className="curve-wrapper">
+        <div className="curve-wrapper" style={{ marginBottom: '150px' }}>
             <div id="indentedtree" />
         </div>
     );
 };
 
 IdentedTree.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.object).isRequired,
     margin: PropTypes.shape({
         top: PropTypes.number,
         right: PropTypes.number,

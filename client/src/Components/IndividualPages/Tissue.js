@@ -68,7 +68,9 @@ const Tissue = () => {
                 {
                     loading ? <Spinner loading={loading} /> : (
                         <>
-                            <h1> Tissue Page </h1>
+                            <h1>
+                                {tissueData.name}
+                            </h1>
                             <IdentedTree data={tissueData} />
                             <Footer />
                         </>
