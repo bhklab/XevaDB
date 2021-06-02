@@ -24,16 +24,16 @@ const transformIndentedTreeData = (data) => {
             name: element.name,
             children: [
                 {
+                    name: 'Drugs',
+                    children: drugs,
+                },
+                {
                     name: 'Patients',
                     children: patients,
                 },
                 {
                     name: 'Models',
                     children: models,
-                },
-                {
-                    name: 'Drugs',
-                    children: drugs,
                 },
             ],
         });

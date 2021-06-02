@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable react/destructuring-assignment */
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -180,15 +181,14 @@ BarPlot.propTypes = {
     dimensions: PropTypes.shape({
         height: PropTypes.number,
         width: PropTypes.number,
-    }).isRequired,
+    }),
     margin: PropTypes.shape({
         top: PropTypes.number,
         right: PropTypes.number,
         bottom: PropTypes.number,
         left: PropTypes.number,
-    }).isRequired,
+    }),
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
-    yAxisLabel: PropTypes.string.isRequired,
 };
 
 export default BarPlot;
