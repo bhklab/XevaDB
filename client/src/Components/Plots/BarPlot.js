@@ -1,20 +1,28 @@
+/* eslint-disable react/require-default-props */
+/* eslint-disable react/destructuring-assignment */
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
+// defaul parameters.
+const defaultMargin = {
+    top: 50, right: 150, bottom: 200, left: 150,
+};
+const defaultDimensions = { width: 850, height: 400 };
+const defaultArc = { outerRadius: 260, innerRadius: 150 };
 
+// create the svg canvas.
 const createSvg = (width, height, left, right, top, bottom) => {
     const svg = d3.select('#barplot')
         .append('svg')
         .attr('width', width + left + right)
         .attr('height', height + top + bottom)
+        .attr('id', 'barplotsvg')
         .append('g')
-        .attr('transform', `translate(${left},${top})`)
-        .attr('id', 'barplotsvg');
+        .attr('transform', `translate(${left},${top})`);
 
     return svg;
 };
-
 
 const createXScale = (width, data) => {
     const scale = d3.scaleBand()
@@ -25,16 +33,14 @@ const createXScale = (width, data) => {
     return scale;
 };
 
-
-const createYScale = (height) => {
+const createYScale = (height, max) => {
     const scale = d3.scaleLinear()
-        .domain([0, 1700])
+        .domain([0, max + 5])
         .range([height, 0])
         .nice();
 
     return scale;
 };
-
 
 const colorScale = (data, colors) => {
     const values = data.map((element) => element.id);
@@ -45,7 +51,6 @@ const colorScale = (data, colors) => {
 
     return scale;
 };
-
 
 const createXAxis = (svg, xScale, height) => {
     const axis = d3.axisBottom()
@@ -61,7 +66,6 @@ const createXAxis = (svg, xScale, height) => {
         .style('font-size', 13);
 };
 
-
 const createYAxis = (svg, yScale) => {
     const axis = d3.axisLeft()
         .scale(yScale)
@@ -71,7 +75,6 @@ const createYAxis = (svg, yScale) => {
         .call(axis)
         .style('font-size', 13);
 };
-
 
 const createBars = (svg, data, xScale, yScale, height, color) => {
     svg.selectAll('bars')
@@ -86,7 +89,6 @@ const createBars = (svg, data, xScale, yScale, height, color) => {
         .attr('fill', (d) => color(d.id));
 };
 
-
 const appendBarText = (svg, data, xScale, yScale) => {
     data.forEach((element) => {
         svg.append('text')
@@ -100,15 +102,36 @@ const appendBarText = (svg, data, xScale, yScale) => {
     });
 };
 
+const appendYAxisLabel = (svg, height, left, label) => {
+    svg.append('text')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('font-family', 'sans-serif')
+        .attr('transform', `translate(${-left / 2}, ${height / 1.5})rotate(270)`)
+        .attr('font-size', '14px')
+        .style('text-anchor', 'start')
+        .attr('fill', 'black')
+        .text(`${label}`);
+};
 
 const BarPlot = (props) => {
     // getting the prop data.
-    const { dimensions, margin } = props;
+    const margin = props.margin || defaultMargin;
+    const dimensions = props.dimensions || defaultDimensions;
     let { data } = props;
     const { width, height } = dimensions;
     const {
         left, right, top, bottom,
     } = margin;
+    const yAxisLabel = props.label;
+
+    // calulcates the max value in the data.
+    let max = 0;
+    data.forEach((val) => {
+        if (val.value > max) {
+            max = val.value;
+        }
+    });
 
     // sort data
     data = data.sort((b, a) => a.value - b.value);
@@ -124,14 +147,14 @@ const BarPlot = (props) => {
 
     useEffect(() => {
         // remove the element if already present.
-        d3.selectAll('#barplotsvg').remove();
+        d3.select('#barplotsvg').remove();
 
         // svg canvas.
         const svg = createSvg(width, height, left, right, top, bottom);
 
         // scales and axis.
         const xScale = createXScale(width, data);
-        const yScale = createYScale(height);
+        const yScale = createYScale(height, max);
         const color = colorScale(data, colorList);
         createXAxis(svg, xScale, height);
         createYAxis(svg, yScale);
@@ -141,8 +164,10 @@ const BarPlot = (props) => {
 
         // create bars.
         createBars(svg, data, xScale, yScale, height, color);
-    }, [data]);
 
+        // append y-axis test/label.
+        appendYAxisLabel(svg, height, left, yAxisLabel);
+    });
 
     return (
         <div
@@ -152,20 +177,18 @@ const BarPlot = (props) => {
     );
 };
 
-
 BarPlot.propTypes = {
     dimensions: PropTypes.shape({
         height: PropTypes.number,
         width: PropTypes.number,
-    }).isRequired,
+    }),
     margin: PropTypes.shape({
         top: PropTypes.number,
         right: PropTypes.number,
         bottom: PropTypes.number,
         left: PropTypes.number,
-    }).isRequired,
+    }),
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
-
 
 export default BarPlot;

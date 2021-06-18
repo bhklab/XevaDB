@@ -29,7 +29,6 @@ class DonutChart extends React.Component {
     // data should be like => {id: 'Gastric Cancer', value: 1007}
     makeDonutChart(data, height, width, left, top, bottom, right) {
         const { chartId } = this.props;
-        console.log(chartId);
 
         /** SETTING SVG ATTRIBUTES * */
         d3.select('svg').remove();
@@ -278,7 +277,10 @@ DonutChart.propTypes = {
         left: PropTypes.number,
     }).isRequired,
     chartId: PropTypes.string.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    data: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string,
+        value: PropTypes.number,
+    })).isRequired,
     arcRadius: PropTypes.shape({
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,

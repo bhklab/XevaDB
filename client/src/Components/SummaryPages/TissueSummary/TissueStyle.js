@@ -1,16 +1,15 @@
 import styled from 'styled-components';
 
 const StyleComponent = styled.div`
+    position: relative;
+
     img {
         margin-top: 50px;
         height: 750px;
         width: 625px;
         display: block;
-        margin-left: auto;
-        margin-right: auto;
+        margin: auto;
     }
-
-    
 
     div > img {
         height: 60px;
@@ -19,7 +18,7 @@ const StyleComponent = styled.div`
         opacity: 0.5;
         position: absolute;
         top: 35%;
-        left: 25%
+        left: 20%
         :hover {
             opacity: 1.0;
             transform: scale(1.25)
@@ -29,31 +28,32 @@ const StyleComponent = styled.div`
     div:nth-child(1) {
         position: absolute;
         top: 25%;
-        left: 30%;
+        left: 25%;
+        background-color: red;
     }
 
     div:nth-child(2) {
         position: absolute;
         top: 25%;
-        left: 60%
+        left: 67.5%
     }
 
     div:nth-child(4) {
         position: absolute;
         top: 35%;
-        left: 65%
+        left: 72.5%
     }
 
     div:nth-child(5) {
         position: absolute;
         top: 45%;
-        left: 30%
+        left: 25%
     }
 
     div:nth-child(6) {
         position: absolute;
         top: 45%;
-        left: 61%
+        left: 67.5%
     }
 `;
 

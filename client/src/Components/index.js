@@ -11,15 +11,15 @@ import HeatMapData from './Plots/HeatMap/HeatMapData';
 import Home from './Home/Home';
 import Login from './Login/Login';
 import OncoprintData from './Plots/Oncoprint/OncoprintData';
-import Patient from './IndividualPages/Patient';
+import Patient from './IndividualPages/Patient/Patient';
 import PatientSummary from './SummaryPages/PatientSummary/PatientSummary';
 import Search from './Search/Search';
 import SearchResult from './Search/SearchResult';
 import StatTable from './ResponseStat/ModelResponseStatTable';
-import TissueSummary from './SummaryPages/TissueSummary';
+import Tissue from './IndividualPages/Tissue';
+import TissueSummary from './SummaryPages/TissueSummary/TissueSummary';
 import TopNav from './TopNav/TopNav';
 import TumorGrowthCurve from './Plots/TumorGrowthCurve/TumorGrowthCurve';
-
 
 export {
     CounterNav,
@@ -40,6 +40,7 @@ export {
     Search,
     SearchResult,
     StatTable,
+    Tissue,
     TissueSummary,
     TopNav,
     TumorGrowthCurve,

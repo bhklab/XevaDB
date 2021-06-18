@@ -83,9 +83,9 @@ class Search extends React.Component {
     componentDidMount() {
         axios.get('/api/v1/datasets', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
-                const datasets = response.data.data.map((item) => ({
-                    value: item.dataset_id,
-                    label: Search.parseDataset(item.dataset_name),
+                const datasets = response.data.datasets.map((item) => ({
+                    value: item.id,
+                    label: Search.parseDataset(item.name),
                 }));
                 this.setState({
                     datasets: [...datasets],
@@ -149,7 +149,7 @@ class Search extends React.Component {
         });
         const label = selectedOption.value;
         let initial = 1;
-        axios.post('/api/v1/drugpatient/dataset', { label }, { headers: { Authorization: localStorage.getItem('user') } }, axiosConfig.headers)
+        axios.post('/api/v1/drugspatients/dataset', { label }, { headers: { Authorization: localStorage.getItem('user') } }, axiosConfig.headers)
             .then((response) => {
                 const data = response.data.data[0].map((item) => ({
                     value: initial++,

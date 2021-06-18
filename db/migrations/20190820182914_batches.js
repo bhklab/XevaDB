@@ -1,13 +1,23 @@
 
-exports.up = function (knex, Promise) {
-    return knex.schema.createTable('batches', (table) => {
-        table.increments('batch_id')
-            .primary();
-        table.string('batch')
-            .notNullable();
-    });
-};
+exports.up = (knex) => (
+    knex.schema.hasTable('batches')
+        .then((exists) => {
+            let query = '';
+            if (!exists) {
+                query = knex.schema.createTable('batches', (table) => {
+                    table.increments('batch_id')
+                        .primary();
+                    table.string('batch')
+                        .notNullable();
+                });
+            }
+            return query;
+        })
+        .catch((err) => {
+            throw err;
+        })
+);
 
-exports.down = function (knex, Promise) {
-    return knex.schema.dropTable('batches');
-};
+exports.down = (knex) => (
+    knex.schema.dropTable('batches')
+);

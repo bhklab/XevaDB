@@ -2,13 +2,17 @@
 const knex = require('../../db/knex1');
 
 
-// get all the data from the genes table.
-const getGenes = function (request, response) {
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - list of the genes in the database.
+ */
+const getGenes = (request, response) => {
     knex.select()
         .from('genes')
-        .then((gene) => response.status(200).json({
+        .then((genes) => response.status(200).json({
             status: 'success',
-            data: gene,
+            data: genes,
         }))
         .catch((error) => response.status(500).json({
             status: 'could not find data from genes table, getGenes',

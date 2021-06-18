@@ -1,6 +1,6 @@
-const path = require('path')
+const path = require('path');
 
-const data_path = path.join(__dirname, '../../XevaDI/output_data')
-// const data_path = path.join(__dirname, '../../XevaDB/data_conversion/FinalCsvFiles/')
+// path to the data directory.
+const dataDirectoryPath = path.join(__dirname, '../../XevaDI/output_data');
 
-module.exports = data_path;
+module.exports = dataDirectoryPath;

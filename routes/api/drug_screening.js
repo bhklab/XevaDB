@@ -2,14 +2,23 @@
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 
+
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @param {string} request.query.drug - drug query parameter.
+ * @param {string} request.query.patient - patient query parameter.
+ * @returns {Object} - list of the datasets.
+ */
 // this will get the drug screening data based on drug and patient id.
-const getDrugScreening = function (request, response) {
+const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
     let { drug } = request.query;
     const { patient } = request.query;
 
     // this will remove the spaces in the drug name and replace
     // it with ' + '. example BKM120   LDE225 => BKM120 + LDE225
     drug = drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
+
     // grabs the batch_id based on the drug and patient query param passed on.
     const grabBatchId = knex.select('batch_information.batch_id', 'model_information.dataset_id')
         .from('batch_information')
@@ -36,6 +45,7 @@ const getDrugScreening = function (request, response) {
     grabBatchId.then((batch) => {
         // grab the dataset id.
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
+
         // check if it verified and the dataset id is greater than 0
         // or if it's not verified (unkown) then the dataset id should be less than 7.
         if (isVerified(response, dataset)) {
@@ -98,5 +108,5 @@ const getDrugScreening = function (request, response) {
 
 
 module.exports = {
-    getDrugScreening,
+    getDrugScreeningDataBasedOnDrugAndPatient,
 };

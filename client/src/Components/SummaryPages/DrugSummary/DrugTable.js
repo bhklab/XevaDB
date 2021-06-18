@@ -80,7 +80,7 @@ class DrugTable extends React.Component {
             {
                 Header: 'PubChem CID',
                 Cell: (val) => {
-                    const pubchemLink = (val.original.pubchemid.split(','));
+                    const pubchemLink = String(val.original.pubchemid).split(',');
                     const { length } = pubchemLink;
                     const link = [];
                     let isNa = '';
@@ -119,7 +119,7 @@ class DrugTable extends React.Component {
         ];
 
         return (
-            <TableWrapper className="wrap">
+            <TableWrapper>
                 <h1 style={h1Style}> List of Drugs </h1>
                 {loading
                     ? (

@@ -2,13 +2,17 @@
 const knex = require('../../db/knex1');
 
 
-// get all the data from the batches table.
-const getBatches = function (request, response) {
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - list of the batches.
+ */
+const getBatches = (request, response) => {
     knex.select()
         .from('batches')
-        .then((batch) => response.status(200).json({
+        .then((batches) => response.status(200).json({
             status: 'success',
-            data: batch,
+            data: batches,
         }))
         .catch((error) => response.status(500).json({
             status: 'could not find data from batch table, getBatches',

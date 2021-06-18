@@ -3,84 +3,89 @@ const express = require('express');
 const router = express.Router();
 
 // setting the path of the drugscreening api to variable so that we can use it later.
+const awtauthentication = require('./api/auth');
+const batchResponse = require('./api/batch_response');
+const batches = require('./api/batch');
+const copyNumberVariation = require('./api/copy_number_variation');
+const counter = require('./api/counter');
 const datasets = require('./api/dataset');
 const drugs = require('./api/drug');
-const tissues = require('./api/tissue');
+const drugScreening = require('./api/drug_screening');
 const genes = require('./api/gene');
-const patients = require('./api/patient');
 const models = require('./api/model');
-const batches = require('./api/batch');
-const mixed = require('./api/mixed');
 const modelInformation = require('./api/model_information');
 const modelResponse = require('./api/model_response');
 const mutation = require('./api/mutation');
-const drugScreening = require('./api/drug_screening');
+const patients = require('./api/patient');
 const rnasequencing = require('./api/rnaseq');
-const copyNumberVariation = require('./api/copy_number_variation');
-const awtauthentication = require('./api/auth');
-const batchResponse = require('./api/batch_response');
+const tissues = require('./api/tissue');
+const utils = require('./api/util');
 const verifytoken = require('./api/verify_token');
-
-
-// APIs related to dataset table.
-router.get('/v1/datasets', verifytoken, datasets.getDatasets);
-router.get('/v1/dataset/patients', datasets.getPatientsGroupedByDataset);
-router.get('/v1/dataset/models', verifytoken, datasets.getModelsPatientsGroupedByDataset);
-
-// APIs related to drugs table.
-router.get('/v1/drugs', verifytoken, drugs.getDrugs);
-router.get('/v1/drug/class', verifytoken, drugs.getDrugGroupedByClass);
-// router.get('/v1/drug/class', drugs.getDrugGroupedByClass);
-
-// APIs related to tissues table.
-router.get('/v1/tissues', tissues.getTissues);
-router.get('/v1/tissue/models', verifytoken, tissues.getModelsGroupedByTissue);
-
-// APIs related to drug table.
-router.get('/v1/genes', genes.getGenes);
-
-// APIs related to patients table.
-router.get('/v1/patients', verifytoken, patients.getPatients);
-
-// APIs related to batches table.
-router.get('/v1/batches', batches.getBatches);
-
-// APIs related to models table.
-router.get('/v1/models', verifytoken, models.getModels);
-
-// mixed APIs.
-router.get('/v1/counter', verifytoken, mixed.getCounter);
-
-// APIs for the model information table.
-router.post('/v1/drugpatient/dataset', verifytoken, modelInformation.postDrugandPatientBasedOnDataset);
-
-// APIs for model response table.
-router.get('/v1/response/:dataset', verifytoken, modelResponse.getModelResponseBasedOnDataset);
-router.get('/v1/response', verifytoken, modelResponse.getModelResponseBasedPerDatasetBasedOnDrugs);
-router.get('/v1/modelstats', verifytoken, modelResponse.getModelResponseStats);
-
-// APIs related to mutation table.
-router.get('/v1/mutation/:dataset', mixed.isValidId, verifytoken, mutation.getMutationBasedOnDataset);
-router.get('/v1/mutation', verifytoken, mutation.getMutationBasedPerDatasetBasedOnGenes);
-
-// APIs related to rnasequencing table.
-router.get('/v1/rnaseq/:dataset', mixed.isValidId, verifytoken, rnasequencing.getRnaSeqBasedOnDataset);
-router.get('/v1/rnaseq', verifytoken, rnasequencing.getRnaSeqBasedPerDatasetBasedOnGenes);
-
-// APIs related to copy_number_variation table.
-router.get('/v1/cnv/:dataset', mixed.isValidId, verifytoken, copyNumberVariation.getCopyNumberVariationBasedOnDataset);
-router.get('/v1/cnv', verifytoken, copyNumberVariation.getCopyNumberVariationBasedPerDatasetBasedOnGenes);
-
-// APIs related to drug screening table.
-router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreening);
 
 // Authorization APIs.
 router.post('/v1/login', awtauthentication.createLogin);
 router.post('/v1/register', awtauthentication.registerUser);
 
-
 // APIs related to batch response.
-router.get('/v1/batchstats', verifytoken, batchResponse.getBatchResponseStats);
+router.get('/v1/batchresponsestats', verifytoken, batchResponse.getBatchResponseStatsBasedOnDrugAndPatient);
+
+// APIs related to batches table.
+router.get('/v1/batches', batches.getBatches);
+
+// APIs related to copy_number_variation table.
+router.get('/v1/cnv', verifytoken, copyNumberVariation.getCopyNumberVariationBasedOnDatasetAndGenes);
+router.get('/v1/cnv/:dataset', utils.isValidId, verifytoken, copyNumberVariation.getCopyNumberVariationDataBasedOnDataset);
+
+// counter APIs.
+router.get('/v1/counter', verifytoken, counter.getCounter);
+
+// APIs related to dataset table.
+router.get('/v1/datasets', verifytoken, datasets.getDatasets);
+router.get('/v1/datasets/details', verifytoken, datasets.getDatasetsDetailedInformation);
+router.get('/v1/datasets/details/:dataset', verifytoken, datasets.getDatasetDetailedInformationBasedOnDatasetId);
+
+// APIs related to drugs table.
+router.get('/v1/drugs', verifytoken, drugs.getDrugs);
+
+// APIs related to drug table.
+router.get('/v1/genes', genes.getGenes);
+
+// APIs related to models table.
+router.get('/v1/models', verifytoken, models.getModels);
+router.get('/v1/models/details', verifytoken, models.getModelsDetailedInformation);
+router.get('/v1/models/groupbytissue', verifytoken, models.getModelsGroupedByTissueType);
+router.get('/v1/models/groupbydrugclass', verifytoken, models.getModelsGroupedByDrugClass);
+
+// APIs for the model information table.
+router.get('/v1/modelinformation', verifytoken, modelInformation.getModelInformation);
+router.get('/v1/modelinformation/:model', utils.isValidId, verifytoken, modelInformation.getModelInformationBasedOnModelId);
+// TODO: maybe not use this end point and use end point to get the data related to a single dataset.
+router.post('/v1/drugspatients/dataset', verifytoken, modelInformation.postDrugsandPatientsBasedOnDataset);
+
+// APIs for model response table.
+router.get('/v1/modelresponse/:dataset', utils.isValidId, verifytoken, modelResponse.getModelResponseBasedOnDataset);
+router.get('/v1/modelresponse', verifytoken, modelResponse.getModelResponseBasedOnDatasetAndDrugList);
+router.get('/v1/modelresponsestats', verifytoken, modelResponse.getModelResponseStatsBasedOnDrugAndPatient);
+
+// APIs related to mutation table.
+router.get('/v1/mutation', verifytoken, mutation.getMutationDataBasedOnDatasetAndGenes);
+router.get('/v1/mutation/:dataset', utils.isValidId, verifytoken, mutation.getMutationDataBasedOnDataset);
+
+// APIs related to patients table.
+router.get('/v1/patients', verifytoken, patients.getPatients);
+router.get('/v1/patients/details', verifytoken, patients.getPatientsDetailedInformation);
+router.get('/v1/patients/details/:patient', utils.isValidId, verifytoken, patients.getPatientDetailedInformationBasedOnPatientId);
+
+// APIs related to rnasequencing table.
+router.get('/v1/rnaseq', verifytoken, rnasequencing.getRnaSeqBasedOnDatasetAndGenes);
+router.get('/v1/rnaseq/:dataset', utils.isValidId, verifytoken, rnasequencing.getRnaSeqDataBasedOnDataset);
+
+// APIs related to tissues table.
+router.get('/v1/tissues', tissues.getTissues);
+router.get('/v1/tissues/details/:tissue', verifytoken, tissues.getTissueDetailedInformationBasedOnTissueId);
+
+// APIs related to drug screening table.
+router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreeningDataBasedOnDrugAndPatient);
 
 
 module.exports = router;

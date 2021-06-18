@@ -8,7 +8,10 @@ const HeaderStyle = styled.header`
         box-sizing: border-box;
     }
     button {
-        background-color: ${colors.blue_header}
+        background-color: ${colors.blue_header};
+        &:hover {
+            background-color: ${colors.pink_header} !important;
+        }
     }
     display: flex;
     justify-content: space-around;
@@ -16,7 +19,7 @@ const HeaderStyle = styled.header`
     min-height: 10vh;
     max-height: 10vh;
     font-family: 'Raleway', sans-serif;
-    background-color: ${colors.white_red};
+    background-color: ${colors.white};
     position: absolute;
     top: 0;
     left: 0;
@@ -31,27 +34,48 @@ const LinkStyle = styled.div`
     a {
         color: ${colors.blue_header};
         text-decoration: none;
-        letter-spacing:1px;
+        letter-spacing: 1px;
         font-family: 'Raleway', sans-serif;
         font-weight: 700;
-        font-size: 1.20em;
+        font-size: 1.30rem;
         &:hover {
             color: ${colors.pink_header};
             cursor: pointer;
         }
     }
 
-    a:nth-child(1) {
-        margin-left: 600px;
-    }
-
-    a:nth-child(6) {
-        margin-right: -200px;
-    }
-
-    @media screen and (max-width: 2100px) {
+    @media screen and (max-width: 2600px) {
         a {
-            font-size: 1.20em;
+            font-size: 1.45em;
+        }
+
+        a:nth-child(1) {
+            margin-left: 600px;
+        }
+
+        a:nth-child(6) {
+            margin-right: -200px;
+        }
+    }
+
+    @media screen and (max-width: 2200px) {
+        a {
+            font-size: 1.35em;
+        }
+
+        a:nth-child(1) {
+            margin-left: 400px;
+        }
+
+        a:nth-child(6) {
+            margin-right: -150px;
+        }
+    }
+    
+
+    @media screen and (max-width: 1700px) {
+        a {
+            font-size: 1.25em;
         }
 
         a:nth-child(1) {
@@ -59,7 +83,7 @@ const LinkStyle = styled.div`
         }
 
         a:nth-child(6) {
-        margin-right: -100px;
+            margin-right: -100px;
         }
     }
 

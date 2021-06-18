@@ -9,7 +9,7 @@ import axios from 'axios';
 import {
     Paper, SubmitStyle, LogoStyle, PaperGradient, LogoBack,
 } from './LoginStyle';
-import logo from '../../images/logo.png';
+import logo from '../../images/new_logo.png';
 import colors from '../../styles/colors';
 
 

@@ -22,11 +22,11 @@ class DrugSummary extends React.Component {
     componentDidMount() {
         const newValues = [];
         // passing on token as the header to the api call.
-        axios.get('/api/v1/drug/class', { headers: { Authorization: localStorage.getItem('user') } })
+        axios.get('/api/v1/models/groupbydrugclass', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 response.data.data.forEach((data) => {
                     const value = {};
-                    if (data.class_name !== '') {
+                    if (String(data.class_name) !== 'null') {
                         value.id = (data.class_name).replace('"', '').replace('/', '_');
                         value.value = data.model_ids;
                         newValues.push(value);
@@ -66,11 +66,12 @@ class DrugSummary extends React.Component {
                                         chartId="donut_drugs"
                                         data={data}
                                         arcRadius={arc}
+                                        label="Number of models"
                                     />
                                 )
                         }
                     </div>
-                    <div className="donut-wrapper summary-table">
+                    <div className="summary-table">
                         <DrugTable />
                     </div>
                     <Footer />

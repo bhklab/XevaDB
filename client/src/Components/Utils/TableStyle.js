@@ -2,11 +2,18 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const TableWrapper = styled.div`
-    padding:10px 20px 30px 20px;
+    margin: auto !important;
+    padding: 10px 20px 30px 20px;
     font-family: 'Raleway', sans-serif;
 
     .ReactTable * {
         box-sizing: border-box;
+    }
+
+    .rt-td:hover {
+        a {
+            color: ${colors.pink_header} !important;
+        }
     }
 
     .ReactTable .rt-table {
@@ -21,7 +28,7 @@ const TableWrapper = styled.div`
     }
 
     .ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
-        background: ${colors.fade_blue}
+        background: ${colors.white_red}
     }
 
     .ReactTable .rt-thead {
@@ -57,6 +64,5 @@ const TableWrapper = styled.div`
         color: ${colors.blue_header};
     }
 `;
-
 
 export default TableWrapper;

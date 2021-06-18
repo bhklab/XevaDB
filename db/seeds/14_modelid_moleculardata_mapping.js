@@ -1,22 +1,18 @@
-const csv = require('csvjson');
-const fs = require('fs');
-const data_path = require('../path')
+const csv = require('csvtojson');
+const path = require('path');
+const dataPath = require('../path');
 
-const options = {
-  delimiter: ',', // optional
-  quote: '"', // optional
+
+const csvFilePath = path.join(dataPath, 'modelid_moleculardata_mapping.csv');
+const parserParams = {
+    delimiter: ',', // optional
+    quote: '"', // optional
+    ignoreEmpty: true,
 };
 
-const file_location = `${data_path}/modelid_moleculardata_mapping.csv`
 
-
-const file = fs.readFileSync(file_location, 'utf8');
-const dataObj = csv.toObject(file, options);
-
-
-exports.seed = function (knex, Promise) {
-  return knex('modelid_moleculardata_mapping').del()
-    .then(() => {
-      return knex('modelid_moleculardata_mapping').insert(dataObj);
-    });
-};
+exports.seed = (knex) => (
+    knex('modelid_moleculardata_mapping').del()
+        .then(() => csv(parserParams).fromFile(csvFilePath))
+        .then((data) => knex('modelid_moleculardata_mapping').insert(data))
+);

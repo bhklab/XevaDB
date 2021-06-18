@@ -1,73 +1,93 @@
-/* eslint-disable no-shadow */
-/* eslint-disable array-callback-return */
-/* eslint-disable no-plusplus */
-/* eslint-disable func-names */
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
+const { distinctPatientsQuery, geneListQuery } = require('./helper');
 
-// This will get the rna sequencing data for the selected dataset id.
-const getRnaSeqBasedOnDataset = function (request, response) {
-    const paramDataset = request.params.dataset;
 
-    if (isVerified(response, paramDataset)) {
-        // grabbing the rna_sequencing data based on patients and limiting genes to 1-30.
-        knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
-            .from('rna_sequencing')
-            .rightJoin(
-                'genes',
-                'rna_sequencing.gene_id',
-                'genes.gene_id',
-            )
-            .leftJoin(
-                'modelid_moleculardata_mapping',
-                'rna_sequencing.sequencing_uid',
-                'modelid_moleculardata_mapping.sequencing_uid',
-            )
-            .leftJoin(
-                knex.select()
-                    .from('model_information')
-                    .groupBy('model_information.patient_id')
-                    .as('model_information'),
-                'modelid_moleculardata_mapping.model_id',
-                'model_information.model_id',
-            )
-            .leftJoin(
-                'patients',
-                'model_information.patient_id',
-                'patients.patient_id',
-            )
-            .leftJoin(
-                'sequencing',
-                'modelid_moleculardata_mapping.sequencing_uid',
-                'sequencing.sequencing_uid',
-            )
-            .where('model_information.dataset_id', paramDataset)
-            .andWhereBetween('rna_sequencing.gene_id', [1, 30])
-            .orderBy('genes.gene_id')
-            .orderBy('sequencing.sequencing_uid')
-            .then((rnaseq_data) => {
-                let gene_id = '';
-                const data = [];
-                let i = 0;
-                const usersRows = JSON.parse(JSON.stringify(rnaseq_data));
-                usersRows.map((element) => {
-                    if (element.gene_name !== gene_id) {
-                        gene_id = element.gene_name;
-                        data[i] = {};
-                        data[i].gene_id = element.gene_name;
-                        data[i][element.patient] = element.value;
-                        i++;
-                    } else {
-                        data[i - 1][element.patient] = element.value;
-                    }
-                });
-                response.send(data);
-            })
-            .catch((error) => response.status(500).json({
-                status: 'could not find data from rna_sequencing table, getRnaSeqBasedOnDataset',
+// rna sequencing data.
+const rnaSeqQuery = () => knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
+    .from('rna_sequencing')
+    .rightJoin(
+        'genes',
+        'rna_sequencing.gene_id',
+        'genes.gene_id',
+    )
+    .leftJoin(
+        'modelid_moleculardata_mapping',
+        'rna_sequencing.sequencing_uid',
+        'modelid_moleculardata_mapping.sequencing_uid',
+    )
+    .leftJoin(
+        knex.select()
+            .from('model_information')
+            .groupBy('model_information.patient_id')
+            .as('model_information'),
+        'modelid_moleculardata_mapping.model_id',
+        'model_information.model_id',
+    )
+    .leftJoin(
+        'patients',
+        'model_information.patient_id',
+        'patients.patient_id',
+    )
+    .leftJoin(
+        'sequencing',
+        'modelid_moleculardata_mapping.sequencing_uid',
+        'sequencing.sequencing_uid',
+    );
+
+
+// transforming the input data.
+const transformData = (input) => {
+    // array to store mutation data .
+    const data = [];
+    let gene_id = '';
+    let i = 0;
+    // transforming the data.
+    input.forEach((element) => {
+        if (element.gene_name !== gene_id) {
+            gene_id = element.gene_name;
+            data[i] = {};
+            data[i].gene_id = element.gene_name;
+            data[i][element.patient] = element.value;
+            i += 1;
+        } else {
+            data[i - 1][element.patient] = element.value;
+        }
+    });
+    return data;
+};
+
+
+/**
+ * @param {Object} request - request object.
+ * @param {number} request.params.dataset - dataset id.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - rna sequencing data based on the dataset id.
+ */
+const getRnaSeqDataBasedOnDataset = async (request, response) => {
+    // dataset param.
+    const datasetParam = request.params.dataset;
+
+    if (isVerified(response, datasetParam)) {
+        try {
+            // grabbing the rna_sequencing data based on patients and limiting genes to 1-30.
+            const rnaSeqData = await rnaSeqQuery().where('model_information.dataset_id', datasetParam)
+                .andWhereBetween('rna_sequencing.gene_id', [1, 30])
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid');
+
+            // transforming the data.
+            const transformedData = transformData(JSON.parse(JSON.stringify(rnaSeqData)));
+
+            // sending the response.
+            response.send(transformedData);
+        } catch (error) {
+            response.status(500).json({
+                status: 'Could not find data from rna_sequencing table, getRnaSeqBasedOnDataset',
                 data: error,
-            }));
+            });
+        }
     } else {
         response.status(500).json({
             status: 'Could not find data from rna_sequencing table, getRnaSeqBasedOnDataset',
@@ -77,106 +97,48 @@ const getRnaSeqBasedOnDataset = function (request, response) {
 };
 
 
-// this will get the rna sequencing data based on
-// dataset and drug query parameters.
-const getRnaSeqBasedPerDatasetBasedOnGenes = function (request, response) {
-    const paramGene = request.query.genes;
-    const paramDataset = request.query.dataset;
-    const genes = paramGene.split(',');
+/**
+ * @param {Object} request - request object.
+ * @param {string} request.query.genes - list of genes to query.
+ * @param {number} request.query.dataset - dataset id to query from.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - rna sequencing data based on
+ *  dataset and drug query parameters.
+ */
+const getRnaSeqBasedOnDatasetAndGenes = async (request, response) => {
+    // dataset and gene query parameters.
+    const geneParam = request.query.genes;
+    const datasetParam = request.query.dataset;
 
-    if (isVerified(response, paramDataset)) {
-        // get the distinct patients or total patients from model information table.
-        // as some patient ids are missing from oncoprint because
-        // data is not available for that patient/model.
-        const modelInformationDistinctPatient = knex('model_information')
-            .distinct('patients.patient')
-            .from('model_information')
-            .leftJoin(
-                'patients',
-                'model_information.patient_id',
-                'patients.patient_id',
-            )
-            .where({
-                dataset_id: paramDataset,
-            });
+    if (isVerified(response, datasetParam)) {
+        try {
+            // getting the unique list of patients and genes.
+            const patients = await distinctPatientsQuery(datasetParam);
+            const genes = await geneListQuery(geneParam.split(','));
 
-        // to get the gene list based on gene_id param.
-        const geneList = knex.select('gene_id')
-            .from('genes')
-            .whereIn('gene_name', genes);
+            // patients and genes array.
+            const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
+            const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
 
-        // rna_sequencing data.
-        Promise.all([modelInformationDistinctPatient, geneList])
-            .then((row) => {
-                const data = [];
-                // patients
-                const patientRows = JSON.parse(JSON.stringify(row[0]));
-                // parsing the gene_list in order to get an array of genes.
-                let value = JSON.parse(JSON.stringify(row[1]));
-                value = value.map((value) => value.gene_id);
+            // grabbing the rna_sequencing data for the genes.
+            const rnaSeqData = await rnaSeqQuery().where('model_information.dataset_id', datasetParam)
+                .whereIn('rna_sequencing.gene_id', genesArray)
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid');
 
-                // grabbing the rna_sequencing data for the genes.
-                knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
-                    .from('rna_sequencing')
-                    .rightJoin(
-                        'genes',
-                        'rna_sequencing.gene_id',
-                        'genes.gene_id',
-                    )
-                    .leftJoin(
-                        'modelid_moleculardata_mapping',
-                        'rna_sequencing.sequencing_uid',
-                        'modelid_moleculardata_mapping.sequencing_uid',
-                    )
-                    .leftJoin(
-                        knex.select()
-                            .from('model_information')
-                            .groupBy('model_information.patient_id')
-                            .as('model_information'),
-                        'modelid_moleculardata_mapping.model_id',
-                        'model_information.model_id',
-                    )
-                    .leftJoin(
-                        'patients',
-                        'model_information.patient_id',
-                        'patients.patient_id',
-                    )
-                    .leftJoin(
-                        'sequencing',
-                        'modelid_moleculardata_mapping.sequencing_uid',
-                        'sequencing.sequencing_uid',
-                    )
-                    .where('model_information.dataset_id', paramDataset)
-                    .whereIn('rna_sequencing.gene_id', value)
-                    .orderBy('genes.gene_id')
-                    .orderBy('sequencing.sequencing_uid')
-                    .then((rnasequencing_data) => {
-                        let gene_id = '';
-                        let i = 0;
-                        const usersRows = JSON.parse(JSON.stringify(rnasequencing_data));
-                        usersRows.map((element) => {
-                            if (element.gene_name !== gene_id) {
-                                gene_id = element.gene_name;
-                                data[i] = {};
-                                data[i].gene_id = element.gene_name;
-                                data[i][element.patient] = element.value;
-                                i++;
-                            } else {
-                                data[i - 1][element.patient] = element.value;
-                            }
-                        });
+            // transforming the data.
+            const transformedData = transformData(JSON.parse(JSON.stringify(rnaSeqData)));
+            // array of all the patients belonging to a particular dataset.
+            transformedData.push(patientsArray);
 
-                        // array of all the patients belonging to a particular dataset.
-                        const patient = patientRows.map((element) => element.patient);
-                        data.push(patient);
-                        // sending the response.
-                        response.send(data);
-                    });
-            })
-            .catch((error) => response.status(500).json({
-                status: 'could not find data from rna_sequencing table, getRnaSeqBasedPerDatasetBasedOnDrugs',
+            // sending the response.
+            response.send(transformedData);
+        } catch (error) {
+            response.status(500).json({
+                status: 'Could not find data from rna_sequencing table, getRnaSeqBasedPerDatasetBasedOnGenes',
                 data: error,
-            }));
+            });
+        }
     } else {
         response.status(500).json({
             status: 'Could not find data from rna_sequencing table, getRnaSeqBasedPerDatasetBasedOnGenes',
@@ -187,6 +149,6 @@ const getRnaSeqBasedPerDatasetBasedOnGenes = function (request, response) {
 
 
 module.exports = {
-    getRnaSeqBasedOnDataset,
-    getRnaSeqBasedPerDatasetBasedOnGenes,
+    getRnaSeqDataBasedOnDataset,
+    getRnaSeqBasedOnDatasetAndGenes,
 };

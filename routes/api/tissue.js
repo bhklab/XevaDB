@@ -1,14 +1,72 @@
+/* eslint-disable camelcase */
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
+const { getAllowedDatasetIds } = require('./util');
+const { getModelInformationDataQuery } = require('./model_information');
 
 
-// get all the data from the tissues table.
-const getTissues = function (request, response) {
+/**
+ * @param {Object} data - input data.
+ * @returns {Object} - transformed data.
+ */
+const transformTissueDetail = (data) => {
+    const transformedData = {};
+    data.forEach((value) => {
+        const {
+            tissue_name, tissue_id, dataset_name,
+            patient, model, drug_name,
+        } = value;
+        // if the tissue is not available in the object.
+        if (!transformedData[tissue_name]) {
+            transformedData[tissue_name] = {
+                id: tissue_id,
+                name: tissue_name,
+                datasets: {
+                    [dataset_name]: {
+                        name: dataset_name,
+                        patients: [patient],
+                        models: [model],
+                        drugs: [drug_name],
+                    },
+                },
+            };
+        }
+        // if the dataset is not in the object, add a new dataset.
+        if (!transformedData[tissue_name].datasets[dataset_name]) {
+            transformedData[tissue_name].datasets[dataset_name] = {
+                name: dataset_name,
+                patients: [patient],
+                models: [model],
+                drugs: [drug_name],
+            };
+        }
+
+        // add models and patients accordingly.
+        if (!transformedData[tissue_name].datasets[dataset_name].models.includes(model)) {
+            transformedData[tissue_name].datasets[dataset_name].models.push(model);
+        }
+        if (!transformedData[tissue_name].datasets[dataset_name].patients.includes(patient)) {
+            transformedData[tissue_name].datasets[dataset_name].patients.push(patient);
+        }
+        if (!transformedData[tissue_name].datasets[dataset_name].drugs.includes(drug_name)) {
+            transformedData[tissue_name].datasets[dataset_name].drugs.push(drug_name);
+        }
+    });
+    return transformedData;
+};
+
+
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - list of the tissues.
+ */
+const getTissues = (request, response) => {
     knex.select()
         .from('tissues')
-        .then((tissue) => response.status(200).json({
+        .then((tissues) => response.status(200).json({
             status: 'success',
-            data: tissue,
+            data: tissues,
         }))
         .catch((error) => response.status(500).json({
             status: 'could not find data from tissue table, getTissues',
@@ -17,29 +75,30 @@ const getTissues = function (request, response) {
 };
 
 
-// this is grouping different modelids based on the different tissues.
-const getModelsGroupedByTissue = function (request, response) {
-    // if the user is not logged in the dataset id's would be between 1 to 6, else 1 to 8.
-    const datasetArray = response.locals.user === 'unknown' ? [1, 6] : [1, 8];
-    // select models grouped by tissues.
-    knex.select('model_information.tissue_id', 'tissues.tissue_name')
-        .count('model_information.patient_id as total')
-        .groupBy('model_information.tissue_id')
-        .from('model_information')
-        .leftJoin(
-            'tissues',
-            'model_information.tissue_id',
-            'tissues.tissue_id',
-        )
-        .whereNot('model_information.tissue_id', '')
-        .whereBetween('model_information.dataset_id', datasetArray)
-        .orderBy('tissues.tissue_name', 'asc')
-        .then((tissue) => response.status(200).json({
+/**
+ * @param {Object} request - request object.
+ * @param {string} request.params.tissue - tissue id.
+ * @param {Object} response - response object with authorization header.
+ * @param {string} response.locals.user - whether the user is verified or not ('unknown').
+ * @returns {Object} - model information data based on the tissue id.
+ */
+const getTissueDetailedInformationBasedOnTissueId = (request, response) => {
+    // user variable.
+    const { user } = response.locals;
+    // model param.
+    const tissueParam = request.params.tissue;
+
+    // query to grab the data based on the tissue id.
+    getModelInformationDataQuery()
+        .where('t.tissue_id', tissueParam)
+        .andWhereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .then((data) => transformTissueDetail(data))
+        .then((data) => response.status(200).json({
             status: 'success',
-            data: tissue,
+            data,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find tissue',
+            status: 'could not find data from model information table, getTissueDetailedInformationBasedOnTissueId',
             data: error,
         }));
 };
@@ -47,5 +106,5 @@ const getModelsGroupedByTissue = function (request, response) {
 
 module.exports = {
     getTissues,
-    getModelsGroupedByTissue,
+    getTissueDetailedInformationBasedOnTissueId,
 };

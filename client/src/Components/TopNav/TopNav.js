@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { HeaderStyle, LogoStyle, LinkStyle } from './NavStyle';
-import logo from '../../images/logo.png';
+import logo from '../../images/new_logo.png';
 
 class TopNav extends React.Component {
     constructor(props) {

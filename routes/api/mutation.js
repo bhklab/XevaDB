@@ -1,97 +1,99 @@
-/* eslint-disable no-plusplus */
-/* eslint-disable func-names */
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
+const { distinctPatientsQuery, geneListQuery } = require('./helper');
 
-// This will get the mutation for the selected dataset id.
-const getMutationBasedOnDataset = function (request, response) {
-    const paramDataset = request.params.dataset;
 
-    if (isVerified(response, paramDataset)) {
-        // get the distinct patients or total patients from model information table.
-        // as some patient ids are missing from oncoprint
-        // because data is not available for that patient/model.
-        const modelInformationDistinctPatient = knex('model_information')
-            .distinct('patients.patient')
+// mutation data.
+const mutationQuery = () => knex.select('genes.gene_name', 'patients.patient', 'mutation.value')
+    .from('mutation')
+    .rightJoin(
+        'genes',
+        'mutation.gene_id',
+        'genes.gene_id',
+    )
+    .leftJoin(
+        'modelid_moleculardata_mapping',
+        'mutation.sequencing_uid',
+        'modelid_moleculardata_mapping.sequencing_uid',
+    )
+    .leftJoin(
+        knex.select()
             .from('model_information')
-            .leftJoin(
-                'patients',
-                'model_information.patient_id',
-                'patients.patient_id',
-            )
-            .where({
-                dataset_id: paramDataset,
-            });
+            .groupBy('model_information.patient_id')
+            .as('model_information'),
+        'modelid_moleculardata_mapping.model_id',
+        'model_information.model_id',
+    )
+    .leftJoin(
+        'patients',
+        'model_information.patient_id',
+        'patients.patient_id',
+    )
+    .leftJoin(
+        'sequencing',
+        'modelid_moleculardata_mapping.sequencing_uid',
+        'sequencing.sequencing_uid',
+    );
 
-        // mutation data.
-        modelInformationDistinctPatient
-            .then((total) => {
-                const patientRows = JSON.parse(JSON.stringify(total));
-                const data = [];
-                // grabbing the mutation data based on patients and limiting genes to 1-30.
-                knex.select('genes.gene_name', 'patients.patient', 'mutation.value')
-                    .from('mutation')
-                    .rightJoin(
-                        'genes',
-                        'mutation.gene_id',
-                        'genes.gene_id',
-                    )
-                    .leftJoin(
-                        'modelid_moleculardata_mapping',
-                        'mutation.sequencing_uid',
-                        'modelid_moleculardata_mapping.sequencing_uid',
-                    )
-                    .leftJoin(
-                        knex.select()
-                            .from('model_information')
-                            .groupBy('model_information.patient_id')
-                            .as('model_information'),
-                        'modelid_moleculardata_mapping.model_id',
-                        'model_information.model_id',
-                    )
-                    .leftJoin(
-                        'patients',
-                        'model_information.patient_id',
-                        'patients.patient_id',
-                    )
-                    .leftJoin(
-                        'sequencing',
-                        'modelid_moleculardata_mapping.sequencing_uid',
-                        'sequencing.sequencing_uid',
-                    )
-                    .where('model_information.dataset_id', paramDataset)
-                    .andWhereBetween('mutation.gene_id', [1, 30])
-                    .orderBy('genes.gene_id')
-                    .orderBy('sequencing.sequencing_uid')
-                    .then((mutation_data) => {
-                        let gene_id = '';
-                        let i = 0;
-                        const usersRows = JSON.parse(JSON.stringify(mutation_data));
-                        usersRows.forEach((element) => {
-                            if (element.gene_name !== gene_id) {
-                                gene_id = element.gene_name;
-                                data[i] = {};
-                                data[i].gene_id = element.gene_name;
-                                data[i][element.patient] = element.value;
-                                i++;
-                            } else {
-                                data[i - 1][element.patient] = element.value;
-                            }
-                        });
 
-                        // array of all the patients belonging to a particular dataset.
-                        const patient = patientRows.map((element) => element.patient);
-                        data.push(patient);
+// transforming the input data.
+const transformData = (input) => {
+    // array to store mutation data .
+    const data = [];
+    let gene_id = '';
+    let i = 0;
+    // transforming the data.
+    input.forEach((element) => {
+        if (element.gene_name !== gene_id) {
+            gene_id = element.gene_name;
+            data[i] = {};
+            data[i].gene_id = element.gene_name;
+            data[i][element.patient] = element.value;
+            i += 1;
+        } else {
+            data[i - 1][element.patient] = element.value;
+        }
+    });
+    return data;
+};
 
-                        // sending the response.
-                        response.send(data);
-                    });
-            })
-            .catch((error) => response.status(500).json({
-                status: 'could not find data from mutation table, getMutationBasedOnDataset',
+
+/**
+ * @param {Object} request - request object.
+ * @param {number} request.params.dataset - dataset id.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - mutation data based on the dataset id.
+ */
+const getMutationDataBasedOnDataset = async (request, response) => {
+    // dataset param.
+    const datasetParam = request.params.dataset;
+
+    if (isVerified(response, datasetParam)) {
+        try {
+            // patients.
+            const patients = await distinctPatientsQuery(datasetParam);
+            const patientRows = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
+
+            // grabbing the mutation data based on patients and limiting genes to 1-30.
+            const mutationData = await mutationQuery().where('model_information.dataset_id', datasetParam)
+                .andWhereBetween('mutation.gene_id', [1, 30])
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid');
+
+            // transforming the data.
+            const transformedData = transformData(JSON.parse(JSON.stringify(mutationData)));
+            // array of all the patients belonging to a particular dataset.
+            transformedData.push(patientRows);
+
+            // sending the response.
+            response.send(transformedData);
+        } catch (error) {
+            response.status(500).json({
+                status: 'Could not find data from mutation table, getMutationBasedOnDataset',
                 data: error,
-            }));
+            });
+        }
     } else {
         response.status(500).json({
             status: 'Could not find data from mutation table, getMutationBasedOnDataset',
@@ -101,107 +103,49 @@ const getMutationBasedOnDataset = function (request, response) {
 };
 
 
-// this will get the mutation based on
-// dataset and drug query parameters.
-const getMutationBasedPerDatasetBasedOnGenes = function (request, response) {
-    const paramGene = request.query.genes;
-    const paramDataset = request.query.dataset;
-    const genes = paramGene.split(',');
+/**
+ * @param {Object} request - request object.
+ * @param {string} request.query.genes - list of genes to query.
+ * @param {number} request.query.dataset - dataset id to query from.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - mutation data based on
+ *  dataset and drug query parameters.
+ */
+const getMutationDataBasedOnDatasetAndGenes = async (request, response) => {
+    // gene and dataset param.
+    const geneParam = request.query.genes;
+    const datasetParam = request.query.dataset;
 
-    if (isVerified(response, paramDataset)) {
-        // get the distinct patients or total patients from model information table.
-        // as some patient ids are missing from oncoprint
-        // because data is not available for that patient/model.
-        const modelInformationDistinctPatient = knex('model_information')
-            .distinct('patients.patient')
-            .from('model_information')
-            .leftJoin(
-                'patients',
-                'model_information.patient_id',
-                'patients.patient_id',
-            )
-            .where({
-                dataset_id: paramDataset,
-            });
+    if (isVerified(response, datasetParam)) {
+        try {
+            // getting the unique list of patients and genes.
+            const patients = await distinctPatientsQuery(datasetParam);
+            const genes = await geneListQuery(geneParam.split(','));
 
-        // to get the gene list based on gene_id param.
-        const geneList = knex.select('gene_id')
-            .from('genes')
-            .whereIn('gene_name', genes);
+            // patients and genes array.
+            const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
+            const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
 
-        // mutation data.
-        Promise.all([modelInformationDistinctPatient, geneList])
-            .then((row) => {
-                const data = [];
-                // patients
-                const patientRows = JSON.parse(JSON.stringify(row[0]));
-                // parsing the gene_list in order to get an array of genes.
-                let value = JSON.parse(JSON.stringify(row[1]));
-                value = value.map((val) => val.gene_id);
+            // grabbing the mutation data for the genes.
+            const mutationData = await mutationQuery()
+                .where('model_information.dataset_id', datasetParam)
+                .whereIn('mutation.gene_id', genesArray)
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid');
 
-                // grabbing the mutation data for the genes.
-                knex.select('genes.gene_name', 'patients.patient', 'mutation.value')
-                    .from('mutation')
-                    .rightJoin(
-                        'genes',
-                        'mutation.gene_id',
-                        'genes.gene_id',
-                    )
-                    .leftJoin(
-                        'modelid_moleculardata_mapping',
-                        'mutation.sequencing_uid',
-                        'modelid_moleculardata_mapping.sequencing_uid',
-                    )
-                    .leftJoin(
-                        knex.select()
-                            .from('model_information')
-                            .groupBy('model_information.patient_id')
-                            .as('model_information'),
-                        'modelid_moleculardata_mapping.model_id',
-                        'model_information.model_id',
-                    )
-                    .leftJoin(
-                        'patients',
-                        'model_information.patient_id',
-                        'patients.patient_id',
-                    )
-                    .leftJoin(
-                        'sequencing',
-                        'modelid_moleculardata_mapping.sequencing_uid',
-                        'sequencing.sequencing_uid',
-                    )
-                    .where('model_information.dataset_id', paramDataset)
-                    .whereIn('mutation.gene_id', value)
-                    .orderBy('genes.gene_id')
-                    .orderBy('sequencing.sequencing_uid')
-                    .then((mutation_data) => {
-                        let gene_id = '';
-                        let i = 0;
-                        const usersRows = JSON.parse(JSON.stringify(mutation_data));
-                        usersRows.forEach((element) => {
-                            if (element.gene_name !== gene_id) {
-                                gene_id = element.gene_name;
-                                data[i] = {};
-                                data[i].gene_id = element.gene_name;
-                                data[i][element.patient] = element.value;
-                                i++;
-                            } else {
-                                data[i - 1][element.patient] = element.value;
-                            }
-                        });
+            // transforming the data.
+            const transformedData = transformData(JSON.parse(JSON.stringify(mutationData)));
+            // array of all the patients belonging to a particular dataset.
+            transformedData.push(patientsArray);
 
-                        // array of all the patients belonging to a particular dataset.
-                        const patient = patientRows.map((element) => element.patient);
-                        data.push(patient);
-
-                        // sending the response.
-                        response.send(data);
-                    });
-            })
-            .catch((error) => response.status(500).json({
-                status: 'could not find data from mutation table, getMutationBasedPerDatasetBasedOnDrugs',
+            // sending the response.
+            response.send(transformedData);
+        } catch (error) {
+            response.status(500).json({
+                status: 'Could not find data from mutation table, getMutationBasedPerDatasetBasedOnDrugs',
                 data: error,
-            }));
+            });
+        }
     } else {
         response.status(500).json({
             status: 'Could not find data from mutation table, getMutationBasedPerDatasetBasedOnDrugs',
@@ -212,6 +156,6 @@ const getMutationBasedPerDatasetBasedOnGenes = function (request, response) {
 
 
 module.exports = {
-    getMutationBasedOnDataset,
-    getMutationBasedPerDatasetBasedOnGenes,
+    getMutationDataBasedOnDataset,
+    getMutationDataBasedOnDatasetAndGenes,
 };

@@ -22,14 +22,14 @@ const DatasetTable = (props) => {
             search: false,
             sortable: false,
             Cell: (row) => (
-                <Link to={`/dataset/${row.original.parameter}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
-                    {row.original.id}
+                <Link to={`/dataset/${row.original.dataset_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                    {row.original.dataset_name}
                 </Link>
             ),
         },
         {
             Header: 'Number of Patients',
-            accessor: 'value',
+            accessor: 'totalPatients',
             minWidth: 120,
         },
         {
@@ -40,7 +40,7 @@ const DatasetTable = (props) => {
     ];
 
     return (
-        <TableWrapper className="wrap">
+        <TableWrapper>
             <h1 style={h1Style}> List of Datasets </h1>
             <ReactTable
                 data={data}

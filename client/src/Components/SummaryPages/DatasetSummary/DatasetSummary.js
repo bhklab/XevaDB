@@ -7,16 +7,6 @@ import DatasetTable from './DatasetTable';
 import Spinner from '../../Utils/Spinner';
 
 class DatasetSummary extends React.Component {
-    static parseDataset(dataset) {
-        if (dataset === 'SU2C UHN (Breast Cancer)') {
-            return 'UHN (Breast Cancer)';
-        }
-        if (dataset === 'SU2C McGill (Breast Cancer)') {
-            return 'McGill (Breast Cancer)';
-        }
-        return dataset;
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -29,13 +19,13 @@ class DatasetSummary extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/v1/dataset/models', { headers: { Authorization: localStorage.getItem('user') } })
+        axios.get('/api/v1/datasets/details', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
-                const data = response.data.data.map((element) => ({
-                    id: DatasetSummary.parseDataset(element.dataset_name),
-                    value: element.patient_id,
-                    parameter: element.dataset_id,
-                    totalModels: element.totalModels,
+                const data = response.data.datasets.map((element) => ({
+                    dataset_name: element.name,
+                    dataset_id: element.id,
+                    totalPatients: element.patients.length,
+                    totalModels: element.models.length,
                 }));
                 this.setState({
                     data,
@@ -67,14 +57,22 @@ class DatasetSummary extends React.Component {
                                     <DonutChart
                                         dimensions={dimensions}
                                         margin={margin}
-                                        data={data}
+                                        data={
+                                            data.map((element) => (
+                                                {
+                                                    id: element.dataset_name,
+                                                    value: element.totalPatients,
+                                                    parameter: element.dataset_id,
+                                                }
+                                            ))
+                                        }
                                         arcRadius={arc}
                                         chartId="donut_datasets"
                                     />
                                 )
                         }
                     </div>
-                    <div className="donut-wrapper summary-table">
+                    <div className="summary-table">
                         {
                             loading
                                 ? <Spinner loading={loading} />
