@@ -1,6 +1,8 @@
 /* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/require-default-props */
 import React, { useEffect } from 'react';
 import * as d3 from 'd3';
+import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
 import createToolTip from '../Utils/ToolTip';
 
@@ -180,6 +182,20 @@ const TreeDiagram = (props) => {
             <div id="treediagram" />
         </div>
     );
+};
+
+TreeDiagram.propTypes = {
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    margin: PropTypes.shape({
+        top: PropTypes.number,
+        right: PropTypes.number,
+        bottom: PropTypes.number,
+        left: PropTypes.number,
+    }),
+    dimensions: PropTypes.shape({
+        width: PropTypes.number,
+        height: PropTypes.number,
+    }),
 };
 
 export default TreeDiagram;
