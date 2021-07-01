@@ -51,9 +51,9 @@ const PatientTable = (props) => {
             accessor: 'tissue',
             minWidth: 160,
             Cell: ({ row }) => (
-                <span>
-                    {`${row.tissue.name}`}
-                </span>
+                <Link to={`/tissue/${row.tissue.id}`} style={linkStyle}>
+                    {row.tissue.name}
+                </Link>
             ),
         },
     ];
