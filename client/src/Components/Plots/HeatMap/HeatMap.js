@@ -81,7 +81,6 @@ class HeatMap extends Component {
             .attr('top', 10)
             .attr('left', 20);
 
-
         // setting the query strings
         let drugUse = '';
         let drugIndex = 0;
@@ -283,7 +282,6 @@ class HeatMap extends Component {
             .tickSize(0)
             .tickPadding(25);
 
-
         const xAxis = d3.axisTop()
             .scale(xScale)
             .tickSize(5);
@@ -302,7 +300,6 @@ class HeatMap extends Component {
             .attr('transform', `translate(${margin.left},${margin.top})`)
             .attr('id', `heatmap-${plotId}-g`);
 
-
         /** Appending Circle to the  Y-Axis */
         drug.forEach((val, i) => {
             svg
@@ -316,25 +313,21 @@ class HeatMap extends Component {
                 .style('visibility', 'hidden');
         });
 
-
         /** HEATMAP SKELETON * */
 
         // structure of the heatmap
         const skeleton = svg.append('g')
             .attr('id', 'skeleton');
 
-
         // this will create g element for each of data row (equivalent to total number of row)
         const drugResponse = skeleton.append('g')
             .attr('id', 'targ_rect');
-
 
         const gskeleton = drugResponse.selectAll('g')
             .data(data)
             .enter()
             .append('g')
             .attr('transform', (d, i) => `translate(0,${i * rectHeight})`);
-
 
         // this will append rect equivalent to number of patient ids.
         const drawrectangle = gskeleton.selectAll('rect.hmap-rect')
@@ -364,7 +357,6 @@ class HeatMap extends Component {
             .attr('height', rectHeight - 2)
             .attr('x', (d, i) => i * rectWidth)
             .attr('y', rectHeight);
-
 
         // grabbing the min and max value for the response type.
         const [min, max] = calculateMinMax();
@@ -486,11 +478,11 @@ class HeatMap extends Component {
                 createToolTip(d3.event.pageX, d3.event.pageY, patientToolTip, d);
                 // highlight
                 const drugClass = d3.select(this).attr('class').split(' ')[1];
-                d3.selectAll(`.hmap-hlight-${patient[i]}`)
+                d3.selectAll(`.hmap-hlight-${patient[i].replace('.', '')}`)
                     .style('opacity', 0.2);
-                d3.selectAll(`.oprint-hlight-${patient[i]}`)
+                d3.selectAll(`.oprint-hlight-${patient[i].replace('.', '')}`)
                     .style('opacity', 0.2);
-                d3.selectAll(`.hlight-space-${patient[i]}`)
+                d3.selectAll(`.hlight-space-${patient[i].replace('.', '')}`)
                     .style('opacity', 0.2);
 
                 return drugClass;
@@ -501,11 +493,11 @@ class HeatMap extends Component {
                 hideToolTip();
                 // highlight
                 const drugClass = d3.select(this).attr('class').split(' ')[1];
-                d3.selectAll(`.hmap-hlight-${patient[i]}`)
+                d3.selectAll(`.hmap-hlight-${patient[i].replace('.', '')}`)
                     .style('opacity', 0);
-                d3.selectAll(`.oprint-hlight-${patient[i]}`)
+                d3.selectAll(`.oprint-hlight-${patient[i].replace('.', '')}`)
                     .style('opacity', 0);
-                d3.selectAll(`.hlight-space-${patient[i]}`)
+                d3.selectAll(`.hlight-space-${patient[i].replace('.', '')}`)
                     .style('opacity', 0);
 
                 return drugClass;
@@ -629,7 +621,6 @@ class HeatMap extends Component {
             .attr('x', (dataset === '7' ? '-2.4em' : '0.6em'))
             .attr('y', '.15em');
 
-
         /** SMALL RECTANGLES ON RIGHT SIDE OF HEATMAP * */
 
         // This will create four rectangles on right side for the Evaluation of target lesions.
@@ -656,7 +647,6 @@ class HeatMap extends Component {
                 .text((d) => Object.keys(d))
                 .attr('fill', `${colors.blue_header}`)
                 .attr('font-size', '14px');
-
 
             /** VERTICAL GRAPH ON RIGHT SIDE OF HEATMAP * */
 
@@ -695,7 +685,6 @@ class HeatMap extends Component {
                 .style('stroke', `${colors.black}`)
                 .style('stroke-width', 1);
 
-
             // rectangle for vertical graph.
             const drugEvaluationRectangle = (iterator) => {
                 const responseEvalTypes = ['CR', 'PR', 'SD', 'PD'];
@@ -720,7 +709,6 @@ class HeatMap extends Component {
             for (let i = 0; i < drug.length; i++) {
                 drugEvaluationRectangle(i);
             }
-
 
             /** HORIZONTAL GRAPH AT THE TOP OF HEATMAP * */
 
