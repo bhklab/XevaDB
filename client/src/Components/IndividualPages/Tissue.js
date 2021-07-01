@@ -42,7 +42,11 @@ const transformIndentedTreeData = (data) => {
 };
 
 // Tissue Component.
-const Tissue = () => {
+const Tissue = (props) => {
+    // grab the tissue params id.
+    const { match } = props;
+    const tissueParam = match.params.id;
+
     // tissue and data loader state.
     const [tissueData, setTissueDataState] = useState({});
     const [loading, setLoader] = useState(true);
@@ -50,9 +54,11 @@ const Tissue = () => {
     // query to fetch the tissue detail.
     const fetchData = async () => {
         // API call to fetch the data from tissue detailed information API.
-        const tissueInformation = await axios.get('/api/v1/tissues/details/1', HEADER);
+        const tissueInformation = await axios.get(`/api/v1/tissues/details/${tissueParam}`, HEADER);
         // setting the tissue data state after transforming the data.
-        setTissueDataState(transformIndentedTreeData(Object.values(tissueInformation.data.data)[0]));
+        setTissueDataState(
+            transformIndentedTreeData(Object.values(tissueInformation.data.data)[0]),
+        );
         setLoader(false);
     };
 
