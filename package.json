@@ -24,7 +24,7 @@
     "express": "^4.17.1",
     "fast-csv": "^2.5.0",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.16.5",
+    "knex": "^0.19.5",
     "knex-csv-seeder": "^0.4.1",
     "knex-csv-transformer": "^1.0.4",
     "knex-logger": "^0.1.0",
