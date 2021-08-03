@@ -5,7 +5,7 @@ const fs = require('fs');
 const dataPath = require('../path');
 
 
-const csvFilePath = path.join(dataPath, 'copy_number_variation.csv');
+const csvFilePath = path.join(dataPath, 'mutation.csv');
 const parserParams = {
     delimiter: ',', // optional
     quote: '"', // optional
@@ -20,21 +20,21 @@ exports.seed = async (knex) => {
 
 
     // truncating the copy number variation data.
-    await knex('copy_number_variation').truncate()
+    await knex('mutation').truncate()
         .on('query', () => {
-            console.log(`${'='.repeat(20).trimEnd()}truncating copy_number_variation table!${'='.repeat(20).trimEnd()}`);
+            console.log(`${'='.repeat(20).trimEnd()}truncating mutation table!${'='.repeat(20).trimEnd()}`);
         })
         .on('query-response', (response) => {
-            console.log('trancating copy_number_variation table has been completed!', response);
+            console.log('trancating mutation table has been completed!', response);
         })
         .on('query-error', (error) => {
-            console.log(error, 'an error occured while creating copy_number_variation table!');
+            console.log(error, 'an error occured while creating mutation table!');
         });
 
 
     // function to insert data into the copy number variation table.
     const insertData = async (i) => {
-        await knex('copy_number_variation').insert(seedingData)
+        await knex('mutation').insert(seedingData)
             .then(() => {
                 if (i) {
                     console.log(`Inserting next 100k rows, currently at index ${i}`);
@@ -64,15 +64,15 @@ exports.seed = async (knex) => {
             }
         })
         .then(async () => { // this will insert the remaining data into the table.
-            await knex('copy_number_variation').insert(seedingData)
+            await knex('mutation').insert(seedingData)
                 .on('query', () => {
-                    console.log('Inserting data into the copy_number_variation table!!');
+                    console.log('Inserting data into the mutation table!!');
                 })
                 .on('query-response', (response) => {
-                    console.log(`${'='.repeat(20).trimEnd()}Inserted ${response} rows into the copy_number_variation table!!${'='.repeat(20).trimEnd()}`);
+                    console.log(`${'='.repeat(20).trimEnd()}Inserted ${response} rows into the mutation table!!${'='.repeat(20).trimEnd()}`);
                 })
                 .on('query-error', (error) => {
-                    console.log(error, 'an error occured while creating copy_number_variation table!');
+                    console.log(error, 'an error occured while creating mutation table!');
                 });
         });
 };
