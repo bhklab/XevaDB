@@ -9,7 +9,7 @@ const csvFilePath = path.join(dataPath, 'mutation.csv');
 const parserParams = {
     delimiter: ',', // optional
     quote: '"', // optional
-    ignoreEmpty: true,
+    ignoreEmpty: false,
 };
 
 
