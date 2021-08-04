@@ -595,7 +595,7 @@ class Oncoprint extends React.Component {
             .enter()
             .append('rect')
             .attr('x', (hmap_patients.length * rect_width + rect_width * 7.5))
-            .attr('y', (d, i) => (genes.length * 10) + i * rect_height * 0.75)
+            .attr('y', (d, i) => (genes.length * 5) + i * rect_height * 0.75)
             .attr('height', rect_width)
             .attr('width', rect_width)
             .attr('fill', function (d) {
@@ -626,7 +626,7 @@ class Oncoprint extends React.Component {
             .enter()
             .append('text')
             .attr('x', (hmap_patients.length * rect_width + rect_width * 9))
-            .attr('y', (d, i) => (genes.length * 10.5) + i * rect_height * 0.75)
+            .attr('y', (d, i) => (genes.length * 5.7) + i * rect_height * 0.75)
             .text((d) => d.value)
             .attr('font-size', '12px')
             .attr('fill', `${colors.blue_header}`);
