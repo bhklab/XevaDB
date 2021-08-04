@@ -176,7 +176,7 @@ const xAxis = (xscale, patientSvgWidth, boxHeight) => {
         .ticks(3)
         .tickSize(0);
 
-    d3.select('#heatmap-heatmap-g')
+    d3.select('#skeleton')
         .append('g')
         .attr('transform', `translate(${patientSvgWidth + 20}, ${boxHeight})`)
         .call(axis);
@@ -336,7 +336,7 @@ const BoxPlot = (props) => {
 
         // create an svg element.
         const svgCanvas = createTopSvg(patientSvgWidth, patientSvgHeight, 'boxplot', 'top');
-        const svgCanvasRight = appendGElementRight('heatmap-heatmap-g', 'right', patientSvgWidth, drugHeight);
+        const svgCanvasRight = appendGElementRight('skeleton', 'right', patientSvgWidth, drugHeight);
 
         // creating reactangle around the svgs.
         createRectangle(svgCanvas, patientSvgWidth, patientSvgHeight);
