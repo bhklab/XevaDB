@@ -300,9 +300,19 @@ class HeatMap extends Component {
             .attr('transform', `translate(${margin.left},${margin.top})`)
             .attr('id', `heatmap-${plotId}-g`);
 
+        /** HEATMAP SKELETON * */
+
+        // structure of the heatmap
+        const skeleton = svg.append('g')
+            .attr('id', 'skeleton');
+
         /** Appending Circle to the  Y-Axis */
+        const circles = skeleton
+            .append('g')
+            .attr('id', 'circle-group');
+
         drug.forEach((val, i) => {
-            svg
+            circles
                 .append('circle')
                 .attr('cx', -12)
                 .attr('cy', i)
@@ -312,12 +322,6 @@ class HeatMap extends Component {
                 .attr('transform', `translate(0,${yScale(val) + rectWidth - i})`)
                 .style('visibility', 'hidden');
         });
-
-        /** HEATMAP SKELETON * */
-
-        // structure of the heatmap
-        const skeleton = svg.append('g')
-            .attr('id', 'skeleton');
 
         // this will create g element for each of data row (equivalent to total number of row)
         const drugResponse = skeleton.append('g')
