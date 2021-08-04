@@ -151,8 +151,8 @@ class Oncoprint extends React.Component {
                 .attr('cx', -12)
                 .attr('cy', i)
                 .attr('r', 6)
-                .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
-                .style('fill', '#5b8c85')
+                .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '').replace('.', '')}`)
+                .style('fill', `${colors.circle_green}`)
                 .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
                 .style('visibility', 'hidden');
         });
@@ -694,11 +694,11 @@ class Oncoprint extends React.Component {
                         createToolTip(d3.event.pageX, d3.event.pageY, genes[i], hmap_patients[j], mutationToolTip, cnvToolTip);
 
                         // highlight
-                        d3.selectAll(`.hmap-hlight-${hmap_patients[j]}`)
+                        d3.selectAll(`.hmap-hlight-${hmap_patients[j].replace('.', '')}`)
                             .style('opacity', 0.2);
-                        d3.selectAll(`.oprint-hlight-${hmap_patients[j]}`)
+                        d3.selectAll(`.oprint-hlight-${hmap_patients[j].replace('.', '')}`)
                             .style('opacity', 0.2);
-                        d3.selectAll(`.hlight-space-${hmap_patients[j]}`)
+                        d3.selectAll(`.hlight-space-${hmap_patients[j].replace('.', '')}`)
                             .style('opacity', 0.2);
                     })
                     .on('mouseout', () => {
@@ -706,11 +706,11 @@ class Oncoprint extends React.Component {
                         hideToolTip();
 
                         // highlight
-                        d3.selectAll(`.hmap-hlight-${hmap_patients[j]}`)
+                        d3.selectAll(`.hmap-hlight-${hmap_patients[j].replace('.', '')}`)
                             .style('opacity', 0);
-                        d3.selectAll(`.oprint-hlight-${hmap_patients[j]}`)
+                        d3.selectAll(`.oprint-hlight-${hmap_patients[j].replace('.', '')}`)
                             .style('opacity', 0);
-                        d3.selectAll(`.hlight-space-${hmap_patients[j]}`)
+                        d3.selectAll(`.hlight-space-${hmap_patients[j].replace('.', '')}`)
                             .style('opacity', 0);
                     });
             }

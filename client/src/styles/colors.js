@@ -23,4 +23,5 @@ export default {
     green_gradient: '#5ab4ac',
     bg_fade_blue: '#dfe5ed',
     bg_fade_white: '#f0f2f5',
+    circle_green: '#5b8c85',
 };
