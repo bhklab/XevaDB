@@ -61,6 +61,13 @@ class OncoprintData extends React.Component {
     }
 
     updateResults(onco) {
+        // if the dataset id is equals to 4.
+        if (this.state.dataset === '4') {
+            this.setState({
+                loading: false,
+            });
+        }
+
         // total patients for the dataset.
         let hmap_patients = onco[0].data.pop();
 
@@ -155,7 +162,7 @@ class OncoprintData extends React.Component {
 
         function renderingData() {
             let data = '';
-            if (data_mut.length || data_cnv.length || data_rna.length) {
+            if (data_mut.length > 0 || data_cnv.length > 0 || data_rna.length > 0) {
                 data = (
                     <Oncoprint
                         className="oprint"
@@ -174,7 +181,8 @@ class OncoprintData extends React.Component {
                         data_cnv={data_cnv}
                     />
                 );
-            } else if (dataset === '4') {
+            } else if (dataset === '4' || dataset === 4) {
+                console.log('here');
                 return <Error message="There is no data available for PDXE (Gastric Cancer)" />;
             } else if (error) {
                 return <Error message="Page not found!!" />;
