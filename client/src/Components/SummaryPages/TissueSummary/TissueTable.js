@@ -18,22 +18,22 @@ const TissueTable = ({ data }) => {
             ),
         },
         {
-            Header: 'No. of Datasets',
+            Header: 'Datasets',
             accessor: 'dataset_count',
             minWidth: 160,
         },
         {
-            Header: 'No. of Patients',
+            Header: 'Patients',
             accessor: 'patient_count',
             minWidth: 160,
         },
         {
-            Header: 'No. of Models',
+            Header: 'Models',
             accessor: 'model_count',
             minWidth: 160,
         },
         {
-            Header: 'No. of Drugs',
+            Header: 'Drugs',
             accessor: 'drug_count',
             minWidth: 160,
         },

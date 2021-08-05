@@ -30,12 +30,12 @@ const PatientTable = (props) => {
             ),
         },
         {
-            Header: 'No. of Models',
+            Header: 'Models',
             accessor: 'model_count',
             minWidth: 160,
         },
         {
-            Header: 'No. of Drugs',
+            Header: 'Drugs',
             accessor: 'drug_count',
             minWidth: 160,
         },

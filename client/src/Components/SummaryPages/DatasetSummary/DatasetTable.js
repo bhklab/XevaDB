@@ -28,12 +28,12 @@ const DatasetTable = (props) => {
             ),
         },
         {
-            Header: 'Number of Patients',
+            Header: 'Patients',
             accessor: 'totalPatients',
             minWidth: 120,
         },
         {
-            Header: 'Number of Models',
+            Header: 'Models',
             accessor: 'totalModels',
             minWidth: 120,
         },
