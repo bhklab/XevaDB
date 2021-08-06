@@ -4,6 +4,8 @@
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 import { CSVLink } from 'react-csv';
 import { StyleTable, StyledLink } from './ResponseStyle';
 import BatchStatTable from './BatchResponseStatTable';
@@ -54,13 +56,13 @@ class StatTable extends React.Component {
             batchData: response[0].data,
         });
         // if the dataset id is not 7 then table header won't include Link and Row Number.
-        const { data } = this.state;
-        if (data[0] && data[0].dataset_id !== 7) {
-            this.setState({
-                tableHeader: ['Type', 'Model', 'Drug',
-                    'mRECIST', 'Best Average Response', 'Slope', 'AUC', 'Survival (Days)'],
-            });
-        }
+        // const { data } = this.state;
+        // if (data[0] && data[0].dataset_id !== 7) {
+        //     this.setState({
+        //         tableHeader: ['Type', 'Model', 'Drug',
+        //             'mRECIST', 'Best Average Response', 'Slope', 'AUC', 'Survival (Days)'],
+        //     });
+        // }
     }
 
     createTable() {
@@ -111,15 +113,24 @@ class StatTable extends React.Component {
             const dataRow = (
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`} style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}>
                     <td>{drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? 'Control' : 'Treatment'}</td>
-                    <td>{model}</td>
+                    <Tippy
+                        content={<a style={{ color: `${colors.lightgray}` }} href={link} target="_blank" rel="noopener noreferrer">Link to the raw data</a>}
+                        interactive
+                        interactiveBorder={20}
+                        placement="right"
+                    >
+                        <td>
+                            {model}
+                        </td>
+                    </Tippy>
                     <td>{drug}</td>
                     <td>{mRECIST}</td>
                     <td>{bar}</td>
                     <td>{slope}</td>
                     <td>{AUC}</td>
                     <td>{survival}</td>
-                    {checkData(link)}
-                    {checkData(row)}
+                    {/* {checkData(link)}
+                    {checkData(row)} */}
                 </tr>
             );
 
