@@ -84,17 +84,28 @@ class StatTable extends React.Component {
                 newData[total].patient = eachdata.patient;
                 newData[total].link = eachdata.link;
                 newData[total].row = eachdata.row;
+                newData[total].type = drugValue.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? 'Control' : 'Treatment';
                 total += 1;
             }
             newData[total - 1][eachdata.response_type === 'best.average.response' ? 'bar' : eachdata.response_type] = eachdata.value;
         });
 
+        // sorting data based on control and treatment.
+        const finalData = [];
+        newData.forEach((el) => {
+            if (el.type === 'Treatment') {
+                finalData.unshift(el);
+            } else {
+                finalData.push(el);
+            }
+        });
+
         // creating each table row.
         const createTableRow = (eachdata, index) => {
             const {
-                model, drug,
-                bar, mRECIST, slope, AUC,
-                survival, link, row,
+                model, drug, type,
+                bar, mRECIST, slope,
+                AUC, survival, link, row,
             } = eachdata;
 
             // will not return anything if there is no data.
@@ -112,7 +123,7 @@ class StatTable extends React.Component {
 
             const dataRow = (
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`} style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}>
-                    <td>{drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? 'Control' : 'Treatment'}</td>
+                    <td>{type}</td>
                     <Tippy
                         content={<a style={{ color: `${colors.lightgray}` }} href={link} target="_blank" rel="noopener noreferrer">Link to the raw data</a>}
                         interactive
@@ -138,7 +149,7 @@ class StatTable extends React.Component {
         };
 
         // create the table.
-        const table = newData.map((eachdata, index) => (
+        const table = finalData.map((eachdata, index) => (
             createTableRow(eachdata, index)
         ));
 
