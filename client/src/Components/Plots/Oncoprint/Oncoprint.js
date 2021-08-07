@@ -331,9 +331,11 @@ class Oncoprint extends React.Component {
                 if (genes_mut.includes(genes[i]) && patient_mut.includes(hmap_patients[j]) && data_mut[i][hmap_patients[j]] !== '0' && data_mut[i][hmap_patients[j]] !== '') {
                     isAlteration = !isAlteration ? true : isAlteration;
                     // based on the data gives different colors to the rectangle.
-                    const { color } = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()];
-                    const type = mutationTypeMap[data_mut[i][hmap_patients[j]].toLowerCase()].mainType;
-                    colorReactangles('mut', color, i, j, type);
+                    data_mut[i][hmap_patients[j]].split(',').forEach((el) => {
+                        const { color } = mutationTypeMap[el.toLowerCase()];
+                        const type = mutationTypeMap[el.toLowerCase()].mainType;
+                        colorReactangles('mut', color, i, j, type);
+                    });
                 }
             }
         }
