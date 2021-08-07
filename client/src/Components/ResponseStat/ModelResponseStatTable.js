@@ -124,16 +124,27 @@ class StatTable extends React.Component {
             const dataRow = (
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`} style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}>
                     <td>{type}</td>
-                    <Tippy
-                        content={<a style={{ color: `${colors.lightgray}` }} href={link} target="_blank" rel="noopener noreferrer">Link to the raw data</a>}
-                        interactive
-                        interactiveBorder={20}
-                        placement="right"
-                    >
-                        <td>
-                            {model}
-                        </td>
-                    </Tippy>
+                    {
+                        link
+                            ? (
+                                <Tippy
+                                    content={<a style={{ color: `${colors.lightgray}` }} href={link} target="_blank" rel="noopener noreferrer">Link to the raw data</a>}
+                                    interactive
+                                    interactiveBorder={20}
+                                    placement="right"
+                                >
+                                    <td>
+                                        {model}
+                                    </td>
+                                </Tippy>
+                            )
+                            : (
+                                <td>
+                                    {model}
+                                </td>
+                            )
+                    }
+
                     <td>{drug}</td>
                     <td>{mRECIST}</td>
                     <td>{bar}</td>
