@@ -11,7 +11,7 @@ const { distinctPatientsQuery } = require('./helper');
 const getControl = (datasetId) => {
     let control = '';
     if (datasetId === '7') {
-        control = 'water';
+        control = 'h2o';
     } else if (datasetId === '8') {
         control = 'control';
     } else {
