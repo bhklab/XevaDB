@@ -49,7 +49,7 @@ class DatasetSummary extends React.Component {
                 <GlobalStyles />
                 <div className="wrapper">
                     <div className="donut-wrapper">
-                        <h1> Number of Patients Per Dataset </h1>
+                        <h1> Datasets </h1>
                         {
                             loading
                                 ? <Spinner loading={loading} />
@@ -63,6 +63,7 @@ class DatasetSummary extends React.Component {
                                                     id: element.dataset_name,
                                                     value: element.totalPatients,
                                                     parameter: element.dataset_id,
+                                                    models: element.totalModels,
                                                 }
                                             ))
                                         }
