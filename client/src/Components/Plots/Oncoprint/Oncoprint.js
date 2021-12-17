@@ -89,8 +89,8 @@ class Oncoprint extends React.Component {
         let rect_alterations_rna = [];
         if (data_rna.length > 0) {
             rect_alterations_rna = [
-                { value: 'mRNA High', color: 'none' },
-                { value: 'mRNA Low', color: 'none' },
+                { value: 'Expression High', color: 'none' },
+                { value: 'Expression Low', color: 'none' },
             ];
         }
         // only if the cnv data is present.
@@ -612,9 +612,9 @@ class Oncoprint extends React.Component {
             })
             .attr('stroke', (d) => {
                 let val = '';
-                if (d.value === 'mRNA High') {
+                if (d.value === 'Expression High') {
                     val = 'red';
-                } if (d.value === 'mRNA Low') {
+                } if (d.value === 'Expression Low') {
                     val = 'blue';
                 } if (d.value === 'Not Available') {
                     val = 'lightgray';
