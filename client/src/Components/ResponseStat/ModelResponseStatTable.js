@@ -12,7 +12,6 @@ import BatchStatTable from './BatchResponseStatTable';
 import downloadIcon from '../../images/download.svg';
 import colors from '../../styles/colors';
 
-
 class StatTable extends React.Component {
     constructor(props) {
         super(props);
@@ -48,6 +47,7 @@ class StatTable extends React.Component {
                 key: value,
             }));
         }
+        return headers;
     }
 
     parseData(response) {
@@ -105,21 +105,21 @@ class StatTable extends React.Component {
             const {
                 model, drug, type,
                 bar, mRECIST, slope,
-                AUC, survival, link, row,
+                AUC, survival, link,
             } = eachdata;
 
             // will not return anything if there is no data.
-            const checkData = (val) => {
-                let tableData = '';
-                if (val && val === link) {
-                    tableData = <td style={{ minWidth: 150 }}><a href={val} target="_blank" rel="noopener noreferrer">Google-Sheet</a></td>;
-                } else if (val && val === row) {
-                    tableData = <td>{val}</td>;
-                } else {
-                    tableData = null;
-                }
-                return tableData;
-            };
+            // const checkData = (val) => {
+            //     let tableData = '';
+            //     if (val && val === link) {
+            //         tableData = <td style={{ minWidth: 150 }}><a href={val} target="_blank" rel="noopener noreferrer">Google-Sheet</a></td>;
+            //     } else if (val && val === row) {
+            //         tableData = <td>{val}</td>;
+            //     } else {
+            //         tableData = null;
+            //     }
+            //     return tableData;
+            // };
 
             const dataRow = (
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`} style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}>
@@ -150,7 +150,7 @@ class StatTable extends React.Component {
                     <td>{bar}</td>
                     <td>{slope}</td>
                     <td>{AUC}</td>
-                    <td>{survival}</td>
+                    <td>{parseInt(survival, 10)}</td>
                     {/* {checkData(link)}
                     {checkData(row)} */}
                 </tr>
@@ -176,7 +176,7 @@ class StatTable extends React.Component {
 
     render() {
         const { batchData, data } = this.state;
-        const datasetId = data[0] && data[0].dataset_id;
+        // const datasetId = data[0] && data[0].dataset_id;
         const csvHeader = this.getCSVHeader(data);
         const tableHeader = this.createTableHeader();
         const table = this.createTable();
