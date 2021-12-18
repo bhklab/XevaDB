@@ -92,7 +92,7 @@ const createBars = (svg, data, xScale, yScale, height, color) => {
 const appendBarText = (svg, data, xScale, yScale) => {
     data.forEach((element) => {
         svg.append('text')
-            .attr('x', xScale(element.id) + 10)
+            .attr('x', xScale(element.id) + (xScale.bandwidth() / 3))
             .attr('y', yScale(element.value) - 4)
             .attr('font-family', 'sans-serif')
             .attr('font-size', '12px')
@@ -115,6 +115,7 @@ const appendYAxisLabel = (svg, height, left, label) => {
 };
 
 const BarPlot = (props) => {
+    console.log(props);
     // getting the prop data.
     const margin = props.margin || defaultMargin;
     const dimensions = props.dimensions || defaultDimensions;
