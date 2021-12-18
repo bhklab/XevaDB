@@ -115,7 +115,6 @@ const appendYAxisLabel = (svg, height, left, label) => {
 };
 
 const BarPlot = (props) => {
-    console.log(props);
     // getting the prop data.
     const margin = props.margin || defaultMargin;
     const dimensions = props.dimensions || defaultDimensions;

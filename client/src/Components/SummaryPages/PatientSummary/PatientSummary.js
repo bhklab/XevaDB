@@ -33,7 +33,6 @@ const transformData = (data) => {
             };
         }
     });
-    console.log(transformedData);
     return transformedData;
 };
 
