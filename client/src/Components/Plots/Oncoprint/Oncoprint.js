@@ -791,8 +791,8 @@ class Oncoprint extends React.Component {
             val.forEach((row) => {
                 // if the gene id matches the clicked gene.
                 if (row.gene_id === gene) {
-                    Object.keys(row).forEach((patient, j) => {
-                        if ((isNaN(row[patient]) || i === 1) && patient !== 'gene_id') {
+                    Object.keys(row).forEach((patient) => {
+                        if ((Number.isNaN(row[patient]) || i === 1) && patient !== 'gene_id') {
                             const { priority } = type[row[patient].toLowerCase()];
                             createNewData(patient, priority);
                         } else if (Number(row[patient])) {
