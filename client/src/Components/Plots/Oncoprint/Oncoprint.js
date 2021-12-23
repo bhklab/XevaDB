@@ -12,30 +12,25 @@ import colors from '../../../styles/colors';
 class Oncoprint extends React.Component {
     constructor(props) {
         super(props);
-        this.Oncoprint = this.Oncoprint.bind(this);
+        this.makeOncoprint = this.makeOncoprint.bind(this);
         this.rankOncoprintBasedOnHeatMapChanges = this.rankOncoprintBasedOnHeatMapChanges.bind(this);
         this.rankOncoprint = this.rankOncoprint.bind(this);
     }
 
     componentDidMount() {
-        this.Oncoprint();
+        this.makeOncoprint();
     }
 
-    Oncoprint(modifiedPatients) {
+    makeOncoprint(patientArray) {
         let { hmap_patients } = this.props;
-        hmap_patients = modifiedPatients || hmap_patients;
-        const { className } = this.props;
+        hmap_patients = patientArray || hmap_patients;
+
+        const { className: plotId } = this.props;
         const { dimensions, margin, threshold } = this.props;
         const { data_mut, data_rna, data_cnv } = this.props;
         const { genes_mut, genes_rna, genes_cnv } = this.props;
         const { patient_mut, patient_rna, patient_cnv } = this.props;
 
-        this.makeOncoprint(className, dimensions, margin, threshold, hmap_patients,
-            data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv);
-    }
-
-
-    makeOncoprint(plotId, dimensions, margin, threshold, hmap_patients, data_mut, data_rna, data_cnv, genes_mut, genes_rna, genes_cnv, patient_mut, patient_rna, patient_cnv) {
         let isAlteration = false;
 
         // to merge two arrays and give the unique values.
@@ -628,7 +623,7 @@ class Oncoprint extends React.Component {
             .enter()
             .append('text')
             .attr('x', (hmap_patients.length * rect_width + rect_width * 9))
-            .attr('y', (d, i) => (genes.length * 5.7) + i * rect_height * 0.75)
+            .attr('y', (d, i) => (genes.length * 5) + i * rect_height * 0.8)
             .text((d) => d.value)
             .attr('font-size', '12px')
             .attr('fill', `${colors.blue_header}`);
@@ -725,7 +720,7 @@ class Oncoprint extends React.Component {
         const { className } = this.props;
         if (globalPatients.length > 0) {
             d3.select(`#oncoprint-${className}`).remove();
-            this.Oncoprint(globalPatients);
+            this.makeOncoprint(globalPatients);
         }
     }
 
@@ -834,7 +829,7 @@ class Oncoprint extends React.Component {
         // creating a new oncoprint based on the sorted patients list.
         const { className } = this.props;
         d3.select(`#oncoprint-${className}`).remove();
-        this.Oncoprint(sortedPatients);
+        this.makeOncoprint(sortedPatients);
 
         // making the circle visible on click of the drug.
         d3.select(`#circle-${gene.replace(/\s/g, '').replace(/\+/g, '')}`)
