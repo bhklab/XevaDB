@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { mutationTypeMap, cnaMap, rnaMap } from '../../../utils/MutationViewsUtil';
 import PatientContext, { PatientConsumer } from '../../Context/PatientContext';
 import colors from '../../../styles/colors';
+import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 
 class Oncoprint extends React.Component {
     constructor(props) {
@@ -123,16 +124,9 @@ class Oncoprint extends React.Component {
 
         /** SETTING SVG ATTRIBUTES and Oncoprint SKELETON * */
         // make the svg element
-        const svg = d3.select('#oncoprint')
-            .append('svg')
-            .attr('id', `oncoprint-${plotId}`) // set an id so that I can remove+replace on refresh
-            .attr('xmlns', 'http://www.w3.org/2000/svg')
-            .attr('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom)
-            .append('g')
-            .attr('transform',
-                `translate(${margin.left},${margin.top})`);
+        const svg = createSvgCanvas({
+            height, width, margin, id: 'oncoprint', canvasId: `oncoprint-${plotId}`,
+        });
 
         // skeleton of the oncoprint
         const skeleton = svg.append('g')
@@ -873,6 +867,5 @@ Oncoprint.propTypes = {
     data_rna: PropTypes.arrayOf(PropTypes.object).isRequired,
     data_cnv: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
-
 
 export default Oncoprint;
