@@ -182,7 +182,6 @@ class OncoprintData extends React.Component {
                     />
                 );
             } else if (dataset === '4' || dataset === 4) {
-                console.log('here');
                 return <Error message="There is no data available for PDXE (Gastric Cancer)" />;
             } else if (error) {
                 return <Error message="Page not found!!" />;

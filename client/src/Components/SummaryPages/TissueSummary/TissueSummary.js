@@ -14,7 +14,7 @@ import Pancreas from '../../../images/pancreas.png';
 import Skin from '../../../images/skin.png';
 import TissueTable from './TissueTable';
 import colors from '../../../styles/colors';
-import createToolTip from '../../Utils/ToolTip';
+import createToolTip from '../../../utils/ToolTip';
 
 // mouse over event on the images.
 const imageMouseOverEvent = (event, data) => {
