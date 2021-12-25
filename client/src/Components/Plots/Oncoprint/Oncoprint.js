@@ -34,21 +34,9 @@ class Oncoprint extends React.Component {
 
         let isAlteration = false;
 
-        // to merge two arrays and give the unique values.
-        // eslint-disable-next-line no-extend-native
-        Array.prototype.unique = function () {
-            const a = this.concat();
-            for (let i = 0; i < a.length; ++i) {
-                for (let j = i + 1; j < a.length; ++j) {
-                    if (a[i] === a[j]) { a.splice(j--, 1); }
-                }
-            }
-            return a;
-        };
-
-        // merging the data from all of three calls to api ie cnv, mutation and rnaseq.
-        const genes = [...genes_mut, ...genes_rna, ...genes_cnv].unique();
-        const patients = [...patient_mut, ...patient_rna, ...patient_cnv].unique();
+        // unique patients and genes.
+        const genes = [...new Set([...genes_mut, ...genes_rna, ...genes_cnv])];
+        const patients = [...new Set([...patient_mut, ...patient_rna, ...patient_cnv])];
 
         // aberration data
         const aberration = [
@@ -106,7 +94,6 @@ class Oncoprint extends React.Component {
             { value: 'Not Available', color: 'none' },
         ];
 
-
         // making tooltips
         const tooltip = d3.select('.oprint-wrapper')
             .append('div')
@@ -121,7 +108,6 @@ class Oncoprint extends React.Component {
             .attr('top', 10)
             .attr('left', 20);
 
-
         /** SETTING SVG ATTRIBUTES and Oncoprint SKELETON * */
         // make the svg element
         const svg = createSvgCanvas({
@@ -131,7 +117,6 @@ class Oncoprint extends React.Component {
         // skeleton of the oncoprint
         const skeleton = svg.append('g')
             .attr('id', 'skeleton');
-
 
         /** Appending Circle to the  Y-Axis */
         genes.forEach((val, i) => {
@@ -145,7 +130,6 @@ class Oncoprint extends React.Component {
                 .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
                 .style('visibility', 'hidden');
         });
-
 
         /* *  Gene Names on Y-Axis * */
 
@@ -210,7 +194,6 @@ class Oncoprint extends React.Component {
         // create gene-name y-axis.
         geneAxis();
 
-
         /** Setting Alterations * */
 
         // alterations: mutations are #1a9850 and a third, AMP/del are #e41a1c/#0033CC and full respectively
@@ -219,7 +202,6 @@ class Oncoprint extends React.Component {
 
         const highlight = svg.append('g')
             .attr('id', 'highlight');
-
 
         // collect info about alterations per gene/patient for plotting later
         const gene_alterations = {};
@@ -238,7 +220,6 @@ class Oncoprint extends React.Component {
                 });
             }
         }
-
 
         /** Coloring the rectangles based on mutation, cnv or rnaseq data * */
 
@@ -275,7 +256,6 @@ class Oncoprint extends React.Component {
             }
         };
 
-
         // stroke for not sequenced patients.
         const colorNotSequenced = (i, j) => {
             alterations.append('rect')
@@ -288,7 +268,6 @@ class Oncoprint extends React.Component {
                 .attr('x', j * (rect_width) + 1)
                 .attr('y', i * (rect_height) + 1);
         };
-
 
         // creates a layer of oncoprint.
         for (let i = 0; i < genes.length; i++) {
@@ -347,7 +326,6 @@ class Oncoprint extends React.Component {
             }
         }
 
-
         /** ALTERATION GRAPHS * */
 
         /** Vertical Graph * */
@@ -363,11 +341,9 @@ class Oncoprint extends React.Component {
             }
             const max_width = d3.max(max_width_arr);
 
-
             const xrange_gene = d3.scaleLinear()
                 .domain([0, max_width])
                 .range([0, rect_width * 5]);
-
 
             const gene_alter = svg.append('g')
                 .attr('id', 'gene-alter')
@@ -385,7 +361,6 @@ class Oncoprint extends React.Component {
                 .attr('fill', `${colors.white}`)
                 .style('stroke', `${colors.black}`)
                 .style('stroke-width', stroke_width);
-
 
             // function to caculate alterations.
             const geneAlterationReactangle = (iterator) => {
@@ -445,7 +420,6 @@ class Oncoprint extends React.Component {
                 .attr('fill', `${colors.black}`)
                 .attr('stroke', 'none');
         }
-
 
         /** Horizontal Graph * */
 
@@ -621,7 +595,6 @@ class Oncoprint extends React.Component {
             .text((d) => d.value)
             .attr('font-size', '12px')
             .attr('fill', `${colors.blue_header}`);
-
 
         // creating tooltip.
         const createToolTip = (x, y, gene, patient, mutation, cnv) => {
