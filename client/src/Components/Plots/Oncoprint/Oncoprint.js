@@ -10,44 +10,22 @@ import colors from '../../../styles/colors';
 import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import createToolTip from '../../../utils/ToolTip';
 
+// aberration data
+const aberration = [
+    { value: 'missense', color: `${colors.green}` },
+    { value: 'inframe', color: `${colors.brown}` },
+    { value: 'truncating', color: `${colors.black}` },
+    { value: 'other', color: `${colors.violet}` },
+    { value: 'del', color: `${colors.blue}` },
+    { value: 'amp', color: `${colors.red}` },
+];
+
 /**
- * main function to create the oncoprint
- * @param {Array} hmap_patients - patient array
- * @param {Object} props - props object
- * @param {Object} context - context object
+ * @param {Array} data_mut - array of mutation data
+ * @param {Array} data_rna - array of rna data
+ * @param {Array} data_cnv - array of cnv data
  */
-const makeOncoprint = (hmap_patients, props, context) => {
-    const { className: plotId } = props;
-    const { dimensions, margin, threshold } = props;
-    const { data_mut, data_rna, data_cnv } = props;
-    const { genes_mut, genes_rna, genes_cnv } = props;
-    const { patient_mut, patient_rna, patient_cnv } = props;
-
-    let isAlteration = false;
-
-    // unique patients and genes.
-    const genes = [...new Set([...genes_mut, ...genes_rna, ...genes_cnv])];
-    const patients = [...new Set([...patient_mut, ...patient_rna, ...patient_cnv])];
-
-    // aberration data
-    const aberration = [
-        { value: 'missense', color: `${colors.green}` },
-        { value: 'inframe', color: `${colors.brown}` },
-        { value: 'truncating', color: `${colors.black}` },
-        { value: 'other', color: `${colors.violet}` },
-        { value: 'del', color: `${colors.blue}` },
-        { value: 'amp', color: `${colors.red}` },
-    ];
-
-    // height and width for the SVG based on the number of genes_mut and patient/sample ids.
-    // height and width of the rectangles in the main skeleton.
-    const rect_height = dimensions.height;
-    const rect_width = dimensions.width;
-
-    // this height and width is used for setting the body.
-    const height = genes.length * rect_height;
-    const width = hmap_patients.length * rect_width;
-
+const createAlterationData = (data_mut, data_rna, data_cnv) => {
     // adding this for rectangles on right side of oncoprint.
     // only if the mutation data is present.
     // TODO:: This should be according to the types of mutation present in the data.
@@ -85,6 +63,159 @@ const makeOncoprint = (hmap_patients, props, context) => {
         { value: 'Not Available', color: 'none' },
     ];
 
+    return rect_alterations;
+};
+
+/**
+ * appending circles that allow sorting of the data.
+ * @param {Array} genes - genes array.
+ * @param {Object} svg - svg object.
+ * @param {number} rect_height - height.
+ */
+const sortingCircles = (genes, svg, rect_height) => {
+    genes.forEach((val, i) => {
+        svg
+            .append('circle')
+            .attr('cx', -12)
+            .attr('cy', i)
+            .attr('r', 6)
+            .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '').replace('.', '')}`)
+            .style('fill', `${colors.circle_green}`)
+            .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
+            .style('visibility', 'hidden');
+    });
+};
+
+const createGeneYAxis = (
+    skeleton, genes, rect_height, rect_width, tooltip, data_mut, data_cnv, data_rna, props, context,
+) => {
+    // geneNames
+    const geneNames = skeleton.append('g')
+        .attr('id', 'gene_names');
+
+    // gene names on the y axis
+    for (let i = 0; i < genes.length; i++) {
+        geneNames.append('text')
+            .attr('class', genes[i])
+            .attr('dx', -25)
+            .style('text-anchor', 'end')
+            .style('font-size', '11px')
+            .attr('dy', i * (rect_height) + rect_width)
+            .attr('font-weight', '550')
+            .attr('fill', `${colors.blue_header}`)
+            .text(genes[i])
+            .on('mouseover', () => {
+                // tooltip on mousever setting the div to visible.
+                d3.select('#oncoprint')
+                    .append('div')
+                    .style('position', 'absolute')
+                    .style('border', 'solid')
+                    .style('visibility', 'visible')
+                    .style('border-width', '1px')
+                    .style('border-radius', '5px')
+                    .style('padding', '5px')
+                    .style('left', `${d3.event.pageX - 100}px`)
+                    .style('top', `${d3.event.pageY + 15}px`)
+                    .attr('id', 'tooltiptextgene')
+                    .style('color', `${colors.black}`)
+                    .style('background-color', `${colors.white}`)
+                    .text('Click to Sort');
+
+                d3.selectAll(`.oprint-hlight-${genes[i]}`)
+                    .style('opacity', 0.2);
+            })
+            .on('mouseout', () => {
+                // tooltip on mousever setting the div to hidden.
+                tooltip
+                    .style('visibility', 'hidden');
+                // remove all the divs with id tooltiptext.
+                d3.select('#tooltiptextgene').remove();
+                // for highlight.
+                d3.selectAll(`.oprint-hlight-${genes[i]}`)
+                    .style('opacity', 0);
+            })
+            .on('click', () => {
+                // tooltip on mousever setting the div to hidden.
+                tooltip
+                    .style('visibility', 'hidden');
+                // remove all the divs with id tooltiptext.
+                d3.select('#tooltiptextgene').remove();
+                // ranking oncoprint.
+                rankOncoprint(genes[i], [data_mut, data_cnv, data_rna], props, context);
+            });
+    }
+};
+
+/**
+ * @param {Array} genes - array of genes.
+ * @param {Array} genes_mut - array of genes for mutation.
+ * @param {Array} genes_cnv - array of genes for cnv.
+ */
+const geneAlteration = (genes, genes_mut, genes_cnv) => {
+    const gene_alterations = {};
+
+    if (genes_mut.length > 0 || genes_cnv.length > 0) {
+        for (let i = 0; i < genes.length; i++) {
+            gene_alterations[genes[i]] = {
+                missense: 0, amp: 0, del: 0, inframe: 0, truncating: 0, other: 0,
+            };
+        }
+    }
+
+    return gene_alterations;
+};
+
+/**
+ * @param {Array} hmap_patients - patients array
+ * @param {Array} genes_mut - array of genes for mutation.
+ * @param {Array} genes_cnv - array of genes for cnv.
+ */
+const patientAlteration = (hmap_patients, genes_mut, genes_cnv) => {
+    const patient_alterations = [];
+
+    if (genes_mut.length > 0 || genes_cnv.length > 0) {
+        for (let i = 0; i < hmap_patients.length; i++) {
+            patient_alterations.push({
+                missense: 0, amp: 0, del: 0, inframe: 0, truncating: 0, other: 0,
+            });
+        }
+    }
+
+    return patient_alterations;
+};
+
+/**
+ * main function to create the oncoprint
+ * @param {Array} hmap_patients - patient array
+ * @param {Object} props - props object
+ * @param {Object} context - context object
+ */
+const makeOncoprint = (hmap_patients, props, context) => {
+    let isAlteration = false;
+
+    // data from props.
+    const { className: plotId } = props;
+    const { dimensions, margin, threshold } = props;
+    const { data_mut, data_rna, data_cnv } = props;
+    const { genes_mut, genes_rna, genes_cnv } = props;
+    const { patient_mut, patient_rna, patient_cnv } = props;
+
+    // unique patients and genes.
+    const genes = [...new Set([...genes_mut, ...genes_rna, ...genes_cnv])];
+    const patients = [...new Set([...patient_mut, ...patient_rna, ...patient_cnv])];
+
+    // abberation.
+    const rect_alterations = createAlterationData(data_mut, data_rna, data_cnv);
+
+    // height and width for the SVG based on the number of genes_mut and patient/sample ids.
+    // height and width of the rectangles in the main skeleton.
+    const rect_height = dimensions.height;
+    const rect_width = dimensions.width;
+
+    // this height and width is used for setting the body.
+    const height = genes.length * rect_height;
+    const width = hmap_patients.length * rect_width;
+
     // making tooltips
     const tooltip = createToolTip('oncoprint');
 
@@ -99,83 +230,12 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('id', 'skeleton');
 
     /** Appending Circle to the  Y-Axis */
-    genes.forEach((val, i) => {
-        svg
-            .append('circle')
-            .attr('cx', -12)
-            .attr('cy', i)
-            .attr('r', 6)
-            .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '').replace('.', '')}`)
-            .style('fill', `${colors.circle_green}`)
-            .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
-            .style('visibility', 'hidden');
-    });
+    sortingCircles(genes, svg, rect_height);
 
     /* *  Gene Names on Y-Axis * */
+    createGeneYAxis(skeleton, genes, rect_height, rect_width, tooltip, data_mut, data_cnv, data_rna, props, context);
 
-    // geneNames
-    const geneNames = skeleton.append('g')
-        .attr('id', 'gene_names');
-
-    // gene names on the y axis
-    const geneAxis = () => {
-        for (let i = 0; i < genes.length; i++) {
-            geneNames.append('text')
-                .attr('class', genes[i])
-                .attr('dx', -25)
-                .style('text-anchor', 'end')
-                .style('font-size', '11px')
-                .attr('dy', i * (rect_height) + rect_width)
-                .attr('font-weight', '550')
-                .attr('fill', `${colors.blue_header}`)
-                .text(genes[i])
-                .on('mouseover', () => {
-                    // tooltip on mousever setting the div to visible.
-                    d3.select('#oncoprint')
-                        .append('div')
-                        .style('position', 'absolute')
-                        .style('border', 'solid')
-                        .style('visibility', 'visible')
-                        .style('border-width', '1px')
-                        .style('border-radius', '5px')
-                        .style('padding', '5px')
-                        .style('left', `${d3.event.pageX - 100}px`)
-                        .style('top', `${d3.event.pageY + 15}px`)
-                        .attr('id', 'tooltiptextgene')
-                        .style('color', `${colors.black}`)
-                        .style('background-color', `${colors.white}`)
-                        .text('Click to Sort');
-
-                    d3.selectAll(`.oprint-hlight-${genes[i]}`)
-                        .style('opacity', 0.2);
-                })
-                .on('mouseout', () => {
-                    // tooltip on mousever setting the div to hidden.
-                    tooltip
-                        .style('visibility', 'hidden');
-                    // remove all the divs with id tooltiptext.
-                    d3.select('#tooltiptextgene').remove();
-                    // for highlight.
-                    d3.selectAll(`.oprint-hlight-${genes[i]}`)
-                        .style('opacity', 0);
-                })
-                .on('click', () => {
-                    // tooltip on mousever setting the div to hidden.
-                    tooltip
-                        .style('visibility', 'hidden');
-                    // remove all the divs with id tooltiptext.
-                    d3.select('#tooltiptextgene').remove();
-                    // ranking oncoprint.
-                    rankOncoprint(genes[i], [data_mut, data_cnv, data_rna], props, context);
-                });
-        }
-    };
-
-    // create gene-name y-axis.
-    geneAxis();
-
-    /** Setting Alterations * */
-
+    /* ****************************************** Setting Alterations ****************************************** */
     // alterations: mutations are #1a9850 and a third, AMP/del are #e41a1c/#0033CC and full respectively
     const alterations = svg.append('g')
         .attr('id', 'alterations');
@@ -184,22 +244,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('id', 'highlight');
 
     // collect info about alterations per gene/patient for plotting later
-    const gene_alterations = {};
-    const patient_alterations = [];
-
-    if (genes_mut.length > 0 || genes_cnv.length > 0) {
-        for (let i = 0; i < genes.length; i++) {
-            gene_alterations[genes[i]] = {
-                missense: 0, amp: 0, del: 0, inframe: 0, truncating: 0, other: 0,
-            };
-        }
-
-        for (let i = 0; i < hmap_patients.length; i++) {
-            patient_alterations.push({
-                missense: 0, amp: 0, del: 0, inframe: 0, truncating: 0, other: 0,
-            });
-        }
-    }
+    const gene_alterations = geneAlteration(genes, genes_mut, genes_cnv);
+    const patient_alterations = patientAlteration(hmap_patients, genes_mut, genes_cnv);
 
     /** Coloring the rectangles based on mutation, cnv or rnaseq data * */
     // this will take four parameters and color the rectangle accordingly
@@ -305,9 +351,9 @@ const makeOncoprint = (hmap_patients, props, context) => {
         }
     }
 
-    /** ALTERATION GRAPHS * */
+    /** *******************************************ALTERATION GRAPHS******************************************* * */
 
-    /** Vertical Graph * */
+    /** ******************************************* Vertical Graph  ******************************************** */
     if ((genes_mut.length > 0 || genes_cnv.length > 0) && isAlteration) {
         // calculating max width
         const max_width_arr = [];
@@ -400,7 +446,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
             .attr('stroke', 'none');
     }
 
-    /** Horizontal Graph * */
+    /** ******************************************* Horizontal Graph ******************************************* * */
 
     // calculating max height
     if ((genes_mut.length > 0 || genes_cnv.length > 0) && isAlteration) {
@@ -432,9 +478,9 @@ const makeOncoprint = (hmap_patients, props, context) => {
             let y_range = 0;
 
             // loops through each type for each of the genes_mut.
-            aberration.forEach((type, j) => {
+            aberration.forEach((type, index) => {
                 // set value to 1 if j is greater than 1.
-                j = j > 1 ? j / j : j;
+                const j = index > 1 ? index / index : index;
 
                 // setting y range.
                 y_range = (yrange_patient(patient_alterations[i][type.value])) - ((`${dimensions.height}` * j) - y_range);
@@ -526,7 +572,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('y', 0)
         .style('opacity', 0);
     // }
-    /** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint * */
+
+    /** ******************************** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint ******************************** */
 
     // This will create rectangles on right side for alterations.
     // legends
@@ -574,7 +621,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('font-size', '12px')
         .attr('fill', `${colors.blue_header}`);
 
-    // creating tooltip.
+    /** ******************************************** Tooltip for oncoprint ******************************************** */
+
     const showToolTip = (x, y, gene, patient, mutation, cnv) => {
         // tooltip on mousever setting the div to visible.
         tooltip
@@ -667,7 +715,6 @@ const makeOncoprint = (hmap_patients, props, context) => {
  * @param {Object} context - context object.
  */
 const rankOncoprint = (gene, data, props, context) => {
-    console.log(gene, data, props, context);
     // array for new data.
     const newData = {};
     // function to return the type.
@@ -777,6 +824,10 @@ const rankOncoprint = (gene, data, props, context) => {
         .style('visibility', 'visible');
 };
 
+/**
+ * main component
+ * @param {Object} props - props object
+ */
 const Oncoprint = (props) => {
     // patient context.
     const context = useContext(PatientContext);
@@ -808,8 +859,6 @@ const Oncoprint = (props) => {
         </div>
     );
 };
-
-// Oncoprint.contextType = PatientContext;
 
 Oncoprint.propTypes = {
     className: PropTypes.string.isRequired,
