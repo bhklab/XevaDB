@@ -9,6 +9,7 @@ import PatientContext, { PatientConsumer } from '../../Context/PatientContext';
 import colors from '../../../styles/colors';
 import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import createToolTip from '../../../utils/ToolTip';
+import convertToTitleCase from '../../../utils/ConvertToTitleCase';
 
 // aberration data
 const aberration = [
@@ -21,6 +22,59 @@ const aberration = [
 ];
 
 /**
+ * @param {Array} data - data input array
+ * @returns {Array} - array of objects {value: '', color: ''}
+ */
+const getMutationMappingObject = (data) => {
+    // mutation array.
+    let mutations = [];
+    data.forEach((el) => {
+        Object.keys(el).forEach((value) => {
+            if (value !== 'gene_id' && el[value] !== '0') {
+                mutations.push(...el[value].split(','));
+            }
+        });
+    });
+    // set of the unique mutations.
+    mutations = [...new Set(mutations)];
+
+    // mapping mutations to the mutationTypeMap object
+    const mutationObject = {};
+    mutations.forEach((mutation) => {
+        const mutationStyle = mutationTypeMap[mutation.toLowerCase()].style;
+        const mutationColor = mutationTypeMap[mutation.toLowerCase()].color;
+        if (!mutationObject[mutationStyle]) {
+            mutationObject[mutationStyle] = {
+                value: convertToTitleCase(mutationStyle, '_'),
+                color: mutationColor,
+            };
+        }
+    });
+    return Object.values(mutationObject);
+};
+
+/**
+ * @param {Array} data - input data array
+ * @returns {Array} - mapping of CNV data
+ */
+const getCopyNunberVariationMapping = (data) => {
+    // cnv array.
+    const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
+    const cnvArray = {};
+    data.forEach((el) => {
+        Object.keys(el).forEach((value) => {
+            if (value !== 'gene_id' && el[value] !== '0' && !cnvArray[cnaMap[el[value]].xevalabel]) {
+                cnvArray[cnaMap[el[value]].xevalabel] = {
+                    value: cnvMapping[cnaMap[el[value]].xevalabel],
+                    color: cnaMap[el[value]].color,
+                };
+            }
+        });
+    });
+    return Object.values(cnvArray);
+};
+
+/**
  * @param {Array} data_mut - array of mutation data
  * @param {Array} data_rna - array of rna data
  * @param {Array} data_cnv - array of cnv data
@@ -28,15 +82,9 @@ const aberration = [
 const createAlterationData = (data_mut, data_rna, data_cnv) => {
     // adding this for rectangles on right side of oncoprint.
     // only if the mutation data is present.
-    // TODO:: This should be according to the types of mutation present in the data.
     let rect_alterations_mut = [];
     if (data_mut.length > 0) {
-        rect_alterations_mut = [
-            { value: 'Missense Mutation', color: `${colors.green}` },
-            { value: 'Inframe Mutation', color: `${colors.brown}` },
-            { value: 'Truncating Mutation', color: `${colors.black}` },
-            { value: 'Other Mutations', color: `${colors.violet}` },
-        ];
+        rect_alterations_mut = getMutationMappingObject(data_mut);
     }
     // only if rnaseq data is available.
     let rect_alterations_rna = [];
@@ -49,10 +97,7 @@ const createAlterationData = (data_mut, data_rna, data_cnv) => {
     // only if the cnv data is present.
     let rect_alterations_cnv = [];
     if (data_cnv.length > 0) {
-        rect_alterations_cnv = [
-            { value: 'Deletion', color: `${colors.blue}` },
-            { value: 'Amplification', color: `${colors.red}` },
-        ];
+        rect_alterations_cnv = getCopyNunberVariationMapping(data_cnv);
     }
 
     const rect_alterations = [
@@ -829,6 +874,7 @@ const rankOncoprint = (gene, data, props, context) => {
  * @param {Object} props - props object
  */
 const Oncoprint = (props) => {
+    console.log(props);
     // patient context.
     const context = useContext(PatientContext);
 

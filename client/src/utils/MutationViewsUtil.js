@@ -63,7 +63,7 @@ const mutationStyleMap = {
     truncating: {
         label: 'Truncating',
         longName: 'Truncating',
-        style: 'trunc_mutation',
+        style: 'truncating_mutation',
         mainType: 'truncating',
         priority: 6,
         color: `${colors.black}`,
@@ -71,7 +71,7 @@ const mutationStyleMap = {
     nonsense: {
         label: 'Nonsense',
         longName: 'Nonsense',
-        style: 'trunc_mutation',
+        style: 'truncating_mutation',
         mainType: 'truncating',
         priority: 8,
         color: `${colors.black}`,
@@ -79,7 +79,7 @@ const mutationStyleMap = {
     nonstop: {
         label: 'Nonstop',
         longName: 'Nonstop',
-        style: 'trunc_mutation',
+        style: 'truncating_mutation',
         mainType: 'truncating',
         priority: 9,
         color: `${colors.black}`,
@@ -87,7 +87,7 @@ const mutationStyleMap = {
     nonstart: {
         label: 'Nonstart',
         longName: 'Nonstart',
-        style: 'trunc_mutation',
+        style: 'truncating_mutation',
         mainType: 'truncating',
         priority: 10,
         color: `${colors.black}`,
@@ -95,7 +95,7 @@ const mutationStyleMap = {
     frameshift: {
         label: 'FS',
         longName: 'Frame Shift',
-        style: 'trunc_mutation',
+        style: 'truncating_mutation',
         mainType: 'truncating',
         priority: 6,
         color: `${colors.black}`,
@@ -103,7 +103,7 @@ const mutationStyleMap = {
     frame_shift_del: {
         label: 'FS del',
         longName: 'Frame Shift Deletion',
-        style: 'trunc_mutation',
+        style: 'truncating_mutation',
         mainType: 'truncating',
         priority: 6,
         color: `${colors.black}`,
@@ -111,7 +111,7 @@ const mutationStyleMap = {
     frame_shift_ins: {
         label: 'FS ins',
         longName: 'Frame Shift Insertion',
-        style: 'trunc_mutation',
+        style: 'truncating_mutation',
         mainType: 'truncating',
         priority: 7,
         color: `${colors.black}`,
@@ -135,7 +135,7 @@ const mutationStyleMap = {
     splice_site: {
         label: 'Splice',
         longName: 'Splice site',
-        style: 'trunc_mutation',
+        style: 'truncating_mutation',
         mainType: 'truncating',
         priority: 11,
         color: `${colors.black}`,
