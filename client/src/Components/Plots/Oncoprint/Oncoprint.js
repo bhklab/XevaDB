@@ -21,6 +21,8 @@ const aberration = [
     { value: 'amp', color: `${colors.red}` },
 ];
 
+const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
+
 /**
  * @param {Array} data - data input array
  * @returns {Array} - array of objects {value: '', color: ''}
@@ -58,20 +60,21 @@ const getMutationMappingObject = (data) => {
  * @returns {Array} - mapping of CNV data
  */
 const getCopyNunberVariationMapping = (data) => {
-    // cnv array.
-    const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
-    const cnvArray = {};
-    data.forEach((el) => {
-        Object.keys(el).forEach((value) => {
-            if (value !== 'gene_id' && el[value] !== '0' && !cnvArray[cnaMap[el[value]].xevalabel]) {
-                cnvArray[cnaMap[el[value]].xevalabel] = {
-                    value: cnvMapping[cnaMap[el[value]].xevalabel],
-                    color: cnaMap[el[value]].color,
+    const cnvObject = {};
+    data.forEach((obj) => {
+        Object.entries(obj).forEach(([key, value]) => {
+            if (key !== 'gene_id' && value !== '0' && !cnvObject[cnaMap[value.toLowerCase()].xevalabel]) {
+                const xevaLabel = cnaMap[value.toLowerCase()].xevalabel;
+                const { color } = cnaMap[value.toLowerCase()];
+                // adding to cnv object
+                cnvObject[xevaLabel] = {
+                    value: cnvMapping[xevaLabel],
+                    color,
                 };
             }
         });
     });
-    return Object.values(cnvArray);
+    return Object.values(cnvObject);
 };
 
 /**
