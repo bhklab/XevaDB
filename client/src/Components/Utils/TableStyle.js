@@ -4,7 +4,7 @@ import colors from '../../styles/colors';
 const TableWrapper = styled.div`
     margin: auto !important;
     padding: 10px 20px 30px 20px;
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Open Sans', 'Roboto';
 
     .ReactTable * {
         box-sizing: border-box;

@@ -18,7 +18,7 @@ const HeaderStyle = styled.header`
     align-items: center;
     min-height: 10vh;
     max-height: 10vh;
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Open Sans', 'Roboto';
     background-color: ${colors.white};
     position: absolute;
     top: 0;
@@ -35,7 +35,7 @@ const LinkStyle = styled.div`
         color: ${colors.blue_header};
         text-decoration: none;
         letter-spacing: 1px;
-        font-family: 'Raleway', sans-serif;
+        font-family: 'Open Sans', 'Roboto';
         font-weight: 700;
         font-size: 1.30rem;
         &:hover {

@@ -13,7 +13,7 @@ const DonutNav = styled.div`
     align-items: flex-end;
     justify-content: space-around;
     flex-wrap: wrap;
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Open Sans', 'Roboto';
     font-weight: 500;
     font-size: 1.4em;
     padding-bottom: 5px;
