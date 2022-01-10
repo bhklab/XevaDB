@@ -3,6 +3,12 @@ import colors from './styles/colors';
 
 const GlobalStyles = createGlobalStyle`
 
+  * {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+  }
+
   body {
     background: linear-gradient(
       to right top, 
@@ -24,6 +30,7 @@ const GlobalStyles = createGlobalStyle`
     min-width: 100vw;
     width: auto;
     position: relative;
+    font-size: 16px;
   }
 
   a {
@@ -54,6 +61,7 @@ const GlobalStyles = createGlobalStyle`
   .donut-wrapper, .doc-wrapper, .tissue-wrapper, .summary-table {
     background: ${colors.white}
     font-family: 'Open Sans', 'Roboto';
+    padding-top: 20px;
   }
 
   .heatmap-wrapper, .oprint-wrapper {
@@ -97,6 +105,5 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 `;
-
 
 export default GlobalStyles;
