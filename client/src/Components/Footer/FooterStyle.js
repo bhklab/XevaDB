@@ -4,7 +4,7 @@ const styles = {
     color: `${colors.blue_header}`,
     backgroundColor: `${colors.white}`,
     fontSize: '1.20em',
-    minHeight: '100px',
+    minHeight: '80px',
     minWidth: '100vw',
     position: 'absolute',
     bottom: '0',
