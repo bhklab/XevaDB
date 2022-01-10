@@ -13,7 +13,6 @@ const styles = {
     position: 'absolute',
     minWidth: '100vw',
     backgroundColor: `${colors.white}`,
-    fontFamily: 'Raleway, sans-serif',
 };
 
 export default styles;

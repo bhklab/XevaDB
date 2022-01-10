@@ -394,7 +394,7 @@ class Search extends React.Component {
                                             position="right center"
                                         >
                                             <div style={{
-                                                color: `${colors.blue_header}`, fontFamily: 'Raleway', fontSize: '17px', fontWeight: '500',
+                                                color: `${colors.blue_header}`, fontFamily: 'Open Sans', fontSize: '17px', fontWeight: '500',
                                             }}
                                             >
                                                 Complete all the fields!!
