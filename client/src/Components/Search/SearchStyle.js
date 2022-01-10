@@ -15,6 +15,7 @@ const StyleBar = styled.div`
         color: ${colors.blue_header};
         text-align: center;
         font-size: 27px;
+        padding: 15px 0px 15px 0px;
     }  
     
     .search-container {
@@ -29,12 +30,11 @@ const StyleBar = styled.div`
 
     .select-component {
         background: ${colors.white};
-        margin: 0px;
         display: flex;
         flex-wrap: wrap;
-        padding: 10px 50px 20px 50px;
         justify-content: space-around;
         border-radius: 20px;
+        padding: 10px 50px 20px 50px;
 
         .two-col {
             display: flex;
@@ -125,9 +125,8 @@ const StyleBar = styled.div`
         }
 
         .select-component {
-            padding: 10px 50px 50px 50px;
-            max-width: 80%;
-            max-height: 400px;
+            padding: 10px 50px 20px 50px;
+            max-width: 90%;
         }
 
         .div-genomics, .div-gene, .div-dataset, .div-drug {
@@ -163,7 +162,6 @@ const StyleBar = styled.div`
    }
 `;
 
-
 const StyleButton = styled.button`
     background-color: ${colors.blue_header};
     border: none;
@@ -187,7 +185,6 @@ const StyleButton = styled.button`
         border: 1px solid ${colors.blue_header};
     }
 `;
-
 
 const customStyles = {
     placeholder: (provided) => ({
@@ -269,7 +266,6 @@ const customStyles = {
         overflow: 'auto',
     }),
 };
-
 
 export {
     StyleBar,
