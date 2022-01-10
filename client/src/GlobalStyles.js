@@ -7,6 +7,7 @@ const GlobalStyles = createGlobalStyle`
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+    font-family: 'Open Sans', 'Roboto';
   }
 
   body {
@@ -35,7 +36,6 @@ const GlobalStyles = createGlobalStyle`
 
   a {
     text-decoration: none;
-    font-family: 'Open Sans', 'Roboto';
     &:hover {
       cursor: pointer !important;
     }
@@ -49,7 +49,6 @@ const GlobalStyles = createGlobalStyle`
     margin-top: 8rem;
 
     h1 {
-      font-family:'Open Sans', 'Roboto';
       font-weight: 700;
       text-align: center;
       color: ${colors.blue_header};
@@ -60,7 +59,6 @@ const GlobalStyles = createGlobalStyle`
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
   .donut-wrapper, .doc-wrapper, .tissue-wrapper, .summary-table {
     background: ${colors.white}
-    font-family: 'Open Sans', 'Roboto';
     padding-top: 20px;
   }
 
@@ -96,7 +94,6 @@ const GlobalStyles = createGlobalStyle`
       text-decoration: none;
       font-size: 16px;
       padding: 10px;
-      font-family: 'Open Sans', 'Roboto';
       color: ${colors.blue_header};
     }
 
