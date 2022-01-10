@@ -82,7 +82,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .summary-table, .stats-table {
-    margin-bottom: 150px;
+    margin-bottom: 120px;
   }
 
   .curve-wrapper {

@@ -6,11 +6,6 @@ import TableWrapper from '../../Utils/TableStyle';
 import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 
-const h1Style = {
-    color: `${colors.blue_header}`,
-    margin: '50px',
-};
-
 const DatasetTable = (props) => {
     const { data, dataLength } = props;
 
@@ -41,7 +36,7 @@ const DatasetTable = (props) => {
 
     return (
         <TableWrapper>
-            <h1 style={h1Style}> List of Datasets </h1>
+            <h1> List of Datasets </h1>
             <ReactTable
                 data={data}
                 columns={columns}
