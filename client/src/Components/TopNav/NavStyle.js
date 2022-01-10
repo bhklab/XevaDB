@@ -2,23 +2,19 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const HeaderStyle = styled.header`
-    *{
-        margin: 0px;
-        padding: 0px;
-        box-sizing: border-box;
-    }
     button {
         background-color: ${colors.blue_header};
         &:hover {
             background-color: ${colors.pink_header} !important;
         }
+        min-width: 80px;
+        min-height: 40px;
     }
     display: flex;
     justify-content: space-around;
     align-items: center;
     min-height: 10vh;
     max-height: 10vh;
-    font-family: 'Open Sans', 'Roboto';
     background-color: ${colors.white};
     position: absolute;
     top: 0;
@@ -35,9 +31,8 @@ const LinkStyle = styled.div`
         color: ${colors.blue_header};
         text-decoration: none;
         letter-spacing: 1px;
-        font-family: 'Open Sans', 'Roboto';
         font-weight: 700;
-        font-size: 1.30rem;
+        font-size: 1.35em;
         &:hover {
             color: ${colors.pink_header};
             cursor: pointer;
@@ -46,7 +41,7 @@ const LinkStyle = styled.div`
 
     @media screen and (max-width: 2600px) {
         a {
-            font-size: 1.45em;
+            font-size: 1.55em;
         }
 
         a:nth-child(1) {
@@ -60,7 +55,7 @@ const LinkStyle = styled.div`
 
     @media screen and (max-width: 2200px) {
         a {
-            font-size: 1.35em;
+            font-size: 1.45em;
         }
 
         a:nth-child(1) {
@@ -75,7 +70,7 @@ const LinkStyle = styled.div`
 
     @media screen and (max-width: 1700px) {
         a {
-            font-size: 1.25em;
+            font-size: 1.40em;
         }
 
         a:nth-child(1) {
@@ -89,7 +84,7 @@ const LinkStyle = styled.div`
 
     @media screen and (max-width: 1300px) {
         a {
-            font-size: 1.15em;
+            font-size: 1.25em;
         }
         
         a:nth-child(1) {
@@ -123,7 +118,6 @@ const LogoStyle = styled.img`
     margin-top: 2px;
     z-index: 999;
 `;
-
 
 export {
     HeaderStyle,
