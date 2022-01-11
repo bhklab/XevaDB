@@ -31,9 +31,9 @@ const getMutationMappingObject = (data) => {
     // mutation array.
     let mutations = [];
     data.forEach((el) => {
-        Object.keys(el).forEach((value) => {
-            if (value !== 'gene_id' && el[value] !== '0') {
-                mutations.push(...el[value].split(','));
+        Object.entries(el).forEach(([key, value]) => {
+            if (key !== 'gene_id' && value !== '0' && value !== '') {
+                mutations.push(...value.split(','));
             }
         });
     });
@@ -641,7 +641,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .data(rect_alterations)
         .enter()
         .append('rect')
-        .attr('x', (hmap_patients.length * (rect_width + 3.2)))
+        .attr('x', ((hmap_patients.length + 8.5) * rect_width))
         .attr('y', (d, i) => (genes.length * (5 + i * 1.2)))
         .attr('height', rect_width)
         .attr('width', rect_width)
@@ -672,7 +672,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .data(rect_alterations)
         .enter()
         .append('text')
-        .attr('x', (hmap_patients.length * (rect_width + 3.8)))
+        .attr('x', ((hmap_patients.length + 10) * rect_width))
         .attr('y', (d, i) => (genes.length * (5.6 + i * 1.2)))
         .text((d) => d.value)
         .attr('font-size', '12px')
