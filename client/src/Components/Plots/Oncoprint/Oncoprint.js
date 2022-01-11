@@ -103,12 +103,21 @@ const createAlterationData = (data_mut, data_rna, data_cnv) => {
         rect_alterations_cnv = getCopyNunberVariationMapping(data_cnv);
     }
 
+    // wild type only when cnv or mut data is available
+    const remainingTypes = (data_cnv.length > 0 || data_mut.length > 0)
+        ? [
+            { value: 'Wild Type', color: 'lightgray' },
+            { value: 'Not Available', color: 'none' }
+        ]
+        : [
+            { value: 'Not Available', color: 'none' }
+        ];
+
     const rect_alterations = [
         ...rect_alterations_mut,
         ...rect_alterations_rna,
         ...rect_alterations_cnv,
-        { value: 'Wild Type', color: 'lightgray' },
-        { value: 'Not Available', color: 'none' },
+        ...remainingTypes,
     ];
 
     return rect_alterations;
