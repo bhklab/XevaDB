@@ -641,8 +641,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .data(rect_alterations)
         .enter()
         .append('rect')
-        .attr('x', (hmap_patients.length * rect_width + rect_width * 7.5))
-        .attr('y', (d, i) => (genes.length * 5) + i * rect_height * 0.75)
+        .attr('x', (hmap_patients.length * (rect_width + 2.5)))
+        .attr('y', (d, i) => (genes.length * (5 + i * 1.2)))
         .attr('height', rect_width)
         .attr('width', rect_width)
         .attr('fill', function fill(d) {
@@ -672,8 +672,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .data(rect_alterations)
         .enter()
         .append('text')
-        .attr('x', (hmap_patients.length * rect_width + rect_width * 9))
-        .attr('y', (d, i) => (genes.length * 5) + i * rect_height * 0.8)
+        .attr('x', (hmap_patients.length * (rect_width + 3)))
+        .attr('y', (d, i) => (genes.length * (5.6 + i * 1.2)))
         .text((d) => d.value)
         .attr('font-size', '12px')
         .attr('fill', `${colors.blue_header}`);
@@ -886,7 +886,6 @@ const rankOncoprint = (gene, data, props, context) => {
  * @param {Object} props - props object
  */
 const Oncoprint = (props) => {
-    console.log(props);
     // patient context.
     const context = useContext(PatientContext);
 
