@@ -72,7 +72,7 @@ const PatientSummary = () => {
             <GlobalStyles />
             <div className="wrapper">
                 <div className="donut-wrapper">
-                    <h1> Number of patients per dataset </h1>
+                    <h1> Number of Patients per Dataset </h1>
                     {
                         loading ? <Spinner loading={loading} />
                             : (
