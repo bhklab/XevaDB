@@ -642,13 +642,12 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .enter()
         .append('rect')
         .attr('x', ((hmap_patients.length + 8.5) * rect_width))
-        .attr('y', (d, i) => (genes.length * 5 + ((rect_width + 10) * i)))
+        .attr('y', (d, i) => (genes.length * 5 + (rect_width + 10) * i))
         .attr('height', rect_width)
         .attr('width', rect_width)
         .attr('fill', function fill(d) {
             if (d.color === 'none') {
                 d3.select(this).attr('stroke', 'lightgray')
-                    .attr('transform', 'translate(1,1)')
                     .attr('width', rect_width)
                     .attr('height', rect_width);
                 return `${colors.white}`;
@@ -673,7 +672,9 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .enter()
         .append('text')
         .attr('x', ((hmap_patients.length + 10) * rect_width))
-        .attr('y', (d, i) => (genes.length * 5.6 + ((rect_width + 10) * i)))
+        .attr('y', (d, i) => (genes.length * 5 + (rect_width + 10) * i + rect_width * 0.75))
+        .attr('height', rect_width)
+        .attr('width', rect_width)
         .text((d) => d.value)
         .attr('font-size', '12px')
         .attr('fill', `${colors.blue_header}`);
