@@ -2,7 +2,7 @@ import React from 'react';
 
 const PatientContext = React.createContext({
     globalPatients: [],
-    setPatients: () => {},
+    setPatients: () => { },
 });
 
 const PatientProvider = PatientContext.Provider;

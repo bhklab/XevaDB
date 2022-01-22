@@ -3,6 +3,13 @@ import colors from './styles/colors';
 
 const GlobalStyles = createGlobalStyle`
 
+  * {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: 'Open Sans', 'Roboto';
+  }
+
   body {
     background: linear-gradient(
       to right top, 
@@ -24,11 +31,11 @@ const GlobalStyles = createGlobalStyle`
     min-width: 100vw;
     width: auto;
     position: relative;
+    font-size: 16px;
   }
 
   a {
     text-decoration: none;
-    font-family: 'Raleway', sans-serif;
     &:hover {
       cursor: pointer !important;
     }
@@ -42,7 +49,6 @@ const GlobalStyles = createGlobalStyle`
     margin-top: 8rem;
 
     h1 {
-      font-family:'Raleway', sans-serif;
       font-weight: 700;
       text-align: center;
       color: ${colors.blue_header};
@@ -53,7 +59,7 @@ const GlobalStyles = createGlobalStyle`
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
   .donut-wrapper, .doc-wrapper, .tissue-wrapper, .summary-table {
     background: ${colors.white}
-    font-family: 'Raleway', sans-serif;
+    padding-top: 20px;
   }
 
   .heatmap-wrapper, .oprint-wrapper {
@@ -74,7 +80,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .summary-table, .stats-table {
-    margin-bottom: 150px;
+    margin-bottom: 120px;
   }
 
   .curve-wrapper {
@@ -88,7 +94,6 @@ const GlobalStyles = createGlobalStyle`
       text-decoration: none;
       font-size: 16px;
       padding: 10px;
-      font-family: 'Raleway', sans-serif;
       color: ${colors.blue_header};
     }
 
@@ -97,6 +102,5 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 `;
-
 
 export default GlobalStyles;

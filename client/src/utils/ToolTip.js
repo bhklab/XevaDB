@@ -1,6 +1,6 @@
 import { select } from 'd3';
 
-const createToolTip = (id) => {
+const createToolTip = (id) => (
     select(`#${id}`)
         .append('div')
         .attr('id', 'tooltip')
@@ -11,7 +11,7 @@ const createToolTip = (id) => {
         .style('border-radius', '5px')
         .style('padding', '5px')
         .attr('top', 10)
-        .attr('left', 10);
-};
+        .attr('left', 10)
+);
 
 export default createToolTip;

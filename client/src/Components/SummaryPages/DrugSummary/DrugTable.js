@@ -6,11 +6,6 @@ import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 
-const h1Style = {
-    color: `${colors.blue_header}`,
-    margin: '50px',
-};
-
 // base link for pubchem.
 const pubchemURL = 'https://pubchem.ncbi.nlm.nih.gov/compound/';
 
@@ -120,7 +115,7 @@ class DrugTable extends React.Component {
 
         return (
             <TableWrapper>
-                <h1 style={h1Style}> List of Drugs </h1>
+                <h1> List of Drugs </h1>
                 {loading
                     ? (
                         <Spinner loading={loading} />

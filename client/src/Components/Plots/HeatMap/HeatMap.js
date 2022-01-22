@@ -548,7 +548,7 @@ class HeatMap extends Component {
             .attr('id', 'drugName');
 
         drugName.attr('stroke-width', '0')
-            .style('font-family', '\'Raleway\',sans-serif')
+            .style('font-family', 'Open Sans')
             .style('font-size', '11px')
             .call(yAxis)
             .selectAll('text')
@@ -615,7 +615,7 @@ class HeatMap extends Component {
 
         patientId.attr('stroke-width', '0')
             .style('font-size', '11px')
-            .style('font-family', '\'Raleway\',sans-serif')
+            .style('font-family', 'Open Sans')
             .style('text-anchor', (dataset === '7' ? 'start' : 'middle'))
             .call(xAxis)
             .selectAll('text')

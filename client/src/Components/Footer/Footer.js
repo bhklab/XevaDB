@@ -2,9 +2,9 @@ import React from 'react';
 import styles from './FooterStyle';
 
 const Footer = () => (
-    <div style={styles}>
+    <footer style={styles}>
         ©BHKLab 2020
-    </div>
+    </footer>
 );
 
 export default Footer;

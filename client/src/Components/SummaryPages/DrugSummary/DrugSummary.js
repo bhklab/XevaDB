@@ -56,7 +56,7 @@ class DrugSummary extends React.Component {
                 <GlobalStyles />
                 <div className="wrapper">
                     <div className="donut-wrapper">
-                        <h1> Number of Models Per Drug class </h1>
+                        <h1> Number of Models per Drug Class </h1>
                         {
                             loading ? <Spinner loading={loading} />
                                 : (

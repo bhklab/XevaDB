@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
-import createToolTip from '../Utils/ToolTip';
+import createToolTip from '../../utils/ToolTip';
 
 // creating the default margin in case not passed as props.
 const defaultMargin = {

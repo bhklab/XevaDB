@@ -160,9 +160,14 @@ class DonutChart extends React.Component {
                 .style('cursor', 'pointer');
             // tooltip grabbing event.pageX and event.pageY
             // and set color according to the ordinal scale.
-            const value = ` (${d.data.value})`;
+            const value = `
+                Dataset: ${d.data.id} <br/>
+                Patients: ${d.data.value} <br/>
+                Models: ${d.data.models}
+            `;
+
             tooltip
-                .text([d.data.id + value])
+                .html([value])
                 .style('left', `${d3.event.pageX + 10}px`)
                 .style('top', `${d3.event.pageY + 10}px`)
                 .style('color', 'white')
@@ -251,7 +256,7 @@ class DonutChart extends React.Component {
             .attr('x', (width) - 250)
             .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
             .attr('fill', (d) => color(d.id))
-            .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)} (${d.value})`);
+            .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`);
     }
 
     render() {
@@ -263,7 +268,6 @@ class DonutChart extends React.Component {
         );
     }
 }
-
 
 DonutChart.propTypes = {
     dimensions: PropTypes.shape({

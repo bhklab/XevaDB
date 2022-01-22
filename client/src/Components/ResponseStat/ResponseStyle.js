@@ -40,7 +40,7 @@ export const StyleTable = styled.div`
 
     #stats-table {
         text-align: left;
-        font-family: 'Raleway', sans-serif;
+        font-family: 'Open Sans', 'Roboto';
         border-collapse: collapse;
         width: 800px;
     }
@@ -48,7 +48,7 @@ export const StyleTable = styled.div`
     th {
         color: ${colors.moderate_blue};
         text-align: left;
-        font-family: 'Raleway', sans-serif;
+        font-family: 'Open Sans', 'Roboto';
         padding: 10px;
         height: 40px;
         background-color: ${colors.lightgray};

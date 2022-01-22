@@ -2,6 +2,8 @@
 /* eslint-disable class-methods-use-this */
 import React from 'react';
 import PropTypes from 'prop-types';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 import { CSVLink } from 'react-csv';
 import { StyleTable, StyledLink } from './ResponseStyle';
 import downloadIcon from '../../images/download.svg';
@@ -55,7 +57,11 @@ class BatchStatTable extends React.Component {
     createTableHeader() {
         // create the header for the table.
         const { tableHeader } = this.state;
-        const header = tableHeader.map((key, index) => <th key={index}>{key}</th>);
+        const header = tableHeader.map((key, index) => (
+            <Tippy content="description">
+                <th key={index}>{key}</th>
+            </Tippy>
+        ));
         return header;
     }
 
@@ -85,7 +91,6 @@ class BatchStatTable extends React.Component {
         );
     }
 }
-
 
 BatchStatTable.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object).isRequired,

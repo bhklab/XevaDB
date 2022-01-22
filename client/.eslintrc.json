@@ -22,13 +22,36 @@
     ],
     "rules": {
         // Indent with 4 spaces
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "indent": ["error", 4],
-        "import/newline-after-import": ["error", { "count": 1 }],
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx"
+                ]
+            }
+        ],
+        "indent": [
+            "error",
+            4
+        ],
+        "import/newline-after-import": [
+            "error",
+            {
+                "count": 1
+            }
+        ],
         "react/prop-types": 0,
-        "react/jsx-indent": ["error", 4],
-        "react/jsx-indent-props": ["error", 4],
-        "no-console": "off"
+        "react/jsx-indent": [
+            "error",
+            4
+        ],
+        "react/jsx-indent-props": [
+            "error",
+            4
+        ],
+        "no-console": "off",
+        "no-plusplus": "off"
     },
     "parser": "babel-eslint"
 }

@@ -33,34 +33,33 @@ const transformData = (data) => {
             };
         }
     });
-    console.log(transformedData);
     return transformedData;
 };
 
 // transform data for BarPlot.
 const barPlotData = (data) => {
-    const barData = data.map((element) => (
+    return data.map((element) => (
         {
-            id: element.patient,
-            value: element.drugs.length,
+            id: element.name,
+            value: element.patients.length,
         }
     ));
-    // sort the data based on the value.
-    const sortedData = barData.sort((a, b) => b.value - a.value).slice(1, 20);
-    // return the sorted data.
-    return sortedData;
 };
 
 // patient Summary Component
 const PatientSummary = () => {
     const [patientData, setPatientDataState] = useState([]);
+    const [datasetsDetailedInformation, setDatasetDetailedInformation] = useState([]);
     const [loading, setLoader] = useState(true);
 
     const fetchData = async () => {
         // api request to get the required data.
         const models = await axios.get('/api/v1/modelinformation', { headers: { Authorization: localStorage.getItem('user') } });
+        // api request to get dataset detailed information.
+        const datasetsDetail = await axios.get('/api/v1/datasets/details', { headers: { Authorization: localStorage.getItem('user') } });
         // transforming data.
         setPatientDataState(Object.values(transformData(models.data.data)));
+        setDatasetDetailedInformation(datasetsDetail.data.datasets);
         setLoader(false);
     };
 
@@ -73,13 +72,13 @@ const PatientSummary = () => {
             <GlobalStyles />
             <div className="wrapper">
                 <div className="donut-wrapper">
-                    <h1> Number of Drugs Tested on a Patient </h1>
+                    <h1> Number of Patients per Dataset </h1>
                     {
                         loading ? <Spinner loading={loading} />
                             : (
                                 <BarPlot
-                                    data={barPlotData(patientData)}
-                                    label="Number of drugs"
+                                    data={barPlotData(datasetsDetailedInformation)}
+                                    label="Number of patients"
                                 />
                             )
                     }

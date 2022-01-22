@@ -92,9 +92,9 @@ const createBars = (svg, data, xScale, yScale, height, color) => {
 const appendBarText = (svg, data, xScale, yScale) => {
     data.forEach((element) => {
         svg.append('text')
-            .attr('x', xScale(element.id) + 10)
+            .attr('x', xScale(element.id) + (xScale.bandwidth() / 3))
             .attr('y', yScale(element.value) - 4)
-            .attr('font-family', 'sans-serif')
+            .attr('font-family', 'Open Sans')
             .attr('font-size', '12px')
             .style('text-anchor', 'start')
             .attr('fill', 'black')
@@ -106,7 +106,7 @@ const appendYAxisLabel = (svg, height, left, label) => {
     svg.append('text')
         .attr('x', 0)
         .attr('y', 0)
-        .attr('font-family', 'sans-serif')
+        .attr('font-family', 'Open Sans')
         .attr('transform', `translate(${-left / 2}, ${height / 1.5})rotate(270)`)
         .attr('font-size', '14px')
         .style('text-anchor', 'start')
