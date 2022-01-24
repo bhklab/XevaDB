@@ -7,6 +7,7 @@ import {
     Dataset,
     DatasetSummary,
     Documentation,
+    Drug,
     DrugSummary,
     Footer,
     GrowthCurveData,
@@ -53,7 +54,7 @@ const App = () => {
                     <Route path="/dataset/:id" exact component={Dataset} />
                     <Route path="/doc" exact component={Documentation} />
                     <Route path="/drugs" exact component={DrugSummary} />
-                    {/* <Route path="/drug/:id" exact component={DrugTable} /> */}
+                    <Route path="/drug/:id" exact component={Drug} />
                     <Route path="/home" exact component={CounterNav} />
                     <Route path="/login" exact component={Login} />
                     <Route path="/maps" exact component={Merge} />

@@ -3,6 +3,7 @@ import Dataset from './IndividualPages/Dataset';
 import DatasetSummary from './SummaryPages/DatasetSummary/DatasetSummary';
 import Documentation from './Documentation/Documentation';
 import DonutChart from './Plots/DonutChart';
+import Drug from './IndividualPages/Drug';
 import DrugSummary from './SummaryPages/DrugSummary/DrugSummary';
 import DrugTable from './SummaryPages/DrugSummary/DrugTable';
 import Footer from './Footer/Footer';
@@ -27,6 +28,7 @@ export {
     DatasetSummary,
     Documentation,
     DonutChart,
+    Drug,
     DrugSummary,
     DrugTable,
     Footer,
