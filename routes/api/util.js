@@ -16,11 +16,12 @@ const isVerified = (response, datasetId) => (
  * @param {Object} next
  * checks the validity of the param id.
  */
-const isValidId = (request, response, next) => (
-    Number(request.params.dataset || request.params.patient || request.params.model)
+const isValidId = (request, response, next) => {
+    const { params: { id } } = request;
+    Number(id)
         ? next()
-        : next(new Error('Invalid Id, Please enter a valid integer id.'))
-);
+        : next(new Error('Invalid Id, Please enter a valid integer id.'));
+};
 
 
 /**
