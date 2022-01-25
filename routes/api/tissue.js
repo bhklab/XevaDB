@@ -85,8 +85,8 @@ const getTissues = (request, response) => {
 const getTissueDetailedInformationBasedOnTissueId = (request, response) => {
     // user variable.
     const { user } = response.locals;
-    // model param.
-    const tissueParam = request.params.tissue;
+    // tissue parameter.
+    const { params: { id: tissueParam } } = request;
 
     // query to grab the data based on the tissue id.
     getModelInformationDataQuery()

@@ -44,8 +44,7 @@ const transformIndentedTreeData = (data) => {
 // Tissue Component.
 const Tissue = (props) => {
     // grab the tissue params id.
-    const { match } = props;
-    const tissueParam = match.params.id;
+    const { match: { params: { id: tissueParam } } } = props;
 
     // tissue and data loader state.
     const [tissueData, setTissueDataState] = useState({});

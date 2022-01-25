@@ -67,7 +67,7 @@ const transformData = (input) => {
  */
 const getRnaSeqDataBasedOnDataset = async (request, response) => {
     // dataset param.
-    const datasetParam = request.params.dataset;
+    const { params: { id: datasetParam } } = request;
 
     if (isVerified(response, datasetParam)) {
         try {

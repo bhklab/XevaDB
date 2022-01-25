@@ -127,7 +127,7 @@ const getPatientDetailedInformationBasedOnPatientId = (request, response) => {
     const { user } = response.locals;
 
     // patient parameter.
-    const patientParam = request.params.patient;
+    const { params: { id: patientParam } } = request;
 
     // model information data.
     getModelInformationDataQuery()

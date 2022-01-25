@@ -105,7 +105,7 @@ const getModelInformationBasedOnModelId = (request, response) => {
     // user variable.
     const { user } = response.locals;
     // model param.
-    const modelParam = request.params.model;
+    const { params: { id: modelParam } } = request;
 
     // query to grab the data based on the patient id.
     getModelInformationDataQuery()

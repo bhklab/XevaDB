@@ -133,7 +133,8 @@ const transformData = (row) => {
  */
 const getModelResponseBasedOnDataset = (request, response) => {
     // dataset parameter.
-    const datasetParam = request.params.dataset;
+    const { params: { id: datasetParam } } = request;
+
     // patients and model response.
     const patients = distinctPatientsQuery(datasetParam);
     const modelResponse = modelResponseQuery(datasetParam);

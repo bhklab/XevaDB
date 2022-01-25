@@ -71,7 +71,7 @@ const transformData = (input) => {
  */
 const getCopyNumberVariationDataBasedOnDataset = async (request, response) => {
     // dataset parameter.
-    const datasetParam = request.params.dataset;
+    const { params: { id: datasetParam } } = request;
 
     // if verification passes.
     if (isVerified(response, datasetParam)) {
