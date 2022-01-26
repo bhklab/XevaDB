@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Footer from '../Footer/Footer';
-import GlobalStyles from '../../GlobalStyles';
-import Spinner from '../Utils/Spinner';
+import GlobalStyles from '../../../GlobalStyles';
+import Spinner from '../../Utils/Spinner';
+import Footer from '../../Footer/Footer';
+import Annotation from './Annotation';
 
-// header constant.
+// header constant
 const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
 
+// Individual drug page component
 const Drug = (props) => {
     // get the drug id from the props object 
     // and assign it to drugId variable
@@ -21,7 +23,6 @@ const Drug = (props) => {
     const fetchData = async () => {
         // get the drug information based on the drugId
         const drugInformation = await axios.get(`/api/v1/drugs/${drugId}`, HEADER);
-        console.log(drugInformation);
 
         // update the state of data
         const { data } = drugInformation;
@@ -45,7 +46,10 @@ const Drug = (props) => {
                     isLoading
                         ? <Spinner loading={isLoading} />
                         : (
-                            <h1> {drugData.drug_name} </h1>
+                            <div className='curve-wrapper'>
+                                <h1> {drugData.drug_name} </h1>
+                                <Annotation data={drugData} />
+                            </div>
                         )
                 }
             </div>
