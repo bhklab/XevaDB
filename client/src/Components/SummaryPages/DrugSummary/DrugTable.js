@@ -7,9 +7,8 @@ import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 import firstAlphabetUpperCase from '../../../utils/FirstAlphabetUpperCase';
+import pubchemURL from '../../../utils/PubChemURL';
 
-// base link for pubchem.
-const pubchemURL = 'https://pubchem.ncbi.nlm.nih.gov/compound/';
 
 class DrugTable extends React.Component {
     constructor(props) {

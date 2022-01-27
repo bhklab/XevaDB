@@ -39,8 +39,25 @@ const AnnotationStyle = styled.div`
     .key, .value {
         padding: 6px;
     }
+    
+    a {
+        padding: 0px;
+        color: ${colors.pink_header};
+    }
 `;
 
+/**
+ * returns the value for table data
+ * @param {string} key 
+ * @param {string | number} value 
+ */
+const createTableValue = (key, value) => {
+    if (key === 'pubchemid') {
+        return <a href={`${pubchemURL}${value}`} target='_blank'> {value} </a>
+    } else {
+        return value;
+    }
+};
 
 /**
  * 
@@ -55,7 +72,7 @@ const createTable = (data) => {
                     <tbody key={value}>
                         <tr className='table-row'>
                             <td className='key'> {convertToTitleCase(key, '_')} </td>
-                            <td className='value'> {value} </td>
+                            <td className='value'> {createTableValue(key, value)} </td>
                         </tr>
                     </tbody>
                 ))
