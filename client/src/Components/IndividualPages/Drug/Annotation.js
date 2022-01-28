@@ -9,7 +9,7 @@ import pubchemURL from '../../../utils/PubChemURL';
 // styles for annotation
 const AnnotationStyle = styled.div`
     box-sizing: border-box;
-    margin: 100px;
+    padding: 40px 0 60px 0;
     width: 80%;
     display: flex;
     flex-direction: column;
