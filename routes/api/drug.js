@@ -5,12 +5,14 @@ const { getAllowedDatasetIds } = require('./util');
 
 
 // query to get the drug data
-const drugQuery = knex.distinct('dg.drug_id')
-    .select('drug_name', 'standard_name', 'targets', 'treatment_type', 'class', 'class_name', 'pubchemid')
-    .from('drugs as dg')
-    .leftJoin('drug_annotations as da', 'dg.drug_id', 'da.drug_id')
-    .leftJoin('datasets_drugs as dd', 'dd.drug_id', 'dg.drug_id')
-    .leftJoin('datasets as d', 'd.dataset_id', 'dd.dataset_id');
+const drugQuery = () => (
+    knex.distinct('dg.drug_id')
+        .select('drug_name', 'standard_name', 'targets', 'treatment_type', 'class', 'class_name', 'pubchemid')
+        .from('drugs as dg')
+        .leftJoin('drug_annotations as da', 'dg.drug_id', 'da.drug_id')
+        .leftJoin('datasets_drugs as dd', 'dd.drug_id', 'dg.drug_id')
+        .leftJoin('datasets as d', 'd.dataset_id', 'dd.dataset_id')
+);
 
 
 /**
@@ -24,7 +26,7 @@ const getDrugs = (request, response) => {
     const { user } = response.locals;
 
     // selecting drug list based on dataset list.
-    drugQuery
+    drugQuery()
         .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .orderBy('dg.drug_name', 'asc')
         .then((drugs) => {
@@ -48,7 +50,7 @@ const getSingleDrugInformation = (request, response) => {
     const { user } = response.locals;
 
     // selecting drug list based on dataset list.
-    drugQuery
+    drugQuery()
         .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .where('dg.drug_id', request.params.id)
         .then((drugInformation) => {
