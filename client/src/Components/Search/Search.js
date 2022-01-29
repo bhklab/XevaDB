@@ -14,11 +14,8 @@ import { GeneList } from '../../utils/GeneList';
 import colors from '../../styles/colors';
 
 class Search extends React.Component {
-    static parseDataset(dataset) {
-        if (dataset === 'SU2C UHN (Breast Cancer)') {
-            return 'UHN (Breast Cancer)';
-        }
-        if (dataset === 'SU2C McGill (Breast Cancer)') {
+    static mapDataset(dataset) {
+        if (dataset === 'McGill TNBC') {
             return 'McGill (Breast Cancer)';
         }
         return dataset;
@@ -85,7 +82,7 @@ class Search extends React.Component {
             .then((response) => {
                 const datasets = response.data.datasets.map((item) => ({
                     value: item.id,
-                    label: Search.parseDataset(item.name),
+                    label: Search.mapDataset(item.name),
                 }));
                 this.setState({
                     datasets: [...datasets],
