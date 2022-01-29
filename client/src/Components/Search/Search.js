@@ -40,16 +40,6 @@ class Search extends React.Component {
             drugValue: [],
             axiosConfig: {},
         };
-        this.handleDrugChange = this.handleDrugChange.bind(this);
-        this.handleDatasetChange = this.handleDatasetChange.bind(this);
-        this.handleGeneListChange = this.handleGeneListChange.bind(this);
-        this.handleGeneSearchChange = this.handleGeneSearchChange.bind(this);
-        this.handleExpressionChange = this.handleExpressionChange.bind(this);
-        this.handleKeyPress = this.handleKeyPress.bind(this);
-        this.redirectUser = this.redirectUser.bind(this);
-        this.handleThreshold = this.handleThreshold.bind(this);
-        this.ifAllDataAvailable = this.ifAllDataAvailable.bind(this);
-        this.clearText = this.clearText.bind(this);
     }
 
     componentWillMount() {
@@ -91,7 +81,7 @@ class Search extends React.Component {
             });
     }
 
-    handleDrugChange(selectedOption) {
+    handleDrugChange = (selectedOption) => {
         if (selectedOption !== null && selectedOption.length > 0) {
             // destructuring the state.
             const { drugs, allDrugs } = this.state;
@@ -140,7 +130,7 @@ class Search extends React.Component {
 
     // handle the dataset change and sends a post
     // request to grab drugs based on the particular dataset.
-    handleDatasetChange(selectedOption) {
+    handleDatasetChange = (selectedOption) => {
         const { axiosConfig } = this.state;
         this.setState({
             selectedDataset: selectedOption.value,
@@ -165,7 +155,7 @@ class Search extends React.Component {
 
     // sets the value of selected gene search,
     // empty if it's user defined list else the option selected.
-    handleGeneListChange(selectedOption) {
+    handleGeneListChange = (selectedOption) => {
         if (selectedOption.value === 'user defined list') {
             this.setState({
                 selectedGeneSearch: '',
@@ -178,14 +168,14 @@ class Search extends React.Component {
     }
 
     // sets the value on event change.
-    handleGeneSearchChange(event) {
+    handleGeneSearchChange = (event) => {
         this.setState({
             selectedGeneSearch: event.target.value,
         });
     }
 
     // this adds the value either mutation or cnv or RNASeq.
-    handleExpressionChange(selectedOption) {
+    handleExpressionChange = (selectedOption) => {
         const { genomicsValue } = this.state;
         if (selectedOption !== null && selectedOption.length > 0) {
             // map through the options in order to store the selected value.
@@ -231,20 +221,20 @@ class Search extends React.Component {
     }
 
     // threshold for GeneExpression.
-    handleThreshold(event) {
+    handleThreshold = (event) => {
         this.setState({
             threshold: event.target.value,
         });
     }
 
-    handleKeyPress(event) {
+    handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             this.redirectUser();
         }
     }
 
     // checks if all the data is available.
-    ifAllDataAvailable() {
+    ifAllDataAvailable = () => {
         const {
             selectedDataset, selectedDrugs, selectedGeneSearch, genomics,
         } = this.state;
@@ -257,8 +247,16 @@ class Search extends React.Component {
         );
     }
 
+    // checks if the gene list entered by the user is less than 50 in number
+    ifGenesLessThanFifty = () => {
+        // gene length
+        const geneLength = this.state.selectedGeneSearch.split(',').length;
+        // return true/false based on the length
+        return geneLength < 50;
+    }
+
     // redirects the user to search page.
-    redirectUser() {
+    redirectUser = () => {
         const {
             selectedDataset, selectedDrugs, selectedGeneSearch,
             selectedGenomics, threshold, genomics,
@@ -266,14 +264,14 @@ class Search extends React.Component {
         // this removes spaces from gene list.
         const formatedGeneList = selectedGeneSearch.replace(/\s/g, '');
         // only renders if all the data is available.
-        if (this.ifAllDataAvailable()) {
+        if (this.ifAllDataAvailable() && this.ifGenesLessThanFifty()) {
             const { history } = this.props;
             history.push(`/search/?drug=${selectedDrugs}&dataset=${selectedDataset}&genes=${formatedGeneList}&genomics=${selectedGenomics}&threshold=${threshold}`);
         }
     }
 
     // clear the text from text area.
-    clearText() {
+    clearText = () => {
         const { selectedGeneSearch } = this.state;
         if (selectedGeneSearch[0] === 'Enter Gene Symbol(s)') {
             this.setState({
