@@ -28,7 +28,7 @@ class Search extends React.Component {
             drugs: [],
             datasets: [],
             genes: [],
-            selectedGeneSearch: ['Enter Gene Symbol(s)'],
+            selectedGeneSearch: ['Enter Gene Symbols (Max 50 genes)'],
             selectedDrugs: [],
             selectedDataset: '',
             genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'],
@@ -39,6 +39,7 @@ class Search extends React.Component {
             genomics: [],
             drugValue: [],
             axiosConfig: {},
+            geneLimit: 50,
         };
     }
 
@@ -50,7 +51,7 @@ class Search extends React.Component {
         }));
 
         this.setState({
-            genes: [{ value: 'user defined list', label: 'User-Defined List' }, ...genes],
+            genes: [{ value: 'user defined list', label: 'User-Defined List (Max 50 genes)' }, ...genes],
         });
 
         const genomic = genomicsValue.map((item, i) => ({
@@ -248,11 +249,11 @@ class Search extends React.Component {
     }
 
     // checks if the gene list entered by the user is less than 50 in number
-    ifGenesLessThanFifty = () => {
+    ifGeneNumberLessThanFifty = () => {
         // gene length
         const geneLength = this.state.selectedGeneSearch.split(',').length;
         // return true/false based on the length
-        return geneLength < 50;
+        return geneLength < this.state.geneLimit;
     }
 
     // redirects the user to search page.
@@ -264,7 +265,7 @@ class Search extends React.Component {
         // this removes spaces from gene list.
         const formatedGeneList = selectedGeneSearch.replace(/\s/g, '');
         // only renders if all the data is available.
-        if (this.ifAllDataAvailable() && this.ifGenesLessThanFifty()) {
+        if (this.ifAllDataAvailable() && this.ifGeneNumberLessThanFifty()) {
             const { history } = this.props;
             history.push(`/search/?drug=${selectedDrugs}&dataset=${selectedDataset}&genes=${formatedGeneList}&genomics=${selectedGenomics}&threshold=${threshold}`);
         }
@@ -279,6 +280,15 @@ class Search extends React.Component {
             });
         }
     }
+
+    // text for the pop up
+    popupText = () => {
+        if (this.state.selectedGeneSearch.length > 1) {
+            return this.ifGeneNumberLessThanFifty() ? 'Complete all the fields!!' : 'Please keep gene list less than 50!';
+        }
+        return 'Complete all the fields!!';
+    }
+
 
     render() {
         const {
@@ -376,7 +386,7 @@ class Search extends React.Component {
 
                         <div>
                             {
-                                this.ifAllDataAvailable()
+                                this.ifAllDataAvailable() && this.ifGeneNumberLessThanFifty()
                                     ? (
                                         <StyleButton onClick={this.redirectUser} type="button" className="stylebutton">
                                             <span>
@@ -399,7 +409,7 @@ class Search extends React.Component {
                                                 color: `${colors.blue_header}`, fontFamily: 'Open Sans', fontSize: '17px', fontWeight: '500',
                                             }}
                                             >
-                                                Complete all the fields!!
+                                                {this.popupText()}
                                             </div>
                                         </Popup>
                                     )
