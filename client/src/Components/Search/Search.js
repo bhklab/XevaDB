@@ -11,6 +11,7 @@ import axios from 'axios';
 import Popup from 'reactjs-popup';
 import { StyleBar, customStyles, StyleButton } from './SearchStyle';
 import { GeneList } from '../../utils/GeneList';
+import feelingLuckyRequest from '../../utils/FeelingLuckyRequest';
 import colors from '../../styles/colors';
 
 class Search extends React.Component {
@@ -366,7 +367,7 @@ class Search extends React.Component {
                         </div>
 
                         <div className="sample">
-                            <a href="/search/?drug=BGJ398,binimetinib,BKM120,BYL719&dataset=1&genes=SOX9,RAN,TNK2,EP300,PXN,NCOA2,AR,NRIP1,NCOR1,NCOR2&genomics=Mutation,CNV,RNASeq&threshold=2"> Feeling Lucky? </a>
+                            <a href={`${feelingLuckyRequest}`}> Feeling Lucky? </a>
                         </div>
 
                         <div>
