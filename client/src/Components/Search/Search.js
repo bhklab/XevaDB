@@ -48,7 +48,7 @@ class Search extends React.Component {
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.redirectUser = this.redirectUser.bind(this);
         this.handleThreshold = this.handleThreshold.bind(this);
-        this.checkInput = this.checkInput.bind(this);
+        this.ifAllDataAvailable = this.ifAllDataAvailable.bind(this);
         this.clearText = this.clearText.bind(this);
     }
 
@@ -243,6 +243,20 @@ class Search extends React.Component {
         }
     }
 
+    // checks if all the data is available.
+    ifAllDataAvailable() {
+        const {
+            selectedDataset, selectedDrugs, selectedGeneSearch, genomics,
+        } = this.state;
+
+        return (
+            (selectedDataset !== '') &&
+            (selectedDrugs.length > 0) &&
+            (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') &&
+            (genomics.length > 0)
+        );
+    }
+
     // redirects the user to search page.
     redirectUser() {
         const {
@@ -252,18 +266,10 @@ class Search extends React.Component {
         // this removes spaces from gene list.
         const formatedGeneList = selectedGeneSearch.replace(/\s/g, '');
         // only renders if all the data is available.
-        if ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') && (genomics.length > 0)) {
+        if (this.ifAllDataAvailable()) {
             const { history } = this.props;
             history.push(`/search/?drug=${selectedDrugs}&dataset=${selectedDataset}&genes=${formatedGeneList}&genomics=${selectedGenomics}&threshold=${threshold}`);
         }
-    }
-
-    // check if all fields are selected.
-    checkInput() {
-        const {
-            selectedDataset, selectedDrugs, selectedGeneSearch, genomics,
-        } = this.state;
-        return ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') && (genomics.length > 0));
     }
 
     // clear the text from text area.
@@ -372,7 +378,7 @@ class Search extends React.Component {
 
                         <div>
                             {
-                                this.checkInput()
+                                this.ifAllDataAvailable()
                                     ? (
                                         <StyleButton onClick={this.redirectUser} type="button" className="stylebutton">
                                             <span>
