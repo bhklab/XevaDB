@@ -1,3 +1,4 @@
+import Biomarker from './Biomarker/Biomarker';
 import CounterNav from './CounterNav/CounterNav';
 import Dataset from './IndividualPages/Dataset';
 import DatasetSummary from './SummaryPages/DatasetSummary/DatasetSummary';
@@ -23,6 +24,7 @@ import TopNav from './TopNav/TopNav';
 import TumorGrowthCurve from './Plots/TumorGrowthCurve/TumorGrowthCurve';
 
 export {
+    Biomarker,
     CounterNav,
     Dataset,
     DatasetSummary,
