@@ -2,7 +2,7 @@ import React from 'react';
 import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import DonutNav from './CounterStyle';
+import CounterStyle from './CounterStyle';
 import GlobalStyles from '../../GlobalStyles';
 
 class CounterNav extends React.Component {
@@ -41,7 +41,7 @@ class CounterNav extends React.Component {
         return (
             <div>
                 <GlobalStyles />
-                <DonutNav>
+                <CounterStyle>
                     {
                         types.map((type) => (
                             <Link to={type}>
@@ -57,7 +57,7 @@ class CounterNav extends React.Component {
                             </Link>
                         ))
                     }
-                </DonutNav>
+                </CounterStyle>
             </div>
         );
     }

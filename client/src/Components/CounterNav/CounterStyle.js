@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import colors from '../../styles/colors';
 
-const DonutNav = styled.div`
+const CounterStyle = styled.div`
     display: flex;
     background-color: ${colors.white};
     min-height: 9vh;
@@ -76,4 +76,4 @@ const DonutNav = styled.div`
 `;
 
 
-export default DonutNav;
+export default CounterStyle;
