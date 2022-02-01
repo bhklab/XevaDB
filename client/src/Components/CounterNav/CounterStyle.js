@@ -4,25 +4,22 @@ import colors from '../../styles/colors';
 const CounterStyle = styled.div`
     display: flex;
     background-color: ${colors.white};
-    min-height: 9vh;
-    max-height: 9vh;
+    min-height: 8vh;
+    max-height: 8vh;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    align-items: flex-end;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
     font-family: 'Open Sans', 'Roboto';
     font-weight: 500;
-    font-size: 1.4em;
-    padding-bottom: 5px;
+    font-size: 1.2vw;
     a {
-        padding: 10px;
         color: ${colors.blue_header};
         letter-spacing: 2px;
         font-weight: bold;
-        font-size: 0.9em;
         text-decoration: none;
         &:hover {
             color: ${colors.pink_header};
@@ -30,48 +27,7 @@ const CounterStyle = styled.div`
         text-align:center;
     }
     h4 {
-        margin-top: 3px;
-        margin-bottom: 0px;
-    }
-
-    @media screen and (max-width: 1500px) {
-        a {
-            font-size: 0.85em;
-        }
-
-        a:nth-child(1) {
-            margin-left : 100px;
-        }
-    }
-
-    @media screen and (max-width: 1300px) {
-        a {
-            font-size: 0.75em;
-        }
-        
-        a:nth-child(1) {
-            margin-left : 10px;
-        }
-    }
-
-    @media screen and (max-width: 1000px) {
-        a {
-           font-size: 0.65em;
-        }
-
-        a:nth-child(1) {
-            margin-left: 0px;
-        }
-    }
-
-    @media screen and (max-width: 700px) {
-        a {
-           font-size: 0.55em;
-        }
-
-        a:nth-child(1) {
-            margin-left : 0px;
-        }
+        margin: 0px;
     }
 `;
 
