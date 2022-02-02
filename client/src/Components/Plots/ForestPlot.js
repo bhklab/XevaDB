@@ -56,7 +56,7 @@ const margin = {
 };
 
 // width and height of the SVG canvas.
-const width = 900 - margin.left - margin.right;
+const width = 1000 - margin.left - margin.right;
 const height = 550 - margin.top - margin.bottom;
 
 
@@ -255,7 +255,7 @@ const createVerticalLine = (svg, scale, height) => {
     svg.append('g')
         .attr('id', 'vertical-line')
         .append('line')
-        .style('stroke', `${colors.dark_gray_text}`)
+        .style('stroke', `${colors.fade_blue}`)
         .attr('x1', scale(0))
         .attr('y1', 0)
         .attr('x2', scale(0))
@@ -277,7 +277,7 @@ const createHorizontalLines = (svg, scale, data, height) => {
             horizontal
                 .append('line')
                 .attr('id', `horizontal-line-${element.dataset.name}`)
-                .style('stroke', `${colors.dark_gray_text}`)
+                .style('stroke', `${colors.fade_blue}`)
                 .style('stroke-width', 1.25)
                 .attr('x1', scale(element.lower))
                 .attr('y1', ((i + 1) * height) / (data.length + ADDITIONAL))
@@ -343,7 +343,7 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
 
 //     svg.append('path')
 //         .attr('d', lineFunction(poly))
-//         .attr('stroke', `${colors.dark_gray_text}`)
+//         .attr('stroke', `${colors.fade_blue}`)
 //         .attr('fill', `${colors.teal}`);
 // };
 
@@ -603,9 +603,6 @@ const ForestPlot = ({ height, width, margin, data }) => {
     // get all the data types available in the data.
     const mDataTypes = getAllDataTypes(updatedData);
 
-    // filtered data.
-    const filteredData = createFilteredData(updatedData, molecularType);
-
     useEffect(() => {
         // remove the svg canvas.
         d3.select('#forestplot-canvas').remove();
@@ -617,7 +614,7 @@ const ForestPlot = ({ height, width, margin, data }) => {
         createSelectionOptions(mDataTypes, updatedData, molecularType, setMolecularType);
 
         // create forest plot.
-        createForestPlot(margin, height, width, filteredData);
+        createForestPlot(margin, height, width, updatedData);
     }, [isAnalytic, molecularType]);
 
     return (
