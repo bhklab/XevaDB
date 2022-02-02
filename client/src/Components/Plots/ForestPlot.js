@@ -270,10 +270,10 @@ const createHorizontalLines = (svg, scale, data, height) => {
                 .attr('x2', scale(element.upper))
                 .attr('y2', ((i + 1) * height) / (data.length + ADDITIONAL))
                 .on('mouseover', (event) => {
-                    mouseOverEvent(event, element);
+                    mouseOverEvent(d3.event, element);
                 })
                 .on('mouseout', (event) => {
-                    mouseOutEvent(event, element);
+                    mouseOutEvent(d3.event, element);
                 });
         }
     })
@@ -303,11 +303,11 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
             .attr('cy', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('r', circleScale(element.n))
             .attr('fill', (fdr < 0.05 && pc > 0.70) ? `${colors.pink_header}` : `${colors.silver}`)
-            .on('mouseover', (event) => {
-                mouseOverEvent(event, element);
+            .on('mouseover', function () {
+                mouseOverEvent(d3.event, element);
             })
             .on('mouseout', (event) => {
-                mouseOutEvent(event, element);
+                mouseOutEvent(d3.event, element);
             });
     });
 };
