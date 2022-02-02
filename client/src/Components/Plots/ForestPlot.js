@@ -8,22 +8,8 @@ import styled from 'styled-components';
 
 // style for forest plot.
 const StyledForestPlot = styled.div`
-    width: 100%;
-    margin-left: 10px;
-    .title {
-        font-size: 14px;
-    }
-    .switch-wrapper {
-        margin: 0px 60px 40px 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        .disclaimer {
-            margin-left: 10px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-    }
+    width: 80%;
+    margin: auto;
 `;
 
 // data length and multiplier variables.
