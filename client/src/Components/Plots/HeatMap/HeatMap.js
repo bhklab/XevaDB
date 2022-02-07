@@ -10,6 +10,7 @@ import PatientContext, { PatientConsumer } from '../../Context/PatientContext';
 // import DensityPlot from '../DensityPlot/DensityPlot';
 import BoxPlot from '../BoxPlot';
 import colors from '../../../styles/colors';
+import createToolTip from '../../../utils/ToolTip';
 
 class HeatMap extends Component {
     constructor(props) {
@@ -22,6 +23,8 @@ class HeatMap extends Component {
         this.makeHeatMap = this.makeHeatMap.bind(this);
         this.rankHeatMap = this.rankHeatMap.bind(this);
         this.rankHeatMapBasedOnOncoprintChanges = this.rankHeatMapBasedOnOncoprintChanges.bind(this);
+        // adding tool tip function 
+        this.createToolTip = createToolTip.bind(this);
     }
 
     componentDidMount() {
@@ -69,17 +72,7 @@ class HeatMap extends Component {
         };
 
         // making tooltips
-        const tooltip = d3.select('.heatmap-wrapper')
-            .append('div')
-            .attr('id', 'heatmap-tooltip')
-            .style('position', 'absolute')
-            .style('visibility', 'hidden')
-            .style('border', 'solid')
-            .style('border-width', '1px')
-            .style('border-radius', '5px')
-            .style('padding', '5px')
-            .attr('top', 10)
-            .attr('left', 20);
+        const tooltip = this.createToolTip('heatmap');
 
         // setting the query strings
         let drugUse = '';
