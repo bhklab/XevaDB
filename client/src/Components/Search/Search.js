@@ -249,9 +249,10 @@ class Search extends React.Component {
     }
 
     // checks if the gene list entered by the user is less than 50 in number
-    ifGeneNumberLessThanFifty = () => {
+    ifGeneNumberLessThanFifty = (data) => {
+        const { selectedGeneSearch } = this.state;
         // gene length
-        const geneLength = this.state.selectedGeneSearch.split(',').length;
+        const geneLength = typeof (selectedGeneSearch) === 'string' && selectedGeneSearch.split(',').length;
         // return true/false based on the length
         return geneLength < this.state.geneLimit;
     }
