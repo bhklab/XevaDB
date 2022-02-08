@@ -566,7 +566,9 @@ class HeatMap extends Component {
         // ********************************************************************* //
         const biomarkerImage = skeleton
             .append('g')
-            .attr('id', 'biomarker-image');
+            .attr('id', 'biomarker-image')
+            .append('a')
+            .attr('xlink:href', '/biomarker');
 
         biomarkerImage.selectAll('div')
             .data(drug)
@@ -574,7 +576,28 @@ class HeatMap extends Component {
             .text('🅱️')
             .attr('x', -40)
             .attr('y', (d, i) => (i + 1.75) * rectHeight)
+            .on('mouseover', function () {
+                const tooltipDiv = tooltip
+                    .style('visibility', 'visible')
+                    .style('left', `${d3.event.pageX - 100}px`)
+                    .style('top', `${d3.event.pageY + 15}px`)
+                    .style('color', `${colors.black}`)
+                    .style('background-color', `${colors.white}`)
 
+                // add text to tooltip
+                tooltipDiv
+                    .append('text')
+                    .attr('id', 'tooltip-biomarker')
+                    .text('Redirect to Biomarker Page!');
+            })
+            .on('mouseout', function () {
+                // hide the tooltip
+                tooltip
+                    .style('visibility', 'hidden');
+
+                // remove the biomarker tooltip data
+                d3.select('#tooltip-biomarker').remove();
+            });
 
         // ********************************************************************* //
         // *************** X-AXIS AND Y-AXIS FOR THE SKELETONs ****************** //
