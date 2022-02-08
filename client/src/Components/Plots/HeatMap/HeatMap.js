@@ -87,7 +87,9 @@ class HeatMap extends Component {
         let drugIndex = 0;
         const patientUse = patient;
 
-        // drug evaluations
+        // ********************************************************************* //
+        // **************************** drug evaluations *********************** //
+        // ********************************************************************* //
         let maxDrug = 0;
         let drugEvaluations = {};
         if (responseType === 'mRECIST') {
@@ -98,7 +100,9 @@ class HeatMap extends Component {
             }
         }
 
-        // patient evaluations
+        // ********************************************************************* //
+        // **************************** patient evaluations *********************** //
+        // ********************************************************************* //
         let patientEvaluations = {};
         if (responseType === 'mRECIST') {
             for (let j = 0; j < patient.length; j++) {
@@ -141,6 +145,9 @@ class HeatMap extends Component {
         // reference to this
         const reference = this;
 
+        // ********************************************************************* //
+        // **************************** selection dropdown *********************** //
+        // ********************************************************************* //
         // create a selection dropdown.
         function createSelection() {
             const options = ['mRECIST', 'Slope', 'Best Average Response', 'AUC'];
@@ -205,6 +212,9 @@ class HeatMap extends Component {
             return [min, max];
         }
 
+        // ********************************************************************* //
+        // ********************* legends (Except for mRECIST) ****************** //
+        // ********************************************************************* //
         // creating legend for the response type except for mRECIST.
         function createLegend(svg, height, width, min, max) {
             const defs = svg.append('defs');
@@ -260,6 +270,9 @@ class HeatMap extends Component {
                 .style('text-anchor', 'start');
         }
 
+        // ********************************************************************* //
+        // *********************** scale for the main skeleton ***************** //
+        // ********************************************************************* //
         /** SCALE FOR MAIN SKELETON * */
 
         // defining the scale that we will use for our x-axis and y-axis for the skeleton.
@@ -282,8 +295,9 @@ class HeatMap extends Component {
             .scale(xScale)
             .tickSize(5);
 
-        /** SETTING SVG ATTRIBUTES * */
-
+        // ********************************************************************* //
+        // **************************** SVG Canvas ***************************** //
+        // ********************************************************************* //
         // make the SVG element.
         const svg = d3.select('#heatmap')
             .append('svg')
@@ -302,6 +316,10 @@ class HeatMap extends Component {
         const skeleton = svg.append('g')
             .attr('id', 'skeleton');
 
+
+        // ********************************************************************* //
+        // ******************* Circles on y-axis (for sorting) ***************** //
+        // ********************************************************************* //
         /** Appending Circle to the  Y-Axis */
         const circles = skeleton
             .append('g')
@@ -329,6 +347,10 @@ class HeatMap extends Component {
             .append('g')
             .attr('transform', (d, i) => `translate(0,${i * rectHeight})`);
 
+
+        // ********************************************************************* //
+        // **************************** drug evaluations *********************** //
+        // ********************************************************************* //
         // this will append rect equivalent to number of patient ids.
         const drawrectangle = gskeleton.selectAll('rect.hmap-rect')
             .data((d, i) => {
@@ -390,7 +412,9 @@ class HeatMap extends Component {
             };
         }
 
-        // creating tooltip.
+        // ********************************************************************* //
+        // **************************** tooltip *********************** //
+        // ********************************************************************* //
         const createToolTip = (x, y, patient, response) => {
             // tooltip on mousever setting the div to visible.
             tooltip
@@ -434,7 +458,9 @@ class HeatMap extends Component {
         let pCount = 0;
         drugIndex = 0;
 
-        // let highlight =
+        // ********************************************************************* //
+        // ********************* event listener to rectangles ****************** //
+        // ********************************************************************* //
         gskeleton.selectAll('rect.hmap-hlight')
             .data((d, i) => {
                 // calling the function and passing the data d as parameter.
@@ -537,8 +563,10 @@ class HeatMap extends Component {
             .attr('y', 0)
             .style('opacity', 0);
 
-        /** X-AXIS AND Y-AXIS FOR THE SKELETON * */
 
+        // ********************************************************************* //
+        // **************************** X-AXIS AND Y-AXIS FOR THE SKELETONs *********************** //
+        // ********************************************************************* //
         // calling the y-axis and removing the stroke.
         const drugName = skeleton.append('g')
             .attr('id', 'drugName');
@@ -621,8 +649,10 @@ class HeatMap extends Component {
             .attr('x', (dataset === '7' ? '-2.4em' : '0.6em'))
             .attr('y', '.15em');
 
-        /** SMALL RECTANGLES ON RIGHT SIDE OF HEATMAP * */
 
+        // ********************************************************************* //
+        // ********** SMALL RECTANGLES ON RIGHT SIDE OF HEATMAP  *************** //
+        // ********************************************************************* //
         // This will create four rectangles on right side for the Evaluation of target lesions.
         if (responseType === 'mRECIST') {
             const targetRect = skeleton.append('g')
@@ -648,8 +678,10 @@ class HeatMap extends Component {
                 .attr('fill', `${colors.blue_header}`)
                 .attr('font-size', '14px');
 
-            /** VERTICAL GRAPH ON RIGHT SIDE OF HEATMAP * */
 
+            // ********************************************************************* //
+            // ********** VERTICAL GRAPH ON RIGHT SIDE OF HEATMAP  *************** //
+            // ********************************************************************* //
             const strokeWidth = 0.75;
 
             // This will make a right side vertical graph.
@@ -710,8 +742,10 @@ class HeatMap extends Component {
                 drugEvaluationRectangle(i);
             }
 
-            /** HORIZONTAL GRAPH AT THE TOP OF HEATMAP * */
 
+            // ********************************************************************* //
+            // ********** HORIZONTAL GRAPH AT THE TOP OF HEATMAP  *************** //
+            // ********************************************************************* //
             let maxPatientidTotal = 0;
             const boxHeight = 80;
 
