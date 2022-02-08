@@ -88,7 +88,7 @@ class HeatMap extends Component {
         const patientUse = patient;
 
         // ********************************************************************* //
-        // **************************** drug evaluations *********************** //
+        // ********************* drug and patient evaluations ****************** //
         // ********************************************************************* //
         let maxDrug = 0;
         let drugEvaluations = {};
@@ -100,9 +100,6 @@ class HeatMap extends Component {
             }
         }
 
-        // ********************************************************************* //
-        // **************************** patient evaluations *********************** //
-        // ********************************************************************* //
         let patientEvaluations = {};
         if (responseType === 'mRECIST') {
             for (let j = 0; j < patient.length; j++) {
@@ -328,7 +325,7 @@ class HeatMap extends Component {
         drug.forEach((val, i) => {
             circles
                 .append('circle')
-                .attr('cx', -12)
+                .attr('cx', -10)
                 .attr('cy', i)
                 .attr('r', 6)
                 .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
@@ -565,11 +562,27 @@ class HeatMap extends Component {
 
 
         // ********************************************************************* //
-        // **************************** X-AXIS AND Y-AXIS FOR THE SKELETONs *********************** //
+        // **************************** biomarker Image *********************** //
+        // ********************************************************************* //
+        const biomarkerImage = skeleton
+            .append('g')
+            .attr('id', 'biomarker-image');
+
+        biomarkerImage.selectAll('div')
+            .data(drug)
+            .join('text')
+            .text('🅱️')
+            .attr('x', -40)
+            .attr('y', (d, i) => (i + 1.75) * rectHeight)
+
+
+        // ********************************************************************* //
+        // *************** X-AXIS AND Y-AXIS FOR THE SKELETONs ****************** //
         // ********************************************************************* //
         // calling the y-axis and removing the stroke.
         const drugName = skeleton.append('g')
-            .attr('id', 'drugName');
+            .attr('id', 'drugName')
+            .attr('transform', 'translate(-20, 0)');
 
         drugName.attr('stroke-width', '0')
             .style('font-family', 'Open Sans')
