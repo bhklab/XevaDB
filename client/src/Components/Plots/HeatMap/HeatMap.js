@@ -19,33 +19,41 @@ class HeatMap extends Component {
             modifiedPatients: [],
             responseValue: 'mRECIST',
         };
-        this.HeatMap = this.HeatMap.bind(this);
         this.makeHeatMap = this.makeHeatMap.bind(this);
         this.rankHeatMap = this.rankHeatMap.bind(this);
         this.rankHeatMapBasedOnOncoprintChanges = this.rankHeatMapBasedOnOncoprintChanges.bind(this);
+        this.calcMargin = this.calcMargin.bind(this);
         // adding tool tip function 
         this.createToolTip = createToolTip.bind(this);
     }
 
     componentDidMount() {
-        this.HeatMap();
+        this.makeHeatMap();
     }
 
-    HeatMap() {
-        const { data } = this.props;
-        const { drugId, patientId } = this.props;
-        const { dimensions, margin } = this.props;
-        const { className } = this.props;
-        const { dataset } = this.props;
-        const { responseValue: responseType } = this.state;
-        this.makeHeatMap(data, patientId, drugId, dataset, className, dimensions, margin, responseType);
-    }
+    // calculates the new margin for the heatmap.
+    calcMargin(selectedOption) {
+        let margin = '';
+        if (selectedOption === 'mRECIST') {
+            margin = {
+                top: 200, right: 250, bottom: 50, left: 250,
+            };
+        } else {
+            margin = {
+                top: 100, right: 250, bottom: 50, left: 250,
+            };
+        }
+        return margin;
+    };
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatMap(data, patient, drug, dataset, plotId, dimensions, margin, responseType) {
-        // variable to get the function stored.
-        const heatmap = this.makeHeatMap;
-        const reference = this;
+    makeHeatMap(data = this.props.data, patient = this.props.patientId, margin = this.props.margin) {
+        // props data
+        const { drugId: drug } = this.props;
+        const { dimensions } = this.props;
+        const { className: plotId } = this.props;
+        const { dataset } = this.props;
+        const { responseValue: responseType } = this.state;
 
         // height and width for the SVG based on the number of drugs and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
@@ -71,7 +79,7 @@ class HeatMap extends Component {
             NA: `${colors.lightgray}`,
         };
 
-        // making tooltips
+        // initializing the tooltip
         const tooltip = this.createToolTip('heatmap');
 
         // setting the query strings
@@ -98,21 +106,6 @@ class HeatMap extends Component {
                     CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, total: 0,
                 };
             }
-        }
-
-        // calculates the new margin for the heatmap.
-        function calcMargin(selectedOption) {
-            let margin = '';
-            if (selectedOption !== 'mRECIST') {
-                margin = {
-                    top: 100, right: 250, bottom: 50, left: 250,
-                };
-            } else {
-                margin = {
-                    top: 200, right: 250, bottom: 50, left: 250,
-                };
-            }
-            return margin;
         }
 
         /* this code will add to the drugEvaluations  and
@@ -145,6 +138,9 @@ class HeatMap extends Component {
             }
         }
 
+        // reference to this
+        const reference = this;
+
         // create a selection dropdown.
         function createSelection() {
             const options = ['mRECIST', 'Slope', 'Best Average Response', 'AUC'];
@@ -155,9 +151,15 @@ class HeatMap extends Component {
                 .enter()
                 .append('option')
                 .text((d) => d)
-                .attr('value', (d) => d);
+                .attr('value', (d) => d)
+                .attr('selected', (d) => {
+                    if (d === 'mRECIST') {
+                        return 'selected';
+                    }
+                });
 
-            d3.select('.select').on('change', () => {
+
+            d3.select('.select').on('change', function () {
                 // recover the option that has been chosen
                 const selectedOption = d3.select('select').property('value');
                 let response = '';
@@ -171,15 +173,16 @@ class HeatMap extends Component {
                     default:
                         response = selectedOption;
                 }
+
                 reference.setState({
                     responseValue: response,
-                }, () => {
+                }, function () {
                     d3.select(`#heatmap-${plotId}`).remove();
                     d3.select('#heatmap-tooltip').remove();
 
-                    margin = calcMargin(selectedOption);
+                    let margin = this.calcMargin(selectedOption);
 
-                    heatmap(data, patient, drug, dataset, plotId, dimensions, margin, response);
+                    this.makeHeatMap(data, patient, margin);
                 });
             });
         }
@@ -597,7 +600,7 @@ class HeatMap extends Component {
                 // remove all the divs with id tooltiptext.
                 d3.select('#tooltiptextdrug').remove();
                 // margin
-                margin = calcMargin(responseType);
+                let margin = this.calcMargin(responseType);
                 // highlight.
                 this.rankHeatMap(d, i, data, responseType, margin);
             });
@@ -859,7 +862,7 @@ class HeatMap extends Component {
 
         // finally calling the makeHeatMap function in order passing
         // new dataset in order to make new heatmap based on ranking.
-        this.makeHeatMap(newDataset, newSortedPatients, drugId, datasetId, className, dimensions, margin, responseType);
+        this.makeHeatMap(newDataset, newSortedPatients, margin);
 
         // making the circle visible on click of the drug.
         d3.select(`#circle-${drug.replace(/\s/g, '').replace(/\+/g, '')}`)
@@ -868,13 +871,15 @@ class HeatMap extends Component {
 
     rankHeatMapBasedOnOncoprintChanges(value) {
         const { data } = this.props;
-        const { drugId } = this.props;
         const { globalPatients } = value;
-        const { dimensions } = this.props;
-        const { margin } = this.props;
         const { className } = this.props;
-        const { dataset } = this.props;
-        const { responseValue: responseType } = this.state;
+
+        // recover the option that has been chosen
+        const selectedOption = d3.select('select').property('value');
+
+        // margin
+        const margin = this.calcMargin(selectedOption);
+
         const newDataset = [];
 
         // sort the complete data according to the globalPatients.
@@ -889,11 +894,9 @@ class HeatMap extends Component {
         if (globalPatients.length > 0) {
             d3.select(`#heatmap-${className}`).remove();
             d3.select('#heatmap-tooltip').remove();
-            this.makeHeatMap(newDataset, globalPatients, drugId, dataset, className, dimensions, margin, responseType);
+            this.makeHeatMap(newDataset, globalPatients, margin);
         }
     }
-
-    // static contextType = PatientContext;
 
     render() {
         const { responseValue } = this.state;
@@ -923,7 +926,7 @@ class HeatMap extends Component {
                         responseValue !== 'mRECIST' ? <BoxPlot response={responseValue} data={data} patients={modifiedPatients} drugs={drugs} /> : <div />
                     }
                 </div>
-                <PatientConsumer>{(value) => { this.rankHeatMapBasedOnOncoprintChanges(value); }}</PatientConsumer>
+                <PatientConsumer>{(value) => { value.globalPatients.length > 0 && this.rankHeatMapBasedOnOncoprintChanges(value); }}</PatientConsumer>
             </div>
         );
     }
