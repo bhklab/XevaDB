@@ -57,7 +57,8 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
-  .donut-wrapper, .doc-wrapper, .tissue-wrapper, .summary-table {
+  .donut-wrapper, .doc-wrapper, .tissue-wrapper, 
+  .summary-table, .biomarker-wrapper {
     background: ${colors.white}
     padding-top: 20px;
   }
@@ -70,13 +71,19 @@ const GlobalStyles = createGlobalStyle`
     margin-bottom: 100px;
   }
 
-  .donut-wrapper, .summary-table, .tissue-wrapper {
+  .donut-wrapper, .summary-table, 
+  .tissue-wrapper, .biomarker-wrapper {
     margin-bottom: 30px;
     min-width: 1300px;
   }
 
   .tissue-wrapper {
     padding-bottom: 100px;
+  }
+
+  .biomarker-wrapper {
+    margin-bottom: 160px;
+    min-width: 1200px;
   }
 
   .summary-table, .stats-table {
