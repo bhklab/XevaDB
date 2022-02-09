@@ -10,6 +10,10 @@ import styled from 'styled-components';
 const StyledForestPlot = styled.div`
     width: 80%;
     margin: auto;
+
+    @media screen and (min-width: 2300px) {
+        width: 65%;
+    }
 `;
 
 // data length and multiplier variables.
@@ -605,7 +609,7 @@ const ForestPlot = ({ height, width, margin, data }) => {
 
     return (
         <StyledForestPlot>
-            <div style={{ position: 'relative', marginTop: '20px' }}>
+            <div style={{ position: 'relative' }}>
                 <select
                     className='select'
                     id='selection'
@@ -615,7 +619,8 @@ const ForestPlot = ({ height, width, margin, data }) => {
                         height: '30px',
                         position: 'absolute',
                         width: '140px',
-                        right: '20px',
+                        right: '-50px',
+                        top: '-50px',
                         fontSize: '16px',
                         color: `${colors.blue_header}`,
                         borderRadius: '5px',
