@@ -3,12 +3,22 @@ import GlobalStyles from '../../GlobalStyles';
 import Footer from '../Footer/Footer';
 import ForestPlot from '../Plots/ForestPlot';
 import styled from 'styled-components';
+import BiomarkerSelect from './BiomarkerSelect';
+import colors from '../../styles/colors';
 import data from './data';
 
 // Biomarker styles
 const StyledBiomarker = styled.div`
     h1 {
-        margin: 5px 0 60px 0;
+        margin: 20px 0 30px 0;
+    }
+
+    @media screen and (min-height: 1200px) {
+        margin-top: 250px;
+
+        .biomarker-wrapper {
+            min-width: 1500px;
+        }
     }
 `;
 
@@ -19,8 +29,9 @@ const Biomarker = () => {
         <StyledBiomarker>
             <GlobalStyles />
             <div className='wrapper'>
-                <div className="donut-wrapper">
-                    <h1> Biomarker </h1>
+                <div className='biomarker-wrapper'>
+                    {/* <h1> Biomarker </h1> */}
+                    <BiomarkerSelect />
                     <ForestPlot data={data.gctd} />
                 </div>
             </div>
