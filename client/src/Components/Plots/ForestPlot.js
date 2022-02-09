@@ -11,7 +11,7 @@ const StyledForestPlot = styled.div`
     width: 80%;
     margin: auto;
 
-    @media screen and (min-width: 2300px) {
+    @media screen and (min-width: 1600px) {
         width: 65%;
     }
 `;
