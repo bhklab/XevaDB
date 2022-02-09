@@ -20,7 +20,7 @@ const StyledForestPlot = styled.div`
 const ADDITIONAL = 2;
 
 // variable to calculate chart width relative to the svg width.
-const CHART_WIDTH = 0.70;
+const CHART_WIDTH = 0.65;
 
 // width & height of square/rectangle for legend.
 const RECTANGLE_DIMENSIONS = 20;
@@ -46,7 +46,7 @@ const margin = {
 };
 
 // width and height of the SVG canvas.
-const width = 1000 - margin.left - margin.right;
+const width = 1200 - margin.left - margin.right;
 const height = 550 - margin.top - margin.bottom;
 
 
@@ -208,7 +208,7 @@ const createXScale = (min, max, width) => {
 
     return d3.scaleLinear()
         .domain([updatedMin, max])
-        .range([100, (width * CHART_WIDTH)])
+        .range([200, (width * CHART_WIDTH)])
         .nice();
 };
 
@@ -348,7 +348,7 @@ const appendDatasetName = (svg, data, height) => {
         .attr('id', 'dataset-header')
         .append('text')
         .attr('font-weight', 700)
-        .attr('x', 10)
+        .attr('x', 0)
         .attr('y', -20)
         .attr('fill', `${colors.blue_header}`)
         .text('Dataset Name')
@@ -363,7 +363,7 @@ const appendDatasetName = (svg, data, height) => {
             .append('text')
             .attr('id', `dataset-${element.dataset.name}`)
             .attr('font-weight', 200)
-            .attr('x', 10)
+            .attr('x', 0)
             .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('fill', `${colors.blue_header}`)
             .text(`${element.dataset.name}`)
@@ -460,7 +460,7 @@ const createLegend = (svg, height, width) => {
 
     legend.forEach((el, i) => {
         legends.append('rect')
-            .attr('x', width - 160)
+            .attr('x', width * 0.75)
             .attr('y', ((height * 0.2) + ((i + 1) * RECTANGLE_DIMENSIONS)))
             .attr('width', RECTANGLE_DIMENSIONS)
             .attr('height', RECTANGLE_DIMENSIONS)
@@ -476,7 +476,7 @@ const createLegend = (svg, height, width) => {
         legendText
             .append('text')
             .attr('id', `legend-${el}`)
-            .attr('x', width - 135)
+            .attr('x', width * 0.77)
             .attr('y', ((height * 0.2) + (((i + 1) * RECTANGLE_DIMENSIONS) + (0.75 * RECTANGLE_DIMENSIONS))))
             .text(`${el.text}`)
             .attr('font-size', '12px')

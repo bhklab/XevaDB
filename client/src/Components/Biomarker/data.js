@@ -38,7 +38,7 @@ const data = {
             },
             "dataset": {
                 "id": 1,
-                "name": "CCLE"
+                "name": "PDXE (Breast Cancer)"
             }
         },
         {
@@ -78,7 +78,7 @@ const data = {
             },
             "dataset": {
                 "id": 2,
-                "name": "CTRPv2"
+                "name": "PDXE (Colorectal Cancer)"
             }
         },
         {
@@ -118,7 +118,7 @@ const data = {
             },
             "dataset": {
                 "id": 2,
-                "name": "CTRPv2"
+                "name": "PDXE (Colorectal Cancer)"
             }
         },
         {
@@ -158,7 +158,7 @@ const data = {
             },
             "dataset": {
                 "id": 4,
-                "name": "GDSC_v1"
+                "name": "UHN (Breast Cancer)"
             }
         },
         {
@@ -198,7 +198,7 @@ const data = {
             },
             "dataset": {
                 "id": 5,
-                "name": "GDSC_v2"
+                "name": "McGill TNBC"
             }
         },
         {
@@ -238,7 +238,7 @@ const data = {
             },
             "dataset": {
                 "id": 5,
-                "name": "GDSC_v2"
+                "name": "McGill TNBC"
             }
         },
         {
@@ -278,7 +278,7 @@ const data = {
             },
             "dataset": {
                 "id": 6,
-                "name": "GRAY"
+                "name": "PDXE (Gastric Cancer)"
             }
         },
         {
@@ -318,7 +318,7 @@ const data = {
             },
             "dataset": {
                 "id": 9,
-                "name": "UHNBreast"
+                "name": "PDXE (Colorectal Cancer)"
             }
         },
         {
@@ -358,7 +358,7 @@ const data = {
             },
             "dataset": {
                 "id": 10,
-                "name": "gCSI"
+                "name": "PDXE (Cutaneous Melanoma)"
             }
         },
         {
@@ -398,7 +398,7 @@ const data = {
             },
             "dataset": {
                 "id": 10,
-                "name": "gCSI"
+                "name": "PDXE (Cutaneous Melanoma)"
             }
         }
     ]
