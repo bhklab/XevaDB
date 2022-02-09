@@ -588,7 +588,7 @@ class HeatMap extends Component {
                 tooltipDiv
                     .append('text')
                     .attr('id', 'tooltip-biomarker')
-                    .text('Redirect to Biomarker Page!');
+                    .text('Redirect to Biomarker Page');
             })
             .on('mouseout', function () {
                 // hide the tooltip
