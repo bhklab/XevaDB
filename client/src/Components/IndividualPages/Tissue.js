@@ -17,7 +17,7 @@ const transformIndentedTreeData = (data) => {
     // looping through the datasets.
     Object.values(data.datasets).forEach((element) => {
         const patients = element.patients.map((el) => ({ name: el }));
-        const models = element.models.map((el) => ({ name: el }));
+        // const models = element.models.map((el) => ({ name: el }));
         const drugs = element.drugs.map((el) => ({ name: el }));
 
         transformedData.children.push({
@@ -31,10 +31,10 @@ const transformIndentedTreeData = (data) => {
                     name: 'Patients',
                     children: patients,
                 },
-                {
-                    name: 'Models',
-                    children: models,
-                },
+                // {
+                //     name: 'Models',
+                //     children: models,
+                // },
             ],
         });
     });
@@ -72,13 +72,12 @@ const Tissue = (props) => {
             <div className="wrapper">
                 {
                     loading ? <Spinner loading={loading} /> : (
-                        <>
+                        <div className="curve-wrapper" style={{ marginBottom: '150px' }}>
                             <h1>
                                 {tissueData.name}
                             </h1>
                             <IdentedTree data={tissueData} />
-                            <Footer />
-                        </>
+                        </div>
                     )
                 }
             </div>
