@@ -3,7 +3,6 @@
 /* eslint-disable func-names */
 /* eslint-disable no-extend-native */
 /* eslint-disable class-methods-use-this */
-/* eslint-disable no-plusplus */
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Link } from 'react-router-dom';
@@ -15,7 +14,7 @@ import ExportPng from '../../Utils/ExportPng';
 import DoseCurve from '../DoseChart';
 
 // this will initialize a tooltip.
-const initializeToolTop = () => d3.select('.wrapper')
+const initializeToolTip = () => d3.select('.wrapper')
     .append('div')
     .style('position', 'absolute')
     .style('visibility', 'hidden')
@@ -382,6 +381,9 @@ const tumorCurve = (data, plotId, minmax) => {
 
 // plot the mean of each experiment type (control, treatment)
 const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) => {
+    // tooltip
+    const tooltip = initializeToolTip();
+
     // calling getUnionOfTimepoints to get all the timepoints.
     const timeUnion = getUnionOfTimepoints(data);
     let expTypes = [];
@@ -463,7 +465,17 @@ const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) 
                     }
                     return `${colors.moderate_blue}`;
                 })
-                .attr('stroke-width', 3.5);
+                .attr('stroke-width', 3.5)
+                .on('mouseover', function (d) {
+                    createToolTip(d, 'line', tooltip);
+                })
+                .on('mouseout', function () {
+                    // remove all the divs with id tooltiptext.
+                    d3.selectAll('#tooltiptext').remove();
+                    // tooltip on mousever setting the div to hidden.
+                    tooltip
+                        .style('visibility', 'hidden');
+                });
         }
 
         // plot error bars
@@ -870,7 +882,7 @@ const TumorGrowthCurve = (props) => {
     // function will be triggered once the component is mounted/updated.
     useEffect(() => {
         if (data.length !== 0) {
-            const tooltip = initializeToolTop();
+            const tooltip = initializeToolTip();
             // calling tumorCurve function passing the data, PlotID and node reference.
             const curve = tumorCurve(data, plotId, minmax);
             // plot each model
