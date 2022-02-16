@@ -49,7 +49,7 @@ const createToolTip = (d, type, tooltip) => {
         ];
     } else if (type === 'dot') {
         tooltipData = [
-            `Time: ${d.time} days`, `Volume: ${d.volume} mm³`,
+            `Time: ${d.time} days`, `Volume: ${d.volume} mm³`, `Model: ${d.model}`, `Type: ${d.exp_type}`
         ];
     }
     // append the data.
@@ -898,11 +898,11 @@ const TumorGrowthCurve = (props) => {
             <div className="wrapper">
                 <div className="curve-wrapper">
                     <h1>
-                        Drug ID =
+                        Drug:
                         {' '}
                         <span style={{ color: `${colors.pink_header}` }}>{drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
                         {' '}
-                        and Patient ID =
+                        and Patient:
                         {' '}
                         <span style={{ color: `${colors.pink_header}` }}>{patientParam}</span>
                     </h1>
