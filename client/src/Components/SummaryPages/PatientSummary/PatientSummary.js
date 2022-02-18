@@ -56,7 +56,7 @@ const PatientSummary = () => {
         // api request to get the required data.
         const models = await axios.get('/api/v1/modelinformation', { headers: { Authorization: localStorage.getItem('user') } });
         // api request to get dataset detailed information.
-        const datasetsDetail = await axios.get('/api/v1/datasets/details', { headers: { Authorization: localStorage.getItem('user') } });
+        const datasetsDetail = await axios.get('/api/v1/datasets/detail', { headers: { Authorization: localStorage.getItem('user') } });
         // transforming data.
         setPatientDataState(Object.values(transformData(models.data.data)));
         setDatasetDetailedInformation(datasetsDetail.data.datasets);

@@ -105,7 +105,7 @@ const getDatasetsDetailedInformation = (request, response) => {
  */
 const getDatasetDetailedInformationBasedOnDatasetId = (request, response) => {
     // dataset param.
-    const { params: { id: datasetParam } } = request;
+    const { params: { dataset: datasetParam } } = request;
 
     if (isVerified(response, datasetParam)) {
         // select the number of patients and models grouped by dataset.
