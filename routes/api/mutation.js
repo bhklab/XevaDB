@@ -67,7 +67,7 @@ const transformData = (input) => {
  */
 const getMutationDataBasedOnDataset = async (request, response) => {
     // dataset param.
-    const { params: { id: datasetParam } } = request;
+    const { params: { dataset: datasetParam } } = request;
 
     if (isVerified(response, datasetParam)) {
         try {

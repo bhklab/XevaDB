@@ -34,7 +34,7 @@ router.get('/v1/batches', batches.getBatches);
 
 // APIs related to copy_number_variation table.
 router.get('/v1/cnv', verifytoken, copyNumberVariation.getCopyNumberVariationBasedOnDatasetAndGenes);
-router.get('/v1/cnv/:id', utils.isValidId, verifytoken, copyNumberVariation.getCopyNumberVariationDataBasedOnDataset);
+router.get('/v1/cnv/:dataset', utils.isValidDatasetId, verifytoken, copyNumberVariation.getCopyNumberVariationDataBasedOnDataset);
 
 // counter APIs.
 router.get('/v1/counter', verifytoken, counter.getCounter);
@@ -70,7 +70,7 @@ router.get('/v1/modelresponsestats', verifytoken, modelResponse.getModelResponse
 
 // APIs related to mutation table.
 router.get('/v1/mutation', verifytoken, mutation.getMutationDataBasedOnDatasetAndGenes);
-router.get('/v1/mutation/:id', utils.isValidId, verifytoken, mutation.getMutationDataBasedOnDataset);
+router.get('/v1/mutation/:dataset', utils.isValidDatasetId, verifytoken, mutation.getMutationDataBasedOnDataset);
 
 // APIs related to patients table.
 router.get('/v1/patients', verifytoken, patients.getPatients);
@@ -79,7 +79,7 @@ router.get('/v1/patients/details/:id', utils.isValidId, verifytoken, patients.ge
 
 // APIs related to rnasequencing table.
 router.get('/v1/rnaseq', verifytoken, rnasequencing.getRnaSeqBasedOnDatasetAndGenes);
-router.get('/v1/rnaseq/:id', utils.isValidId, verifytoken, rnasequencing.getRnaSeqDataBasedOnDataset);
+router.get('/v1/rnaseq/:dataset', utils.isValidDatasetId, verifytoken, rnasequencing.getRnaSeqDataBasedOnDataset);
 
 // APIs related to tissues table.
 router.get('/v1/tissues', tissues.getTissues);
