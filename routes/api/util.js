@@ -1,3 +1,5 @@
+const { request } = require("express");
+
 /**
  * @param {string} datasetId
  * @param {Object} response
@@ -25,6 +27,21 @@ const isValidId = (request, response, next) => {
 
 
 /**
+ * @param {Object} request - request object.
+ * @param {Object} response - reponse object.
+ * @param {Object} next
+ * checks the validity of the dataset id parameter.
+ */
+const isValidDatasetId = (request, response, next) => {
+    const { params: { dataset } } = request;
+
+    Number(dataset)
+        ? next()
+        : next(new Error('Invalid dataset id, Please enter a valid integer dataset id.'));
+};
+
+
+/**
  * @param {string} user
  * @returns {Array} returns an array of values based the user argument.
  */
@@ -34,5 +51,6 @@ const getAllowedDatasetIds = (user) => (user === 'unknown' ? [1, 6] : [1, 8]);
 module.exports = {
     isVerified,
     isValidId,
+    isValidDatasetId,
     getAllowedDatasetIds,
 };
