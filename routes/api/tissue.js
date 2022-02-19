@@ -5,6 +5,15 @@ const { getAllowedDatasetIds } = require('./util');
 const { getModelInformationDataQuery } = require('./model_information');
 
 
+// ************************************** Tissue Queries ***************************************************
+/**
+ * @returns {Object} - returns a query to fetch all the tissues
+ */
+const getAllTissuesQuery = () => knex.select()
+    .from('tissues');
+
+
+// ************************************** Transform Functions *************************************************
 /**
  * @param {Object} data - input data.
  * @returns {Object} - transformed data.
@@ -56,14 +65,14 @@ const transformTissueDetail = (data) => {
 };
 
 
+// ************************************** API Endpoint Functions *************************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
  * @returns {Object} - list of the tissues.
  */
-const getTissues = (request, response) => {
-    knex.select()
-        .from('tissues')
+const getAllTissues = (request, response) => {
+    getAllTissuesQuery()
         .then((tissues) => response.status(200).json({
             status: 'success',
             data: tissues,
@@ -82,7 +91,7 @@ const getTissues = (request, response) => {
  * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - model information data based on the tissue id.
  */
-const getTissueDetailedInformationBasedOnTissueId = (request, response) => {
+const getSingleTissueDetailedInformationBasedOnTissueId = (request, response) => {
     // user variable.
     const { user } = response.locals;
     // tissue parameter.
@@ -105,6 +114,6 @@ const getTissueDetailedInformationBasedOnTissueId = (request, response) => {
 
 
 module.exports = {
-    getTissues,
-    getTissueDetailedInformationBasedOnTissueId,
+    getAllTissues,
+    getSingleTissueDetailedInformationBasedOnTissueId,
 };
