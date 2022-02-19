@@ -7,14 +7,14 @@ const { getAllowedDatasetIds } = require('./util');
 /**
  * @returns {Object} - knex query to get data for all datasets
  */
-const allDatasetsQuery = () => knex.select()
+const getAllDatasetsQuery = () => knex.select()
     .from('datasets');
 
 
 /**
  * @return {Object} - knex query to get detailed information for all datasets
  */
-const allDatasetDetailQuery = () => knex.select()
+const getAllDatasetDetailQuery = () => knex.select()
     .from('datasets as d')
     .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'dt.dataset_id')
     .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id')
@@ -77,7 +77,7 @@ const getAllDatasets = (request, response) => {
     const { user } = response.locals;
 
     // select the datasets.
-    allDatasetsQuery()
+    getAllDatasetsQuery()
         .whereBetween('datasets.dataset_id', getAllowedDatasetIds(user))
         .then((data) => transformAllDatasetsData(data))
         .then((datasets) => response.status(200).json({
@@ -103,7 +103,7 @@ const getAllDatasetsDetailedInformation = (request, response) => {
     const { user } = response.locals;
 
     // select the number of patients and models grouped by dataset.
-    allDatasetDetailQuery()
+    getAllDatasetDetailQuery()
         .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => Object.values(transformDatasetDetail(data)))
         .then((datasets) => response.status(200).json({
@@ -130,7 +130,7 @@ const getSingleDatasetDetailedInformationBasedOnDatasetId = (request, response) 
 
     if (isVerified(response, datasetParam)) {
         // select the number of patients and models grouped by dataset.
-        allDatasetDetailQuery()
+        getAllDatasetDetailQuery()
             .where('d.dataset_id', datasetParam)
             .then((data) => Object.values(transformDatasetDetail(data)))
             .then((datasets) => response.status(200).json({
