@@ -3,12 +3,40 @@ const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
 
 
-const datasetDetailQuery = () => knex.select()
+// ************************************** Dataset Queries ***************************************************
+/**
+ * @returns {Object} - knex query to get data for all datasets
+ */
+const allDatasetsQuery = () => knex.select()
+    .from('datasets');
+
+
+/**
+ * @return {Object} - knex query to get detailed information for all datasets
+ */
+const allDatasetDetailQuery = () => knex.select()
     .from('datasets as d')
     .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'dt.dataset_id')
     .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id')
     .leftJoin('patients as p', 'p.dataset_id', 'd.dataset_id')
     .leftJoin('models as m', 'm.patient_id', 'p.patient_id');
+
+
+// ************************************** Transform Functions *************************************************
+/**
+ * 
+ * @param {Array} data - an array of input data
+ * @returns {Array} - returns an array of transformed data
+ */
+const transformAllDatasetsData = (data) => (
+    data.map((value) => (
+        {
+            id: value.dataset_id,
+            name: value.dataset_name,
+        }
+    ))
+);
+
 
 /**
  * @param {Object} data - input data.
@@ -37,34 +65,27 @@ const transformDatasetDetail = (data) => {
 };
 
 
+// ************************************** API Endpoint Functions *************************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
  * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - list of the datasets.
  */
-const getDatasets = (request, response) => {
+const getAllDatasets = (request, response) => {
     // user variable.
     const { user } = response.locals;
 
     // select the datasets.
-    knex.select()
-        .from('datasets')
+    allDatasetsQuery()
         .whereBetween('datasets.dataset_id', getAllowedDatasetIds(user))
-        .then((data) => (
-            data.map((value) => (
-                {
-                    id: value.dataset_id,
-                    name: value.dataset_name,
-                }
-            ))
-        ))
+        .then((data) => transformAllDatasetsData(data))
         .then((datasets) => response.status(200).json({
             status: 'success',
             datasets,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from dataset table, getDatasets',
+            status: 'could not find data from dataset table, getDatasets function',
             data: error,
         }));
 };
@@ -77,12 +98,12 @@ const getDatasets = (request, response) => {
  * @returns {Object} - list of the datasets with detailed information including
  * patient information, tissue information, model information.
  */
-const getDatasetsDetailedInformation = (request, response) => {
+const getAllDatasetsDetailedInformation = (request, response) => {
     // user variable.
     const { user } = response.locals;
 
     // select the number of patients and models grouped by dataset.
-    datasetDetailQuery()
+    allDatasetDetailQuery()
         .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => Object.values(transformDatasetDetail(data)))
         .then((datasets) => response.status(200).json({
@@ -90,7 +111,7 @@ const getDatasetsDetailedInformation = (request, response) => {
             datasets,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from getDatasetsDetailedInformation',
+            status: 'could not find data from getAllDatasetsDetailedInformation',
             data: error,
         }));
 };
@@ -103,13 +124,13 @@ const getDatasetsDetailedInformation = (request, response) => {
  * @returns {Object} - list of the datasets with detailed information including
  * patient information, tissue information, model information.
  */
-const getDatasetDetailedInformationBasedOnDatasetId = (request, response) => {
+const getSingleDatasetDetailedInformationBasedOnDatasetId = (request, response) => {
     // dataset param.
     const { params: { dataset: datasetParam } } = request;
 
     if (isVerified(response, datasetParam)) {
         // select the number of patients and models grouped by dataset.
-        datasetDetailQuery()
+        allDatasetDetailQuery()
             .where('d.dataset_id', datasetParam)
             .then((data) => Object.values(transformDatasetDetail(data)))
             .then((datasets) => response.status(200).json({
@@ -117,7 +138,7 @@ const getDatasetDetailedInformationBasedOnDatasetId = (request, response) => {
                 datasets,
             }))
             .catch((error) => response.status(500).json({
-                status: 'could not find data from getDatasetDetailedInformationBasedOnDatasetId',
+                status: 'could not find data from getSingleDatasetDetailedInformationBasedOnDatasetId',
                 data: error,
             }));
     }
@@ -125,7 +146,7 @@ const getDatasetDetailedInformationBasedOnDatasetId = (request, response) => {
 
 
 module.exports = {
-    getDatasets,
-    getDatasetsDetailedInformation,
-    getDatasetDetailedInformationBasedOnDatasetId,
+    getAllDatasets,
+    getAllDatasetsDetailedInformation,
+    getSingleDatasetDetailedInformationBasedOnDatasetId,
 };
