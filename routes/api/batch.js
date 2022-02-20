@@ -7,7 +7,7 @@ const knex = require('../../db/knex1');
  * @param {Object} response - response object with authorization header.
  * @returns {Object} - list of the batches.
  */
-const getBatches = (request, response) => {
+const getAllBatches = (request, response) => {
     knex.select()
         .from('batches')
         .then((batches) => response.status(200).json({
@@ -22,5 +22,5 @@ const getBatches = (request, response) => {
 
 
 module.exports = {
-    getBatches,
+    getAllBatches,
 };

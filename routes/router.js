@@ -30,7 +30,7 @@ router.post('/v1/register', awtauthentication.registerUser);
 router.get('/v1/batchresponsestats', verifytoken, batchResponse.getBatchResponseStatsBasedOnDrugAndPatient);
 
 // APIs related to batches table.
-router.get('/v1/batches', batches.getBatches);
+router.get('/v1/batches', batches.getAllBatches);
 
 // APIs related to copy_number_variation table.
 router.get('/v1/cnv', verifytoken, copyNumberVariation.getCopyNumberVariationBasedOnDatasetAndGenes);
