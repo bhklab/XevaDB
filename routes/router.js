@@ -58,8 +58,8 @@ router.get('/v1/models/count/groupbytissue', verifytoken, models.getModelCountBy
 router.get('/v1/models/count/groupbydrugclass', verifytoken, models.getModelCountByDrugClass);
 
 // APIs for the model information table.
-router.get('/v1/modelinformation', verifytoken, modelInformation.getModelInformation);
-router.get('/v1/modelinformation/:id', utils.isValidId, verifytoken, modelInformation.getModelInformationBasedOnModelId);
+router.get('/v1/modelinformation', verifytoken, modelInformation.getAllModelInformation);
+router.get('/v1/modelinformation/:model', utils.isValidModelId, verifytoken, modelInformation.getSingleModelInformationBasedOnModelId);
 // TODO: maybe not use this end point and use end point to get the data related to a single dataset.
 router.post('/v1/drugspatients/dataset', verifytoken, modelInformation.postDrugsandPatientsBasedOnDataset);
 
