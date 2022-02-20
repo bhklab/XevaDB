@@ -4,6 +4,7 @@ const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
 
 
+// ************************************** Drug Queries ***************************************************
 // query to get the drug data
 const drugQuery = () => (
     knex.distinct('dg.drug_id')
@@ -15,13 +16,14 @@ const drugQuery = () => (
 );
 
 
+// ************************************** API Endpoint Functions *************************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
  * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - list of the drugs with drug annotations.
  */
-const getDrugs = (request, response) => {
+const getAllDrugs = (request, response) => {
     // user variable.
     const { user } = response.locals;
 
@@ -46,13 +48,16 @@ const getDrugs = (request, response) => {
  * @returns {Object} - single drug information
  */
 const getSingleDrugInformation = (request, response) => {
-    // user variable.
+    // user variable
     const { user } = response.locals;
+
+    // drug param
+    const { params: { drug: drugParam } } = request;
 
     // selecting drug list based on dataset list.
     drugQuery()
         .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
-        .where('dg.drug_id', request.params.id)
+        .where('dg.drug_id', drugParam)
         .then((drugInformation) => {
             response.send(drugInformation);
         })
@@ -64,6 +69,6 @@ const getSingleDrugInformation = (request, response) => {
 
 
 module.exports = {
-    getDrugs,
+    getAllDrugs,
     getSingleDrugInformation,
 };

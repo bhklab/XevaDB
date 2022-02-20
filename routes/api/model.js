@@ -3,7 +3,7 @@ const knex = require('../../db/knex1');
 const { getAllowedDatasetIds } = require('./util');
 
 
-// ************************************** Tissue Queries ***************************************************
+// ************************************** Model Queries ***************************************************
 /**
  * @returns {Object} - All models query
  */
