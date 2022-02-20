@@ -49,7 +49,7 @@ router.get('/v1/drugs', verifytoken, drugs.getAllDrugs);
 router.get('/v1/drugs/:drug', utils.isValidDrugId, verifytoken, drugs.getSingleDrugInformation);
 
 // APIs related to drug table.
-router.get('/v1/genes', genes.getGenes);
+router.get('/v1/genes', genes.getAllGenes);
 
 // APIs related to models table.
 router.get('/v1/models', verifytoken, models.getAllModels);

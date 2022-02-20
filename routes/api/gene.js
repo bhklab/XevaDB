@@ -2,14 +2,22 @@
 const knex = require('../../db/knex1');
 
 
+// ************************************** Gene Queries ***************************************************
+/**
+ * @returns {Object} - returns a Knex query to select all the genes
+ */
+const getAllGenesQuery = () => knex.select()
+    .from('genes');
+
+
+// ************************************** API Endpoint Functions ******************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
  * @returns {Object} - list of the genes in the database.
  */
-const getGenes = (request, response) => {
-    knex.select()
-        .from('genes')
+const getAllGenes = (request, response) => {
+    getAllGenesQuery()
         .then((genes) => response.status(200).json({
             status: 'success',
             data: genes,
@@ -22,5 +30,5 @@ const getGenes = (request, response) => {
 
 
 module.exports = {
-    getGenes,
+    getAllGenes,
 };
