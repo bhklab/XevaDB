@@ -60,14 +60,29 @@ const isValidTissueId = (request, response, next) => {
  * @param {Object} request - request object.
  * @param {Object} response - reponse object.
  * @param {Object} next
- * checks the validity of the tissue id parameter.
+ * checks the validity of the drug id parameter.
  */
 const isValidDrugId = (request, response, next) => {
     const { params: { drug } } = request;
 
     Number(drug)
         ? next()
-        : next(new Error('Invalid tissue id, Please enter a valid integer tissue id.'));
+        : next(new Error('Invalid drug id, Please enter a valid integer drug id.'));
+};
+
+
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - reponse object.
+ * @param {Object} next
+ * checks the validity of the tissue id parameter.
+ */
+const isValidPatientId = (request, response, next) => {
+    const { params: { patient } } = request;
+
+    Number(patient)
+        ? next()
+        : next(new Error('Invalid patient id, Please enter a valid integer patient id.'));
 };
 
 
@@ -84,5 +99,6 @@ module.exports = {
     isValidDatasetId,
     isValidTissueId,
     isValidDrugId,
+    isValidPatientId,
     getAllowedDatasetIds,
 };
