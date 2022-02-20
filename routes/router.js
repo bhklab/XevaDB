@@ -52,9 +52,9 @@ router.get('/v1/drugs/:id', utils.isValidId, verifytoken, drugs.getSingleDrugInf
 router.get('/v1/genes', genes.getGenes);
 
 // APIs related to models table.
-router.get('/v1/models', verifytoken, models.getModels);
+router.get('/v1/models', verifytoken, models.getAllModels);
 router.get('/v1/models/details', verifytoken, models.getModelsDetailedInformation);
-router.get('/v1/models/groupbytissue', verifytoken, models.getModelsGroupedByTissueType);
+router.get('/v1/models/count/groupbytissue', verifytoken, models.getModelCountByTissueType);
 router.get('/v1/models/groupbydrugclass', verifytoken, models.getModelsGroupedByDrugClass);
 
 // APIs for the model information table.
