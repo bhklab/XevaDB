@@ -55,7 +55,7 @@ router.get('/v1/genes', genes.getGenes);
 router.get('/v1/models', verifytoken, models.getAllModels);
 router.get('/v1/models/details', verifytoken, models.getModelsDetailedInformation);
 router.get('/v1/models/count/groupbytissue', verifytoken, models.getModelCountByTissueType);
-router.get('/v1/models/groupbydrugclass', verifytoken, models.getModelsGroupedByDrugClass);
+router.get('/v1/models/count/groupbydrugclass', verifytoken, models.getModelCountByDrugClass);
 
 // APIs for the model information table.
 router.get('/v1/modelinformation', verifytoken, modelInformation.getModelInformation);

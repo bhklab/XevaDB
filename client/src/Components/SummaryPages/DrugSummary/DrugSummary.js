@@ -22,13 +22,13 @@ class DrugSummary extends React.Component {
     componentDidMount() {
         const newValues = [];
         // passing on token as the header to the api call.
-        axios.get('/api/v1/models/groupbydrugclass', { headers: { Authorization: localStorage.getItem('user') } })
+        axios.get('/api/v1/models/count/groupbydrugclass', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 response.data.data.forEach((data) => {
                     const value = {};
                     if (String(data.class_name) !== 'null') {
                         value.id = (data.class_name).replace('"', '').replace('/', '_');
-                        value.value = data.model_ids;
+                        value.value = data.modelCount;
                         newValues.push(value);
                     }
                 });
