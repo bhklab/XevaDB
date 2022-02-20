@@ -14,7 +14,7 @@ const getAllDatasetsQuery = () => knex.select()
 /**
  * @return {Object} - knex query to get detailed information for all datasets
  */
-const getAllDatasetDetailQuery = () => knex.select()
+const getAllDatasetsDetailQuery = () => knex.select()
     .from('datasets as d')
     .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'dt.dataset_id')
     .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id')
@@ -103,7 +103,7 @@ const getAllDatasetsDetailedInformation = (request, response) => {
     const { user } = response.locals;
 
     // select the number of patients and models grouped by dataset.
-    getAllDatasetDetailQuery()
+    getAllDatasetsDetailQuery()
         .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => Object.values(transformDatasetDetail(data)))
         .then((datasets) => response.status(200).json({
@@ -130,7 +130,7 @@ const getSingleDatasetDetailedInformationBasedOnDatasetId = (request, response) 
 
     if (isVerified(response, datasetParam)) {
         // select the number of patients and models grouped by dataset.
-        getAllDatasetDetailQuery()
+        getAllDatasetsDetailQuery()
             .where('d.dataset_id', datasetParam)
             .then((data) => Object.values(transformDatasetDetail(data)))
             .then((datasets) => response.status(200).json({
