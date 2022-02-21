@@ -43,6 +43,9 @@ router.get('/v1/counter', verifytoken, counter.getCounter);
 router.get('/v1/datasets', verifytoken, datasets.getAllDatasets);
 router.get('/v1/datasets/detail', verifytoken, datasets.getAllDatasetsDetailedInformation);
 router.get('/v1/datasets/detail/:dataset', utils.isValidDatasetId, verifytoken, datasets.getSingleDatasetDetailedInformationBasedOnDatasetId);
+// TODO: maybe not use this end point and use end point to get the data related to a single dataset.
+// TODO: rename the endpoint? or use /v1/datasets/detail/:dataset by adding drugs to that API.
+router.post('/v1/drugspatients/dataset', verifytoken, datasets.postDrugsandPatientsBasedOnDataset);
 
 // APIs related to drugs table.
 router.get('/v1/drugs', verifytoken, drugs.getAllDrugs);
@@ -60,8 +63,6 @@ router.get('/v1/models/count/groupbydrugclass', verifytoken, models.getModelCoun
 // APIs for the model information table.
 router.get('/v1/modelinformation', verifytoken, modelInformation.getAllModelInformation);
 router.get('/v1/modelinformation/:model', utils.isValidModelId, verifytoken, modelInformation.getSingleModelInformationBasedOnModelId);
-// TODO: maybe not use this end point and use end point to get the data related to a single dataset.
-router.post('/v1/drugspatients/dataset', verifytoken, modelInformation.postDrugsandPatientsBasedOnDataset);
 
 // APIs for model response table.
 router.get('/v1/modelresponse/:id', utils.isValidId, verifytoken, modelResponse.getModelResponseBasedOnDataset);

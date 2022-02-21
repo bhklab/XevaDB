@@ -1,6 +1,7 @@
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
+const { drugsBasedOnDatasetIdQuery, patientsBasedOnDatasetIdQuery } = require('./helper');
 
 
 // ************************************** Dataset Queries ***************************************************
@@ -145,8 +146,42 @@ const getSingleDatasetDetailedInformationBasedOnDatasetId = (request, response) 
 };
 
 
+/**
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @param {number} request.body.label - dataset id.
+ * @returns {Object} - returns a list of drugs and patients based on the dataset.
+ */
+const postDrugsandPatientsBasedOnDataset = (request, response) => {
+    const dataset = request.body.label;
+
+    // allows only if the dataset value is less than 6 and user is unknown or token is verified.
+    if (isVerified(response, request.body.label)) {
+        // drugs and patients query
+        const drugs = drugsBasedOnDatasetIdQuery(dataset);
+        const patients = patientsBasedOnDatasetIdQuery(dataset);
+
+        Promise.all([drugs, patients])
+            .then((data) => response.status(200).json({
+                status: 'success',
+                data,
+            }))
+            .catch((error) => response.status(500).json({
+                status: 'Could not find data, postDrugandPatientBasedOnDataset',
+                data: error,
+            }));
+    } else {
+        response.status(500).json({
+            status: 'Could not find data, postDrugandPatientBasedOnDataset',
+            data: 'Bad Request',
+        });
+    }
+};
+
+
 module.exports = {
     getAllDatasets,
     getAllDatasetsDetailedInformation,
     getSingleDatasetDetailedInformationBasedOnDatasetId,
+    postDrugsandPatientsBasedOnDataset,
 };
