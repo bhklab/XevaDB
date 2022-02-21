@@ -2,7 +2,7 @@
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
-const { distinctPatientsQuery, distinctDrugsQuery } = require('./helper');
+const { drugsBasedOnDatasetIdQuery, patientsBasedOnDatasetIdQuery } = require('./helper');
 
 
 // ************************************** Model Information Queries ***************************************************
@@ -42,7 +42,7 @@ const getAllModelInformation = async (request, response) => {
         });
     } catch (error) {
         response.status(500).json({
-            status: 'could not find data from model information table, getModelInformation',
+            status: 'Could not find data from model information table, getAllModelInformation',
             data: error,
         });
     }
@@ -71,7 +71,7 @@ const getSingleModelInformationBasedOnModelId = (request, response) => {
             data,
         }))
         .catch((error) => response.status(500).json({
-            status: 'could not find data from model information table, getModelInformationBasedOnPatient',
+            status: 'Could not find data from model information table, getSingleModelInformationBasedOnModelId',
             data: error,
         }));
 };
@@ -88,23 +88,9 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if (isVerified(response, request.body.label)) {
-        const drugs = knex
-            .select('drugs.drug_name as drug', 'drugs.drug_id as drug_id')
-            .from(distinctDrugsQuery(dataset).as('distinct_drugs'))
-            .leftJoin(
-                'drugs',
-                'distinct_drugs.drug_id',
-                'drugs.drug_id',
-            );
-
-        const patients = knex
-            .select('patients.patient as patient', 'patients.patient_id as patient_id')
-            .from(distinctPatientsQuery(dataset).as('distinct_patients'))
-            .leftJoin(
-                'patients',
-                'distinct_patients.patient_id',
-                'patients.patient_id',
-            );
+        // drugs and patients query
+        const drugs = drugsBasedOnDatasetIdQuery(dataset);
+        const patients = patientsBasedOnDatasetIdQuery(dataset);
 
         Promise.all([drugs, patients])
             .then((data) => response.status(200).json({
@@ -112,12 +98,12 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
                 data,
             }))
             .catch((error) => response.status(500).json({
-                status: 'could not find data from model_information table, postDrugandPatientBasedOnDataset',
+                status: 'Could not find data, postDrugandPatientBasedOnDataset',
                 data: error,
             }));
     } else {
         response.status(500).json({
-            status: 'Could not find data from model_information table, postDrugandPatientBasedOnDataset',
+            status: 'Could not find data, postDrugandPatientBasedOnDataset',
             data: 'Bad Request',
         });
     }
@@ -125,8 +111,8 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
 
 
 module.exports = {
-    postDrugsandPatientsBasedOnDataset,
+    getModelInformationDataQuery,
     getAllModelInformation,
     getSingleModelInformationBasedOnModelId,
-    getModelInformationDataQuery,
+    postDrugsandPatientsBasedOnDataset,
 };
