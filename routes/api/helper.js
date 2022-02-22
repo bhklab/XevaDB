@@ -2,6 +2,23 @@ const knex = require('../../db/knex1');
 
 
 /**
+ * @param {string} datasetId
+ * @returns {string} - returns the control based on the dataset id.
+ */
+const getControl = (datasetId) => {
+    let control = '';
+    if (datasetId === '7') {
+        control = 'h2o';
+    } else if (datasetId === '8') {
+        control = 'control';
+    } else {
+        control = 'untreated';
+    }
+    return control;
+};
+
+
+/**
  * @param {number} datasetId - dataset id to get the patient from particular dataset.
  * @returns {Object} - knex query to grab an array of distinct patients
  * from a particular dataset.
@@ -60,6 +77,7 @@ const patientsBasedOnDatasetIdQuery = (dataset) => knex
 
 
 module.exports = {
+    getControl,
     distinctPatientsQuery,
     geneListQuery,
     distinctDrugsQuery,
