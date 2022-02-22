@@ -1,31 +1,14 @@
 /* eslint-disable no-param-reassign */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
-const { distinctPatientsQuery } = require('./helper');
+const { patientsBasedOnDatasetIdQuery, getControl } = require('./helper');
 
 
+// ************************************** Model Response Queries ***************************************************
 /**
- * @param {string} datasetId
- * @returns {string} - returns the control based on the dataset id.
+ * @returns {Object} - returns an object of mysql query builder to get the model response
  */
-const getControl = (datasetId) => {
-    let control = '';
-    if (datasetId === '7') {
-        control = 'h2o';
-    } else if (datasetId === '8') {
-        control = 'control';
-    } else {
-        control = 'untreated';
-    }
-    return control;
-};
-
-
-/**
- * @param {string} - id of the dataset to be selected.
- * @returns {Object} - returns an object of mysql query builder to get the model information.
- */
-const modelResponseQuery = (datasetParam) => knex
+const modelResponseQuery = () => knex
     .select('models.model_id', 'patients.patient', 'drugs.drug_name', 'value', 'response_type')
     .from('model_response')
     .rightJoin(
@@ -43,10 +26,45 @@ const modelResponseQuery = (datasetParam) => knex
         'drugs.drug_id',
         'model_response.drug_id',
     )
-    .where('patients.dataset_id', datasetParam)
     .orderBy('drug_name')
     .orderBy('patient');
 
+
+/**
+ * @returns {Object} - returns an object of mysql query to get model response stats
+ */
+const modelResponseStatsQuery = () => knex.select()
+    .from('model_response')
+    .leftJoin(
+        'model_information',
+        'model_information.model_id',
+        'model_response.model_id',
+    )
+    .leftJoin(
+        'patients',
+        'patients.patient_id',
+        'model_information.patient_id',
+    )
+    .leftJoin(
+        'drugs',
+        'drugs.drug_id',
+        'model_information.drug_id',
+    )
+    .leftJoin(
+        'batch_information',
+        'batch_information.model_id',
+        'model_information.model_id',
+    )
+    .leftJoin(
+        'models',
+        'models.model_id',
+        'model_information.model_id',
+    )
+    .leftJoin(
+        'model_sheets',
+        'model_sheets.model_id',
+        'models.model',
+    );
 
 /**
  * @returns {Object} - returns an object of mysql query builder to
@@ -71,6 +89,7 @@ const batchIdQuery = () => knex.select('batch_information.batch_id', 'model_info
     );
 
 
+// ************************************** Transform Functions *************************************************
 /**
  * @param {Object} row - model response data.
  * @returns {Array} - returns the transformed response data in array format.
@@ -125,6 +144,7 @@ const transformData = (row) => {
 };
 
 
+// ************************************** API Endpoints Functions ***************************************************
 /**
  * @param {Object} request - request object with dataset param.
  * @param {number} request.params.dataset - id of the dataset to be queried.
@@ -133,11 +153,11 @@ const transformData = (row) => {
  */
 const getModelResponseBasedOnDataset = (request, response) => {
     // dataset parameter.
-    const { params: { id: datasetParam } } = request;
+    const { params: { dataset: datasetParam } } = request;
 
     // patients and model response.
-    const patients = distinctPatientsQuery(datasetParam);
-    const modelResponse = modelResponseQuery(datasetParam);
+    const patients = patientsBasedOnDatasetIdQuery(datasetParam);
+    const modelResponse = modelResponseQuery().where('patients.dataset_id', datasetParam);
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if (isVerified(response, datasetParam)) {
@@ -149,12 +169,12 @@ const getModelResponseBasedOnDataset = (request, response) => {
                 response.send(data);
             })
             .catch((error) => response.status(500).json({
-                status: 'could not find data from model_response table, getModelResponseBasedOnDataset',
+                status: 'Could not find data from model_response table, getModelResponseBasedOnDataset',
                 data: error,
             }));
     } else {
         response.status(500).json({
-            status: 'could not find data from model_response table, getModelResponseBasedOnDataset',
+            status: 'Could not find data from model_response table, getModelResponseBasedOnDataset',
             data: 'Bad Request',
         });
     }
@@ -175,12 +195,15 @@ const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
     const datasetParam = request.query.dataset;
 
     // get the array of drugs from the drug parameter.
-    const drug = drugParam.split(',').map((value) => value.replace('_', ' + '));
-    drug.push(getControl(datasetParam));
+    const drugArray = drugParam.split(',').map((value) => value.replace('_', ' + '));
+    // push control to drug array.
+    drugArray.push(getControl(datasetParam));
 
     // calling the functions to get patient and model response query.
-    const patients = distinctPatientsQuery(datasetParam);
-    const modelResponse = modelResponseQuery(datasetParam).whereIn('drugs.drug_name', drug);
+    const patients = patientsBasedOnDatasetIdQuery(datasetParam);
+    const modelResponse = modelResponseQuery()
+        .where('patients.dataset_id', datasetParam)
+        .whereIn('drugs.drug_name', drugArray);
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if (isVerified(response, datasetParam)) {
@@ -192,16 +215,22 @@ const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
                 response.send(data);
             })
             .catch((error) => response.status(500).json({
-                status: 'could not find data from model_response table, getModelResponseBasedPerDatasetBasedOnDrugs',
+                status: 'Could not find data from model_response table, getModelResponseBasedPerDatasetBasedOnDrugs',
                 data: error,
             }));
     } else {
         response.status(500).json({
-            status: 'could not find data from model_response table, getModelResponseBasedPerDatasetBasedOnDrugs',
+            status: 'Could not find data from model_response table, getModelResponseBasedPerDatasetBasedOnDrugs',
             data: 'Bad Request',
         });
     }
 };
+
+
+const getModelResponseBasedOnDrug = (request, response) => {
+
+};
+
 
 
 /**
@@ -229,38 +258,7 @@ const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
         // check if it verified and the dataset id is greater than 0
         // or if it's not verified (unkown) then the dataset id should be less than 7.
         if (isVerified(response, dataset)) {
-            knex.select()
-                .from('model_response')
-                .leftJoin(
-                    'model_information',
-                    'model_information.model_id',
-                    'model_response.model_id',
-                )
-                .leftJoin(
-                    'patients',
-                    'patients.patient_id',
-                    'model_information.patient_id',
-                )
-                .leftJoin(
-                    'drugs',
-                    'drugs.drug_id',
-                    'model_information.drug_id',
-                )
-                .leftJoin(
-                    'batch_information',
-                    'batch_information.model_id',
-                    'model_information.model_id',
-                )
-                .leftJoin(
-                    'models',
-                    'models.model_id',
-                    'model_information.model_id',
-                )
-                .leftJoin(
-                    'model_sheets',
-                    'model_sheets.model_id',
-                    'models.model',
-                )
+            modelResponseStatsQuery()
                 .where('patients.patient', patient)
                 .andWhere(function () {
                     this.where('drugs.drug_name', drug)
@@ -277,6 +275,7 @@ const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
         }
     });
 };
+
 
 
 module.exports = {

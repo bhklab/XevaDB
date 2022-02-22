@@ -27,7 +27,7 @@ router.post('/v1/login', awtauthentication.createLogin);
 router.post('/v1/register', awtauthentication.registerUser);
 
 // APIs related to batch response.
-router.get('/v1/batchresponsestats', verifytoken, batchResponse.getBatchResponseStatsBasedOnDrugAndPatient);
+router.get('/v1/batchresponse/stats', verifytoken, batchResponse.getBatchResponseStatsBasedOnDrugAndPatient);
 
 // APIs related to batches table.
 router.get('/v1/batches', batches.getAllBatches);
@@ -65,9 +65,9 @@ router.get('/v1/modelinformation', verifytoken, modelInformation.getAllModelInfo
 router.get('/v1/modelinformation/:model', utils.isValidModelId, verifytoken, modelInformation.getSingleModelInformationBasedOnModelId);
 
 // APIs for model response table.
-router.get('/v1/modelresponse/:id', utils.isValidId, verifytoken, modelResponse.getModelResponseBasedOnDataset);
 router.get('/v1/modelresponse', verifytoken, modelResponse.getModelResponseBasedOnDatasetAndDrugList);
-router.get('/v1/modelresponsestats', verifytoken, modelResponse.getModelResponseStatsBasedOnDrugAndPatient);
+router.get('/v1/modelresponse/stats', verifytoken, modelResponse.getModelResponseStatsBasedOnDrugAndPatient);
+router.get('/v1/modelresponse/:dataset', utils.isValidDatasetId, verifytoken, modelResponse.getModelResponseBasedOnDataset);
 
 // APIs related to mutation table.
 router.get('/v1/mutation', verifytoken, mutation.getMutationDataBasedOnDatasetAndGenes);
