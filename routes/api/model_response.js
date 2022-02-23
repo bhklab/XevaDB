@@ -101,10 +101,7 @@ const transformData = (row) => {
     const data = [];
     const untreated = {};
 
-    // this will create enteries for heatmap.
-    const usersRows = JSON.parse(JSON.stringify(row[1]));
-
-    usersRows.forEach((element) => {
+    row.forEach((element) => {
         // if the value is not present assign it NA.
         if (element.value === '') {
             element.value = 'NA';
@@ -135,10 +132,6 @@ const transformData = (row) => {
 
     if (Object.entries(untreated).length === 1 && untreated.constructor === Object) { }
     else { data.unshift(untreated); }
-
-    // array of all the patients belonging to a particular dataset.
-    const patients = JSON.parse(JSON.stringify(row[0])).map((element) => element.patient);
-    data.push(patients);
 
     return data;
 };
@@ -213,26 +206,23 @@ const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
     };
 
     // get the patient array for the final data
-    let patients = [];
     if (datasetQueryParam) {
-        // patient array based on dataset id
-        patients = patientsBasedOnDatasetIdQuery(datasetQueryParam);
-
         // update model response query if the dataset query param is available
         modelResponse = modelResponse.where('patients.dataset_id', datasetQueryParam);
     };
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if (isVerified(response, datasetQueryParam)) {
-        Promise.all([patients, modelResponse])
+        modelResponse
             .then((row) => {
+                // console.log(row);
                 // transform the data fetched from the database.
                 const data = transformData(row);
                 // sending the response.
                 response.send(data);
             })
             .catch((error) => response.status(500).json({
-                status: 'Could not find data from model_response table, getModelResponseBasedPerDatasetBasedOnDrugs',
+                status: 'Could not find data from model_response table, getModelResponseBasedPerDatasetBasedOnDrugs1',
                 data: error,
             }));
     } else {
