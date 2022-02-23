@@ -151,7 +151,7 @@ const transformData = (row) => {
  * @param {Object} response - response object
  * @returns {Object} - sends the model response data based on the dataset.
  */
-const getModelResponseBasedOnDataset = (request, response) => {
+const getModelResponsePerDataset = (request, response) => {
     // dataset parameter.
     const { params: { dataset: datasetParam } } = request;
 
@@ -169,12 +169,12 @@ const getModelResponseBasedOnDataset = (request, response) => {
                 response.send(data);
             })
             .catch((error) => response.status(500).json({
-                status: 'Could not find data from model_response table, getModelResponseBasedOnDataset',
+                status: 'Could not find data from model_response table, getModelResponsePerDataset',
                 data: error,
             }));
     } else {
         response.status(500).json({
-            status: 'Could not find data from model_response table, getModelResponseBasedOnDataset',
+            status: 'Could not find data from model_response table, getModelResponsePerDataset',
             data: 'Bad Request',
         });
     }
@@ -191,22 +191,22 @@ const getModelResponseBasedOnDataset = (request, response) => {
 */
 const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
     // drug and dataset parameters.
-    const drugParam = request.query.drug;
-    const datasetParam = request.query.dataset;
+    const drugQueryParam = request.query.drug;
+    const datasetQueryParam = request.query.dataset;
 
     // get the array of drugs from the drug parameter.
-    const drugArray = drugParam.split(',').map((value) => value.replace('_', ' + '));
+    const drugArray = drugQueryParam.split(',').map((value) => value.replace('_', ' + '));
     // push control to drug array.
-    drugArray.push(getControl(datasetParam));
+    drugArray.push(getControl(datasetQueryParam));
 
     // calling the functions to get patient and model response query.
-    const patients = patientsBasedOnDatasetIdQuery(datasetParam);
+    const patients = patientsBasedOnDatasetIdQuery(datasetQueryParam);
     const modelResponse = modelResponseQuery()
-        .where('patients.dataset_id', datasetParam)
+        .where('patients.dataset_id', datasetQueryParam)
         .whereIn('drugs.drug_name', drugArray);
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
-    if (isVerified(response, datasetParam)) {
+    if (isVerified(response, datasetQueryParam)) {
         Promise.all([patients, modelResponse])
             .then((row) => {
                 // transform the data fetched from the database.
@@ -279,7 +279,7 @@ const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
 
 
 module.exports = {
-    getModelResponseBasedOnDataset,
+    getModelResponsePerDataset,
     getModelResponseBasedOnDatasetAndDrugList,
     getModelResponseStatsBasedOnDrugAndPatient,
 };
