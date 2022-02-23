@@ -17,34 +17,43 @@ class SearchResultHeatMap extends React.Component {
         };
         // binding the functions declared.
         this.parseData = this.parseData.bind(this);
+        this.fetchData = this.fetchData.bind(this);
     }
+
 
     componentDidMount() {
         const { drugParam } = this.props;
         const { datasetParam } = this.props;
 
-        axios.get(`/api/v1/modelresponse?drug=${drugParam}&dataset=${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } })
-            .then((response) => {
-                this.parseData(response.data);
-            });
+        // fetch data
+        this.fetchData(drugParam, datasetParam);
     }
 
+    // async function to fetch model response and patients data
+    async fetchData(drugParam, datasetParam) {
+        // model response and patients
+        const modelResponse = await axios.get(`/api/v1/modelresponse?drug=${drugParam}&dataset=${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const patients = await axios.get(`/api/v1/datasets/detail/${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } });
+
+        // parse data
+        this.parseData(modelResponse.data, patients.data.datasets[0].patients);
+    }
+
+
+
     // this function takes the parsed result and set the states.
-    parseData(result) {
+    parseData(modelResponse, patients) {
         // defining the variables.
         const dataset = [];
-        let patient = [];
+        let patientArray = patients;
         const drug = [];
-
-        // patient array.
-        patient = result.pop();
 
         // this function will loop through the elements and
         // assign empty values in case model information is not available.
-        result.forEach((element) => {
+        modelResponse.forEach((element) => {
             const dataObject = {};
             drug.push(element.Drug);
-            patient.forEach((patient) => {
+            patientArray.forEach((patient) => {
                 if (!element[patient]) {
                     dataObject[patient] = '';
                 } else {
@@ -55,12 +64,12 @@ class SearchResultHeatMap extends React.Component {
         });
 
         // patient from one of the object elements to keep it in sync.
-        patient = Object.keys(dataset[0]);
+        patientArray = Object.keys(dataset[0]);
 
         // setting the states using the defined variables.
         this.setState({
             drugId: drug,
-            patientIdDrug: patient,
+            patientIdDrug: patientArray,
             drugData: dataset,
             dimensions: { height: 30, width: 15 },
             margin: {
