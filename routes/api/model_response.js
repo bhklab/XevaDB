@@ -190,20 +190,37 @@ const getModelResponsePerDataset = (request, response) => {
  * based on dataset and drug query parameters.
 */
 const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
-    // drug and dataset parameters.
+    // drug and dataset query parameters.
     const drugQueryParam = request.query.drug;
     const datasetQueryParam = request.query.dataset;
 
-    // get the array of drugs from the drug parameter.
-    const drugArray = drugQueryParam.split(',').map((value) => value.replace('_', ' + '));
-    // push control to drug array.
-    drugArray.push(getControl(datasetQueryParam));
+    // get the model response query.
+    let modelResponse = modelResponseQuery();
 
-    // calling the functions to get patient and model response query.
-    const patients = patientsBasedOnDatasetIdQuery(datasetQueryParam);
-    const modelResponse = modelResponseQuery()
-        .where('patients.dataset_id', datasetQueryParam)
-        .whereIn('drugs.drug_name', drugArray);
+    // get the array of drugs from the drug parameter.
+    let drugArray = [];
+    if (drugQueryParam) {
+        // drug array from the input
+        drugArray = drugQueryParam.split(',').map((value) => value.replace('_', ' + '));
+
+        // update modelresponse query if there is drug query parameter
+        modelResponse = modelResponse.whereIn('drugs.drug_name', drugArray);
+    };
+
+    // push control to drug array.
+    if (drugQueryParam && datasetQueryParam) {
+        drugArray.push(getControl(datasetQueryParam));
+    };
+
+    // get the patient array for the final data
+    let patients = [];
+    if (datasetQueryParam) {
+        // patient array based on dataset id
+        patients = patientsBasedOnDatasetIdQuery(datasetQueryParam);
+
+        // update model response query if the dataset query param is available
+        modelResponse = modelResponse.where('patients.dataset_id', datasetQueryParam);
+    };
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if (isVerified(response, datasetQueryParam)) {
@@ -230,7 +247,6 @@ const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
 const getModelResponseBasedOnDrug = (request, response) => {
 
 };
-
 
 
 /**
