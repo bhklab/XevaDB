@@ -2,6 +2,7 @@
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { patientsBasedOnDatasetIdQuery, getControl } = require('./helper');
+const { batchIdQuery } = require('./batch');
 
 
 // ************************************** Model Response Queries ***************************************************
@@ -64,28 +65,6 @@ const modelResponseStatsQuery = () => knex.select()
         'model_sheets',
         'model_sheets.model_id',
         'models.model',
-    );
-
-/**
- * @returns {Object} - returns an object of mysql query builder to
- * get the batch ids from batch information table.
- */
-const batchIdQuery = () => knex.select('batch_information.batch_id', 'model_information.dataset_id')
-    .from('batch_information')
-    .rightJoin(
-        'model_information',
-        'batch_information.model_id',
-        'model_information.model_id',
-    )
-    .rightJoin(
-        'patients',
-        'model_information.patient_id',
-        'patients.patient_id',
-    )
-    .rightJoin(
-        'drugs',
-        'model_information.drug_id',
-        'drugs.drug_id',
     );
 
 
@@ -259,11 +238,12 @@ const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
     const { patient } = request.query;
 
     // grabs the batch ids based on the patient id and drug param passed.
-    const grabBatchId = batchIdQuery()
+    const getBatchId = batchIdQuery()
         .where('drugs.drug_name', drug)
         .andWhere('patients.patient', patient);
 
-    grabBatchId.then((batch) => {
+
+    getBatchId.then((batch) => {
         // grab the dataset id.
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
         // check if it verified and the dataset id is greater than 0
