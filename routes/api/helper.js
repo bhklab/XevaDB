@@ -36,7 +36,7 @@ const distinctPatientsQuery = (datasetId) => knex
  * @returns {Array} - an array of gene ids based on the genes array param.
  */
 // to select the gene ids based on the gene names.
-const geneListQuery = (genes) => knex.select('gene_id')
+const geneIdsBasedOnGeneNames = (genes) => knex.select('gene_id')
     .from('genes')
     .whereIn('gene_name', genes);
 
@@ -79,7 +79,7 @@ const patientsBasedOnDatasetIdQuery = (dataset) => knex
 module.exports = {
     getControl,
     distinctPatientsQuery,
-    geneListQuery,
+    geneIdsBasedOnGeneNames,
     distinctDrugsQuery,
     drugsBasedOnDatasetIdQuery,
     patientsBasedOnDatasetIdQuery,
