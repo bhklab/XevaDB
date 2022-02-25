@@ -136,7 +136,6 @@ const transformData = (row) => {
     Object.values(untreatedObject).forEach(element => {
         data.unshift(element);
     })
-
     return data;
 };
 
@@ -151,13 +150,12 @@ const getModelResponsePerDataset = (request, response) => {
     // dataset parameter.
     const { params: { dataset: datasetParam } } = request;
 
-    // patients and model response.
-    const patients = patientsBasedOnDatasetIdQuery(datasetParam);
+    // model response.
     const modelResponse = modelResponseQuery().where('patients.dataset_id', datasetParam);
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if (isVerified(response, datasetParam)) {
-        Promise.all([patients, modelResponse])
+        modelResponse
             .then((row) => {
                 // transform the data fetched from the database.
                 const data = transformData(row);

@@ -67,6 +67,8 @@ router.get('/v1/modelinformation/:model', utils.isValidModelId, verifytoken, mod
 // APIs for model response table.
 router.get('/v1/modelresponse', verifytoken, modelResponse.getModelResponse);
 router.get('/v1/modelresponse/stats', verifytoken, modelResponse.getModelResponseStatsBasedOnDrugAndPatient);
+// TODO: this API end point can be eliminated and also the 'getModelResponsePerDataset' function can be removed
+// TODO: instead we can use '/v1/modelresponse' endpoint and pass 'dataset' as the query parameter with either name or id
 router.get('/v1/modelresponse/:dataset', utils.isValidDatasetId, verifytoken, modelResponse.getModelResponsePerDataset);
 
 // APIs related to mutation table.
