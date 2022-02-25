@@ -19,19 +19,6 @@ const getControl = (datasetId) => {
 
 
 /**
- * @param {number} datasetId - dataset id to get the patient from particular dataset.
- * @returns {Object} - knex query to grab an array of distinct patients
- * from a particular dataset.
- */
-const distinctPatientsQuery = (datasetId) => knex
-    .distinct('patients.patient', 'patients.patient_id')
-    .from('patients')
-    .where({
-        'patients.dataset_id': datasetId,
-    });
-
-
-/**
  * @param {Array} genes - array of genes.
  * @returns {Array} - an array of gene ids based on the genes array param.
  */
@@ -39,19 +26,6 @@ const distinctPatientsQuery = (datasetId) => knex
 const geneIdsBasedOnGeneNames = (genes) => knex.select('gene_id')
     .from('genes')
     .whereIn('gene_name', genes);
-
-
-/**
- * @param {number} dataset - dataset id.
- * @returns {Array} - an array of the distinct drug ids based on the dataset id.
- */
-const distinctDrugsQuery = (dataset) => (
-    knex.distinct('drug_id')
-        .from('datasets_drugs')
-        .where({
-            dataset_id: dataset,
-        })
-);
 
 
 /**
@@ -78,9 +52,7 @@ const patientsBasedOnDatasetIdQuery = (dataset) => knex
 
 module.exports = {
     getControl,
-    distinctPatientsQuery,
     geneIdsBasedOnGeneNames,
-    distinctDrugsQuery,
     drugsBasedOnDatasetIdQuery,
     patientsBasedOnDatasetIdQuery,
 };
