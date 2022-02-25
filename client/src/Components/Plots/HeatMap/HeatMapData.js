@@ -21,6 +21,7 @@ class HeatMapData extends React.Component {
         };
         // binding the functions declared.
         this.parseData = this.parseData.bind(this);
+        this.fetchData = this.fetchData.bind(this);
     }
 
 
@@ -34,28 +35,32 @@ class HeatMapData extends React.Component {
     componentDidMount() {
         const { datasetParam } = this.state;
         if (datasetParam > 0) {
-            axios.get(`/api/v1/modelresponse/${datasetParam}`, { headers: { Authorization: localStorage.getItem('user') } })
-                .then((response) => {
-                    this.parseData(response.data);
-                });
+            this.fetchData(datasetParam);
         }
     }
 
-    // this function takes the parsed result and set the states.
-    parseData(result) {
-        const dataset = [];
-        let patient = [];
-        const drug = [];
+    async fetchData(datasetId) {
+        const modelResponse = await axios.get(`/api/v1/modelresponse/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const patients = await axios.get(`/api/v1/datasets/detail/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
 
-        // patient array.
-        patient = result.pop();
+        const modelResponseData = modelResponse.data;
+        const patientsData = patients.data.datasets[0].patients;
+
+        this.parseData(modelResponseData, patientsData);
+    }
+
+    // this function takes the parsed result and set the states.
+    parseData(modelResponse, patients) {
+        const dataset = [];
+        let patientArray = patients;
+        const drug = [];
 
         // this function will loop through the elements and
         // assign empty values in case model information is not available.
-        result.forEach((element) => {
+        modelResponse.forEach((element) => {
             const dataObject = {};
             drug.push(element.Drug);
-            patient.forEach((patient) => {
+            patientArray.forEach((patient) => {
                 if (!element[patient]) {
                     dataObject[patient] = '';
                 } else {
@@ -66,11 +71,11 @@ class HeatMapData extends React.Component {
         });
 
         // patient from one of the object elements to keep it in sync.
-        patient = Object.keys(dataset[0]);
+        patientArray = Object.keys(dataset[0]);
 
         this.setState({
             drugId: drug,
-            patientId: patient,
+            patientId: patientArray,
             data: dataset,
             dimensions: { height: 30, width: 15 },
             margin: {
