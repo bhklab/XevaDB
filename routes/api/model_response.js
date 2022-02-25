@@ -99,7 +99,7 @@ const transformData = (row) => {
     let drug = '';
     let value = 0;
     const data = [];
-    const untreated = {};
+    const untreatedObject = {};
 
     row.forEach((element) => {
         // if the value is not present assign it NA.
@@ -113,11 +113,14 @@ const transformData = (row) => {
             }
             data[value - 1][element.patient][element.response_type] = element.value;
         } else if (element.drug_name.match(/(^untreated$|^water$|^control$|^h2o$)/i)) {
-            untreated.Drug = element.drug_name;
-            if (!(element.patient in untreated)) {
-                untreated[element.patient] = {};
+            if (!untreatedObject[element.drug_name]) {
+                untreatedObject[element.drug_name] = {};
+                untreatedObject[element.drug_name].Drug = element.drug_name;
             }
-            untreated[element.patient][element.response_type] = element.value;
+            if (!(element.patient in untreatedObject[element.drug_name])) {
+                untreatedObject[element.drug_name][element.patient] = {};
+            }
+            untreatedObject[element.drug_name][element.patient][element.response_type] = element.value;
         } else {
             drug = element.drug_name;
             data.push({});
@@ -130,12 +133,12 @@ const transformData = (row) => {
         }
     });
 
-    if (Object.entries(untreated).length === 1 && untreated.constructor === Object) { }
-    else { data.unshift(untreated); }
+    Object.values(untreatedObject).forEach(element => {
+        data.unshift(element);
+    })
 
     return data;
 };
-
 
 // ************************************** API Endpoints Functions ***************************************************
 /**
@@ -182,10 +185,12 @@ const getModelResponsePerDataset = (request, response) => {
  * @returns {Object} - function returns the model response
  * based on dataset and drug query parameters.
 */
-const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
+const getModelResponse = (request, response) => {
     // drug and dataset query parameters.
     const drugQueryParam = request.query.drug;
     const datasetQueryParam = request.query.dataset;
+    let isUserVerified = false;
+    const user = response.locals.user;
 
     // get the model response query.
     let modelResponse = modelResponseQuery();
@@ -200,22 +205,29 @@ const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
         modelResponse = modelResponse.whereIn('drugs.drug_name', drugArray);
     };
 
+    // get the patient array for the final data
+    if (datasetQueryParam) {
+        // update model response query if the dataset query param is available
+        modelResponse = modelResponse.where('patients.dataset_id', datasetQueryParam);
+        // if the dataset query param is passed use isVerified function
+        isUserVerified = isVerified(response, datasetQueryParam);
+    } else if (user === 'unknown') {
+        isUserVerified = true;
+        modelResponse = modelResponse.whereBetween('patients.dataset_id', [1, 6]);
+    } else if (user === 'verified') {
+        isUserVerified = true;
+        modelResponse = modelResponse.whereBetween('patients.dataset_id', [1, 8]);
+    };
+
     // push control to drug array.
     if (drugQueryParam && datasetQueryParam) {
         drugArray.push(getControl(datasetQueryParam));
     };
 
-    // get the patient array for the final data
-    if (datasetQueryParam) {
-        // update model response query if the dataset query param is available
-        modelResponse = modelResponse.where('patients.dataset_id', datasetQueryParam);
-    };
-
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
-    if (isVerified(response, datasetQueryParam)) {
+    if (isUserVerified) {
         modelResponse
             .then((row) => {
-                // console.log(row);
                 // transform the data fetched from the database.
                 const data = transformData(row);
                 // sending the response.
@@ -231,11 +243,6 @@ const getModelResponseBasedOnDatasetAndDrugList = (request, response) => {
             data: 'Bad Request',
         });
     }
-};
-
-
-const getModelResponseBasedOnDrug = (request, response) => {
-
 };
 
 
@@ -286,6 +293,6 @@ const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
 
 module.exports = {
     getModelResponsePerDataset,
-    getModelResponseBasedOnDatasetAndDrugList,
+    getModelResponse,
     getModelResponseStatsBasedOnDrugAndPatient,
 };
