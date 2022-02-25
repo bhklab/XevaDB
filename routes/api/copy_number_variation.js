@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
-const { distinctPatientsQuery, geneListQuery } = require('./helper');
+const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
 
+// ************************************** Copy Number Variation Queries ***************************************************
 // copy number variation query.
 const copyNumberVariationQuery = () => knex
     .select('genes.gene_name', 'patients.patient', 'copy_number_variation.value')
@@ -38,6 +39,7 @@ const copyNumberVariationQuery = () => knex
     );
 
 
+// ************************************** Transform Functions *************************************************
 /**
  * @param {Array} input - an array of the input data.
  * @returns {Array} - an array of the transformed data.
@@ -63,6 +65,7 @@ const transformData = (input) => {
 };
 
 
+// ************************************** API Endpoints Functions ***************************************************
 /**
  * @param {Object} request - request object.
  * @param {number} request.params.dataset - dataset id.
@@ -118,8 +121,8 @@ const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) =
     if (isVerified(response, datasetParam)) {
         try {
             // getting the unique list of patients and genes.
-            const patients = await distinctPatientsQuery(datasetParam);
-            const genes = await geneListQuery(geneParam.split(','));
+            const patients = await patientsBasedOnDatasetIdQuery(datasetParam);
+            const genes = await geneIdsBasedOnGeneNames(geneParam.split(','));
 
             // patients and genes array.
             const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);

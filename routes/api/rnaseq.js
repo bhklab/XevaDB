@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
-const { distinctPatientsQuery, geneListQuery } = require('./helper');
+const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
 
+// ************************************** RNASeq Queries ***************************************************
 // rna sequencing data.
 const rnaSeqQuery = () => knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
     .from('rna_sequencing')
@@ -37,6 +38,7 @@ const rnaSeqQuery = () => knex.select('genes.gene_name', 'patients.patient', 'rn
     );
 
 
+// ************************************** Transform Functions *************************************************
 // transforming the input data.
 const transformData = (input) => {
     // array to store mutation data .
@@ -59,6 +61,7 @@ const transformData = (input) => {
 };
 
 
+// ************************************** API Endpoints Functions ***************************************************
 /**
  * @param {Object} request - request object.
  * @param {number} request.params.dataset - dataset id.
@@ -113,8 +116,8 @@ const getRnaSeqBasedOnDatasetAndGenes = async (request, response) => {
     if (isVerified(response, datasetParam)) {
         try {
             // getting the unique list of patients and genes.
-            const patients = await distinctPatientsQuery(datasetParam);
-            const genes = await geneListQuery(geneParam.split(','));
+            const patients = await patientsBasedOnDatasetIdQuery(datasetParam);
+            const genes = await geneIdsBasedOnGeneNames(geneParam.split(','));
 
             // patients and genes array.
             const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);

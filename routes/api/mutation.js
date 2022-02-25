@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
-const { distinctPatientsQuery, geneListQuery } = require('./helper');
+const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
 
+// ************************************** Mutation Queries ***************************************************
 // mutation data.
 const mutationQuery = () => knex.select('genes.gene_name', 'patients.patient', 'mutation.value')
     .from('mutation')
@@ -37,6 +38,7 @@ const mutationQuery = () => knex.select('genes.gene_name', 'patients.patient', '
     );
 
 
+// ************************************** Transform Functions *************************************************
 // transforming the input data.
 const transformData = (input) => {
     // array to store mutation data .
@@ -59,6 +61,7 @@ const transformData = (input) => {
 };
 
 
+// ************************************** API Endpoints Functions ***************************************************
 /**
  * @param {Object} request - request object.
  * @param {number} request.params.dataset - dataset id.
@@ -72,7 +75,7 @@ const getMutationDataBasedOnDataset = async (request, response) => {
     if (isVerified(response, datasetParam)) {
         try {
             // patients.
-            const patients = await distinctPatientsQuery(datasetParam);
+            const patients = await patientsBasedOnDatasetIdQuery(datasetParam);
             const patientRows = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
 
             // grabbing the mutation data based on patients and limiting genes to 1-30.
@@ -119,8 +122,8 @@ const getMutationDataBasedOnDatasetAndGenes = async (request, response) => {
     if (isVerified(response, datasetParam)) {
         try {
             // getting the unique list of patients and genes.
-            const patients = await distinctPatientsQuery(datasetParam);
-            const genes = await geneListQuery(geneParam.split(','));
+            const patients = await patientsBasedOnDatasetIdQuery(datasetParam);
+            const genes = await geneIdsBasedOnGeneNames(geneParam.split(','));
 
             // patients and genes array.
             const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
