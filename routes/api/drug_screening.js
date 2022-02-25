@@ -1,8 +1,50 @@
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
+const { batchIdQuery } = require('./batch');
 
 
+// ************************************** Mutation Queries *********************************************************
+const drugScreeningQuery = () => knex
+    .select(
+        'drug_screening.time', 'drug_screening.volume', 'drug_screening.volume_normal',
+        'drugs.drug_name as drug', 'patients.patient as patient_id',
+        'batch_information.type', 'batches.batch', 'models.model as model_id'
+    )
+    .from('drug_screening')
+    .rightJoin(
+        'model_information',
+        'drug_screening.model_id',
+        'model_information.model_id',
+    )
+    .rightJoin(
+        'models',
+        'model_information.model_id',
+        'models.model_id',
+    )
+    .rightJoin(
+        'drugs',
+        'model_information.drug_id',
+        'drugs.drug_id',
+    )
+    .rightJoin(
+        'patients',
+        'model_information.patient_id',
+        'patients.patient_id',
+    )
+    .rightJoin(
+        'batch_information',
+        'drug_screening.model_id',
+        'batch_information.model_id',
+    )
+    .rightJoin(
+        'batches',
+        'batches.batch_id',
+        'batch_information.batch_id',
+    );
+
+
+// ************************************** API Endpoints Functions ***************************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -20,23 +62,7 @@ const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
     drug = drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
 
     // grabs the batch_id based on the drug and patient query param passed on.
-    const grabBatchId = knex.select('batch_information.batch_id', 'model_information.dataset_id')
-        .from('batch_information')
-        .rightJoin(
-            'model_information',
-            'batch_information.model_id',
-            'model_information.model_id',
-        )
-        .rightJoin(
-            'patients',
-            'model_information.patient_id',
-            'patients.patient_id',
-        )
-        .rightJoin(
-            'drugs',
-            'model_information.drug_id',
-            'drugs.drug_id',
-        )
+    const grabBatchId = batchIdQuery()
         .where('drugs.drug_name', drug)
         .andWhere('patients.patient', patient);
     // .andWhere('batch_information.type', 'treatment')
@@ -49,40 +75,7 @@ const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
         // check if it verified and the dataset id is greater than 0
         // or if it's not verified (unkown) then the dataset id should be less than 7.
         if (isVerified(response, dataset)) {
-            knex.select('drug_screening.time', 'drug_screening.volume', 'drug_screening.volume_normal',
-                'drugs.drug_name as drug', 'patients.patient as patient_id',
-                'batch_information.type', 'batches.batch', 'models.model as model_id')
-                .from('drug_screening')
-                .rightJoin(
-                    'model_information',
-                    'drug_screening.model_id',
-                    'model_information.model_id',
-                )
-                .rightJoin(
-                    'models',
-                    'model_information.model_id',
-                    'models.model_id',
-                )
-                .rightJoin(
-                    'drugs',
-                    'model_information.drug_id',
-                    'drugs.drug_id',
-                )
-                .rightJoin(
-                    'patients',
-                    'model_information.patient_id',
-                    'patients.patient_id',
-                )
-                .rightJoin(
-                    'batch_information',
-                    'drug_screening.model_id',
-                    'batch_information.model_id',
-                )
-                .rightJoin(
-                    'batches',
-                    'batches.batch_id',
-                    'batch_information.batch_id',
-                )
+            drugScreeningQuery()
                 .where(function () {
                     this.where('drugs.drug_name', drug)
                         .orWhere('drugs.drug_name', 'water')
