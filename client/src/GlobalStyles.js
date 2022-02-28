@@ -68,7 +68,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .oprint-wrapper {
-    margin-bottom: 100px;
+    margin-bottom: 200px;
   }
 
   .donut-wrapper, .summary-table, 
