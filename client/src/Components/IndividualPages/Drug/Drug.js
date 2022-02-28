@@ -4,6 +4,7 @@ import GlobalStyles from '../../../GlobalStyles';
 import Spinner from '../../Utils/Spinner';
 import Footer from '../../Footer/Footer';
 import Annotation from './Annotation';
+import PatientResponseChart from './PatientResponseChart';
 
 // header constant
 const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
@@ -49,6 +50,7 @@ const Drug = (props) => {
                             <div className='curve-wrapper'>
                                 <h1> {drugData.drug_name} </h1>
                                 <Annotation data={drugData} />
+                                <PatientResponseChart />
                             </div>
                         )
                 }
