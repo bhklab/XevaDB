@@ -573,7 +573,7 @@ class HeatMap extends Component {
         biomarkerImage.selectAll('div')
             .data(drug)
             .join('text')
-            .text('🅱️')
+            .text('🧬')
             .attr('x', -40)
             .attr('y', (d, i) => (i + 1.75) * rectHeight)
             .on('mouseover', function () {
