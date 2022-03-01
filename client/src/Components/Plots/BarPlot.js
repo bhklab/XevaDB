@@ -189,6 +189,7 @@ BarPlot.propTypes = {
         left: PropTypes.number,
     }),
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    label: PropTypes.string.isRequired,
 };
 
 export default BarPlot;
