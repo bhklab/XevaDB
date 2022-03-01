@@ -3,6 +3,36 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import styled from 'styled-components';
+
+// bar plot styles
+const StyledBarPlot = styled.div`
+    width: 90%;
+    margin: auto;
+    overflow-x: scroll;
+
+    ::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 10px;
+        height: 10px;
+    }
+      
+    ::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, .5);
+        box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    }
+`;
+
+// color list
+const colorList = [
+    '#E64B35FF', '#4DBBD5FF', '#00A087FF', '#3C5488FF',
+    '#F39B7FFF', '#8491B4FF', '#91D1C2FF', '#B09C85FF',
+    '#0073C2FF', '#868686FF', '#CD534CFF', '#7AA6DCFF',
+    '#003C67FF', '#3B3B3BFF', '#A73030FF', '#4A6990FF',
+    '#00468BBF', '#42B540BF', '#0099B4BF', '#925E9FBF',
+    '#FDAF91BF', '#AD002ABF', '#ADB6B6BF',
+];
 
 // defaul parameters.
 const defaultMargin = {
@@ -10,6 +40,7 @@ const defaultMargin = {
 };
 const defaultDimensions = { width: 850, height: 400 };
 const defaultArc = { outerRadius: 260, innerRadius: 150 };
+const minBarWidth = 60;
 
 // create the svg canvas.
 const createSvg = (width, height, left, right, top, bottom) => {
@@ -24,6 +55,7 @@ const createSvg = (width, height, left, right, top, bottom) => {
     return svg;
 };
 
+// x scale for the plot
 const createXScale = (width, data) => {
     const scale = d3.scaleBand()
         .domain(data.map((d) => d.id))
@@ -33,15 +65,17 @@ const createXScale = (width, data) => {
     return scale;
 };
 
+// y scale for the plot
 const createYScale = (height, max) => {
     const scale = d3.scaleLinear()
-        .domain([0, max + 5])
+        .domain([0, max])
         .range([height, 0])
         .nice();
 
     return scale;
 };
 
+// color scale
 const colorScale = (data, colors) => {
     const values = data.map((element) => element.id);
 
@@ -52,6 +86,7 @@ const colorScale = (data, colors) => {
     return scale;
 };
 
+// create the x axis for the chart
 const createXAxis = (svg, xScale, height) => {
     const axis = d3.axisBottom()
         .scale(xScale)
@@ -66,6 +101,7 @@ const createXAxis = (svg, xScale, height) => {
         .style('font-size', 13);
 };
 
+// create y axis for the plot
 const createYAxis = (svg, yScale) => {
     const axis = d3.axisLeft()
         .scale(yScale)
@@ -76,6 +112,7 @@ const createYAxis = (svg, yScale) => {
         .style('font-size', 13);
 };
 
+// create bars
 const createBars = (svg, data, xScale, yScale, height, color) => {
     svg.selectAll('bars')
         .data(data)
@@ -89,6 +126,7 @@ const createBars = (svg, data, xScale, yScale, height, color) => {
         .attr('fill', (d) => color(d.id));
 };
 
+// append text with values on the top of bars
 const appendBarText = (svg, data, xScale, yScale) => {
     data.forEach((element) => {
         svg.append('text')
@@ -102,6 +140,7 @@ const appendBarText = (svg, data, xScale, yScale) => {
     });
 };
 
+// append label
 const appendYAxisLabel = (svg, height, left, label) => {
     svg.append('text')
         .attr('x', 0)
@@ -114,16 +153,20 @@ const appendYAxisLabel = (svg, height, left, label) => {
         .text(`${label}`);
 };
 
+// main component function for the bar plot
 const BarPlot = (props) => {
     // getting the prop data.
     const margin = props.margin || defaultMargin;
-    const dimensions = props.dimensions || defaultDimensions;
     let { data } = props;
-    const { width, height } = dimensions;
-    const {
-        left, right, top, bottom,
-    } = margin;
+    const { left, right, top, bottom } = margin;
     const yAxisLabel = props.label;
+    const dimensions = props.dimensions || defaultDimensions;
+
+    // update dimensions
+    if (minBarWidth * data.length > dimensions.width) {
+        dimensions.width = minBarWidth * data.length;
+    };
+    const { width, height } = dimensions;
 
     // calulcates the max value in the data.
     let max = 0;
@@ -135,15 +178,6 @@ const BarPlot = (props) => {
 
     // sort data
     data = data.sort((b, a) => a.value - b.value);
-
-    const colorList = [
-        '#E64B35FF', '#4DBBD5FF', '#00A087FF', '#3C5488FF',
-        '#F39B7FFF', '#8491B4FF', '#91D1C2FF', '#B09C85FF',
-        '#0073C2FF', '#868686FF', '#CD534CFF', '#7AA6DCFF',
-        '#003C67FF', '#3B3B3BFF', '#A73030FF', '#4A6990FF',
-        '#00468BBF', '#42B540BF', '#0099B4BF', '#925E9FBF',
-        '#FDAF91BF', '#AD002ABF', '#ADB6B6BF',
-    ];
 
     useEffect(() => {
         // remove the element if already present.
@@ -170,13 +204,16 @@ const BarPlot = (props) => {
     });
 
     return (
-        <div
-            id="barplot"
-            style={{ textAlign: 'center' }}
-        />
+        <StyledBarPlot>
+            <div
+                id="barplot"
+                style={{ textAlign: 'center' }}
+            />
+        </StyledBarPlot>
     );
 };
 
+// proptypes
 BarPlot.propTypes = {
     dimensions: PropTypes.shape({
         height: PropTypes.number,
