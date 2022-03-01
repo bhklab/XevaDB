@@ -20,7 +20,7 @@ const PatientResponseChart = () => {
 
         // iterate through data and add an object to transformed Array
         Object.keys(data).forEach(element => {
-            if (element !== 'Drug') {
+            if (element !== 'Drug' && data[element].mRECIST !== 'NA') {
                 transformedArray.push({
                     id: element,
                     value: mRECISTMapper[data[element].mRECIST],

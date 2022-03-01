@@ -47,7 +47,7 @@ const Drug = (props) => {
                     isLoading
                         ? <Spinner loading={isLoading} />
                         : (
-                            <div className='curve-wrapper'>
+                            <div className='curve-wrapper oprint-wrapper'>
                                 <h1> {drugData.drug_name} </h1>
                                 <Annotation data={drugData} />
                                 <PatientResponseChart />
