@@ -29,6 +29,12 @@ const CounterStyle = styled.div`
     h4 {
         margin: 0px;
     }
+    // when screen size is greater than 1800px
+    @media only screen and (min-width: 1800px) {
+        a {
+            font-size: 1.1vw;
+        }
+    }
 `;
 
 

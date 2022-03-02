@@ -51,6 +51,13 @@ const HeaderStyle = styled.div`
     .login-button {
         display: inline !important;
     }
+
+    // when screen size is greater than 1800px
+    @media only screen and (min-width: 1800px) {
+        a {
+            font-size: 1.2vw;
+        }
+    }
 `;
 
 const LogoStyle = styled.img`
