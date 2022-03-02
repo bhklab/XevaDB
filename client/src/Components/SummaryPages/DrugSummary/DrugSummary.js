@@ -55,7 +55,7 @@ class DrugSummary extends React.Component {
             <div>
                 <GlobalStyles />
                 <div className="wrapper">
-                    <div className="donut-wrapper">
+                    <div className="component-wrapper center-component">
                         <h1> Number of Models per Drug Class </h1>
                         {
                             loading ? <Spinner loading={loading} />
@@ -71,7 +71,7 @@ class DrugSummary extends React.Component {
                                 )
                         }
                     </div>
-                    <div className="summary-table">
+                    <div className="component-wrapper center-component">
                         <DrugTable />
                     </div>
                     <Footer />

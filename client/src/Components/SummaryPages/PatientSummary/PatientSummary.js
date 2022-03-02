@@ -71,7 +71,7 @@ const PatientSummary = () => {
         <>
             <GlobalStyles />
             <div className="wrapper">
-                <div className="donut-wrapper">
+                <div className="component-wrapper center-component">
                     <h1> Number of Patients per Dataset </h1>
                     {
                         loading ? <Spinner loading={loading} />
@@ -83,7 +83,7 @@ const PatientSummary = () => {
                             )
                     }
                 </div>
-                <div className="summary-table">
+                <div className="component-wrapper center-component">
                     {
                         loading ? (<Spinner loading={loading} />)
                             : (<PatientTable patientData={patientData} />)

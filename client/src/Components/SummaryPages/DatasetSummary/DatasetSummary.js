@@ -48,7 +48,7 @@ class DatasetSummary extends React.Component {
             <div>
                 <GlobalStyles />
                 <div className="wrapper">
-                    <div className="donut-wrapper">
+                    <div className="component-wrapper center-component">
                         <h1> Datasets </h1>
                         {
                             loading
@@ -73,15 +73,19 @@ class DatasetSummary extends React.Component {
                                 )
                         }
                     </div>
-                    <div className="summary-table">
+                    <div className="component-wrapper center-component">
                         {
                             loading
                                 ? <Spinner loading={loading} />
                                 : (
-                                    <DatasetTable
-                                        data={data}
-                                        dataLength={data.length}
-                                    />
+                                    <>
+                                        <h1> List of Datasets </h1>
+                                        <DatasetTable
+                                            data={data}
+                                            dataLength={data.length}
+                                        />
+                                    </>
+
                                 )
                         }
                     </div>

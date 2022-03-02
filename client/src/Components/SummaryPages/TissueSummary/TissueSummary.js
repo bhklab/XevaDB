@@ -117,7 +117,7 @@ const TissueSummary = () => {
         <div>
             <GlobalStyles />
             <div className="wrapper">
-                <div className="tissue-wrapper">
+                <div className="component-wrapper">
                     <StyleComponent>
                         <h1> PDXs Per Tissue Type </h1>
                         <img src={HumanBody} alt="Human Body" />
@@ -185,7 +185,7 @@ const TissueSummary = () => {
                         </div>
                     </StyleComponent>
                 </div>
-                <div className="summary-table">
+                <div className="component-wrapper center-component">
                     {loading ? <Spinner loading={loading} /> : <TissueTable data={tissueData} />}
                 </div>
             </div>
