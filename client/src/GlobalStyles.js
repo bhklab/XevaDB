@@ -46,14 +46,45 @@ const GlobalStyles = createGlobalStyle`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 8rem;
+    margin-top: 12vh;
+    margin-bottom: 12vh;
 
     h1 {
       font-weight: 700;
       text-align: center;
       color: ${colors.blue_header};
       font-size: 1.75rem;
+      padding: 25px;
     }
+  }
+
+  .component-wrapper {
+    background: ${colors.white};
+    margin: 2vh;
+    min-width: 75vw;
+    max-width: 75vw;
+
+    @media only screen and (min-width: 1800px) {
+      min-width: 70vw;
+      max-width: 70vw;
+    }
+
+    @media only screen and (min-width: 2000px) {
+      min-width: 65vw;
+      max-width: 65vw;
+    }
+
+    @media only screen and (min-width: 2000px) {
+      min-width: 60vw;
+      max-width: 60vw;
+    }
+  }
+
+  .center-component {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .heatmap-wrapper, .oprint-wrapper, .curve-wrapper,
@@ -91,7 +122,9 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .curve-wrapper {
+    // max-width: 90%;
     min-width: 1300px;
+    max-width: 1300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
