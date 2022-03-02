@@ -2,14 +2,9 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const TableWrapper = styled.div`
-    margin: auto !important;
-    padding: 10px 20px 30px 20px;
+    padding: 0 2.5% 2.5% 2.5%;
     font-family: 'Open Sans', 'Roboto';
-
-    h1 {
-        color: ${colors.blue_header};
-        padding-bottom: 20px;
-    }
+    width: 100%;
 
     .ReactTable * {
         box-sizing: border-box;
