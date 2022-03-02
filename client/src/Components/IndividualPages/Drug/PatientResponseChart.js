@@ -4,6 +4,28 @@ import BarPlot from '../../Plots/BarPlot';
 import mRECISTMapper from '../../../utils/mRECISTMapper';
 import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
 import Spinner from '../../Utils/Spinner';
+import Select from 'react-select';
+import styled from 'styled-components';
+import { customStyles } from '../../Search/SearchStyle';
+
+// options for select 
+const options = [
+    { value: 'mRECIST', label: 'mRECIST' },
+    { value: 'Slope', label: 'Slope' },
+    { value: 'Best Average Response', label: 'Best Average Response' },
+    { value: 'AUC', label: 'AUC' }
+]
+
+// styling Patient Response Chart
+const StyledChart = styled.div`
+    max-width: 90%;
+
+    .select-container {
+        margin-top: 20px;
+        min-width: 180px;
+        float: right;
+    }
+`;
 
 // header constant
 const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
@@ -57,13 +79,19 @@ const PatientResponseChart = () => {
 
     return (
         isLoading ? <Spinner loading={isLoading} /> : (
-            <>
+            <StyledChart>
                 <h1> Model Response </h1>
+                <div className='select-container'>
+                    <Select
+                        options={options}
+                        styles={customStyles}
+                    />
+                </div>
                 <BarPlot
                     data={modelResponseData}
                     label="Model Response"
                 />
-            </>
+            </StyledChart>
         )
     )
 };
