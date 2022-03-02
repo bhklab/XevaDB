@@ -123,7 +123,7 @@ const createBars = (svg, data, xScale, yScale, height, color) => {
         .attr('width', xScale.bandwidth())
         .attr('height', (d) => height - yScale(d.value))
         .attr('id', (d) => `bar_${d.id}`)
-        .attr('fill', (d) => color(d.id));
+        .attr('fill', (d) => d.color || color(d.id));
 };
 
 // append text with values on the top of bars

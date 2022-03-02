@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BarPlot from '../../Plots/BarPlot';
 import mRECISTMapper from '../../../utils/mRECISTMapper';
+import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
 import Spinner from '../../Utils/Spinner';
 
 // header constant
@@ -24,6 +25,7 @@ const PatientResponseChart = () => {
                 transformedArray.push({
                     id: element,
                     value: mRECISTMapper[data[element].mRECIST],
+                    color: mRECISTColorMapper[data[element].mRECIST],
                 })
             };
         });
