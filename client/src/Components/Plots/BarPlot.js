@@ -36,7 +36,7 @@ const colorList = [
 
 // defaul parameters.
 const defaultMargin = {
-    top: 50, right: 150, bottom: 200, left: 150,
+    top: 50, right: 150, bottom: 200, left: 100,
 };
 const defaultDimensions = { width: 850, height: 400 };
 const defaultArc = { outerRadius: 260, innerRadius: 150 };
@@ -160,7 +160,7 @@ const BarPlot = (props) => {
     let { data } = props;
     const { left, right, top, bottom } = margin;
     const yAxisLabel = props.label;
-    const dimensions = props.dimensions || defaultDimensions;
+    const dimensions = props.dimensions || { ...defaultDimensions };
 
     // update dimensions
     if (minBarWidth * data.length > dimensions.width) {
@@ -201,7 +201,7 @@ const BarPlot = (props) => {
 
         // append y-axis test/label.
         appendYAxisLabel(svg, height, left, yAxisLabel);
-    });
+    }, []);
 
     return (
         <StyledBarPlot>
