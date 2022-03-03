@@ -191,7 +191,7 @@ const getModelResponse = (request, response) => {
     } else if (user === 'unknown') {
         isUserVerified = true;
         modelResponse = modelResponse.whereBetween('patients.dataset_id', [1, 6]);
-    } else if (user === 'verified') {
+    } else if (user.verified === 'verified') {
         isUserVerified = true;
         modelResponse = modelResponse.whereBetween('patients.dataset_id', [1, 8]);
     };
