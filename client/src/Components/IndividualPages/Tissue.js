@@ -72,7 +72,7 @@ const Tissue = (props) => {
             <div className="wrapper">
                 {
                     loading ? <Spinner loading={loading} /> : (
-                        <div className="curve-wrapper" style={{ marginBottom: '150px' }}>
+                        <div className='component-wrapper center-component'>
                             <h1>
                                 {tissueData.name}
                             </h1>

@@ -101,12 +101,10 @@ const Patient = (props) => {
             <div className="wrapper">
                 {
                     loading ? <Spinner loading={loading} /> : (
-                        <>
+                        <div className='component-wrapper center-component'>
                             <TreeDiagram data={transformTreeDiagramData(patientData)} />
-                            <div className="summary-table">
-                                <PatientTable patientData={patientData} />
-                            </div>
-                        </>
+                            <PatientTable patientData={patientData} />
+                        </div>
                     )
                 }
                 <Footer />

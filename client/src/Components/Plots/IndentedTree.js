@@ -154,7 +154,7 @@ const IdentedTree = (props) => {
     });
 
     return (
-        <div className="curve-wrapper" style={{ marginBottom: '150px' }}>
+        <div className='component-wrapper center-component'>
             <div id="indentedtree" />
         </div>
     );

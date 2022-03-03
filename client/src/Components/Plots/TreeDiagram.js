@@ -164,7 +164,7 @@ const TreeDiagram = (props) => {
     }, []);
 
     return (
-        <div className="curve-wrapper">
+        <div className='component-wrapper center-component'>
             <h1>
                 Dataset =
                 {' '}
