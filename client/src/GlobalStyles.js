@@ -119,29 +119,17 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 
-  .stats-table {
-    margin-bottom: 120px;
-  }
-
-  .curve-wrapper {
-    background: ${colors.white}
-    padding-top: 20px;
+  .growth-curve-wrapper {
+    background: ${colors.white};
+    margin: 2vh;
     min-width: 1300px;
     max-width: 1300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 
     a {
       text-decoration: none;
       font-size: 16px;
       padding: 10px;
       color: ${colors.blue_header};
-    }
-
-    .no-graph {
-      padding: 50px;
     }
   }
 `;
