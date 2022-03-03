@@ -3,6 +3,7 @@ import HeatMapData from '../Plots/HeatMap/HeatMapData';
 import OncoprintData from '../Plots/Oncoprint/OncoprintData';
 import Footer from '../Footer/Footer';
 import { PatientProvider } from '../Context/PatientContext';
+import GlobalStyles from '../../GlobalStyles';
 
 class Dataset extends React.Component {
     constructor(props) {
@@ -37,17 +38,22 @@ class Dataset extends React.Component {
             setPatients,
         };
         return (
-            <div>
-                <PatientProvider value={providerData}>
-                    <HeatMapData
-                        dataset={dataset}
-                    />
-                    <OncoprintData
-                        dataset={dataset}
-                    />
-                </PatientProvider>
-                <Footer />
-            </div>
+            <>
+                <GlobalStyles />
+                <div className='wrapper'>
+                    <div className='heatmap-oncoprint-wrapper center-component'>
+                        <PatientProvider value={providerData}>
+                            <HeatMapData
+                                dataset={dataset}
+                            />
+                            <OncoprintData
+                                dataset={dataset}
+                            />
+                        </PatientProvider>
+                    </div>
+                    <Footer />
+                </div>
+            </>
         );
     }
 }
