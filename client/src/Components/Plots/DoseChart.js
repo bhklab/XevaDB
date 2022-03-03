@@ -111,9 +111,7 @@ const DoseCurve = (props) => {
     });
 
     return (
-        <div className="curve-wrapper">
-            <div id="timechart" />
-        </div>
+        <div id="timechart" />
     );
 };
 
