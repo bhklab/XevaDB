@@ -4,7 +4,6 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Spinner from '../../Utils/Spinner';
 import HeatMap from './HeatMap';
-import GlobalStyles from '../../../GlobalStyles';
 
 class HeatMapData extends React.Component {
     constructor(props) {
@@ -77,7 +76,7 @@ class HeatMapData extends React.Component {
             drugId: drug,
             patientId: patientArray,
             data: dataset,
-            dimensions: { height: 30, width: 15 },
+            dimensions: { height: 30, width: 14 },
             margin: {
                 top: 200, right: 250, bottom: 50, left: 250,
             },
@@ -93,21 +92,18 @@ class HeatMapData extends React.Component {
         } = this.state;
         return (
             <div>
-                <GlobalStyles />
-                <div className="wrapper">
-                    {loading ? <Spinner loading={loading} />
-                        : (
-                            <HeatMap
-                                data={data}
-                                drugId={drugId}
-                                patientId={patientId}
-                                dimensions={dimensions}
-                                margin={margin}
-                                dataset={datasetParam}
-                                className="heatmap"
-                            />
-                        )}
-                </div>
+                {loading ? <Spinner loading={loading} />
+                    : (
+                        <HeatMap
+                            data={data}
+                            drugId={drugId}
+                            patientId={patientId}
+                            dimensions={dimensions}
+                            margin={margin}
+                            dataset={datasetParam}
+                            className="heatmap"
+                        />
+                    )}
             </div>
         );
     }

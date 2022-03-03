@@ -624,7 +624,7 @@ class HeatMap extends Component {
             // eslint-disable-next-line func-names
             .on('mouseover', function () {
                 // tooltip on mousever setting the div to visible.
-                d3.select('.heatmap-wrapper')
+                d3.select('#heatmap')
                     .append('div')
                     .style('position', 'absolute')
                     .style('border', 'solid')
@@ -991,7 +991,7 @@ class HeatMap extends Component {
                         }}
                     />
                 </div>
-                <div className="heatmap-wrapper" id="heatmap">
+                <div id="heatmap">
                     {
                         responseValue !== 'mRECIST' ? <BoxPlot response={responseValue} data={data} patients={modifiedPatients} drugs={drugs} /> : <div />
                     }

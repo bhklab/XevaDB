@@ -143,7 +143,7 @@ class OncoprintData extends React.Component {
             data_mut: data.data_mut || [],
             data_rna: data.data_rna || [],
             data_cnv: data.data_cnv || [],
-            dimensions: { height: 30, width: 15 },
+            dimensions: { height: 30, width: 14 },
             margin: {
                 top: 50, right: 250, bottom: 50, left: 250,
             },
@@ -190,7 +190,7 @@ class OncoprintData extends React.Component {
         }
 
         return (
-            <div className="wrapper" style={{ margin: 'auto' }}>
+            <div>
                 {
                     loading ? <Spinner loading={loading} /> : renderingData()
                 }

@@ -184,7 +184,7 @@ class SearchResultOncoprint extends React.Component {
             } else if (error) {
                 return <Error />;
             } else {
-                data = (<div className="oprint-wrapper"><Spinner loading={loading} /></div>);
+                data = (<div><Spinner loading={loading} /></div>);
             }
             return data;
         }
