@@ -879,6 +879,9 @@ const TumorGrowthCurve = (props) => {
     // calling function to grab the min max values.
     const minmax = calculateMinMax(data);
 
+    // update the drug to replace spaces with '+'
+    const updateDrug = (drug) => drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')
+
     // function will be triggered once the component is mounted/updated.
     useEffect(() => {
         if (data.length !== 0) {
@@ -896,22 +899,22 @@ const TumorGrowthCurve = (props) => {
         <div>
             <GlobalStyles />
             <div className="wrapper">
-                <div className="curve-wrapper">
+                <div className="growth-curve-wrapper center-component">
                     <h1>
-                        Drug:
-                        {' '}
-                        <span style={{ color: `${colors.pink_header}` }}>{drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
+                        Drug: <span style={{ color: `${colors.pink_header}` }}>{updateDrug(drugParam)}</span>
                         {' '}
                         and Patient:
                         {' '}
                         <span style={{ color: `${colors.pink_header}` }}>{patientParam}</span>
                     </h1>
-                    <ExportPng componentRef={componentRef} fileName={`DrugId = ${drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}, PatientId = ${patientParam}`} />
+                    <ExportPng componentRef={componentRef} fileName={`DrugId = ${updateDrug(drugParam)}, PatientId = ${patientParam}`} />
                     <div id="svg-curve" ref={componentRef} />
+                    {
+                        Number(datasetParam) === 7 ? <DoseCurve data={data} maxTime={minmax.maxTime} /> : ''
+                    }
+                    <StatTable patientParam={patientParam} drugParam={drugParam} />
                 </div>
-                {Number(datasetParam) === 7 ? <DoseCurve data={data} maxTime={minmax.maxTime} /> : ''}
-                <StatTable patientParam={patientParam} drugParam={drugParam} />
-                <div className="curve-wrapper" style={{ marginTop: '20px', padding: '10px 0px' }}>
+                <div className="growth-curve-wrapper center-component" style={{ marginTop: '20px', padding: '10px 0px' }}>
                     <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
                 </div>
             </div>

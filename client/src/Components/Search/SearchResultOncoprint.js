@@ -184,7 +184,9 @@ class SearchResultOncoprint extends React.Component {
             } else if (error) {
                 return <Error />;
             } else {
-                data = (<div><Spinner loading={loading} /></div>);
+                data = (
+                    <div><Spinner loading={loading} /></div>
+                );
             }
             return data;
         }
