@@ -74,7 +74,7 @@ const GlobalStyles = createGlobalStyle`
       max-width: 65vw;
     }
 
-    @media only screen and (min-width: 2000px) {
+    @media only screen and (min-width: 2200px) {
       min-width: 60vw;
       max-width: 60vw;
     }
@@ -92,18 +92,31 @@ const GlobalStyles = createGlobalStyle`
     min-width: 80vw;
   }
 
-  .heatmap-wrapper, .oprint-wrapper, .curve-wrapper
-  {
-    background: ${colors.white}
-    padding-top: 20px;
-  }
+  .heatmap-oncoprint-wrapper {
+    background: ${colors.white};
+    margin: 2vh;
+    min-width: 95vw;
+    max-width: 95vw;
 
-  .heatmap-wrapper, .oprint-wrapper {
-    max-width: 1400px;
-  }
+    @media only screen and (min-width: 1600px) {
+      min-width: 85vw;
+      max-width: 85vw;
+    }
 
-  .oprint-wrapper {
-    margin-bottom: 200px;
+    @media only screen and (min-width: 1800px) {
+      min-width: 80vw;
+      max-width: 80vw;
+    }
+
+    @media only screen and (min-width: 2000px) {
+      min-width: 70vw;
+      max-width: 70vw;
+    }
+
+    @media only screen and (min-width: 2200px) {
+      min-width: 65vw;
+      max-width: 65vw;
+    }
   }
 
   .stats-table {
@@ -111,6 +124,8 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .curve-wrapper {
+    background: ${colors.white}
+    padding-top: 20px;
     min-width: 1300px;
     max-width: 1300px;
     display: flex;
