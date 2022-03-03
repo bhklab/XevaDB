@@ -68,7 +68,7 @@ const BiomarkerSelect = () => {
     }, []);
 
     return (
-        < StyledSelect className='biomarker-select' >
+        <StyledSelect className='biomarker-select' >
             <div className='drug-select'>
                 <span> Select Drug </span>
                 <Select styles={customStyles} options={drugs} />
