@@ -47,7 +47,7 @@ const initialize = () => {
     const margin = {
         top: 1, right: 1, bottom: 1, left: 1,
     };
-    const patientWidth = 15 - margin.left - margin.right;
+    const patientWidth = 14 - margin.left - margin.right;
     const patientHeight = 100 - margin.top - margin.bottom;
     const drugWidth = 70 - margin.left - margin.right;
     const drugHeight = 30 - margin.top - margin.bottom;
