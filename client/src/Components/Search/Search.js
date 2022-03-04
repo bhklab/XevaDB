@@ -88,7 +88,7 @@ class Search extends React.Component {
             const { drugs, allDrugs } = this.state;
 
             // loop through the label to give the array of selectedOptions.
-            const label = selectedOption.map((value) => (value.label).replace(/\s/g, '').replace('+', '_'));
+            const label = selectedOption.map((value) => (value.label).replace(/\s/g, '').replaceAll('+', '_'));
 
             // function to check if label array contains the All string.
             const doesItContain = (labelVal) => {
@@ -147,7 +147,7 @@ class Search extends React.Component {
                 this.setState({
                     drugs: [{ value: 'all', label: `All (${data.length})` }, ...data],
                 });
-                const drug = response.data.data[0].map((item) => (item.drug).replace(/\s/g, '').replace('+', '_'));
+                const drug = response.data.data[0].map((item) => (item.drug).replace(/\s/g, '').replaceAll('+', '_'));
                 this.setState({
                     allDrugs: [...drug],
                 });

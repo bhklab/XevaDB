@@ -60,7 +60,7 @@ const PatientResponseChart = ({ drugName }) => {
     // fetch model response data
     const fetchData = async () => {
         // fetch model response data
-        const modelResponse = await axios.get(`/api/v1/modelresponse?drug=${drugName}`, HEADER);
+        const modelResponse = await axios.get(`/api/v1/modelresponse?drug=${drugName.replace(/\s/g, '').replace('+', '_')}`, HEADER);
 
         // transform model response data
         const transformedModelResponse = transformModelResponseData(modelResponse.data[0]);
