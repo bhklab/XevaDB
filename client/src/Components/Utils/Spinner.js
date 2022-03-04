@@ -6,19 +6,13 @@ import colors from '../../styles/colors';
 
 const override = css`
     display: block;
-    margin: auto;
-    margin-top: 300px;
+    margin: 200px;
 `;
-
-const style = {
-    height: '500px',
-    width: '1300px',
-};
 
 const SpinnerUtil = (props) => {
     const { loading } = props;
     return loading ? (
-        <div style={style}>
+        <div>
             <HashLoader
                 css={override}
                 sizeUnit="px"
@@ -26,7 +20,9 @@ const SpinnerUtil = (props) => {
                 color={colors.pink_header}
             />
         </div>
-    ) : (<div />);
+    ) : (
+            <div />
+        );
 };
 
 SpinnerUtil.propTypes = {
