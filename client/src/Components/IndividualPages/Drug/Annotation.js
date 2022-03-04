@@ -69,7 +69,7 @@ const createTable = (data) => {
         <table>
             {
                 Object.entries(data).map(([key, value]) => (
-                    <tbody key={value}>
+                    <tbody key={`${value}-${key}`}>
                         <tr className='table-row'>
                             <td className='key'> {convertToTitleCase(key, '_')} </td>
                             <td className='value'> {createTableValue(key, value)} </td>
