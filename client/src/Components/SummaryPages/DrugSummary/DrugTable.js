@@ -115,18 +115,21 @@ class DrugTable extends React.Component {
         return (
             <TableWrapper>
                 <h1> List of Drugs </h1>
-                {loading
-                    ? (
-                        <Spinner loading={loading} />
+                {
+                    loading ? (
+                        <div className='center-component'>
+                            <Spinner loading={loading} />
+                        </div>
                     ) : (
-                        <ReactTable
-                            data={data}
-                            columns={columns}
-                            className="-highlight"
-                            defaultPageSize={10}
-                            filterable
-                        />
-                    )}
+                            <ReactTable
+                                data={data}
+                                columns={columns}
+                                className="-highlight"
+                                defaultPageSize={10}
+                                filterable
+                            />
+                        )
+                }
             </TableWrapper>
         );
     }
