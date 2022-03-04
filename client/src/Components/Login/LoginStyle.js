@@ -5,7 +5,6 @@ const Paper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: auto;
     margin-top: 16vh;
 
     a {
