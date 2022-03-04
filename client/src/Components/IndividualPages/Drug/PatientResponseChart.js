@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import BarPlot from '../../Plots/BarPlot';
 import mRECISTMapper from '../../../utils/mRECISTMapper';
@@ -30,8 +31,9 @@ const StyledChart = styled.div`
 // header constant
 const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
 
+
 // Patient Response Chart component 
-const PatientResponseChart = () => {
+const PatientResponseChart = ({ drugName }) => {
     // model response data
     const [modelResponseData, setModelResponseData] = useState([]);
     const [isLoading, setLoadingState] = useState(true);
@@ -58,7 +60,7 @@ const PatientResponseChart = () => {
     // fetch model response data
     const fetchData = async () => {
         // fetch model response data
-        const modelResponse = await axios.get(`/api/v1/modelresponse?drug=BGJ398`, HEADER);
+        const modelResponse = await axios.get(`/api/v1/modelresponse?drug=${drugName}`, HEADER);
 
         // transform model response data
         const transformedModelResponse = transformModelResponseData(modelResponse.data[0]);
@@ -98,3 +100,7 @@ const PatientResponseChart = () => {
 
 
 export default PatientResponseChart;
+
+PatientResponseChart.propTypes = {
+    drugName: PropTypes.string
+};

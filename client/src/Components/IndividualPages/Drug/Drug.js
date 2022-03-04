@@ -19,7 +19,6 @@ const Drug = (props) => {
     const [drugData, setDrugData] = useState({});
     const [isLoading, setLoadingState] = useState(true);
 
-
     // query to fetch the drug information data
     const fetchData = async () => {
         // get the drug information based on the drugId
@@ -50,7 +49,7 @@ const Drug = (props) => {
                             <div className='component-wrapper center-component'>
                                 <h1> {drugData.drug_name} </h1>
                                 <Annotation data={drugData} />
-                                <PatientResponseChart />
+                                <PatientResponseChart drugName={drugData.drug_name} />
                             </div>
                         )
                 }
