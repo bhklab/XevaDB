@@ -7,6 +7,7 @@ import BiomarkerSelect from './BiomarkerSelect';
 import colors from '../../styles/colors';
 import data from './data';
 
+
 // Biomarker styles
 const StyledBiomarker = styled.div`
     h1 {
@@ -24,14 +25,19 @@ const StyledBiomarker = styled.div`
 
 
 // Biomarker component
-const Biomarker = () => {
+const Biomarker = (props) => {
+    const { location } = props;
+    // get genes param
+    const params = new URLSearchParams(location.search);
+    const genes = params.get('genes');
+
     return (
         <StyledBiomarker>
             <GlobalStyles />
             <div className='wrapper'>
                 <div className='biomarker-wrapper'>
                     {/* <h1> Biomarker </h1> */}
-                    <BiomarkerSelect />
+                    <BiomarkerSelect genes={genes} />
                     <ForestPlot data={data.gctd} />
                 </div>
             </div>

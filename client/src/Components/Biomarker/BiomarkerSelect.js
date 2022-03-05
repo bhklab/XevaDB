@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import Select from 'react-select';
 import colors from '../../styles/colors';
@@ -26,7 +27,8 @@ const StyledSelect = styled.div`
     }
 `;
 
-const BiomarkerSelect = () => {
+const BiomarkerSelect = (props) => {
+    const { genes: geneProp } = props;
     const [drugs, setDrugs] = useState([]);
     const [genes, setGenes] = useState([]);
 
@@ -48,12 +50,12 @@ const BiomarkerSelect = () => {
     // function to get the gene data
     const getGenes = async function () {
         // API call to get the list of genes
-        const geneResponse = await axios.get('/api/v1/genes', { headers: { Authorization: localStorage.getItem('user') } });
+        const geneList = geneProp.split(',');
 
         // prepare data for gene selection
-        const geneSelectionData = geneResponse.data.data.map(el => ({
-            value: el.gene_id,
-            label: el.gene_name,
+        const geneSelectionData = geneList.map(gene => ({
+            value: gene,
+            label: gene,
         }));
 
         // setting the gene state
@@ -82,3 +84,8 @@ const BiomarkerSelect = () => {
 };
 
 export default BiomarkerSelect;
+
+
+BiomarkerSelect.propTypes = {
+    genes: PropTypes.string.isRequired
+};
