@@ -1021,7 +1021,7 @@ HeatMap.propTypes = {
     patientId: PropTypes.arrayOf(PropTypes.string).isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     className: PropTypes.string.isRequired,
-    geneList: PropTypes.arrayOf(PropTypes.string),
+    geneList: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default HeatMap;

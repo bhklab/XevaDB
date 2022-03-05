@@ -4,6 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Spinner from '../../Utils/Spinner';
 import HeatMap from './HeatMap';
+import { OncoprintGenes } from '../../../utils/OncoprintGenes';
 
 class HeatMapData extends React.Component {
     constructor(props) {
@@ -90,6 +91,7 @@ class HeatMapData extends React.Component {
             patientId, dimensions,
             margin, datasetParam,
         } = this.state;
+
         return (
             <div>
                 {loading ? <Spinner loading={loading} />
@@ -102,6 +104,7 @@ class HeatMapData extends React.Component {
                             margin={margin}
                             dataset={datasetParam}
                             className="heatmap"
+                            geneList={OncoprintGenes}
                         />
                     )}
             </div>
