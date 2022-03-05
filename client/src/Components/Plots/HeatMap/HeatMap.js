@@ -568,17 +568,17 @@ class HeatMap extends Component {
         const biomarkerImage = skeleton
             .append('g')
             .attr('id', 'biomarker-image')
-            .append('a')
-            .attr('xlink:href', `/biomarker?genes=${geneList.join(',')}`);
+
 
         biomarkerImage.selectAll('div')
             .data(drug)
-            .join('text')
+            .join('a')
+            .attr('xlink:href', (d) => `/biomarker?genes=${geneList.join(',')}&drug=${d}`)
+            .append('text')
             .text('🧬')
             .attr('x', -40)
             .attr('y', (d, i) => (i + 1.75) * rectHeight)
             .on('mouseover', function (d) {
-                console.log(d)
                 const tooltipDiv = tooltip
                     .style('visibility', 'visible')
                     .style('left', `${d3.event.pageX - 100}px`)
