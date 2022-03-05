@@ -29,6 +29,7 @@ const StyledSelect = styled.div`
 
 const BiomarkerSelect = (props) => {
     const { genes: geneProp } = props;
+    const { drug: drugProp } = props;
     const [drugs, setDrugs] = useState([]);
     const [genes, setGenes] = useState([]);
 
@@ -73,11 +74,18 @@ const BiomarkerSelect = (props) => {
         <StyledSelect className='biomarker-select' >
             <div className='drug-select'>
                 <span> Select Drug </span>
-                <Select styles={customStyles} options={drugs} />
+                <Select
+                    styles={customStyles}
+                    options={drugs}
+                    defaultValue={{ value: drugProp, label: drugProp }}
+                />
             </div>
             <div className='gene-select'>
                 <span> Select Gene </span>
-                <Select styles={customStyles} options={genes} />
+                <Select
+                    styles={customStyles}
+                    options={genes}
+                />
             </div>
         </StyledSelect >
     )
@@ -87,5 +95,6 @@ export default BiomarkerSelect;
 
 
 BiomarkerSelect.propTypes = {
-    genes: PropTypes.string.isRequired
+    genes: PropTypes.string.isRequired,
+    drug: PropTypes.string.isRequired
 };

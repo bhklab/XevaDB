@@ -30,6 +30,7 @@ const Biomarker = (props) => {
     // get genes param
     const params = new URLSearchParams(location.search);
     const genes = params.get('genes');
+    const drug = params.get('drug');
 
     return (
         <StyledBiomarker>
@@ -37,7 +38,7 @@ const Biomarker = (props) => {
             <div className='wrapper'>
                 <div className='biomarker-wrapper'>
                     {/* <h1> Biomarker </h1> */}
-                    <BiomarkerSelect genes={genes} />
+                    <BiomarkerSelect genes={genes} drug={drug} />
                     <ForestPlot data={data.gctd} />
                 </div>
             </div>
