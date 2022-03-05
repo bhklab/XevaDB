@@ -54,6 +54,7 @@ class HeatMap extends Component {
         const { className: plotId } = this.props;
         const { dataset } = this.props;
         const { responseValue: responseType } = this.state;
+        const { geneList } = this.props;
 
         // height and width for the SVG based on the number of drugs and patient/sample ids.
         // height and width of the rectangles in the main skeleton.
@@ -568,7 +569,7 @@ class HeatMap extends Component {
             .append('g')
             .attr('id', 'biomarker-image')
             .append('a')
-            .attr('xlink:href', '/biomarker');
+            .attr('xlink:href', `/biomarker?genes=${geneList.join(',')}`);
 
         biomarkerImage.selectAll('div')
             .data(drug)
@@ -576,7 +577,8 @@ class HeatMap extends Component {
             .text('🧬')
             .attr('x', -40)
             .attr('y', (d, i) => (i + 1.75) * rectHeight)
-            .on('mouseover', function () {
+            .on('mouseover', function (d) {
+                console.log(d)
                 const tooltipDiv = tooltip
                     .style('visibility', 'visible')
                     .style('left', `${d3.event.pageX - 100}px`)
@@ -1019,6 +1021,7 @@ HeatMap.propTypes = {
     patientId: PropTypes.arrayOf(PropTypes.string).isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     className: PropTypes.string.isRequired,
+    geneList: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default HeatMap;

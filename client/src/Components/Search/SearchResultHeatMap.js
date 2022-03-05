@@ -84,7 +84,9 @@ class SearchResultHeatMap extends React.Component {
             patientIdDrug, dimensions,
             margin,
         } = this.state;
-        const { datasetParam } = this.props;
+        const { datasetParam, geneParam } = this.props;
+        const geneList = geneParam.split(',');
+
         return (
             drugData.length > 0 ? (
                 <HeatMap
@@ -95,6 +97,7 @@ class SearchResultHeatMap extends React.Component {
                     margin={margin}
                     className="searchedheatmap"
                     dataset={datasetParam}
+                    geneList={geneList}
                 />
             ) : ''
         );
@@ -104,6 +107,7 @@ class SearchResultHeatMap extends React.Component {
 SearchResultHeatMap.propTypes = {
     datasetParam: PropTypes.string.isRequired,
     drugParam: PropTypes.string.isRequired,
+    geneParam: PropTypes.string.isRequired,
 };
 
 export default SearchResultHeatMap;

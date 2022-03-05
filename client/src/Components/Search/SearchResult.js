@@ -62,6 +62,7 @@ class SearchResult extends React.Component {
                             <SearchResultHeatMap
                                 drugParam={drugParam}
                                 datasetParam={datasetParam}
+                                geneParam={geneParam}
                             />
                             <SearchResultOncoprint
                                 geneParam={geneParam}
