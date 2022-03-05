@@ -573,7 +573,7 @@ class HeatMap extends Component {
         biomarkerImage.selectAll('div')
             .data(drug)
             .join('a')
-            .attr('xlink:href', (d) => `/biomarker?genes=${geneList.join(',')}&drug=${d}`)
+            .attr('xlink:href', (d) => geneList ? `/biomarker?genes=${geneList.join(',')}&drug=${d}` : `/biomarker?drug=${d}`)
             .append('text')
             .text('🧬')
             .attr('x', -40)
