@@ -806,7 +806,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
             // changing the text on y axis.
             if (val.match(/(volNorm|volNormText)/)) {
                 d3.select('#volume-text')
-                    .text('Normalized volume (mm³)');
+                    .text('Normalized volume');
             } else if (val.match(/(volRaw|volRawText)/)) {
                 d3.select('#volume-text')
                     .text('Volume (mm³)');
