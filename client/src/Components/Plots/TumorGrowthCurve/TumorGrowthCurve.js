@@ -901,7 +901,7 @@ const TumorGrowthCurve = (props) => {
             <div className="wrapper">
                 <div className="growth-curve-wrapper center-component">
                     <h1>
-                        Drug: <span style={{ color: `${colors.pink_header}` }}>{updateDrug(drugParam)}</span>
+                        Drug: <span style={{ color: `${colors.pink_header}` }}> {updateDrug(drugParam)} </span>
                         {' '}
                         and Patient:
                         {' '}
