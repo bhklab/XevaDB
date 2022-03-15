@@ -43,8 +43,8 @@ class CounterNav extends React.Component {
                 <GlobalStyles />
                 <CounterStyle>
                     {
-                        types.map((type) => (
-                            <Link to={type}>
+                        types.map((type, i) => (
+                            <Link to={type} key={i}>
                                 <CountUp
                                     start={0}
                                     end={eval(type)}
@@ -58,7 +58,7 @@ class CounterNav extends React.Component {
                         ))
                     }
                 </CounterStyle>
-            </div>
+            </div >
         );
     }
 }
