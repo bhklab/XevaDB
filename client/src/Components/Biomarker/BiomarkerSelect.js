@@ -13,7 +13,7 @@ const StyledSelect = styled.div`
     justify-content: flex-start;
     margin: 2% 5% 7.5% 10%;
     
-    .drug-select, .gene-select {
+    .drug-select, .gene-select, .genomics-select {
         width: 30%;
         margin: 15px;
     }
@@ -30,8 +30,21 @@ const StyledSelect = styled.div`
 const BiomarkerSelect = (props) => {
     const { genes: geneProp } = props;
     const { drug: drugProp } = props;
+    const { dataTypes: dataTypesProp } = props;
     const [drugs, setDrugs] = useState([]);
     const [genes, setGenes] = useState([]);
+    const [dataTypes, setDataTypes] = useState([]);
+
+    // function to prepare data type array for selection
+    const updateDataTypes = function () {
+        const updatedData = dataTypesProp.map(el => ({
+            value: el,
+            label: el,
+        }));
+
+        // setting the state
+        setDataTypes(updatedData);
+    };
 
     // function to get the drug data
     const getDrugs = async function () {
@@ -68,6 +81,8 @@ const BiomarkerSelect = (props) => {
         getDrugs();
         // calling getGenes function
         getGenes();
+        // update data types
+        updateDataTypes();
     }, []);
 
     return (
@@ -85,6 +100,13 @@ const BiomarkerSelect = (props) => {
                 <Select
                     styles={customStyles}
                     options={genes}
+                />
+            </div>
+            <div className='genomics-select'>
+                <span> Select Genomics </span>
+                <Select
+                    styles={customStyles}
+                    options={dataTypes}
                 />
             </div>
         </StyledSelect >

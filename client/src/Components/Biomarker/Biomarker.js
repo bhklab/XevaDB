@@ -23,6 +23,22 @@ const StyledBiomarker = styled.div`
     }
 `;
 
+/**
+ * 
+ * @param {Array} data - array of input data
+ */
+const getAllDataTypes = (data) => {
+    // variable to store the different data types.
+    const dataTypes = [];
+    // looping through and storing the data type if it's not already present.
+    data.forEach(el => {
+        if (!dataTypes.includes(el.mDataType)) {
+            dataTypes.push(el.mDataType);
+        }
+    });
+    return dataTypes;
+};
+
 
 // Biomarker component
 const Biomarker = (props) => {
@@ -31,6 +47,7 @@ const Biomarker = (props) => {
     const params = new URLSearchParams(location.search);
     const genes = params.get('genes');
     const drug = params.get('drug');
+    const mDataTypes = getAllDataTypes(data.gctd);
 
     return (
         <StyledBiomarker>
@@ -38,7 +55,7 @@ const Biomarker = (props) => {
             <div className='wrapper'>
                 <div className='biomarker-wrapper'>
                     {/* <h1> Biomarker </h1> */}
-                    <BiomarkerSelect genes={genes} drug={drug} />
+                    <BiomarkerSelect genes={genes} drug={drug} dataTypes={mDataTypes} />
                     <ForestPlot data={data.gctd} />
                 </div>
             </div>
