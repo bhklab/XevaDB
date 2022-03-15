@@ -90,17 +90,17 @@ const updateData = (data, isAnalytic) => {
  * @param {Array} data
  * @returns {Array} - of different data types. 
  */
-const getAllDataTypes = (data) => {
-    // variable to store the different data types.
-    const dataTypes = [];
-    // looping through and storing the data type if it's not already present.
-    data.forEach(el => {
-        if (!dataTypes.includes(el.mDataType)) {
-            dataTypes.push(el.mDataType);
-        }
-    });
-    return dataTypes;
-};
+// const getAllDataTypes = (data) => {
+//     // variable to store the different data types.
+//     const dataTypes = [];
+//     // looping through and storing the data type if it's not already present.
+//     data.forEach(el => {
+//         if (!dataTypes.includes(el.mDataType)) {
+//             dataTypes.push(el.mDataType);
+//         }
+//     });
+//     return dataTypes;
+// };
 
 /**
  * data based on the default molecular type.
@@ -488,33 +488,33 @@ const createLegend = (svg, height, width) => {
  * 
  * @param {Array} mDataTypes - an array of mDataTypes.
  */
-const createSelectionOptions = (mDataTypes, data, molecularType, setMolecularType) => {
-    // options for the selection.
-    d3.select('.select')
-        .selectAll('option')
-        .data(mDataTypes)
-        .enter()
-        .append('option')
-        .text((d) => d)
-        .attr('value', (d) => d);
+// const createSelectionOptions = (mDataTypes, data, molecularType, setMolecularType) => {
+//     // options for the selection.
+//     d3.select('.select')
+//         .selectAll('option')
+//         .data(mDataTypes)
+//         .enter()
+//         .append('option')
+//         .text((d) => d)
+//         .attr('value', (d) => d);
 
-    // on change event handler on selection.
-    d3.select('.select').on('change', function () {
-        // selection.
-        const selection = d3.select(this).property('value');
+//     // on change event handler on selection.
+//     d3.select('.select').on('change', function () {
+//         // selection.
+//         const selection = d3.select(this).property('value');
 
-        // update molecular type.
-        setMolecularType(selection);
+//         // update molecular type.
+//         setMolecularType(selection);
 
-        // create the filtered data based on the selection.
-        const filteredData = createFilteredData(data, selection);
+//         // create the filtered data based on the selection.
+//         const filteredData = createFilteredData(data, selection);
 
-        // remove the already drawn forest plot with it's id.
-        d3.select(`#${CANVAS_ID}`).remove();
+//         // remove the already drawn forest plot with it's id.
+//         d3.select(`#${CANVAS_ID}`).remove();
 
-        createForestPlot(margin, 350, width, filteredData);
-    });
-};
+//         createForestPlot(margin, 350, width, filteredData);
+//     });
+// };
 
 /**
  * Main function to create the forest plot.
@@ -591,7 +591,7 @@ const ForestPlot = ({ height, width, margin, data }) => {
     const updatedData = updateData(data, isAnalytic);
 
     // get all the data types available in the data.
-    const mDataTypes = getAllDataTypes(updatedData);
+    // const mDataTypes = getAllDataTypes(updatedData);
 
     useEffect(() => {
         // remove the svg canvas.
@@ -601,7 +601,7 @@ const ForestPlot = ({ height, width, margin, data }) => {
         createToolTip(`${TOOLTIP_ID}`);
 
         // create selection options.
-        createSelectionOptions(mDataTypes, updatedData, molecularType, setMolecularType);
+        // createSelectionOptions(mDataTypes, updatedData, molecularType, setMolecularType);
 
         // create forest plot.
         createForestPlot(margin, height, width, updatedData);
@@ -609,7 +609,7 @@ const ForestPlot = ({ height, width, margin, data }) => {
 
     return (
         <StyledForestPlot>
-            <div style={{ position: 'relative' }}>
+            {/* <div style={{ position: 'relative' }}>
                 <select
                     className='select'
                     id='selection'
@@ -627,7 +627,7 @@ const ForestPlot = ({ height, width, margin, data }) => {
                         border: `1px solid ${colors.blue_header}`,
                     }}
                 />
-            </div>
+            </div> */}
             <div id='forestplot' />
             <div id='forestplot-tooltip' />
         </StyledForestPlot>
