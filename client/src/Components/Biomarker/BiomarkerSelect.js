@@ -64,13 +64,24 @@ const BiomarkerSelect = (props) => {
     // function to get the gene data
     const getGenes = async function () {
         // API call to get the list of genes
-        const geneList = geneProp.split(',');
+        let geneList = [];
+        let geneSelectionData = [];
 
-        // prepare data for gene selection
-        const geneSelectionData = geneList.map(gene => ({
-            value: gene,
-            label: gene,
-        }));
+        if (geneProp) {
+            geneList = geneProp.split(',');
+
+            geneSelectionData = geneList.map(gene => ({
+                value: gene,
+                label: gene,
+            }));
+        } else {
+            geneList = await (await axios.get('/api/v1/genes', { headers: { Authorization: localStorage.getItem('user') } })).data.data;
+
+            geneSelectionData = geneList.map(gene => ({
+                value: gene.gene_name,
+                label: gene.gene_name,
+            }));
+        }
 
         // setting the gene state
         setGenes(geneSelectionData);
@@ -92,7 +103,7 @@ const BiomarkerSelect = (props) => {
                 <Select
                     styles={customStyles}
                     options={drugs}
-                    defaultValue={{ value: drugProp, label: drugProp }}
+                    defaultValue={drugProp ? { value: drugProp, label: drugProp } : ''}
                 />
             </div>
             <div className='gene-select'>
@@ -117,6 +128,7 @@ export default BiomarkerSelect;
 
 
 BiomarkerSelect.propTypes = {
-    genes: PropTypes.string.isRequired,
-    drug: PropTypes.string.isRequired
+    genes: PropTypes.string,
+    drug: PropTypes.string,
+    dataTypes: PropTypes.arrayOf(PropTypes.string),
 };
