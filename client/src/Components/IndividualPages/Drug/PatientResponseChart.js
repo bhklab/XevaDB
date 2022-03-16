@@ -48,7 +48,8 @@ const PatientResponseChart = ({ drugName }) => {
             if (element !== 'Drug' && data[element].mRECIST !== 'NA') {
                 transformedArray.push({
                     id: element,
-                    value: mRECISTMapper[data[element].mRECIST],
+                    // value: mRECISTMapper[data[element].mRECIST],
+                    value: data[element].mRECIST,
                     color: mRECISTColorMapper[data[element].mRECIST],
                 })
             };
@@ -92,6 +93,7 @@ const PatientResponseChart = ({ drugName }) => {
                 <BarPlot
                     data={modelResponseData}
                     label="Model Response"
+                    yAxisTicks={['PD', 'SD', 'PR', 'CR']}
                 />
             </StyledChart>
         )
