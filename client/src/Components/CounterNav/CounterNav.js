@@ -34,10 +34,8 @@ class CounterNav extends React.Component {
 
 
     render() {
-        const {
-            datasets, tissues, patients,
-            drugs, models, types,
-        } = this.state;
+        const { types } = this.state;
+
         return (
             <div>
                 <GlobalStyles />
@@ -47,7 +45,7 @@ class CounterNav extends React.Component {
                             <Link to={type} key={i}>
                                 <CountUp
                                     start={0}
-                                    end={eval(type)}
+                                    end={this.state[type]}
                                     duration={3}
                                     useEasing
                                 />
