@@ -69,8 +69,17 @@ const createXScale = (width, data) => {
 const createYScale = (height, max) => {
     const scale = d3.scaleLinear()
         .domain([0, max])
+        .range([height, 0]);
+
+    return scale;
+};
+
+// if the bar plot y axis need text discription
+const createYScaleWithText = (height, yAxisTicks) => {
+    const scale = d3.scalePoint()
+        .domain(yAxisTicks)
         .range([height, 0])
-        .nice();
+        .padding(0.5);
 
     return scale;
 };
@@ -104,8 +113,8 @@ const createXAxis = (svg, xScale, height) => {
 // create y axis for the plot
 const createYAxis = (svg, yScale) => {
     const axis = d3.axisLeft()
-        .scale(yScale)
-        .ticks(7);
+        .scale(yScale);
+    // .ticks(7);
 
     svg.append('g')
         .call(axis)
@@ -161,6 +170,7 @@ const BarPlot = (props) => {
     const { left, right, top, bottom } = margin;
     const yAxisLabel = props.label;
     const dimensions = props.dimensions || { ...defaultDimensions };
+    const { yAxisTicks } = props;
 
     // update dimensions
     if (minBarWidth * data.length > dimensions.width) {
@@ -188,8 +198,9 @@ const BarPlot = (props) => {
 
         // scales and axis.
         const xScale = createXScale(width, data);
-        const yScale = createYScale(height, max);
+        const yScale = yAxisTicks ? createYScaleWithText(height, yAxisTicks) : createYScale(height, max);
         const color = colorScale(data, colorList);
+
         createXAxis(svg, xScale, height);
         createYAxis(svg, yScale);
 
@@ -227,6 +238,7 @@ BarPlot.propTypes = {
     }),
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     label: PropTypes.string.isRequired,
+    yAxisTicks: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default BarPlot;
