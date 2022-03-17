@@ -171,6 +171,7 @@ const BarPlot = (props) => {
     const yAxisLabel = props.label;
     const dimensions = props.dimensions || { ...defaultDimensions };
     const { yAxisTicks } = props;
+    const { shouldAppendBarText } = props;
 
     // update dimensions
     if (minBarWidth * data.length > dimensions.width) {
@@ -205,7 +206,9 @@ const BarPlot = (props) => {
         createYAxis(svg, yScale);
 
         // append text.
-        appendBarText(svg, data, xScale, yScale);
+        if (shouldAppendBarText) {
+            appendBarText(svg, data, xScale, yScale);
+        };
 
         // create bars.
         createBars(svg, data, xScale, yScale, height, color);
@@ -239,6 +242,7 @@ BarPlot.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     label: PropTypes.string.isRequired,
     yAxisTicks: PropTypes.arrayOf(PropTypes.string),
+    shouldAppendBarText: PropTypes.bool,
 };
 
 export default BarPlot;

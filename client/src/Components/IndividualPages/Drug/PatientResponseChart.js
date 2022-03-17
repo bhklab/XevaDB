@@ -111,6 +111,7 @@ const PatientResponseChart = ({ drugName }) => {
                     data={modelResponseData}
                     label="Model Response"
                     yAxisTicks={mRECISTTypes}
+                    shouldAppendBarText={false}
                 // yAxisTicks={['PD', 'SD', 'PR', 'CR']}
                 />
             </StyledChart>
