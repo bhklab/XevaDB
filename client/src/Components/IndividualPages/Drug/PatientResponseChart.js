@@ -32,31 +32,45 @@ const StyledChart = styled.div`
 const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
 
 
+// transform model response data
+const transformModelResponseData = (data) => {
+    // transformed object
+    const transformedArray = [];
+
+    // iterate through data and add an object to transformed Array
+    Object.keys(data).forEach(element => {
+        if (element !== 'Drug' && data[element].mRECIST !== 'NA') {
+            transformedArray.push({
+                id: element,
+                // value: mRECISTMapper[data[element].mRECIST],
+                value: data[element].mRECIST,
+                color: mRECISTColorMapper[data[element].mRECIST],
+            })
+        };
+    });
+
+    return transformedArray;
+};
+
+
+// function to create mRECIST types
+const mRECISTArray = (data) => {
+    const mRECISTDataArray = [];
+    Object.values(data).forEach(el => {
+        if (el.mRECIST && !mRECISTDataArray.includes(el.mRECIST)) {
+            mRECISTDataArray.push(el.mRECIST)
+        }
+    });
+    return mRECISTDataArray;
+};
+
+
 // Patient Response Chart component 
 const PatientResponseChart = ({ drugName }) => {
     // model response data
     const [modelResponseData, setModelResponseData] = useState([]);
+    const [mRECISTTypes, setmRECISTTypes] = useState([]);
     const [isLoading, setLoadingState] = useState(true);
-
-    // transform model response data
-    const transformModelResponseData = (data) => {
-        // transformed object
-        const transformedArray = [];
-
-        // iterate through data and add an object to transformed Array
-        Object.keys(data).forEach(element => {
-            if (element !== 'Drug' && data[element].mRECIST !== 'NA') {
-                transformedArray.push({
-                    id: element,
-                    // value: mRECISTMapper[data[element].mRECIST],
-                    value: data[element].mRECIST,
-                    color: mRECISTColorMapper[data[element].mRECIST],
-                })
-            };
-        });
-
-        return transformedArray;
-    };
 
     // fetch model response data
     const fetchData = async () => {
@@ -65,6 +79,9 @@ const PatientResponseChart = ({ drugName }) => {
 
         // transform model response data
         const transformedModelResponse = transformModelResponseData(modelResponse.data[0]);
+
+        // get the mRECIST array and set the state
+        setmRECISTTypes(mRECISTArray(modelResponse.data[0]));
 
         // set the model response data
         setModelResponseData(transformedModelResponse);
@@ -93,7 +110,8 @@ const PatientResponseChart = ({ drugName }) => {
                 <BarPlot
                     data={modelResponseData}
                     label="Model Response"
-                    yAxisTicks={['PD', 'SD', 'PR', 'CR']}
+                    yAxisTicks={mRECISTTypes}
+                // yAxisTicks={['PD', 'SD', 'PR', 'CR']}
                 />
             </StyledChart>
         )
@@ -104,5 +122,5 @@ const PatientResponseChart = ({ drugName }) => {
 export default PatientResponseChart;
 
 PatientResponseChart.propTypes = {
-    drugName: PropTypes.string
+    drugName: PropTypes.string,
 };

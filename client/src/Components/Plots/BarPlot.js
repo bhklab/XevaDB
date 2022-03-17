@@ -79,7 +79,7 @@ const createYScaleWithText = (height, yAxisTicks) => {
     const scale = d3.scalePoint()
         .domain(yAxisTicks)
         .range([height, 0])
-        .padding(0.5);
+        .padding(1);
 
     return scale;
 };
