@@ -9,13 +9,6 @@ import Select from 'react-select';
 import styled from 'styled-components';
 import { customStyles } from '../../Search/SearchStyle';
 
-// options for select 
-const options = [
-    { value: 'mRECIST', label: 'mRECIST' },
-    { value: 'Slope', label: 'Slope' },
-    { value: 'Best Average Response', label: 'Best Average Response' },
-    { value: 'AUC', label: 'AUC' }
-]
 
 // styling Patient Response Chart
 const StyledChart = styled.div`
@@ -31,6 +24,18 @@ const StyledChart = styled.div`
 // header constant
 const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
 
+// options for select 
+const options = [
+    { value: 'mRECIST', label: 'mRECIST' },
+    { value: 'Slope', label: 'Slope' },
+    { value: 'Best Average Response', label: 'Best Average Response' },
+    { value: 'AUC', label: 'AUC' }
+]
+
+// margin object to be passed as a prop to BarPlot component
+const margin = {
+    top: 50, right: 150, bottom: 50, left: 100,
+};
 
 // transform model response data
 const transformModelResponseData = (data) => {
@@ -112,6 +117,7 @@ const PatientResponseChart = ({ drugName }) => {
                     label="Model Response"
                     yAxisTicks={mRECISTTypes}
                     shouldAppendBarText={false}
+                    margin={margin}
                 // yAxisTicks={['PD', 'SD', 'PR', 'CR']}
                 />
             </StyledChart>
