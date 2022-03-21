@@ -6,6 +6,11 @@ import Footer from '../../Footer/Footer';
 import Annotation from './Annotation';
 import PatientResponseChart from './PatientResponseChart';
 
+// h4 style
+const h4Style = {
+    margin: '10px 0px 125px 0px', color: 'black', fontWeight: 200
+};
+
 // header constant
 const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
 
@@ -50,6 +55,7 @@ const Drug = (props) => {
                                 <h1> {drugData.drug_name} </h1>
                                 <Annotation data={drugData} />
                                 <PatientResponseChart drugName={drugData.drug_name} />
+                                <h4 style={h4Style}> Patient </h4>
                             </div>
                         )
                 }
