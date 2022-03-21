@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import styled from 'styled-components';
+import colors from '../../styles/colors';
 
 // bar plot styles
 const StyledBarPlot = styled.div`
@@ -135,6 +136,21 @@ const createBars = (svg, data, xScale, yScale, height, color) => {
         .attr('fill', (d) => d.color || color(d.id));
 };
 
+// create circles
+const createCircles = (svg, data, xScale, yScale, height, color) => {
+    svg.selectAll('bars')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('cx', (d) => xScale(d.id))
+        .attr('cy', (d) => yScale(d.value))
+        .attr('r', 7.5)
+        .attr('id', (d) => `circle_${d.id}`)
+        .attr('fill', `${colors.pink_header}`)
+        .attr('stroke', `${colors.pink_header}`)
+        .attr('stroke-width', 1);
+};
+
 // append text with values on the top of bars
 const appendBarText = (svg, data, xScale, yScale) => {
     data.forEach((element) => {
@@ -171,7 +187,7 @@ const BarPlot = (props) => {
     const yAxisLabel = props.label;
     const dimensions = props.dimensions || { ...defaultDimensions };
     const { yAxisTicks } = props;
-    const { shouldAppendBarText } = props;
+    const { shouldAppendBarText, isScatter } = props;
 
     // update dimensions
     if (minBarWidth * data.length > dimensions.width) {
@@ -211,7 +227,11 @@ const BarPlot = (props) => {
         };
 
         // create bars.
-        createBars(svg, data, xScale, yScale, height, color);
+        if (isScatter) {
+            createCircles(svg, data, xScale, yScale, height, color);
+        } else {
+            createBars(svg, data, xScale, yScale, height, color);
+        };
 
         // append y-axis test/label.
         appendYAxisLabel(svg, height, left, yAxisLabel);
@@ -243,6 +263,7 @@ BarPlot.propTypes = {
     label: PropTypes.string.isRequired,
     yAxisTicks: PropTypes.arrayOf(PropTypes.string),
     shouldAppendBarText: PropTypes.bool,
+    isScatter: PropTypes.bool,
 };
 
 export default BarPlot;

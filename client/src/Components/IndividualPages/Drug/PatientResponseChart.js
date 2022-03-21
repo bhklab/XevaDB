@@ -62,7 +62,7 @@ const transformModelResponseData = (data) => {
 const mRECISTArray = (data) => {
     const mRECISTDataArray = [];
     Object.values(data).forEach(el => {
-        if (el.mRECIST && !mRECISTDataArray.includes(el.mRECIST)) {
+        if (el.mRECIST && !mRECISTDataArray.includes(el.mRECIST) && el.mRECIST !== 'NA') {
             mRECISTDataArray.push(el.mRECIST)
         }
     });
@@ -118,6 +118,7 @@ const PatientResponseChart = ({ drugName }) => {
                     yAxisTicks={mRECISTTypes}
                     shouldAppendBarText={false}
                     margin={margin}
+                    isScatter={true}
                 // yAxisTicks={['PD', 'SD', 'PR', 'CR']}
                 />
             </StyledChart>
