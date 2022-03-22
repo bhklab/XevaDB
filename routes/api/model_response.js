@@ -103,7 +103,7 @@ const transformData = (input) => {
     let finalData = Object.values(data);
 
     // only if the control object is present at a location greater than 1
-    if (controlIndex > 0) {
+    if (controlIndex > 0 && controlIndex !== -1) {
         // gets the control data
         const controlData = Object.values(data)[controlIndex];
 
