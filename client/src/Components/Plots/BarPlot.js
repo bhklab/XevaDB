@@ -142,7 +142,7 @@ const createCircles = (svg, data, xScale, yScale, height, color) => {
         .data(data)
         .enter()
         .append('circle')
-        .attr('cx', (d) => xScale(d.id))
+        .attr('cx', (d) => xScale(d.id) + 20)
         .attr('cy', (d) => yScale(d.value))
         .attr('r', 7.5)
         .attr('id', (d) => `circle_${d.id}`)
