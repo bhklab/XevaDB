@@ -70,52 +70,49 @@ const modelResponseStatsQuery = () => knex.select()
 
 // ************************************** Transform Functions *************************************************
 /**
- * @param {Object} row - model response data.
+ * @param {Object} input - model response data.
  * @returns {Array} - returns the transformed response data in array format.
  */
-const transformData = (row) => {
-    // variables.
-    let drug = '';
-    let value = 0;
-    const data = [];
-    const untreatedObject = {};
+const transformData = (input) => {
+    // final transformed data
+    const data = {};
 
-    row.forEach((element) => {
-        // if the value is not present assign it NA.
-        if (element.value === '') {
-            element.value = 'NA';
-        }
-        // creating final data object.
-        if (element.drug_name === drug) {
-            if (!(element.patient in data[value - 1])) {
-                data[value - 1][element.patient] = {};
-            }
-            data[value - 1][element.patient][element.response_type] = element.value;
-        } else if (element.drug_name.match(/(^untreated$|^water$|^control$|^h2o$)/i)) {
-            if (!untreatedObject[element.drug_name]) {
-                untreatedObject[element.drug_name] = {};
-                untreatedObject[element.drug_name].Drug = element.drug_name;
-            }
-            if (!(element.patient in untreatedObject[element.drug_name])) {
-                untreatedObject[element.drug_name][element.patient] = {};
-            }
-            untreatedObject[element.drug_name][element.patient][element.response_type] = element.value;
+    // loop through the data and prepare the final data object
+    input.forEach((row) => {
+        // if the data object doesn't have drug property then add one with the object
+        if (!data.hasOwnProperty(row.drug_name)) {
+            data[row.drug_name] = {
+                Drug: row.drug_name,
+            };
+        };
+
+        // checks for the patient object in the corresponding drug Object
+        if (data[row.drug_name].hasOwnProperty(row.patient)) {
+            data[row.drug_name][row.patient][row.response_type] = (row.value === '' ? 'NA' : row.value);
         } else {
-            drug = element.drug_name;
-            data.push({});
-            data[value].Drug = element.drug_name;
-            if (!(element.patient in data[value])) {
-                data[value][element.patient] = {};
-            }
-            data[value][element.patient][element.response_type] = element.value;
-            value += 1;
-        }
+            data[row.drug_name][row.patient] = {
+                [row.response_type]: (row.value === '' ? 'NA' : row.value),
+            };
+        };
     });
 
-    Object.values(untreatedObject).forEach(element => {
-        data.unshift(element);
-    })
-    return data;
+    // find index of the drug object that matches either untreated, water, control or H20
+    const controlIndex = Object.keys(data).findIndex(el => el.match(/(^untreated$|^water$|^control$|^h2o$)/i));
+
+    // final data; taking the values from data object
+    let finalData = Object.values(data);
+
+    // only if the control object is present at a location greater than 1
+    if (controlIndex > 0) {
+        // gets the control data
+        const controlData = Object.values(data)[controlIndex];
+
+        // remove the data at index returned by controlIndex and add controlObject at the start of the data
+        finalData.splice(controlIndex, 1);
+        finalData.unshift(controlData);
+    };
+
+    return finalData;
 };
 
 // ************************************** API Endpoints Functions ***************************************************
