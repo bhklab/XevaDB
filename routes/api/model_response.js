@@ -79,20 +79,23 @@ const transformData = (input) => {
 
     // loop through the data and prepare the final data object
     input.forEach((row) => {
-        // if the data object doesn't have drug property then add one with the object
+        // if the data object doesn't have 'drug property' then add one with the object
         if (!data.hasOwnProperty(row.drug_name)) {
             data[row.drug_name] = {
                 Drug: row.drug_name,
             };
         };
 
-        // checks for the patient object in the corresponding drug Object
-        if (data[row.drug_name].hasOwnProperty(row.patient)) {
-            data[row.drug_name][row.patient][row.response_type] = (row.value === '' ? 'NA' : row.value);
+        // if the data drug object doesn't have the 'patient property' then add one and assign it to an empty object
+        if (!data[row.drug_name].hasOwnProperty(row.patient)) {
+            data[row.drug_name][row.patient] = {};
+        };
+
+        // checks for the response type and push the corresponding data
+        if (data[row.drug_name][row.patient][row.response_type]) {
+            data[row.drug_name][row.patient][row.response_type].push(row.value === '' ? 'NA' : row.value);
         } else {
-            data[row.drug_name][row.patient] = {
-                [row.response_type]: (row.value === '' ? 'NA' : row.value),
-            };
+            data[row.drug_name][row.patient][row.response_type] = [row.value === '' ? 'NA' : row.value];
         };
     });
 
