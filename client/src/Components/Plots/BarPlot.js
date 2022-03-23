@@ -59,7 +59,7 @@ const createSvg = (width, height, left, right, top, bottom) => {
 // x scale for the plot
 const createXScale = (width, data) => {
     const scale = d3.scaleBand()
-        .domain(data.map((d) => d.id))
+        .domain([...new Set(data.map((d) => d.id))])
         .range([0, width])
         .padding([0.3]);
 
@@ -190,8 +190,9 @@ const BarPlot = (props) => {
     const { shouldAppendBarText, isScatter } = props;
 
     // update dimensions
-    if (minBarWidth * data.length > dimensions.width) {
-        dimensions.width = minBarWidth * data.length;
+    const dataLength = [...new Set(data.map(el => el.id))].length;
+    if (minBarWidth * dataLength > dimensions.width) {
+        dimensions.width = minBarWidth * dataLength;
     };
     const { width, height } = dimensions;
 
