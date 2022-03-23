@@ -38,19 +38,21 @@ const margin = {
 };
 
 // transform model response data
-const transformModelResponseData = (data) => {
+const transformModelResponseData = (data, responseType) => {
     // transformed object
     const transformedArray = [];
 
     // iterate through data and add an object to transformed Array
     Object.keys(data).forEach(element => {
-        if (element !== 'Drug' && data[element].mRECIST !== 'NA') {
-            transformedArray.push({
-                id: element,
-                // value: mRECISTMapper[data[element].mRECIST],
-                value: data[element].mRECIST,
-                color: mRECISTColorMapper[data[element].mRECIST],
-            })
+        if (element !== 'Drug' && data[element][responseType] !== 'NA') {
+            data[element][responseType].forEach(response => {
+                transformedArray.push({
+                    id: element,
+                    // value: mRECISTMapper[data[element].mRECIST],
+                    value: response,
+                    // color: mRECISTColorMapper[response],
+                });
+            });
         };
     });
 
@@ -62,9 +64,13 @@ const transformModelResponseData = (data) => {
 const mRECISTArray = (data) => {
     const mRECISTDataArray = [];
     Object.values(data).forEach(el => {
-        if (el.mRECIST && !mRECISTDataArray.includes(el.mRECIST) && el.mRECIST !== 'NA') {
-            mRECISTDataArray.push(el.mRECIST)
-        }
+        if (typeof (el) === 'object') {
+            el.mRECIST.forEach(response => {
+                if (response && !mRECISTDataArray.includes(response) && response !== 'NA') {
+                    mRECISTDataArray.push(response)
+                }
+            });
+        };
     });
     return mRECISTDataArray;
 };
@@ -76,6 +82,7 @@ const PatientResponseChart = ({ drugName }) => {
     const [modelResponseData, setModelResponseData] = useState([]);
     const [mRECISTTypes, setmRECISTTypes] = useState([]);
     const [isLoading, setLoadingState] = useState(true);
+    const [selectionValue, setSelectionValue] = useState('mRECIST');
 
     // fetch model response data
     const fetchData = async () => {
@@ -83,7 +90,7 @@ const PatientResponseChart = ({ drugName }) => {
         const modelResponse = await axios.get(`/api/v1/modelresponse?drug=${drugName.replace(/\s/g, '').replace('+', '_')}`, HEADER);
 
         // transform model response data
-        const transformedModelResponse = transformModelResponseData(modelResponse.data[0]);
+        const transformedModelResponse = transformModelResponseData(modelResponse.data[0], selectionValue);
 
         // get the mRECIST array and set the state
         setmRECISTTypes(mRECISTArray(modelResponse.data[0]));
@@ -110,6 +117,7 @@ const PatientResponseChart = ({ drugName }) => {
                     <Select
                         options={options}
                         styles={customStyles}
+                        defaultInputValue={selectionValue}
                     />
                 </div>
                 <BarPlot
