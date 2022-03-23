@@ -147,7 +147,7 @@ class SearchResultOncoprint extends React.Component {
             dataCnv: data.data_cnv || dataCnv,
             dimensions: { height: 30, width: 15 },
             margin: {
-                top: 50, right: 250, bottom: 220, left: 250,
+                top: 50, right: 250, bottom: 150, left: 250,
             },
             loading: true,
         });
@@ -184,7 +184,9 @@ class SearchResultOncoprint extends React.Component {
             } else if (error) {
                 return <Error />;
             } else {
-                data = (<div className="oprint-wrapper"><Spinner loading={loading} /></div>);
+                data = (
+                    <div><Spinner loading={loading} /></div>
+                );
             }
             return data;
         }

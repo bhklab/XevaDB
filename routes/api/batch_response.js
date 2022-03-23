@@ -1,7 +1,9 @@
 const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
+const { batchIdQuery } = require('./batch');
 
 
+// ************************************** API Endpoints Functions ***************************************************
 /**
  * @param {Object} request - request object.
  * @param {string} request.query.drug - query drug parameter.
@@ -18,23 +20,7 @@ const getBatchResponseStatsBasedOnDrugAndPatient = (request, response) => {
     const patientParam = request.query.patient;
 
     // grabs the batch id based on the patient id and drug param passed.
-    const batchId = knex.select('batch_id', 'model_information.dataset_id')
-        .from('model_information')
-        .leftJoin(
-            'patients',
-            'model_information.patient_id',
-            'patients.patient_id',
-        )
-        .leftJoin(
-            'drugs',
-            'model_information.drug_id',
-            'drugs.drug_id',
-        )
-        .leftJoin(
-            'batch_information',
-            'batch_information.model_id',
-            'model_information.model_id',
-        )
+    const batchId = batchIdQuery()
         .where('patients.patient', patientParam)
         .andWhere('drugs.drug_name', drugParam);
 

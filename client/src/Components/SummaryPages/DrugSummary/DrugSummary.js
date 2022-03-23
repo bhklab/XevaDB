@@ -22,13 +22,13 @@ class DrugSummary extends React.Component {
     componentDidMount() {
         const newValues = [];
         // passing on token as the header to the api call.
-        axios.get('/api/v1/models/groupbydrugclass', { headers: { Authorization: localStorage.getItem('user') } })
+        axios.get('/api/v1/models/count/groupbydrugclass', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 response.data.data.forEach((data) => {
                     const value = {};
                     if (String(data.class_name) !== 'null') {
                         value.id = (data.class_name).replace('"', '').replace('/', '_');
-                        value.value = data.model_ids;
+                        value.value = data.modelCount;
                         newValues.push(value);
                     }
                 });
@@ -55,7 +55,7 @@ class DrugSummary extends React.Component {
             <div>
                 <GlobalStyles />
                 <div className="wrapper">
-                    <div className="donut-wrapper">
+                    <div className="component-wrapper center-component">
                         <h1> Number of Models per Drug Class </h1>
                         {
                             loading ? <Spinner loading={loading} />
@@ -71,7 +71,7 @@ class DrugSummary extends React.Component {
                                 )
                         }
                     </div>
-                    <div className="summary-table">
+                    <div className="component-wrapper center-component">
                         <DrugTable />
                     </div>
                     <Footer />

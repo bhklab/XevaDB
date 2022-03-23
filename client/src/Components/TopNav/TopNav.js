@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import { HeaderStyle, LogoStyle, LinkStyle } from './NavStyle';
+import { HeaderStyle, LogoStyle } from './NavStyle';
 import logo from '../../images/new_logo.png';
 
 class TopNav extends React.Component {
@@ -35,28 +35,32 @@ class TopNav extends React.Component {
         const { isLink, isLogged } = this.state;
         return (
             <HeaderStyle>
-                <Link to="/">
-                    <LogoStyle src={logo} alt="logo" />
-                </Link>
-                <LinkStyle>
-                    {/* <Link to="/"> Home </Link> */}
+                <div className='logo'>
+                    <Link to="/">
+                        <LogoStyle src={logo} alt="logo" />
+                    </Link>
+                </div>
+                <div className='nav-links'>
+                    <Link to="/biomarker"> Biomarker </Link>
                     <Link to="/datasets"> Datasets </Link>
                     <Link to="/drugs"> Drugs </Link>
                     <Link to="/patients"> Patients </Link>
                     <Link to="/tissues"> Tissues </Link>
                     <Link to="/doc"> Documentation </Link>
-                    <Link to={`${isLink}`}>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={this.isLoggedIn}
-                        >
-                            {isLogged}
-                        </Button>
-                    </Link>
-                </LinkStyle>
+                    <div className='login-button'>
+                        <Link to={`${isLink}`}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                onClick={this.isLoggedIn}
+                            >
+                                {isLogged}
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
             </HeaderStyle>
         );
     }

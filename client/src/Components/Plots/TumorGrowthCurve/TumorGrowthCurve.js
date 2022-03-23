@@ -3,7 +3,6 @@
 /* eslint-disable func-names */
 /* eslint-disable no-extend-native */
 /* eslint-disable class-methods-use-this */
-/* eslint-disable no-plusplus */
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Link } from 'react-router-dom';
@@ -15,7 +14,7 @@ import ExportPng from '../../Utils/ExportPng';
 import DoseCurve from '../DoseChart';
 
 // this will initialize a tooltip.
-const initializeToolTop = () => d3.select('.wrapper')
+const initializeToolTip = () => d3.select('.wrapper')
     .append('div')
     .style('position', 'absolute')
     .style('visibility', 'hidden')
@@ -50,7 +49,7 @@ const createToolTip = (d, type, tooltip) => {
         ];
     } else if (type === 'dot') {
         tooltipData = [
-            `Time: ${d.time} days`, `Volume: ${d.volume} mm³`,
+            `Time: ${d.time} days`, `Volume: ${d.volume} mm³`, `Model: ${d.model}`, `Type: ${d.exp_type}`
         ];
     }
     // append the data.
@@ -382,6 +381,9 @@ const tumorCurve = (data, plotId, minmax) => {
 
 // plot the mean of each experiment type (control, treatment)
 const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) => {
+    // tooltip
+    const tooltip = initializeToolTip();
+
     // calling getUnionOfTimepoints to get all the timepoints.
     const timeUnion = getUnionOfTimepoints(data);
     let expTypes = [];
@@ -463,7 +465,17 @@ const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) 
                     }
                     return `${colors.moderate_blue}`;
                 })
-                .attr('stroke-width', 3.5);
+                .attr('stroke-width', 3.5)
+                .on('mouseover', function (d) {
+                    createToolTip(d, 'line', tooltip);
+                })
+                .on('mouseout', function () {
+                    // remove all the divs with id tooltiptext.
+                    d3.selectAll('#tooltiptext').remove();
+                    // tooltip on mousever setting the div to hidden.
+                    tooltip
+                        .style('visibility', 'hidden');
+                });
         }
 
         // plot error bars
@@ -794,7 +806,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
             // changing the text on y axis.
             if (val.match(/(volNorm|volNormText)/)) {
                 d3.select('#volume-text')
-                    .text('Normalized volume (mm³)');
+                    .text('Normalized volume');
             } else if (val.match(/(volRaw|volRawText)/)) {
                 d3.select('#volume-text')
                     .text('Volume (mm³)');
@@ -867,10 +879,13 @@ const TumorGrowthCurve = (props) => {
     // calling function to grab the min max values.
     const minmax = calculateMinMax(data);
 
+    // update the drug to replace spaces with '+'
+    const updateDrug = (drug) => drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')
+
     // function will be triggered once the component is mounted/updated.
     useEffect(() => {
         if (data.length !== 0) {
-            const tooltip = initializeToolTop();
+            const tooltip = initializeToolTip();
             // calling tumorCurve function passing the data, PlotID and node reference.
             const curve = tumorCurve(data, plotId, minmax);
             // plot each model
@@ -884,22 +899,22 @@ const TumorGrowthCurve = (props) => {
         <div>
             <GlobalStyles />
             <div className="wrapper">
-                <div className="curve-wrapper">
+                <div className="growth-curve-wrapper center-component">
                     <h1>
-                        Drug ID =
+                        Drug: <span style={{ color: `${colors.pink_header}` }}> {updateDrug(drugParam)} </span>
                         {' '}
-                        <span style={{ color: `${colors.pink_header}` }}>{drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
-                        {' '}
-                        and Patient ID =
+                        and Patient:
                         {' '}
                         <span style={{ color: `${colors.pink_header}` }}>{patientParam}</span>
                     </h1>
-                    <ExportPng componentRef={componentRef} fileName={`DrugId = ${drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}, PatientId = ${patientParam}`} />
+                    <ExportPng componentRef={componentRef} fileName={`DrugId = ${updateDrug(drugParam)}, PatientId = ${patientParam}`} />
                     <div id="svg-curve" ref={componentRef} />
+                    {
+                        Number(datasetParam) === 7 ? <DoseCurve data={data} maxTime={minmax.maxTime} /> : ''
+                    }
+                    <StatTable patientParam={patientParam} drugParam={drugParam} />
                 </div>
-                {Number(datasetParam) === 7 ? <DoseCurve data={data} maxTime={minmax.maxTime} /> : ''}
-                <StatTable patientParam={patientParam} drugParam={drugParam} />
-                <div className="curve-wrapper" style={{ marginTop: '20px', padding: '10px 0px' }}>
+                <div className="growth-curve-wrapper center-component" style={{ marginTop: '20px', padding: '10px 0px' }}>
                     <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
                 </div>
             </div>

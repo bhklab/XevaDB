@@ -909,12 +909,12 @@ const Oncoprint = (props) => {
 
     return (
         // eslint-disable-next-line no-return-assign
-        <div>
-            <div className="oprint-wrapper" id="oncoprint" />
+        <>
+            <div id="oncoprint" />
             <PatientConsumer>
                 {(value) => { rankOncoprintBasedOnHeatMapChanges(value); }}
             </PatientConsumer>
-        </div>
+        </>
     );
 };
 

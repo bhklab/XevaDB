@@ -31,8 +31,8 @@ class StatTable extends React.Component {
 
     componentDidMount() {
         const { drugParam, patientParam } = this.props;
-        const getModelResponse = axios.get(`/api/v1/modelresponsestats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
-        const getBatchResponse = axios.get(`/api/v1/batchresponsestats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const getModelResponse = axios.get(`/api/v1/modelresponse/stats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const getBatchResponse = axios.get(`/api/v1/batchresponse/stats?patient=${patientParam}&drug=${drugParam}`, { headers: { Authorization: localStorage.getItem('user') } });
 
         Promise.all([getBatchResponse, getModelResponse]).then((response) => {
             this.parseData(response);
@@ -184,10 +184,10 @@ class StatTable extends React.Component {
         return (
             <>
                 <BatchStatTable data={batchData} />
-                <div className="curve-wrapper">
+                <div>
                     <StyledLink>
-                        <h1 id="titlemodel" style={{ display: 'inline-block', margin: '5px' }}>Model Response</h1>
-                        <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv" style={{ float: 'right', display: 'inline-block' }}>
+                        <h1 id="titlemodel" style={{ display: 'inline-block', padding: '0', margin: '0' }}>Model Response</h1>
+                        <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv" style={{ float: 'right', display: 'inline-block', marginBottom: '10px' }}>
                             Export Data
                             <img src={downloadIcon} alt="download icon!" />
                         </CSVLink>

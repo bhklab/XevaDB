@@ -2,7 +2,7 @@ import React from 'react';
 import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import DonutNav from './CounterStyle';
+import CounterStyle from './CounterStyle';
 import GlobalStyles from '../../GlobalStyles';
 
 class CounterNav extends React.Component {
@@ -34,20 +34,18 @@ class CounterNav extends React.Component {
 
 
     render() {
-        const {
-            datasets, tissues, patients,
-            drugs, models, types,
-        } = this.state;
+        const { types } = this.state;
+
         return (
             <div>
                 <GlobalStyles />
-                <DonutNav>
+                <CounterStyle>
                     {
-                        types.map((type) => (
-                            <Link to={type}>
+                        types.map((type, i) => (
+                            <Link to={type} key={i}>
                                 <CountUp
                                     start={0}
-                                    end={eval(type)}
+                                    end={this.state[type]}
                                     duration={3}
                                     useEasing
                                 />
@@ -57,8 +55,8 @@ class CounterNav extends React.Component {
                             </Link>
                         ))
                     }
-                </DonutNav>
-            </div>
+                </CounterStyle>
+            </div >
         );
     }
 }

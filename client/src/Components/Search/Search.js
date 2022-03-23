@@ -11,14 +11,12 @@ import axios from 'axios';
 import Popup from 'reactjs-popup';
 import { StyleBar, customStyles, StyleButton } from './SearchStyle';
 import { GeneList } from '../../utils/GeneList';
+import feelingLuckyRequest from '../../utils/FeelingLuckyRequest';
 import colors from '../../styles/colors';
 
 class Search extends React.Component {
-    static parseDataset(dataset) {
-        if (dataset === 'SU2C UHN (Breast Cancer)') {
-            return 'UHN (Breast Cancer)';
-        }
-        if (dataset === 'SU2C McGill (Breast Cancer)') {
+    static mapDataset(dataset) {
+        if (dataset === 'McGill TNBC') {
             return 'McGill (Breast Cancer)';
         }
         return dataset;
@@ -30,7 +28,7 @@ class Search extends React.Component {
             drugs: [],
             datasets: [],
             genes: [],
-            selectedGeneSearch: ['Enter Gene Symbol(s)'],
+            selectedGeneSearch: ['Enter Gene Symbols (Max 50 genes)'],
             selectedDrugs: [],
             selectedDataset: '',
             genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'],
@@ -41,17 +39,8 @@ class Search extends React.Component {
             genomics: [],
             drugValue: [],
             axiosConfig: {},
+            geneLimit: 50,
         };
-        this.handleDrugChange = this.handleDrugChange.bind(this);
-        this.handleDatasetChange = this.handleDatasetChange.bind(this);
-        this.handleGeneListChange = this.handleGeneListChange.bind(this);
-        this.handleGeneSearchChange = this.handleGeneSearchChange.bind(this);
-        this.handleExpressionChange = this.handleExpressionChange.bind(this);
-        this.handleKeyPress = this.handleKeyPress.bind(this);
-        this.redirectUser = this.redirectUser.bind(this);
-        this.handleThreshold = this.handleThreshold.bind(this);
-        this.checkInput = this.checkInput.bind(this);
-        this.clearText = this.clearText.bind(this);
     }
 
     componentWillMount() {
@@ -62,7 +51,7 @@ class Search extends React.Component {
         }));
 
         this.setState({
-            genes: [{ value: 'user defined list', label: 'User-Defined List' }, ...genes],
+            genes: [{ value: 'user defined list', label: 'User-Defined List (Max 50 genes)' }, ...genes],
         });
 
         const genomic = genomicsValue.map((item, i) => ({
@@ -85,7 +74,7 @@ class Search extends React.Component {
             .then((response) => {
                 const datasets = response.data.datasets.map((item) => ({
                     value: item.id,
-                    label: Search.parseDataset(item.name),
+                    label: Search.mapDataset(item.name),
                 }));
                 this.setState({
                     datasets: [...datasets],
@@ -93,13 +82,13 @@ class Search extends React.Component {
             });
     }
 
-    handleDrugChange(selectedOption) {
+    handleDrugChange = (selectedOption) => {
         if (selectedOption !== null && selectedOption.length > 0) {
             // destructuring the state.
             const { drugs, allDrugs } = this.state;
 
             // loop through the label to give the array of selectedOptions.
-            const label = selectedOption.map((value) => (value.label).replace(/\s/g, '').replace('+', '_'));
+            const label = selectedOption.map((value) => (value.label).replace(/\s/g, '').replaceAll('+', '_'));
 
             // function to check if label array contains the All string.
             const doesItContain = (labelVal) => {
@@ -142,7 +131,7 @@ class Search extends React.Component {
 
     // handle the dataset change and sends a post
     // request to grab drugs based on the particular dataset.
-    handleDatasetChange(selectedOption) {
+    handleDatasetChange = (selectedOption) => {
         const { axiosConfig } = this.state;
         this.setState({
             selectedDataset: selectedOption.value,
@@ -158,7 +147,7 @@ class Search extends React.Component {
                 this.setState({
                     drugs: [{ value: 'all', label: `All (${data.length})` }, ...data],
                 });
-                const drug = response.data.data[0].map((item) => (item.drug).replace(/\s/g, '').replace('+', '_'));
+                const drug = response.data.data[0].map((item) => (item.drug).replace(/\s/g, '').replaceAll('+', '_'));
                 this.setState({
                     allDrugs: [...drug],
                 });
@@ -167,7 +156,7 @@ class Search extends React.Component {
 
     // sets the value of selected gene search,
     // empty if it's user defined list else the option selected.
-    handleGeneListChange(selectedOption) {
+    handleGeneListChange = (selectedOption) => {
         if (selectedOption.value === 'user defined list') {
             this.setState({
                 selectedGeneSearch: '',
@@ -180,14 +169,14 @@ class Search extends React.Component {
     }
 
     // sets the value on event change.
-    handleGeneSearchChange(event) {
+    handleGeneSearchChange = (event) => {
         this.setState({
             selectedGeneSearch: event.target.value,
         });
     }
 
     // this adds the value either mutation or cnv or RNASeq.
-    handleExpressionChange(selectedOption) {
+    handleExpressionChange = (selectedOption) => {
         const { genomicsValue } = this.state;
         if (selectedOption !== null && selectedOption.length > 0) {
             // map through the options in order to store the selected value.
@@ -233,20 +222,43 @@ class Search extends React.Component {
     }
 
     // threshold for GeneExpression.
-    handleThreshold(event) {
+    handleThreshold = (event) => {
         this.setState({
             threshold: event.target.value,
         });
     }
 
-    handleKeyPress(event) {
+    handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             this.redirectUser();
         }
     }
 
+    // checks if all the data is available.
+    ifAllDataAvailable = () => {
+        const {
+            selectedDataset, selectedDrugs, selectedGeneSearch, genomics,
+        } = this.state;
+
+        return (
+            (selectedDataset !== '') &&
+            (selectedDrugs.length > 0) &&
+            (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') &&
+            (genomics.length > 0)
+        );
+    }
+
+    // checks if the gene list entered by the user is less than 50 in number
+    ifGeneNumberLessThanFifty = (data) => {
+        const { selectedGeneSearch } = this.state;
+        // gene length
+        const geneLength = typeof (selectedGeneSearch) === 'string' && selectedGeneSearch.split(',').length;
+        // return true/false based on the length
+        return geneLength < this.state.geneLimit;
+    }
+
     // redirects the user to search page.
-    redirectUser() {
+    redirectUser = () => {
         const {
             selectedDataset, selectedDrugs, selectedGeneSearch,
             selectedGenomics, threshold, genomics,
@@ -254,22 +266,14 @@ class Search extends React.Component {
         // this removes spaces from gene list.
         const formatedGeneList = selectedGeneSearch.replace(/\s/g, '');
         // only renders if all the data is available.
-        if ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') && (genomics.length > 0)) {
+        if (this.ifAllDataAvailable() && this.ifGeneNumberLessThanFifty()) {
             const { history } = this.props;
             history.push(`/search/?drug=${selectedDrugs}&dataset=${selectedDataset}&genes=${formatedGeneList}&genomics=${selectedGenomics}&threshold=${threshold}`);
         }
     }
 
-    // check if all fields are selected.
-    checkInput() {
-        const {
-            selectedDataset, selectedDrugs, selectedGeneSearch, genomics,
-        } = this.state;
-        return ((selectedDataset !== '') && (selectedDrugs.length > 0) && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') && (genomics.length > 0));
-    }
-
     // clear the text from text area.
-    clearText() {
+    clearText = () => {
         const { selectedGeneSearch } = this.state;
         if (selectedGeneSearch[0] === 'Enter Gene Symbol(s)') {
             this.setState({
@@ -277,6 +281,15 @@ class Search extends React.Component {
             });
         }
     }
+
+    // text for the pop up
+    popupText = () => {
+        if (this.state.selectedGeneSearch.length > 1) {
+            return this.ifGeneNumberLessThanFifty() ? 'Complete all the fields!!' : 'Please keep gene list less than 50!';
+        }
+        return 'Complete all the fields!!';
+    }
+
 
     render() {
         const {
@@ -369,12 +382,12 @@ class Search extends React.Component {
                         </div>
 
                         <div className="sample">
-                            <a href="/search/?drug=BGJ398,binimetinib,BKM120,BYL719&dataset=1&genes=SOX9,RAN,TNK2,EP300,PXN,NCOA2,AR,NRIP1,NCOR1,NCOR2&genomics=Mutation,CNV,RNASeq&threshold=2"> Feeling Lucky? </a>
+                            <a href={`${feelingLuckyRequest}`}> Feeling Lucky? </a>
                         </div>
 
                         <div>
                             {
-                                this.checkInput()
+                                this.ifAllDataAvailable() && this.ifGeneNumberLessThanFifty()
                                     ? (
                                         <StyleButton onClick={this.redirectUser} type="button" className="stylebutton">
                                             <span>
@@ -397,7 +410,7 @@ class Search extends React.Component {
                                                 color: `${colors.blue_header}`, fontFamily: 'Open Sans', fontSize: '17px', fontWeight: '500',
                                             }}
                                             >
-                                                Complete all the fields!!
+                                                {this.popupText()}
                                             </div>
                                         </Popup>
                                     )

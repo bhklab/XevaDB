@@ -36,7 +36,6 @@ const DatasetTable = (props) => {
 
     return (
         <TableWrapper>
-            <h1> List of Datasets </h1>
             <ReactTable
                 data={data}
                 columns={columns}

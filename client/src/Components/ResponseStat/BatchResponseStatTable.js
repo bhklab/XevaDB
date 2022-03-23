@@ -71,10 +71,10 @@ class BatchStatTable extends React.Component {
         const header = this.createTableHeader();
         const table = this.createTable(parsedData);
         return (
-            <div className="curve-wrapper" style={{ paddingTop: '100px' }}>
+            <div style={{ paddingTop: '100px' }}>
                 <StyledLink>
-                    <h1 id="title" style={{ display: 'inline-block', margin: '5px' }}>Batch Response</h1>
-                    <CSVLink data={data} filename="batchresponse.csv" style={{ float: 'right', display: 'inline-block' }}>
+                    <h1 id="title" style={{ display: 'inline-block', padding: '0', margin: '0' }}>Batch Response</h1>
+                    <CSVLink data={data} filename="batchresponse.csv" style={{ float: 'right', display: 'inline-block', marginBottom: '10px' }}>
                         Export Data
                         <img src={downloadIcon} alt="download icon!" />
                     </CSVLink>

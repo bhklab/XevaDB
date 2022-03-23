@@ -54,23 +54,27 @@ class SearchResult extends React.Component {
             setPatients,
         };
         return (
-            <div>
+            <>
                 <GlobalStyles />
                 <div className="wrapper">
-                    <PatientProvider value={providerData}>
-                        <SearchResultHeatMap
-                            drugParam={drugParam}
-                            datasetParam={datasetParam}
-                        />
-                        <SearchResultOncoprint
-                            geneParam={geneParam}
-                            datasetParam={datasetParam}
-                            genomicsParam={genomicsParam}
-                            threshold={threshold}
-                        />
-                    </PatientProvider>
+                    <div className='heatmap-oncoprint-wrapper center-component'>
+                        <PatientProvider value={providerData}>
+                            <SearchResultHeatMap
+                                drugParam={drugParam}
+                                datasetParam={datasetParam}
+                                geneParam={geneParam}
+                            />
+                            <SearchResultOncoprint
+                                geneParam={geneParam}
+                                datasetParam={datasetParam}
+                                genomicsParam={genomicsParam}
+                                threshold={threshold}
+                            />
+                        </PatientProvider>
+                    </div>
+
                 </div>
-            </div>
+            </>
         );
     }
 }

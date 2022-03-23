@@ -4,6 +4,19 @@ const { getAllowedDatasetIds } = require('./util');
 const { getModelInformationDataQuery } = require('./model_information');
 
 
+// ************************************** Patient Queries ***************************************************
+/**
+ * @returns - knex query to get all the patients
+ */
+const getAllPatientsQuery = () => (
+    knex.select()
+        .from('patients')
+        .orderBy('patient_id')
+);
+
+
+
+// ************************************** Transform Functions *************************************************
 /**
  * @param {Object} data - model information input data.
  * @returns {Array} - returns an array of transformed data.
@@ -63,21 +76,20 @@ const transformData = (data) => {
 };
 
 
+// ************************************** API Endpoint Functions ******************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
  * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - list of the patients.
  */
-const getPatients = (request, response) => {
+const getAllPatients = (request, response) => {
     // user variable.
     const { user } = response.locals;
 
     // query.
-    knex.select()
-        .from('patients')
+    getAllPatientsQuery()
         .whereBetween('dataset_id', getAllowedDatasetIds(user))
-        .orderBy('patient_id')
         .then((patients) => response.status(200).json({
             status: 'success',
             data: patients,
@@ -95,7 +107,7 @@ const getPatients = (request, response) => {
  * @param {string} response.locals.user - whether the user is verified or not ('unknown').
  * @returns {Object} - list of the patients with detailed information.
  */
-const getPatientsDetailedInformation = (request, response) => {
+const getAllPatientsDetailedInformation = (request, response) => {
     // user variable.
     const { user } = response.locals;
 
@@ -122,12 +134,12 @@ const getPatientsDetailedInformation = (request, response) => {
  * @param {number} request.params.patient - patient parameter.
  * @returns {Object} - list of the patients with detailed information.
  */
-const getPatientDetailedInformationBasedOnPatientId = (request, response) => {
+const getSinglePatientInformationBasedOnPatientId = (request, response) => {
     // user variable.
     const { user } = response.locals;
 
     // patient parameter.
-    const patientParam = request.params.patient;
+    const { params: { patient: patientParam } } = request;
 
     // model information data.
     getModelInformationDataQuery()
@@ -147,7 +159,7 @@ const getPatientDetailedInformationBasedOnPatientId = (request, response) => {
 
 
 module.exports = {
-    getPatients,
-    getPatientsDetailedInformation,
-    getPatientDetailedInformationBasedOnPatientId,
+    getAllPatients,
+    getAllPatientsDetailedInformation,
+    getSinglePatientInformationBasedOnPatientId,
 };

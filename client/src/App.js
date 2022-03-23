@@ -3,10 +3,12 @@ import React, { useEffect } from 'react';
 import ReactGA from 'react-ga';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {
+    Biomarker,
     CounterNav,
     Dataset,
     DatasetSummary,
     Documentation,
+    Drug,
     DrugSummary,
     Footer,
     GrowthCurveData,
@@ -48,12 +50,13 @@ const App = () => {
             <Router>
                 <Switch>
                     <Route path="/" exact component={Home} />
+                    <Route path="/biomarker" exact component={Biomarker} />
                     <Route path="/curve" exact component={GrowthCurveData} />
                     <Route path="/datasets" exact component={DatasetSummary} />
                     <Route path="/dataset/:id" exact component={Dataset} />
                     <Route path="/doc" exact component={Documentation} />
                     <Route path="/drugs" exact component={DrugSummary} />
-                    {/* <Route path="/drug/:id" exact component={DrugTable} /> */}
+                    <Route path="/drug/:id" exact component={Drug} />
                     <Route path="/home" exact component={CounterNav} />
                     <Route path="/login" exact component={Login} />
                     <Route path="/maps" exact component={Merge} />

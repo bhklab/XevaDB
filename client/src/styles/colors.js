@@ -24,4 +24,5 @@ export default {
     bg_fade_blue: '#dfe5ed',
     bg_fade_white: '#f0f2f5',
     circle_green: '#5b8c85',
+    silver: '#C0C0C0',
 };

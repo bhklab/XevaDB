@@ -84,7 +84,7 @@ const Patient = (props) => {
     // query to fetch the patient detail based on the patient parameter.
     const fetchData = async () => {
         // API call to fecth the data.
-        const patientDetail = await axios.get(`/api/v1/patients/details/${patientParam}`, HEADER);
+        const patientDetail = await axios.get(`/api/v1/patients/detail/${patientParam}`, HEADER);
         // setting the states.
         setPatientDataState(transformData(patientDetail.data.data[0]));
         setLoader(false);
@@ -101,12 +101,10 @@ const Patient = (props) => {
             <div className="wrapper">
                 {
                     loading ? <Spinner loading={loading} /> : (
-                        <>
+                        <div className='component-wrapper center-component'>
                             <TreeDiagram data={transformTreeDiagramData(patientData)} />
-                            <div className="summary-table">
-                                <PatientTable patientData={patientData} />
-                            </div>
-                        </>
+                            <PatientTable patientData={patientData} />
+                        </div>
                     )
                 }
                 <Footer />

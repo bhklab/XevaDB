@@ -19,7 +19,7 @@ class DatasetSummary extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/v1/datasets/details', { headers: { Authorization: localStorage.getItem('user') } })
+        axios.get('/api/v1/datasets/detail', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 const data = response.data.datasets.map((element) => ({
                     dataset_name: element.name,
@@ -48,7 +48,7 @@ class DatasetSummary extends React.Component {
             <div>
                 <GlobalStyles />
                 <div className="wrapper">
-                    <div className="donut-wrapper">
+                    <div className="component-wrapper center-component">
                         <h1> Datasets </h1>
                         {
                             loading
@@ -73,15 +73,19 @@ class DatasetSummary extends React.Component {
                                 )
                         }
                     </div>
-                    <div className="summary-table">
+                    <div className="component-wrapper center-component">
                         {
                             loading
                                 ? <Spinner loading={loading} />
                                 : (
-                                    <DatasetTable
-                                        data={data}
-                                        dataLength={data.length}
-                                    />
+                                    <>
+                                        <h1> List of Datasets </h1>
+                                        <DatasetTable
+                                            data={data}
+                                            dataLength={data.length}
+                                        />
+                                    </>
+
                                 )
                         }
                     </div>

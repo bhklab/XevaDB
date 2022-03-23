@@ -1,13 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 import ReactTable from 'react-table';
+import { Link } from 'react-router-dom';
 import TableWrapper from '../../Utils/TableStyle';
 import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
+import firstAlphabetUpperCase from '../../../utils/FirstAlphabetUpperCase';
+import pubchemURL from '../../../utils/PubChemURL';
 
-// base link for pubchem.
-const pubchemURL = 'https://pubchem.ncbi.nlm.nih.gov/compound/';
 
 class DrugTable extends React.Component {
     constructor(props) {
@@ -37,39 +38,37 @@ class DrugTable extends React.Component {
         //     val.img = pubchem;
         // });
 
-        // to capitalize first alphabet.
-        const capitalize = (s) => {
-            if (typeof s !== 'string') return '';
-            return s.charAt(0).toUpperCase() + s.slice(1);
-        };
-
         const columns = [
             {
                 Header: 'Drug Name',
                 accessor: 'drug_name',
                 minWidth: 180,
-                Cell: (props) => capitalize(props.value),
+                Cell: (row) => (
+                    <Link to={`/drug/${row.original.drug_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                        {row.original.drug_name}
+                    </Link>
+                ),
                 sortable: true,
             },
             {
                 Header: 'Standard Name',
                 accessor: 'standard_name',
                 minWidth: 150,
-                Cell: (props) => capitalize(props.value),
+                Cell: (props) => firstAlphabetUpperCase(props.value),
                 sortable: true,
             },
             {
                 Header: 'Targets',
                 accessor: 'class',
                 minWidth: 150,
-                Cell: (props) => capitalize(props.value),
+                Cell: (props) => firstAlphabetUpperCase(props.value),
                 sortable: true,
             },
             {
                 Header: 'Class',
                 accessor: 'class_name',
                 minWidth: 220,
-                Cell: (props) => capitalize(props.value),
+                Cell: (props) => firstAlphabetUpperCase(props.value),
                 sortable: true,
             },
             {
@@ -116,18 +115,21 @@ class DrugTable extends React.Component {
         return (
             <TableWrapper>
                 <h1> List of Drugs </h1>
-                {loading
-                    ? (
-                        <Spinner loading={loading} />
+                {
+                    loading ? (
+                        <div className='center-component'>
+                            <Spinner loading={loading} />
+                        </div>
                     ) : (
-                        <ReactTable
-                            data={data}
-                            columns={columns}
-                            className="-highlight"
-                            defaultPageSize={10}
-                            filterable
-                        />
-                    )}
+                            <ReactTable
+                                data={data}
+                                columns={columns}
+                                className="-highlight"
+                                defaultPageSize={10}
+                                filterable
+                            />
+                        )
+                }
             </TableWrapper>
         );
     }

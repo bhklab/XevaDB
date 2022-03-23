@@ -17,7 +17,7 @@ const transformIndentedTreeData = (data) => {
     // looping through the datasets.
     Object.values(data.datasets).forEach((element) => {
         const patients = element.patients.map((el) => ({ name: el }));
-        const models = element.models.map((el) => ({ name: el }));
+        // const models = element.models.map((el) => ({ name: el }));
         const drugs = element.drugs.map((el) => ({ name: el }));
 
         transformedData.children.push({
@@ -31,10 +31,10 @@ const transformIndentedTreeData = (data) => {
                     name: 'Patients',
                     children: patients,
                 },
-                {
-                    name: 'Models',
-                    children: models,
-                },
+                // {
+                //     name: 'Models',
+                //     children: models,
+                // },
             ],
         });
     });
@@ -44,8 +44,7 @@ const transformIndentedTreeData = (data) => {
 // Tissue Component.
 const Tissue = (props) => {
     // grab the tissue params id.
-    const { match } = props;
-    const tissueParam = match.params.id;
+    const { match: { params: { id: tissueParam } } } = props;
 
     // tissue and data loader state.
     const [tissueData, setTissueDataState] = useState({});
@@ -73,13 +72,12 @@ const Tissue = (props) => {
             <div className="wrapper">
                 {
                     loading ? <Spinner loading={loading} /> : (
-                        <>
+                        <div className='component-wrapper center-component'>
                             <h1>
                                 {tissueData.name}
                             </h1>
                             <IdentedTree data={tissueData} />
-                            <Footer />
-                        </>
+                        </div>
                     )
                 }
             </div>
