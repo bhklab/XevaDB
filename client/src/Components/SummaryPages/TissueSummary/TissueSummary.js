@@ -120,7 +120,7 @@ const TissueSummary = () => {
                 <div className="component-wrapper">
                     <StyleComponent>
                         <h1> PDXs Per Tissue Type </h1>
-                        <img src={HumanBody} alt="Human Body" />
+                        <img src={HumanBody} alt="Human Body" style={{ paddingBottom: '20px' }} />
                         <div>
                             <div>
                                 <img
