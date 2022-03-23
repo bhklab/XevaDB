@@ -66,11 +66,54 @@ class SearchResultHeatMap extends React.Component {
         // patient from one of the object elements to keep it in sync.
         patientArray = Object.keys(dataset[0]);
 
+        // TODO: Update the 'data' for now; change later when we have average data
+        // TODO: 'mRECIST' will be the max occuring value and the other parameters are just taking the first element
+        // finds the maximum occurences of a 'mRECIST' type
+        const maxOccuringmRECISTValue = (mRECIST) => {
+            // this object will store the occurences of mRECIST values
+            const mRECISTObject = {};
+            mRECIST.forEach(el => {
+                if (mRECISTObject.hasOwnProperty(el)) {
+                    mRECISTObject[el] += 1;
+                } else {
+                    mRECISTObject[el] = 1;
+                }
+            });
+
+            // gets the maximum occuring mRECIST value
+            let maxOccuringKey = '';
+            let maxValue = 0;
+            Object.entries(mRECISTObject).forEach(([key, value]) => {
+                if (value > maxValue) {
+                    maxValue = value;
+                    maxOccuringKey = key;
+                }
+            });
+
+            return maxOccuringKey;
+        };
+
+        // transforms the 'dataset' 
+        const transformedData = dataset.map(row => {
+            const transformedRow = {};
+            Object.entries(row).forEach(([key, value]) => {
+                transformedRow[key] = {
+                    'best.average.response': value['best.average.response']?.[0] || 'NA',
+                    'survival': value['survival']?.[0] || 'NA',
+                    'slope': value['slope']?.[0] || 'NA',
+                    'AUC': value['AUC']?.[0] || 'NA',
+                    'mRECIST': value['mRECIST'] ? maxOccuringmRECISTValue(value['mRECIST']) : 'NA',
+                };
+            });
+            return transformedRow;
+        });
+
         // setting the states using the defined variables.
         this.setState({
             drugId: drug,
             patientIdDrug: patientArray,
-            drugData: dataset,
+            // drugData: dataset,
+            drugData: transformedData,
             dimensions: { height: 30, width: 15 },
             margin: {
                 top: 200, right: 250, bottom: 50, left: 250,
