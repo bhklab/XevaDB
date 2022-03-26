@@ -8,7 +8,9 @@ import PatientResponseChart from './PatientResponseChart';
 
 // h4 style
 const h4Style = {
-    margin: '10px 0px 125px 0px', color: 'black', fontWeight: 200
+    margin: '10px 0px 125px 0px',
+    color: 'black',
+    fontWeight: 200,
 };
 
 // header constant
