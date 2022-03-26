@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.js": "/static/js/main.a8feafc9.chunk.js",
+    "main.js.map": "/static/js/main.a8feafc9.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.09b85ec0.js",
+    "runtime-main.js.map": "/static/js/runtime-main.09b85ec0.js.map",
+    "static/css/2.9f42b52c.chunk.css": "/static/css/2.9f42b52c.chunk.css",
+    "static/js/2.de3de295.chunk.js": "/static/js/2.de3de295.chunk.js",
+    "static/js/2.de3de295.chunk.js.map": "/static/js/2.de3de295.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.d39ba2f05329b3d0606d4c968d7d87ff.js": "/precache-manifest.d39ba2f05329b3d0606d4c968d7d87ff.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.9f42b52c.chunk.css.map": "/static/css/2.9f42b52c.chunk.css.map",
+    "static/js/2.de3de295.chunk.js.LICENSE.txt": "/static/js/2.de3de295.chunk.js.LICENSE.txt",
+    "static/media/download.svg": "/static/media/download.f678bfa5.svg",
+    "static/media/human.png": "/static/media/human.2135ae7d.png",
+    "static/media/largeintestine.png": "/static/media/largeintestine.703c5c45.png",
+    "static/media/lung.png": "/static/media/lung.34f7ebc8.png",
+    "static/media/new_logo.png": "/static/media/new_logo.b694f1dd.png",
+    "static/media/skin.png": "/static/media/skin.c2f8962d.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.09b85ec0.js",
+    "static/css/2.9f42b52c.chunk.css",
+    "static/js/2.de3de295.chunk.js",
+    "static/js/main.a8feafc9.chunk.js"
+  ]
+}
