@@ -21,9 +21,6 @@ const StyledChart = styled.div`
     }
 `;
 
-// header constant
-const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
-
 // options for select 
 const options = [
     { value: 'mRECIST', label: 'mRECIST' },
@@ -87,7 +84,7 @@ const PatientResponseChart = ({ drugName }) => {
     // fetch model response data
     const fetchData = async () => {
         // fetch model response data
-        const modelResponse = await axios.get(`/api/v1/modelresponse?drug=${drugName.replace(/\s/g, '').replace('+', '_')}`, HEADER);
+        const modelResponse = await axios.get(`/api/v1/modelresponse?drug=${drugName.replace(/\s/g, '').replace('+', '_')}`, { headers: { Authorization: localStorage.getItem('user') } });
 
         // transform model response data
         const transformedModelResponse = transformModelResponseData(modelResponse.data[0], selectionValue);

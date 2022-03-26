@@ -13,9 +13,6 @@ const h4Style = {
     fontWeight: 200,
 };
 
-// header constant
-const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
-
 // Individual drug page component
 const Drug = (props) => {
     // get the drug id from the props object 
@@ -23,20 +20,21 @@ const Drug = (props) => {
     const { match: { params: { id: drugId } } } = props;
 
     // state to save the drug information data and setting loader state
-    const [drugData, setDrugData] = useState({});
+    const [drugData, setDrugData] = useState([]);
     const [isLoading, setLoadingState] = useState(true);
 
     // query to fetch the drug information data
     const fetchData = async () => {
         // get the drug information based on the drugId
-        const drugInformation = await axios.get(`/api/v1/drugs/${drugId}`, HEADER);
-
+        const drugInformation = await axios.get(`/api/v1/drugs/${drugId}`, { headers: { Authorization: localStorage.getItem('user') } });
         // update the state of data
-        const { data } = drugInformation;
-        setDrugData(data[0]);
+        if (drugInformation.data.length > 0) {
+            const { data } = drugInformation;
+            setDrugData(data[0]);
 
-        // set loader state
-        setLoadingState(false);
+            // set loader state
+            setLoadingState(false);
+        };
     };
 
     // useEffect hook
@@ -50,7 +48,7 @@ const Drug = (props) => {
             <GlobalStyles />
             <div className='wrapper'>
                 {
-                    isLoading
+                    isLoading && drugData.length === 0
                         ? <Spinner loading={isLoading} />
                         : (
                             <div className='component-wrapper center-component'>
