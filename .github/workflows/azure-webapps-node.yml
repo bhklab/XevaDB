@@ -20,16 +20,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: npm install in root directory
+      - name: "Generate Client Build"
         shell: bash
         run: |
-          npm install
-      - name: npm install and run build in client directory
-        shell: bash
-        working-directory: ./client
-        run: |
-          npm install
-          CI=false npm run build
+          npm i
+          pushd ./client
+          npm i
+          npm run build
+          popd
+        env:
+          CI: ""
       - name: "Deploy to Azure WebApp"
         uses: azure/webapps-deploy@v2
         with:
