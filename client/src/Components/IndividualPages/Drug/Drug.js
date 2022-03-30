@@ -65,7 +65,8 @@ const Drug = (props) => {
                             <div className='component-wrapper center-component'>
                                 <h1> {drugData.drug_name} </h1>
                                 <Annotation data={drugData} />
-                                {/* <PatientResponsePieChart /> */}
+                                <h1> Model Response </h1>
+                                <PatientResponsePieChart data={modelResponseData} />
                                 <PatientResponseScatterPlot data={modelResponseData} />
                                 <h4 style={h4Style}> Patient </h4>
                             </div>
