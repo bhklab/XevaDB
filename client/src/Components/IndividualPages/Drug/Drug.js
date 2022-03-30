@@ -4,7 +4,8 @@ import GlobalStyles from '../../../GlobalStyles';
 import Spinner from '../../Utils/Spinner';
 import Footer from '../../Footer/Footer';
 import Annotation from './Annotation';
-import PatientResponseChart from './PatientResponseChart';
+import PatientResponseScatterPlot from './PatientResponseScatterPlot';
+import PatientResponsePieChart from './PatientResponsePieChart';
 
 // h4 style
 const h4Style = {
@@ -21,20 +22,30 @@ const Drug = (props) => {
 
     // state to save the drug information data and setting loader state
     const [drugData, setDrugData] = useState([]);
+    const [modelResponseData, setModelResponseData] = useState([]);
     const [isLoading, setLoadingState] = useState(true);
 
     // query to fetch the drug information data
     const fetchData = async () => {
         // get the drug information based on the drugId
-        const drugInformation = await axios.get(`/api/v1/drugs/${drugId}`, { headers: { Authorization: localStorage.getItem('user') } });
-        // update the state of data
-        if (drugInformation.data.length > 0) {
-            const { data } = drugInformation;
-            setDrugData(data[0]);
+        const drugInformation = await axios.get(
+            `/api/v1/drugs/${drugId}`,
+            { headers: { Authorization: localStorage.getItem('user') } }
+        );
+        const modelResponse = await axios.get(
+            `/api/v1/modelresponse?drug=${drugInformation.data[0].drug_name.replace(/\s/g, '').replace('+', '_')}`,
+            { headers: { Authorization: localStorage.getItem('user') } }
+        );
 
-            // set loader state
-            setLoadingState(false);
-        };
+        const { data } = drugInformation;
+        const { data: modelData } = modelResponse;
+
+        // set drug and model response data
+        setDrugData(data[0]);
+        setModelResponseData(modelData[0]);
+
+        // set loader state
+        setLoadingState(false);
     };
 
     // useEffect hook
@@ -54,7 +65,8 @@ const Drug = (props) => {
                             <div className='component-wrapper center-component'>
                                 <h1> {drugData.drug_name} </h1>
                                 <Annotation data={drugData} />
-                                <PatientResponseChart drugName={drugData.drug_name} />
+                                {/* <PatientResponsePieChart /> */}
+                                <PatientResponseScatterPlot data={modelResponseData} />
                                 <h4 style={h4Style}> Patient </h4>
                             </div>
                         )
