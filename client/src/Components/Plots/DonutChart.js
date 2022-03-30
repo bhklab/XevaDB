@@ -9,6 +9,11 @@ class DonutChart extends React.Component {
         super(props);
         this.DonutChart = this.DonutChart.bind(this);
         this.makeDonutChart = this.makeDonutChart.bind(this);
+        this.dimensions = { width: 650, height: 250 };
+        this.arc = { outerRadius: 260, innerRadius: 150 };
+        this.margin = {
+            top: 320, right: 100, bottom: 100, left: 380,
+        };
     }
 
     componentDidMount() {
@@ -16,8 +21,8 @@ class DonutChart extends React.Component {
     }
 
     DonutChart() {
-        const { dimensions } = this.props;
-        const { margin } = this.props;
+        const dimensions = this.props.dimensions || this.dimensions;
+        const margin = this.props.margin || this.margin;
         const { data } = this.props;
         const { height, width } = dimensions;
         const {
@@ -79,7 +84,7 @@ class DonutChart extends React.Component {
 
 
         /* Arc for the main pie chart and label arc */
-        const { arcRadius } = this.props;
+        const arcRadius = this.props.arcRadius || this.arc;
         // arc generator
         const arc = d3.arc()
             .outerRadius(arcRadius.outerRadius)
@@ -273,13 +278,13 @@ DonutChart.propTypes = {
     dimensions: PropTypes.shape({
         height: PropTypes.number,
         width: PropTypes.number,
-    }).isRequired,
+    }),
     margin: PropTypes.shape({
         top: PropTypes.number,
         right: PropTypes.number,
         bottom: PropTypes.number,
         left: PropTypes.number,
-    }).isRequired,
+    }),
     chartId: PropTypes.string.isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string,
@@ -288,7 +293,7 @@ DonutChart.propTypes = {
     arcRadius: PropTypes.shape({
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
-    }).isRequired,
+    }),
 };
 
 export default DonutChart;
