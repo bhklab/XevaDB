@@ -28,15 +28,17 @@ class DonutChart extends React.Component {
         const {
             left, top, bottom, right,
         } = margin;
-        this.makeDonutChart(data, height, width, left, top, bottom, right);
+        const { tooltipMapper } = this.props;
+        this.makeDonutChart(data, height, width, left, top, bottom, right, tooltipMapper);
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(data, height, width, left, top, bottom, right) {
+    makeDonutChart(data, height, width, left, top, bottom, right, tooltipMapper) {
         const { chartId } = this.props;
 
         /** SETTING SVG ATTRIBUTES * */
         d3.select('svg').remove();
+
         // make the SVG element.
         const svg = d3.select('#donut')
             .append('svg')
@@ -156,21 +158,26 @@ class DonutChart extends React.Component {
                 .style('visibility', 'visible');
         };
 
-        const mousemove = function (d) {
+        const mousemove = function (d, mapper) {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
                 .duration(300)
                 .style('opacity', 0.4)
                 .style('cursor', 'pointer');
+
+            // const value1 = `
+            //     Dataset: ${d.data.id} <br/>
+            //     Patients: ${d.data.value} <br/>
+            //     Models: ${d.data.models}
+            // `;
+
+            const value = Object.keys(mapper).map(key =>
+                `${key}: ${d.data[mapper[key]]}`
+            ).join('<br/>');
+
             // tooltip grabbing event.pageX and event.pageY
             // and set color according to the ordinal scale.
-            const value = `
-                Dataset: ${d.data.id} <br/>
-                Patients: ${d.data.value} <br/>
-                Models: ${d.data.models}
-            `;
-
             tooltip
                 .html([value])
                 .style('left', `${d3.event.pageX + 10}px`)
@@ -198,7 +205,7 @@ class DonutChart extends React.Component {
                 mouseover(d);
             })
             .on('mousemove', (d) => {
-                mousemove(d);
+                mousemove(d, tooltipMapper);
             })
             .on('mouseout', (d) => {
                 mouseout(d);
@@ -224,7 +231,7 @@ class DonutChart extends React.Component {
                     mouseover(d);
                 })
                 .on('mousemove', (d) => {
-                    mousemove(d);
+                    mousemove(d, tooltipMapper);
                 })
                 .on('mouseout', (d) => {
                     mouseout(d);
@@ -289,11 +296,13 @@ DonutChart.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string,
         value: PropTypes.number,
+        parameter: PropTypes.number,
     })).isRequired,
     arcRadius: PropTypes.shape({
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
     }),
+    tooltipMapper: PropTypes.object.isRequired,
 };
 
 export default DonutChart;
