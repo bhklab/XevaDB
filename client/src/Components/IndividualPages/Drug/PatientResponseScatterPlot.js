@@ -101,7 +101,6 @@ const PatientResponseScatterPlot = ({ data }) => {
     return (
         data.length === 0 ? <Spinner loading={true} /> : (
             <StyledChart>
-                <h1> Model Response </h1>
                 <div className='select-container'>
                     <Select
                         options={options}
