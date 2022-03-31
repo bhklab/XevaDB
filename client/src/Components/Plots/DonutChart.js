@@ -9,6 +9,11 @@ class DonutChart extends React.Component {
         super(props);
         this.DonutChart = this.DonutChart.bind(this);
         this.makeDonutChart = this.makeDonutChart.bind(this);
+        this.dimensions = { width: 650, height: 250 };
+        this.arc = { outerRadius: 260, innerRadius: 150 };
+        this.margin = {
+            top: 320, right: 100, bottom: 100, left: 380,
+        };
     }
 
     componentDidMount() {
@@ -16,22 +21,24 @@ class DonutChart extends React.Component {
     }
 
     DonutChart() {
-        const { dimensions } = this.props;
-        const { margin } = this.props;
+        const dimensions = this.props.dimensions || this.dimensions;
+        const margin = this.props.margin || this.margin;
         const { data } = this.props;
         const { height, width } = dimensions;
         const {
             left, top, bottom, right,
         } = margin;
-        this.makeDonutChart(data, height, width, left, top, bottom, right);
+        const { tooltipMapper } = this.props;
+        this.makeDonutChart(data, height, width, left, top, bottom, right, tooltipMapper);
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(data, height, width, left, top, bottom, right) {
+    makeDonutChart(data, height, width, left, top, bottom, right, tooltipMapper) {
         const { chartId } = this.props;
 
         /** SETTING SVG ATTRIBUTES * */
         d3.select('svg').remove();
+
         // make the SVG element.
         const svg = d3.select('#donut')
             .append('svg')
@@ -79,7 +86,7 @@ class DonutChart extends React.Component {
 
 
         /* Arc for the main pie chart and label arc */
-        const { arcRadius } = this.props;
+        const arcRadius = this.props.arcRadius || this.arc;
         // arc generator
         const arc = d3.arc()
             .outerRadius(arcRadius.outerRadius)
@@ -151,21 +158,26 @@ class DonutChart extends React.Component {
                 .style('visibility', 'visible');
         };
 
-        const mousemove = function (d) {
+        const mousemove = function (d, mapper) {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
                 .duration(300)
                 .style('opacity', 0.4)
                 .style('cursor', 'pointer');
+
+            // const value1 = `
+            //     Dataset: ${d.data.id} <br/>
+            //     Patients: ${d.data.value} <br/>
+            //     Models: ${d.data.models}
+            // `;
+
+            const value = Object.keys(mapper).map(key =>
+                `${key}: ${d.data[mapper[key]]}`
+            ).join('<br/>');
+
             // tooltip grabbing event.pageX and event.pageY
             // and set color according to the ordinal scale.
-            const value = `
-                Dataset: ${d.data.id} <br/>
-                Patients: ${d.data.value} <br/>
-                Models: ${d.data.models}
-            `;
-
             tooltip
                 .html([value])
                 .style('left', `${d3.event.pageX + 10}px`)
@@ -193,7 +205,7 @@ class DonutChart extends React.Component {
                 mouseover(d);
             })
             .on('mousemove', (d) => {
-                mousemove(d);
+                mousemove(d, tooltipMapper);
             })
             .on('mouseout', (d) => {
                 mouseout(d);
@@ -219,7 +231,7 @@ class DonutChart extends React.Component {
                     mouseover(d);
                 })
                 .on('mousemove', (d) => {
-                    mousemove(d);
+                    mousemove(d, tooltipMapper);
                 })
                 .on('mouseout', (d) => {
                     mouseout(d);
@@ -273,22 +285,24 @@ DonutChart.propTypes = {
     dimensions: PropTypes.shape({
         height: PropTypes.number,
         width: PropTypes.number,
-    }).isRequired,
+    }),
     margin: PropTypes.shape({
         top: PropTypes.number,
         right: PropTypes.number,
         bottom: PropTypes.number,
         left: PropTypes.number,
-    }).isRequired,
+    }),
     chartId: PropTypes.string.isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string,
         value: PropTypes.number,
+        parameter: PropTypes.number,
     })).isRequired,
     arcRadius: PropTypes.shape({
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
-    }).isRequired,
+    }),
+    tooltipMapper: PropTypes.object.isRequired,
 };
 
 export default DonutChart;

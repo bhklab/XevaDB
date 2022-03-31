@@ -236,7 +236,7 @@ const BarPlot = (props) => {
 
         // append y-axis test/label.
         appendYAxisLabel(svg, height, left, yAxisLabel);
-    }, []);
+    }, [data]);
 
     return (
         <StyledBarPlot>

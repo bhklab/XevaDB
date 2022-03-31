@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import BarPlot from '../../Plots/BarPlot';
-import mRECISTMapper from '../../../utils/mRECISTMapper';
-import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
+// import mRECISTMapper from '../../../utils/mRECISTMapper';
+// import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
 import Spinner from '../../Utils/Spinner';
 import Select from 'react-select';
 import styled from 'styled-components';
@@ -20,9 +19,6 @@ const StyledChart = styled.div`
         float: right;
     }
 `;
-
-// header constant
-const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
 
 // options for select 
 const options = [
@@ -77,29 +73,22 @@ const mRECISTArray = (data) => {
 
 
 // Patient Response Chart component 
-const PatientResponseChart = ({ drugName }) => {
+const PatientResponseScatterPlot = ({ data }) => {
     // model response data
-    const [modelResponseData, setModelResponseData] = useState([]);
+    const [transformedModelResponseData, setTransformedModelResponseData] = useState([]);
     const [mRECISTTypes, setmRECISTTypes] = useState([]);
-    const [isLoading, setLoadingState] = useState(true);
     const [selectionValue, setSelectionValue] = useState('mRECIST');
 
     // fetch model response data
-    const fetchData = async () => {
-        // fetch model response data
-        const modelResponse = await axios.get(`/api/v1/modelresponse?drug=${drugName.replace(/\s/g, '').replace('+', '_')}`, HEADER);
-
+    const fetchData = () => {
         // transform model response data
-        const transformedModelResponse = transformModelResponseData(modelResponse.data[0], selectionValue);
+        const transformedData = transformModelResponseData(data, selectionValue);
 
         // get the mRECIST array and set the state
-        setmRECISTTypes(mRECISTArray(modelResponse.data[0]));
+        setmRECISTTypes(mRECISTArray(data));
 
         // set the model response data
-        setModelResponseData(transformedModelResponse);
-
-        // update the loading state
-        setLoadingState(false);
+        setTransformedModelResponseData(transformedData);
     };
 
     // use effect react hook
@@ -107,21 +96,20 @@ const PatientResponseChart = ({ drugName }) => {
         // fetch data function
         const modelResponse = fetchData();
 
-    }, []);
+    }, [data]);
 
     return (
-        isLoading ? <Spinner loading={isLoading} /> : (
+        data.length === 0 ? <Spinner loading={true} /> : (
             <StyledChart>
-                <h1> Model Response </h1>
                 <div className='select-container'>
                     <Select
                         options={options}
                         styles={customStyles}
-                        defaultInputValue={selectionValue}
+                        defaultValue={{ value: 'mRECIST', label: 'mRECIST' }}
                     />
                 </div>
                 <BarPlot
-                    data={modelResponseData}
+                    data={transformedModelResponseData}
                     label="Model Response"
                     yAxisTicks={mRECISTTypes}
                     shouldAppendBarText={false}
@@ -135,8 +123,4 @@ const PatientResponseChart = ({ drugName }) => {
 };
 
 
-export default PatientResponseChart;
-
-PatientResponseChart.propTypes = {
-    drugName: PropTypes.string,
-};
+export default PatientResponseScatterPlot;

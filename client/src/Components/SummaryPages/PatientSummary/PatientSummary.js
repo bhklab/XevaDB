@@ -78,6 +78,7 @@ const PatientSummary = () => {
                             : (
                                 <BarPlot
                                     data={barPlotData(datasetsDetailedInformation)}
+                                    shouldAppendBarText={true}
                                     label="Number of patients"
                                 />
                             )

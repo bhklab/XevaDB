@@ -67,6 +67,7 @@ class DrugSummary extends React.Component {
                                         data={data}
                                         arcRadius={arc}
                                         label="Number of models"
+                                        shouldAppendBarText={true}
                                     />
                                 )
                         }
