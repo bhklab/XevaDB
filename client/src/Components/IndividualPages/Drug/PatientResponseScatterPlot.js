@@ -105,7 +105,7 @@ const PatientResponseScatterPlot = ({ data }) => {
                     <Select
                         options={options}
                         styles={customStyles}
-                        defaultInputValue={selectionValue}
+                        defaultValue={{ value: 'mRECIST', label: 'mRECIST' }}
                     />
                 </div>
                 <BarPlot
