@@ -700,8 +700,8 @@ class HeatMap extends Component {
                 .data(targetEval)
                 .enter()
                 .append('rect')
-                .attr('x', (width + (rectWidth * 8)))
-                .attr('y', (d, i) => (rectHeight * 9) + i * rectHeight)
+                .attr('x', width * 1.20)
+                .attr('y', (d, i) => height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75) : (height / 6 + i * rectHeight * 0.75))
                 .attr('height', rectWidth)
                 .attr('width', rectWidth)
                 .attr('fill', (d) => Object.values(d));
@@ -710,8 +710,8 @@ class HeatMap extends Component {
                 .data(targetEval)
                 .enter()
                 .append('text')
-                .attr('x', width + (rectWidth * 9.5))
-                .attr('y', (d, i) => (rectHeight * 9 + rectWidth - 2) + i * rectHeight)
+                .attr('x', width * 1.23)
+                .attr('y', (d, i) => height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75 + 12) : (height / 6 + i * rectHeight * 0.75 + 12))
                 .text((d) => Object.keys(d))
                 .attr('fill', `${colors.blue_header}`)
                 .attr('font-size', '14px');
