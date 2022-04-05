@@ -114,7 +114,7 @@ class SearchResultHeatMap extends React.Component {
             patientIdDrug: patientArray,
             // drugData: dataset,
             drugData: transformedData,
-            dimensions: { height: 30, width: 15 },
+            dimensions: { height: 30, width: 14 },
             margin: {
                 top: 200, right: 250, bottom: 50, left: 250,
             },

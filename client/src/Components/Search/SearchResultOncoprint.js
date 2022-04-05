@@ -145,7 +145,7 @@ class SearchResultOncoprint extends React.Component {
             dataMut: data.data_mut || dataMut,
             dataRna: data.data_rna || dataRna,
             dataCnv: data.data_cnv || dataCnv,
-            dimensions: { height: 30, width: 15 },
+            dimensions: { height: 30, width: 14 },
             margin: {
                 top: 50, right: 250, bottom: 150, left: 250,
             },
