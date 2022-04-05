@@ -214,7 +214,7 @@ class HeatMap extends Component {
         // ********************* legends (Except for mRECIST) ****************** //
         // ********************************************************************* //
         // creating legend for the response type except for mRECIST.
-        function createLegend(svg, height, width, min, max) {
+        function createLegend(svg, height, width, min, max, drug) {
             const defs = svg.append('defs');
 
             const linearGradient = defs.append('linearGradient')
@@ -245,11 +245,12 @@ class HeatMap extends Component {
             }
 
             // Draw the rectangle and fill with gradient
+            const heightConstant = drug.length > 4 ? 4 : 2.5;
             svg.append('rect')
                 .attr('x', width + (rectWidth * 8))
                 .attr('y', height / 3)
                 .attr('width', rectHeight)
-                .attr('height', rectHeight * 4)
+                .attr('height', rectHeight * heightConstant)
                 .style('fill', 'url(#linear-gradient)');
 
             // legend value.
@@ -262,7 +263,7 @@ class HeatMap extends Component {
                 .enter()
                 .append('text')
                 .attr('x', width + (rectWidth * 8))
-                .attr('y', (d, i) => [height / 3 - 5, height / 3 + (rectHeight * 4) + 12][i])
+                .attr('y', (d, i) => [height / 3 - 5, height / 3 + (rectHeight * heightConstant) + 12][i])
                 .text((d) => d)
                 .attr('font-size', '14px')
                 .style('text-anchor', 'start');
@@ -868,7 +869,7 @@ class HeatMap extends Component {
 
         // create legend if response type is not mRECIST.
         if (responseType !== 'mRECIST') {
-            createLegend(svg, height, width, min, max);
+            createLegend(svg, height, width, min, max, drug);
         }
     }
 
