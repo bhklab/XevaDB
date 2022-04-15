@@ -22,15 +22,14 @@ class OncoprintData extends React.Component {
             patient_mut: [],
             patient_rna: [],
             patient_cnv: [],
-            data_mut: [],
-            data_rna: [],
-            data_cnv: [],
+            data_mut: {},
+            data_rna: {},
+            data_cnv: {},
             dimensions: {},
             margin: {},
             loading: true,
             error: false,
         };
-        this.updateResults = this.updateResults.bind(this);
     }
 
     static getDerivedStateFromProps(props) {
@@ -60,7 +59,10 @@ class OncoprintData extends React.Component {
         }
     }
 
-    updateResults(onco) {
+    updateResults = (onco) => {
+        // makes a copy of the data
+        const inputData = JSON.parse(JSON.stringify(onco));
+
         // if the dataset id is equals to 4.
         if (this.state.dataset === '4') {
             this.setState({
@@ -69,11 +71,11 @@ class OncoprintData extends React.Component {
         }
 
         // total patients for the dataset.
-        let hmap_patients = onco[0].data.pop();
+        let hmap_patients = inputData[0].data.pop();
 
         // removing last element from each array element of result
-        if (onco.length > 1) {
-            onco.forEach((value, i) => {
+        if (inputData.length > 1) {
+            inputData.forEach((value, i) => {
                 if (i !== 0) {
                     value.data.pop();
                 }
@@ -81,14 +83,14 @@ class OncoprintData extends React.Component {
         }
 
         // this is according to the object and heatmap sequence.
-        onco.forEach((value, i) => { // can't break in forEach use for if wanna break.
+        inputData.forEach((value, i) => { // can't break in forEach use for if wanna break.
             const dataObject = {};
             if (value.data.length > 1) {
                 hmap_patients.forEach((patient) => {
-                    if (!onco[i].data[0][patient]) {
+                    if (!inputData[i].data[0][patient]) {
                         dataObject[patient] = '';
                     } else {
-                        dataObject[patient] = onco[i].data[0][patient];
+                        dataObject[patient] = inputData[i].data[0][patient];
                     }
                 });
                 hmap_patients = Object.keys(dataObject);
@@ -100,7 +102,7 @@ class OncoprintData extends React.Component {
         const patient = {};
         const genes = {};
         const data = {};
-        const genomics = onco[2].data.length > 1 ? ['Mutation', 'RNASeq', 'CNV'] : ['RNASeq'];
+        const genomics = inputData[2].data.length > 1 ? ['Mutation', 'RNASeq', 'CNV'] : ['RNASeq'];
 
         genomics.forEach((value) => {
             let i = 0;
@@ -114,7 +116,7 @@ class OncoprintData extends React.Component {
             const val = value.substring(0, 3).toLowerCase();
 
             // setting patients
-            const patient_id = Object.keys(onco[i].data[0]).filter((value) => {
+            const patient_id = Object.keys(inputData[i].data[0]).filter((value) => {
                 let return_value = '';
                 if (value !== 'gene_id') {
                     return_value = value;
@@ -125,11 +127,11 @@ class OncoprintData extends React.Component {
             patient[`patient_${val}`] = patient_id;
 
             // genes
-            const gene_id = onco[i].data.map((data) => data.gene_id);
+            const gene_id = inputData[i].data.map((data) => data.gene_id);
             genes[`genes_${val}`] = gene_id;
 
             // data
-            data[`data_${val}`] = onco[i].data;
+            data[`data_${val}`] = inputData[i].data;
         });
 
         this.setState({
@@ -140,9 +142,9 @@ class OncoprintData extends React.Component {
             genes_mut: genes.genes_mut || [],
             genes_rna: genes.genes_rna || [],
             genes_cnv: genes.genes_cnv || [],
-            data_mut: data.data_mut || [],
-            data_rna: data.data_rna || [],
-            data_cnv: data.data_cnv || [],
+            data_mut: data.data_mut || {},
+            data_rna: data.data_rna || {},
+            data_cnv: data.data_cnv || {},
             dimensions: { height: 30, width: 14 },
             margin: {
                 top: 50, right: 250, bottom: 50, left: 250,
