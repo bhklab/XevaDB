@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -13,46 +13,34 @@ import logo from '../../images/new_logo.png';
 import colors from '../../styles/colors';
 
 
-class Login extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: '',
-            isAuthenticated: false,
-            axiosConfig: {
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8',
-                    Accept: 'application/json',
-                },
-            },
-        };
+// axios configuration
+const axiosConfig = {
+    headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        Accept: 'application/json',
+    },
+};
 
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleUserChange = this.handleUserChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
-        this.isAuthenticated = this.isAuthenticated.bind(this);
+// main login functional component
+const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [isAuthenticated, updateAuthenticationValue] = useState(false);
+
+    // update the username
+    const handleUserChange = (event) => {
+        setUsername(event.target.value);
     }
 
-
-    handleUserChange(event) {
-        this.setState({
-            username: event.target.value,
-        });
+    // update password state
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
     }
 
-    handlePasswordChange(event) {
-        this.setState({
-            password: event.target.value,
-        });
-    }
-
-    handleSubmit(event) {
+    // function to handle submit
+    const handleSubmit = (event) => {
         // prevent the default behaviour.
         event.preventDefault();
-
-        // destructuring the state.
-        const { username, password, axiosConfig } = this.state;
 
         // post request.
         axios.post('/api/v1/login', {
@@ -61,9 +49,7 @@ class Login extends React.Component {
         }, axiosConfig.headers)
             .then((response) => {
                 localStorage.setItem('user', response.headers['auth-token']);
-                this.setState({
-                    isAuthenticated: this.isAuthenticated(),
-                });
+                updateAuthenticationValue(isUserAuthenticated());
             })
             .catch((error) => {
                 // console.log(error, 'authentication failed');
@@ -71,88 +57,85 @@ class Login extends React.Component {
             });
     }
 
-    isAuthenticated() {
+    // checks if the user is authenticated or not?
+    const isUserAuthenticated = () => {
         const token = localStorage.getItem('user');
         return token && token.length > 10;
     }
 
+    return (
+        <div>
+            {isAuthenticated ? <Redirect to={{ pathname: '/' }} /> : (
+                <div>
+                    <Link to="/">
+                        <LogoBack>
+                            <LogoStyle src={logo} alt="logo" />
+                        </LogoBack>
+                    </Link>
 
-    render() {
-        const { isAuthenticated } = this.state;
-        return (
-            <div>
-                { isAuthenticated ? <Redirect to={{ pathname: '/' }} /> : (
-                    <div>
-                        <Link to="/">
-                            <LogoBack>
-                                <LogoStyle src={logo} alt="logo" />
-                            </LogoBack>
-                        </Link>
+                    <PaperGradient>
+                        <Paper>
+                            <Typography
+                                component="h1"
+                                variant="h5"
+                                style={{
+                                    color: `${colors.blue_header}`, marginTop: '4.5vh', fontWeight: '700', fontSize: '30px',
+                                }}
+                            >
+                                Sign in
+                            </Typography>
 
-                        <PaperGradient>
-                            <Paper>
-                                <Typography
-                                    component="h1"
-                                    variant="h5"
-                                    style={{
-                                        color: `${colors.blue_header}`, marginTop: '4.5vh', fontWeight: '700', fontSize: '30px',
-                                    }}
-                                >
-                                    Sign in
-                                </Typography>
+                            <form onSubmit={handleSubmit}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Username"
+                                    name="username"
+                                    onChange={handleUserChange}
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                    onChange={handlePasswordChange}
+                                />
 
-                                <form onSubmit={this.handleSubmit}>
-                                    <TextField
-                                        variant="outlined"
-                                        margin="normal"
-                                        required
+                                <SubmitStyle>
+                                    <Button
+                                        type="submit"
                                         fullWidth
-                                        id="email"
-                                        label="Username"
-                                        name="username"
-                                        onChange={this.handleUserChange}
-                                    />
-                                    <TextField
-                                        variant="outlined"
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        name="password"
-                                        label="Password"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="current-password"
-                                        onChange={this.handlePasswordChange}
-                                    />
+                                        variant="contained"
+                                        color="primary"
+                                    >
+                                        Sign In
+                                    </Button>
+                                </SubmitStyle>
 
-                                    <SubmitStyle>
-                                        <Button
-                                            type="submit"
-                                            fullWidth
-                                            variant="contained"
-                                            color="primary"
-                                        >
-                                            Sign In
-                                        </Button>
-                                    </SubmitStyle>
-
-                                    <Grid container style={{ marginTop: '15px' }}>
-                                        <Grid item xs>
-                                            <Link to="#" variant="body2">
-                                                Forgot password?
-                                            </Link>
-                                        </Grid>
+                                <Grid container style={{ marginTop: '15px' }}>
+                                    <Grid item xs>
+                                        <Link to="#" variant="body2">
+                                            Forgot password?
+                                        </Link>
                                     </Grid>
-                                </form>
+                                </Grid>
+                            </form>
 
-                            </Paper>
-                        </PaperGradient>
+                        </Paper>
+                    </PaperGradient>
 
-                    </div>
-                )}
-            </div>
-        );
-    }
+                </div>
+            )}
+        </div>
+    );
 }
 
 
