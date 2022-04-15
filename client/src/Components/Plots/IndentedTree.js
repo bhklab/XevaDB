@@ -7,7 +7,7 @@ import colors from '../../styles/colors';
 
 // creating the default margin in case not passed as props.
 const defaultMargin = {
-    top: 100,
+    top: 50,
     right: 100,
     bottom: 100,
     left: 100,
@@ -20,7 +20,7 @@ const defaultDimensions = {
 };
 
 // node size.
-const nodeSize = 17;
+const nodeSize = 19;
 const format = d3.format(',');
 
 // create columns.
@@ -54,7 +54,7 @@ const createRoot = (data) => {
 };
 
 // create links for the tree.
-const createLinks = (svg, root) => (
+const createLineLinks = (svg, root) => (
     svg.append('g')
         .attr('fill', 'none')
         .attr('stroke', `${colors.pink_header}`)
@@ -62,34 +62,56 @@ const createLinks = (svg, root) => (
         .data(root.links())
         .join('path')
         .attr('d', (d) => `
-        M${d.source.depth * nodeSize},${d.source.index * nodeSize}
-        V${d.target.index * nodeSize}
-        h${nodeSize}
-      `)
+            M${d.source.depth * nodeSize},${d.source.index * nodeSize}
+            V${d.target.index * nodeSize}
+            h${nodeSize}
+        `)
 );
 
 // create nodes.
-const createNodes = (svg, nodes) => (
-    svg.append('g')
+const createNodes = (svg, nodes) => {
+    return svg.append('g')
         .selectAll('g')
         .data(nodes)
         .join('g')
         .attr('transform', (d) => `translate(0,${d.index * nodeSize})`)
-);
+};
 
 // create circles.
 const appendCircles = (node) => {
     node.append('circle')
         .attr('cx', (d) => d.depth * nodeSize)
-        .attr('r', 2.5)
+        .attr('r', (d) => (d.children ? 3 : 2.5))
         .attr('fill', (d) => (d.children ? null : `${colors.pink_header}`));
 };
 
+// function used by the nodes to decide on the font size based on the depth in the tree
+const getNodeFontSizeAndWeight = (node, isFontWeight = false) => {
+    const depth = node.depth;
+    switch (depth) {
+        case 0:
+            return isFontWeight ? '700' : '19px';
+            break;
+        case 1:
+            return isFontWeight ? '600' : '16px';
+            break;
+        case 2:
+            return isFontWeight ? '600' : '15px';
+            break;
+        case 3:
+            return isFontWeight ? '500' : '13px';
+            break;
+    }
+};
+
+// append main text for the nodes
 const appendText = (node) => {
     node.append('text')
         .attr('dy', '0.32em')
         .attr('x', (d) => d.depth * nodeSize + 6)
         .text((d) => d.data.name)
+        .attr('font-size', (d) => getNodeFontSizeAndWeight(d))
+        .attr('font-weight', (d) => getNodeFontSizeAndWeight(d, true))
         .attr('fill', `${colors.blue_header}`);
 
     node.append('title')
@@ -97,7 +119,8 @@ const appendText = (node) => {
         .attr('fill', `${colors.blue_header}`);
 };
 
-const appendData = (svg, root, node) => {
+// appends the text which displays the count for the children at the lowest level of the tree
+const appendDataCount = (svg, root, node) => {
     columns.forEach((data) => {
         const { label, value, format, x } = data;
         svg.append('text')
@@ -129,7 +152,7 @@ const createIndetedTree = (margin, dimensions, data) => {
     // create the svg body for the chart.
     const svg = createSVGBody(margin, dimensions, nodes);
     // links.
-    createLinks(svg, root);
+    createLineLinks(svg, root);
     // create nodes.
     const node = createNodes(svg, nodes);
     // append circles.
@@ -137,7 +160,7 @@ const createIndetedTree = (margin, dimensions, data) => {
     // append text and title.
     appendText(node);
     // append data.
-    appendData(svg, root, node);
+    appendDataCount(svg, root, node);
 };
 
 // Intented Tree component.
