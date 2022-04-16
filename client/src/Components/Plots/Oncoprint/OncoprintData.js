@@ -47,18 +47,27 @@ class OncoprintData extends React.Component {
 
             Promise.all([mutation_data, rnaseq_data, cnv_data])
                 .then((response) => {
-                    this.updateResults(response);
+                    const updatedResponse = this.createObjectFromResponse(response);
+                    this.updateResults(updatedResponse);
                 })
                 .catch((err) => {
-                    if (err) {
-                        this.setState({
-                            error: true,
-                        });
-                    }
+                    this.setState({
+                        error: true,
+                    });
                 });
         }
     }
 
+    // creates an object from the data response mapping the data to the data types
+    createObjectFromResponse = (response) => {
+        return {
+            mutation: response[0],
+            rnaseq: response[1],
+            cnv: response[2],
+        }
+    }
+
+    // creates the updated data and sets the new state
     updateResults = (onco) => {
         // makes a copy of the data
         const inputData = JSON.parse(JSON.stringify(onco));
@@ -71,67 +80,39 @@ class OncoprintData extends React.Component {
         }
 
         // total patients for the dataset.
-        let hmap_patients = inputData[0].data.pop();
+        let hmap_patients;
 
-        // removing last element from each array element of result
-        if (inputData.length > 1) {
-            inputData.forEach((value, i) => {
-                if (i !== 0) {
+        // removes the patient array from each data array
+        if (Object.keys(inputData).length > 1) {
+            Object.values(inputData).forEach((value, i) => {
+                if (i === 0) {
+                    hmap_patients = value.data.pop();
+                }
+                else {
                     value.data.pop();
                 }
             });
         }
-
-        // this is according to the object and heatmap sequence.
-        inputData.forEach((value, i) => { // can't break in forEach use for if wanna break.
-            const dataObject = {};
-            if (value.data.length > 1) {
-                hmap_patients.forEach((patient) => {
-                    if (!inputData[i].data[0][patient]) {
-                        dataObject[patient] = '';
-                    } else {
-                        dataObject[patient] = inputData[i].data[0][patient];
-                    }
-                });
-                hmap_patients = Object.keys(dataObject);
-            }
-        });
 
         // setting patients genes and data for
         // each of mutation, cnv and rna (given they are present)
         const patient = {};
         const genes = {};
         const data = {};
-        const genomics = inputData[2].data.length > 1 ? ['Mutation', 'RNASeq', 'CNV'] : ['RNASeq'];
 
-        genomics.forEach((value) => {
-            let i = 0;
-            if (value === 'Mutation') {
-                i = 0;
-            } else if (value === 'RNASeq') {
-                i = 1;
-            } else if (value === 'CNV') {
-                i = 2;
-            }
+        Object.keys(inputData).forEach((value) => {
             const val = value.substring(0, 3).toLowerCase();
 
             // setting patients
-            const patient_id = Object.keys(inputData[i].data[0]).filter((value) => {
-                let return_value = '';
-                if (value !== 'gene_id') {
-                    return_value = value;
-                }
-                return return_value;
-            });
-
+            const patient_id = Object.keys(inputData[value].data[0]).filter((value) => value !== 'gene_id');
             patient[`patient_${val}`] = patient_id;
 
             // genes
-            const gene_id = inputData[i].data.map((data) => data.gene_id);
+            const gene_id = inputData[value].data.map((data) => data.gene_id);
             genes[`genes_${val}`] = gene_id;
 
             // data
-            data[`data_${val}`] = inputData[i].data;
+            data[`data_${val}`] = inputData[value].data;
         });
 
         this.setState({
