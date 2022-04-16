@@ -108,13 +108,7 @@ class SearchResultOncoprint extends React.Component {
             const val = value.substring(0, 3).toLowerCase();
 
             // setting patients
-            const patientId = Object.keys(result[i].data[0]).filter((value) => {
-                let returnValue = '';
-                if (value !== 'gene_id') {
-                    returnValue = value;
-                }
-                return returnValue;
-            });
+            const patientId = Object.keys(result[i].data[0]).filter((value) => value !== 'gene_id');
             patient[`patient_${val}`] = patientId;
 
             // genes
