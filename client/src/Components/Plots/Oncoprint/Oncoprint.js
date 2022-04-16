@@ -30,7 +30,7 @@ const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
 const getMutationMappingObject = (data) => {
     // mutation array.
     let mutations = [];
-    data.forEach((el) => {
+    Object.values(data).forEach((el) => {
         Object.entries(el).forEach(([key, value]) => {
             if (key !== 'gene_id' && value !== '0' && value !== '') {
                 mutations.push(...value.split(','));
@@ -61,7 +61,7 @@ const getMutationMappingObject = (data) => {
  */
 const getCopyNunberVariationMapping = (data) => {
     const cnvObject = {};
-    data.forEach((obj) => {
+    Object.values(data).forEach((obj) => {
         Object.entries(obj).forEach(([key, value]) => {
             if (key !== 'gene_id' && value !== '0' && !cnvObject[cnaMap[value.toLowerCase()].xevalabel]) {
                 const xevaLabel = cnaMap[value.toLowerCase()].xevalabel;
@@ -86,12 +86,12 @@ const createAlterationData = (data_mut, data_rna, data_cnv) => {
     // adding this for rectangles on right side of oncoprint.
     // only if the mutation data is present.
     let rect_alterations_mut = [];
-    if (data_mut.length > 0) {
+    if (Object.keys(data_mut).length > 0) {
         rect_alterations_mut = getMutationMappingObject(data_mut);
     }
     // only if rnaseq data is available.
     let rect_alterations_rna = [];
-    if (data_rna.length > 0) {
+    if (Object.keys(data_rna).length > 0) {
         rect_alterations_rna = [
             { value: 'Expression High', color: 'none' },
             { value: 'Expression Low', color: 'none' },
@@ -99,12 +99,12 @@ const createAlterationData = (data_mut, data_rna, data_cnv) => {
     }
     // only if the cnv data is present.
     let rect_alterations_cnv = [];
-    if (data_cnv.length > 0) {
+    if (Object.keys(data_cnv).length > 0) {
         rect_alterations_cnv = getCopyNunberVariationMapping(data_cnv);
     }
 
     // wild type only when cnv or mut data is available
-    const remainingTypes = (data_cnv.length > 0 || data_mut.length > 0)
+    const remainingTypes = (Object.keys(data_cnv).length > 0 || Object.keys(data_mut).length > 0)
         ? [
             { value: 'Wild Type', color: 'lightgray' },
             { value: 'Not Available', color: 'none' }
@@ -366,9 +366,9 @@ const makeOncoprint = (hmap_patients, props, context) => {
     for (let i = 0; i < genes.length; i++) {
         for (let j = 0; j < hmap_patients.length; j++) {
             /** Coloring the rectangles borders based on cnv data * */
-            if (genes_cnv.includes(genes[i]) && data_cnv[i][hmap_patients[j]]) {
-                const cnvType = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].xevalabel;
-                const cnvColor = cnaMap[data_cnv[i][hmap_patients[j]].toLowerCase()].color;
+            if (genes_cnv.includes(genes[i]) && data_cnv[genes[i]][hmap_patients[j]]) {
+                const cnvType = cnaMap[data_cnv[genes[i]][hmap_patients[j]].toLowerCase()].xevalabel;
+                const cnvColor = cnaMap[data_cnv[genes[i]][hmap_patients[j]].toLowerCase()].color;
                 if (!isAlteration) {
                     isAlteration = (cnvType !== 'empty');
                 }
@@ -378,10 +378,13 @@ const makeOncoprint = (hmap_patients, props, context) => {
             /** Coloring the rectangles borders based on mutation data * */
             // if the gene from genes located in genes_mut.
             // mutation later because they are 1/3 the box.
-            if (genes_mut.includes(genes[i]) && patient_mut.includes(hmap_patients[j]) && data_mut[i][hmap_patients[j]] !== '0' && data_mut[i][hmap_patients[j]] !== '') {
+            if (
+                genes_mut.includes(genes[i]) && patient_mut.includes(hmap_patients[j]) &&
+                data_mut[genes[i]][hmap_patients[j]] !== '0' && data_mut[genes[i]][hmap_patients[j]] !== ''
+            ) {
                 isAlteration = !isAlteration ? true : isAlteration;
                 // based on the data gives different colors to the rectangle.
-                data_mut[i][hmap_patients[j]].split(',').forEach((el) => {
+                data_mut[genes[i]][hmap_patients[j]].split(',').forEach((el) => {
                     const { color } = mutationTypeMap[el.toLowerCase()];
                     const type = mutationTypeMap[el.toLowerCase()].mainType;
                     colorReactangles('mut', color, i, j, type);
@@ -398,9 +401,9 @@ const makeOncoprint = (hmap_patients, props, context) => {
             for (let j = 0; j < hmap_patients.length; j++) {
                 // only if the element is not included
                 // complete layer of lightgrey rectangles only if mutation data is not available.
-                if (Number(data_rna[z][hmap_patients[j]]) > threshold) {
+                if (Number(data_rna[genes[i]][hmap_patients[j]]) > threshold) {
                     colorReactangles('highrna', 'none', i, j);
-                } else if (Number(data_rna[z][hmap_patients[j]]) < -threshold) {
+                } else if (Number(data_rna[genes[i]][hmap_patients[j]]) < -threshold) {
                     colorReactangles('lowrna', 'none', i, j);
                 }
             }
@@ -829,7 +832,7 @@ const rankOncoprint = (gene, data, props, context) => {
         // type from the function.
         const type = retunType(i);
         // loop through each of the data value.
-        val.forEach((row) => {
+        Object.values(val).forEach((row) => {
             // if the gene id matches the clicked gene.
             if (row.gene_id === gene) {
                 Object.keys(row).forEach((patient) => {
@@ -887,6 +890,8 @@ const rankOncoprint = (gene, data, props, context) => {
  * @param {Object} props - props object
  */
 const Oncoprint = (props) => {
+    console.log(props);
+
     // patient context.
     const context = useContext(PatientContext);
 
@@ -938,9 +943,9 @@ Oncoprint.propTypes = {
     patient_mut: PropTypes.arrayOf(PropTypes.string).isRequired,
     patient_rna: PropTypes.arrayOf(PropTypes.string).isRequired,
     patient_cnv: PropTypes.arrayOf(PropTypes.string).isRequired,
-    data_mut: PropTypes.arrayOf(PropTypes.object).isRequired,
-    data_rna: PropTypes.arrayOf(PropTypes.object).isRequired,
-    data_cnv: PropTypes.arrayOf(PropTypes.object).isRequired,
+    data_mut: PropTypes.object.isRequired,
+    data_rna: PropTypes.object.isRequired,
+    data_cnv: PropTypes.object.isRequired,
 };
 
 export default Oncoprint;

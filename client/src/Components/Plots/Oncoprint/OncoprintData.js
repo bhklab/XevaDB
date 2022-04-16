@@ -112,7 +112,12 @@ class OncoprintData extends React.Component {
             genes[`genes_${val}`] = gene_id;
 
             // data
-            data[`data_${val}`] = inputData[value].data;
+            data[`data_${val}`] = {};
+            inputData[value].data.forEach(el => {
+                data[`data_${val}`][el.gene_id] = el;
+                // deletes the gene id from the data
+                // delete el.gene_id;
+            })
         });
 
         this.setState({
@@ -145,7 +150,11 @@ class OncoprintData extends React.Component {
 
         function renderingData() {
             let data = '';
-            if (data_mut.length > 0 || data_cnv.length > 0 || data_rna.length > 0) {
+            if (
+                Object.keys(data_mut).length > 0 ||
+                Object.keys(data_cnv).length > 0 ||
+                Object.keys(data_rna).length > 0
+            ) {
                 data = (
                     <Oncoprint
                         className="oprint"

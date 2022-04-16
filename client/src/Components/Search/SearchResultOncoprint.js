@@ -19,9 +19,9 @@ class SearchResultOncoprint extends React.Component {
             patientMut: [],
             patientRna: [],
             patientCnv: [],
-            dataMut: [],
-            dataRna: [],
-            dataCnv: [],
+            dataMut: {},
+            dataRna: {},
+            dataCnv: {},
             dimensions: {},
             margin: {},
             loading: true,
@@ -66,17 +66,16 @@ class SearchResultOncoprint extends React.Component {
     }
 
     updateResults(result, genomics) {
-        // grab the last array(patient array) from result[0]
-        const dataset = result[0].data;
-
         // grabbing the total patients from hmap.
-        let hmapPatients = dataset.pop();
+        let hmapPatients;
 
         // removing last element from each array element of result
         if (result.length > 1) {
             result.forEach((value, i) => {
-                if (i !== 0) {
-                    value.data.pop();
+                if (i === 0) {
+                    hmapPatients = value.data.pop();
+                } else {
+                    value.data.pop()
                 }
             });
         }
@@ -114,7 +113,12 @@ class SearchResultOncoprint extends React.Component {
             genes[`genes_${val}`] = geneId;
 
             // data
-            data[`data_${val}`] = result[i].data;
+            data[`data_${val}`] = {};
+            result[i].data.forEach(el => {
+                data[`data_${val}`][el.gene_id] = el;
+                // deletes the gene id from the data
+                // delete el.gene_id;
+            })
         });
 
         // destructuring the states and prop.
@@ -154,7 +158,11 @@ class SearchResultOncoprint extends React.Component {
 
         function renderingData() {
             let data = '';
-            if (dataMut.length || dataCnv.length || dataRna.length) {
+            if (
+                Object.keys(dataMut).length ||
+                Object.keys(dataCnv).length ||
+                Object.keys(dataRna).length
+            ) {
                 data = (
                     <Oncoprint
                         className="oprint_result"
