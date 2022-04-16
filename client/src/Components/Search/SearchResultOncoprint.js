@@ -59,11 +59,9 @@ class SearchResultOncoprint extends React.Component {
                 this.updateResults(response, genomics);
             })
             .catch((err) => {
-                if (err) {
-                    this.setState({
-                        error: true,
-                    });
-                }
+                this.setState({
+                    error: true,
+                });
             });
     }
 

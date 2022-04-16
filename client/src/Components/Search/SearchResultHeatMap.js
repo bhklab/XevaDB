@@ -64,7 +64,7 @@ class SearchResultHeatMap extends React.Component {
         });
 
         // patient from one of the object elements to keep it in sync.
-        patientArray = Object.keys(dataset[0]);
+        patientArray = Object.keys(dataset[0]).sort();
 
         // TODO: Update the 'data' for now; change later when we have average data
         // TODO: 'mRECIST' will be the max occuring value and the other parameters are just taking the first element
