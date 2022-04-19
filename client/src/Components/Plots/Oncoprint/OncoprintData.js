@@ -83,7 +83,7 @@ class OncoprintData extends React.Component {
         let hmap_patients;
 
         // removes the patient array from each data array
-        if (Object.keys(inputData).length > 1) {
+        if (Object.keys(inputData).length > 0) {
             Object.values(inputData).forEach((value, i) => {
                 if (i === 0) {
                     hmap_patients = value.data.pop();

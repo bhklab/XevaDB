@@ -66,12 +66,15 @@ class SearchResultOncoprint extends React.Component {
     }
 
     updateResults(result, genomics) {
+        // makes a copy of the data
+        const inputData = JSON.parse(JSON.stringify(result));
+
         // grabbing the total patients from hmap.
         let hmapPatients;
 
-        // removing last element from each array element of result
-        if (result.length > 1) {
-            result.forEach((value, i) => {
+        // removing last element from each array element of inputData
+        if (inputData.length > 0) {
+            inputData.forEach((value, i) => {
                 if (i === 0) {
                     hmapPatients = value.data.pop();
                 } else {
@@ -81,14 +84,14 @@ class SearchResultOncoprint extends React.Component {
         }
 
         // this is according to the object and heatmap sequence.
-        result.forEach((value, i) => { // can't break in forEach use for if wanna break.
+        inputData.forEach((value, i) => { // can't break in forEach use for if wanna break.
             const dataObject = {};
             if (value.data.length > 0) {
                 hmapPatients.forEach((patient) => {
-                    if (!result[i].data[0][patient]) {
+                    if (!inputData[i].data[0][patient]) {
                         dataObject[patient] = '';
                     } else {
-                        dataObject[patient] = result[i].data[0][patient];
+                        dataObject[patient] = inputData[i].data[0][patient];
                     }
                 });
             }
@@ -105,19 +108,17 @@ class SearchResultOncoprint extends React.Component {
             const val = value.substring(0, 3).toLowerCase();
 
             // setting patients
-            const patientId = Object.keys(result[i].data[0]).filter((value) => value !== 'gene_id');
+            const patientId = Object.keys(inputData[i].data[0]).filter((value) => value !== 'gene_id');
             patient[`patient_${val}`] = patientId;
 
             // genes
-            const geneId = result[i].data.map((data) => data.gene_id);
+            const geneId = inputData[i].data.map((data) => data.gene_id);
             genes[`genes_${val}`] = geneId;
 
             // data
             data[`data_${val}`] = {};
-            result[i].data.forEach(el => {
+            inputData[i].data.forEach(el => {
                 data[`data_${val}`][el.gene_id] = el;
-                // deletes the gene id from the data
-                // delete el.gene_id;
             })
         });
 
