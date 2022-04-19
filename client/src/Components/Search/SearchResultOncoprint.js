@@ -4,7 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Oncoprint from '../Plots/Oncoprint/Oncoprint';
 import Spinner from '../Utils/Spinner';
-import Error from '../Utils/Error';
+import ErrorComponent from '../Utils/Error';
 
 class SearchResultOncoprint extends React.Component {
     constructor(props) {
@@ -182,7 +182,7 @@ class SearchResultOncoprint extends React.Component {
                     />
                 );
             } else if (error) {
-                return <Error />;
+                return <ErrorComponent />;
             } else {
                 data = (
                     <div><Spinner loading={loading} /></div>

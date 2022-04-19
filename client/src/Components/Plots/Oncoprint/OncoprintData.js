@@ -6,7 +6,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Oncoprint from './Oncoprint';
 import Spinner from '../../Utils/Spinner';
-import Error from '../../Utils/Error';
+import ErrorComponent from '../../Utils/Error';
 import { OncoprintGenes } from '../../../utils/OncoprintGenes';
 
 class OncoprintData extends React.Component {
@@ -174,9 +174,9 @@ class OncoprintData extends React.Component {
                     />
                 );
             } else if (dataset === '4' || dataset === 4) {
-                return <Error message="There is no data available for PDXE (Gastric Cancer)" />;
+                return <ErrorComponent message="There is no data available for PDXE (Gastric Cancer)" />;
             } else if (error) {
-                return <Error message="Page not found!!" />;
+                return <ErrorComponent message="Page not found!!" />;
             }
             return data;
         }

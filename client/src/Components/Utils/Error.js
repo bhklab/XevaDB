@@ -8,7 +8,7 @@ const ErrorStyle = styled.h1`
     font-size: 2.5rem !important;
 `;
 
-const Error = ({ message }) => {
+const ErrorComponent = ({ message }) => {
     // data variable if message is not defined.
     let data = '';
     if (!message) {
@@ -22,4 +22,4 @@ const Error = ({ message }) => {
     );
 };
 
-export default Error;
+export default ErrorComponent;
