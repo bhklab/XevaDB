@@ -890,8 +890,6 @@ const rankOncoprint = (gene, data, props, context) => {
  * @param {Object} props - props object
  */
 const Oncoprint = (props) => {
-    console.log(props);
-
     // patient context.
     const context = useContext(PatientContext);
 
