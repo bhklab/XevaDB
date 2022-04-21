@@ -19,10 +19,6 @@ class HeatMap extends Component {
             modifiedPatients: [],
             responseValue: 'mRECIST',
         };
-        this.makeHeatMap = this.makeHeatMap.bind(this);
-        this.rankHeatMap = this.rankHeatMap.bind(this);
-        this.rankHeatMapBasedOnOncoprintChanges = this.rankHeatMapBasedOnOncoprintChanges.bind(this);
-        this.calcMargin = this.calcMargin.bind(this);
         // adding tool tip function 
         this.createToolTip = createToolTip.bind(this);
     }
@@ -32,7 +28,7 @@ class HeatMap extends Component {
     }
 
     // calculates the new margin for the heatmap.
-    calcMargin(selectedOption) {
+    calcMargin = (selectedOption) => {
         let margin = '';
         if (selectedOption === 'mRECIST') {
             margin = {
@@ -47,7 +43,7 @@ class HeatMap extends Component {
     };
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatMap(data = this.props.data, patient = this.props.patientId, margin = this.props.margin) {
+    makeHeatMap = (data = this.props.data, patient = this.props.patientId, margin = this.props.margin) => {
         // props data
         const { drugId: drug } = this.props;
         const { dimensions } = this.props;
@@ -873,8 +869,10 @@ class HeatMap extends Component {
         }
     }
 
-    rankHeatMap(drug, i, dataset, responseType, margin = this.props, { dimensions } = this.props,
-        { drugId } = this.props, { className } = this.props, { dataset: datasetId } = this.props) {
+    rankHeatMap = (
+        drug, i, dataset, responseType, margin = this.props, { dimensions } = this.props,
+        { drugId } = this.props, { className } = this.props, { dataset: datasetId } = this.props
+    ) => {
         // grabbing the clicked data value.
         const data = dataset[i];
 
@@ -942,7 +940,7 @@ class HeatMap extends Component {
             .style('visibility', 'visible');
     }
 
-    rankHeatMapBasedOnOncoprintChanges(value) {
+    rankHeatMapBasedOnOncoprintChanges = (value) => {
         const { data } = this.props;
         const { globalPatients } = value;
         const { className } = this.props;
