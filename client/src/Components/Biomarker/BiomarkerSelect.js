@@ -2,35 +2,22 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Select from 'react-select';
-import colors from '../../styles/colors';
 import { customStyles } from '../Search/SearchStyle';
-import styled from 'styled-components';
+import { StyledSelect } from './BiomarkerStyle';
 
-const StyledSelect = styled.div`
-    width: 80%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    margin: 2% 5% 7.5% 10%;
-    
-    .drug-select, .gene-select, .genomics-select {
-        width: 30%;
-        margin: 15px;
-    }
 
-    span {
-        margin-bottom: 5px;
-        color: ${colors.pink_header};
-        font-size: 1.15rem;
-        font-weight: 600;
-        display: inline-block;
-    }
-`;
-
+/**
+ * 
+ * @param {Object} props 
+ * @returns - Biomarker Select Component
+ */
 const BiomarkerSelect = (props) => {
+    // props
     const { genes: geneProp } = props;
     const { drug: drugProp } = props;
     const { dataTypes: dataTypesProp } = props;
+
+    // component states
     const [drugs, setDrugs] = useState([]);
     const [genes, setGenes] = useState([]);
     const [dataTypes, setDataTypes] = useState([]);
@@ -41,7 +28,6 @@ const BiomarkerSelect = (props) => {
             value: el,
             label: el,
         }));
-
         // setting the state
         setDataTypes(updatedData);
     };
@@ -50,13 +36,11 @@ const BiomarkerSelect = (props) => {
     const getDrugs = async function () {
         // API call to get the list of drugs
         const drugResponse = await axios.get('/api/v1/drugs', { headers: { Authorization: localStorage.getItem('user') } });
-
         // prepare data for drug selection
         const drugSelectionData = drugResponse.data.map(el => ({
             value: el.drug_id,
             label: el.drug_name,
         }));
-
         // setting the state
         setDrugs(drugSelectionData);
     };
