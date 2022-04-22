@@ -19,9 +19,6 @@ class HeatMapData extends React.Component {
             margin: {},
             loading: true,
         };
-        // binding the functions declared.
-        this.parseData = this.parseData.bind(this);
-        this.fetchData = this.fetchData.bind(this);
     }
 
 
@@ -39,7 +36,7 @@ class HeatMapData extends React.Component {
         }
     }
 
-    async fetchData(datasetId) {
+    fetchData = async (datasetId) => {
         // get model response data and list of patients based on the dataset id
         const modelResponse = axios.get(`/api/v1/modelresponse/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
         const patients = axios.get(`/api/v1/datasets/detail/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
@@ -55,7 +52,7 @@ class HeatMapData extends React.Component {
     }
 
     // this function takes the parsed result and set the states.
-    parseData(modelResponse, patients) {
+    parseData = (modelResponse, patients) => {
         const dataset = [];
         let patientArray = patients;
         const drug = [];
@@ -140,6 +137,8 @@ class HeatMapData extends React.Component {
             patientId, dimensions,
             margin, datasetParam,
         } = this.state;
+
+        console.log(drugId);
 
         return (
             <div>
