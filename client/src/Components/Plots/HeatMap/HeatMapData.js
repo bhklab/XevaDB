@@ -41,11 +41,15 @@ class HeatMapData extends React.Component {
 
     async fetchData(datasetId) {
         // get model response data and list of patients based on the dataset id
-        const modelResponse = await axios.get(`/api/v1/modelresponse/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
-        const patients = await axios.get(`/api/v1/datasets/detail/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const modelResponse = axios.get(`/api/v1/modelresponse/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const patients = axios.get(`/api/v1/datasets/detail/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
 
-        const modelResponseData = modelResponse.data;
-        const patientsData = patients.data.datasets[0].patients;
+        // running both API calls in parallel
+        const data = await Promise.all([modelResponse, patients]);
+
+        // get model response and patient data
+        const modelResponseData = data[0].data;
+        const patientsData = data[1].data.datasets[0].patients;
 
         this.parseData(modelResponseData, patientsData);
     }
