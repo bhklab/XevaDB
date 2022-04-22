@@ -27,6 +27,7 @@ class OncoprintData extends React.Component {
             data_cnv: {},
             dimensions: {},
             margin: {},
+            drugs: [],
             loading: true,
             error: false,
         };
@@ -44,8 +45,9 @@ class OncoprintData extends React.Component {
             const mutation_data = axios.get(`/api/v1/mutation?genes=${OncoprintGenes}&dataset=${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
             const rnaseq_data = axios.get(`/api/v1/rnaseq?genes=${OncoprintGenes}&dataset=${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
             const cnv_data = axios.get(`/api/v1/cnv?genes=${OncoprintGenes}&dataset=${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const drugs = axios.get(`/api/v1/datasets/detail/${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
 
-            Promise.all([mutation_data, rnaseq_data, cnv_data])
+            Promise.all([mutation_data, rnaseq_data, cnv_data, drugs])
                 .then((response) => {
                     const updatedResponse = this.createObjectFromResponse(response);
                     this.updateResults(updatedResponse);
@@ -64,6 +66,7 @@ class OncoprintData extends React.Component {
             mutation: response[0],
             rnaseq: response[1],
             cnv: response[2],
+            drugs: response[3],
         }
     }
 
@@ -71,6 +74,12 @@ class OncoprintData extends React.Component {
     updateResults = (onco) => {
         // makes a copy of the data
         const inputData = JSON.parse(JSON.stringify(onco));
+
+        // grab drugs
+        const drugs = inputData.drugs.data.datasets[0].drugs;
+
+        // delete the drug object from the inputData object
+        delete inputData.drugs;
 
         // if the dataset id is equals to 4.
         if (this.state.dataset === '4') {
@@ -131,6 +140,7 @@ class OncoprintData extends React.Component {
             data_mut: data.data_mut || {},
             data_rna: data.data_rna || {},
             data_cnv: data.data_cnv || {},
+            drugs,
             dimensions: { height: 30, width: 14 },
             margin: {
                 top: 50, right: 250, bottom: 50, left: 250,
@@ -143,7 +153,7 @@ class OncoprintData extends React.Component {
         const {
             genes_mut, genes_rna, genes_cnv,
             patient_mut, patient_rna, patient_cnv,
-            data_mut, data_rna, data_cnv,
+            data_mut, data_rna, data_cnv, drugs,
             dimensions, margin, threshold,
             hmap_patients, loading, error, dataset,
         } = this.state;
@@ -171,6 +181,7 @@ class OncoprintData extends React.Component {
                         data_mut={data_mut}
                         data_rna={data_rna}
                         data_cnv={data_cnv}
+                        drugs={drugs}
                     />
                 );
             } else if (dataset === '4' || dataset === 4) {
