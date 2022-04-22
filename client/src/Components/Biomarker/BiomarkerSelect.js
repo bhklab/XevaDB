@@ -13,8 +13,10 @@ import { StyledSelect } from './BiomarkerStyle';
  */
 const BiomarkerSelect = (props) => {
     // props
-    const { genes: geneProp } = props;
-    const { drug: drugProp } = props;
+    const { geneList: geneListProp } = props;
+    const { selectedGene: selectedGeneProp } = props;
+    const { drugList: drugListProp } = props;
+    const { selectedDrug: selectedDrugProp } = props;
     const { dataTypes: dataTypesProp } = props;
 
     // component states
@@ -34,14 +36,25 @@ const BiomarkerSelect = (props) => {
 
     // function to get the drug data
     const getDrugs = async function () {
-        // API call to get the list of drugs
-        const drugResponse = await axios.get('/api/v1/drugs', { headers: { Authorization: localStorage.getItem('user') } });
-        // prepare data for drug selection
-        const drugSelectionData = drugResponse.data.map(el => ({
-            value: el.drug_id,
-            label: el.drug_name,
-        }));
-        // setting the state
+        // final data array
+        let drugSelectionData = [];
+
+        if (drugListProp) {
+            drugSelectionData = drugListProp.split(',').map(drug => ({
+                value: drug,
+                label: drug,
+            }));
+        } else {
+            // API call to get the list of drugs
+            const drugResponse = await axios.get('/api/v1/drugs', { headers: { Authorization: localStorage.getItem('user') } });
+            // prepare data for drug selection
+            drugSelectionData = drugResponse.data.map(el => ({
+                value: el.drug_id,
+                label: el.drug_name,
+            }));
+        }
+
+        // set the drug state with the data
         setDrugs(drugSelectionData);
     };
 
@@ -51,15 +64,17 @@ const BiomarkerSelect = (props) => {
         let geneList = [];
         let geneSelectionData = [];
 
-        if (geneProp) {
-            geneList = geneProp.split(',');
+        if (geneListProp) {
+            geneList = geneListProp.split(',');
 
             geneSelectionData = geneList.map(gene => ({
                 value: gene,
                 label: gene,
             }));
         } else {
-            geneList = await (await axios.get('/api/v1/genes', { headers: { Authorization: localStorage.getItem('user') } })).data.data;
+            geneList = await (
+                await axios.get('/api/v1/genes', { headers: { Authorization: localStorage.getItem('user') } })
+            ).data.data;
 
             geneSelectionData = geneList.map(gene => ({
                 value: gene.gene_name,
@@ -87,7 +102,7 @@ const BiomarkerSelect = (props) => {
                 <Select
                     styles={customStyles}
                     options={drugs}
-                    defaultValue={drugProp ? { value: drugProp, label: drugProp } : ''}
+                    defaultValue={selectedDrugProp ? { value: selectedDrugProp, label: selectedDrugProp } : ''}
                 />
             </div>
             <div className='gene-select'>
@@ -95,6 +110,7 @@ const BiomarkerSelect = (props) => {
                 <Select
                     styles={customStyles}
                     options={genes}
+                    defaultValue={selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : ''}
                 />
             </div>
             <div className='genomics-select'>

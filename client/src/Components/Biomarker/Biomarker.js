@@ -32,16 +32,26 @@ const Biomarker = (props) => {
     const { location } = props;
     // get genes param
     const params = new URLSearchParams(location.search);
-    const genes = params.get('genes');
-    const drug = params.get('drug');
+    const geneList = params.get('geneList');
+    const selectedGene = params.get('selectedGene');
+    const drugList = params.get('drugList');
+    const selectedDrug = params.get('selectedDrug');
     const mDataTypes = getAllDataTypes(data.gctd);
+
+    console.log(geneList, selectedDrug, selectedGene, drugList);
 
     return (
         <StyledBiomarker>
             <GlobalStyles />
             <div className='wrapper'>
                 <div className='biomarker-wrapper'>
-                    <BiomarkerSelect genes={genes} drug={drug} dataTypes={mDataTypes} />
+                    <BiomarkerSelect
+                        geneList={geneList}
+                        selectedGene={selectedGene}
+                        drugList={drugList}
+                        selectedDrug={selectedDrug}
+                        dataTypes={mDataTypes}
+                    />
                     <ForestPlot data={data.gctd} />
                 </div>
             </div>
