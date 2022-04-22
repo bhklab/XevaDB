@@ -548,7 +548,7 @@ class HeatMap extends Component {
             .style('opacity', 0);
 
 
-        /** *********************************** biomarker Image************************************** */
+        /** *********************************** biomarker Image ************************************** */
         const biomarkerImage = skeleton
             .append('g')
             .attr('id', 'biomarker-image')
@@ -557,7 +557,7 @@ class HeatMap extends Component {
         biomarkerImage.selectAll('div')
             .data(drug)
             .join('a')
-            .attr('xlink:href', (d) => geneList ? `/biomarker?genes=${geneList.join(',')}&drug=${d}` : `/biomarker?drug=${d}`)
+            .attr('xlink:href', (d) => geneList ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drug}&selectedDrug=${d}` : `/biomarker?selectedDrug=${d}`)
             .append('text')
             .text('🧬')
             .attr('x', -40)
