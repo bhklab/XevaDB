@@ -144,7 +144,8 @@ const sortingCircles = (genes, svg, rect_height) => {
 };
 
 const createGeneYAxis = (
-    skeleton, genes, rect_height, rect_width, tooltip, data_mut, data_cnv, data_rna, props, context,
+    skeleton, genes, rect_height, rect_width, tooltip,
+    data_mut, data_cnv, data_rna, props, context,
 ) => {
     // geneNames
     const geneNames = skeleton.append('g')
@@ -154,7 +155,7 @@ const createGeneYAxis = (
     for (let i = 0; i < genes.length; i++) {
         geneNames.append('text')
             .attr('class', genes[i])
-            .attr('dx', -25)
+            .attr('dx', -45)
             .style('text-anchor', 'end')
             .style('font-size', '11px')
             .attr('dy', i * (rect_height) + rect_width)
@@ -203,6 +204,43 @@ const createGeneYAxis = (
     }
 };
 
+const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, tooltip) => {
+    const biomarkerImage = skeleton
+        .append('g')
+        .attr('id', 'biomarker-image')
+
+    biomarkerImage.selectAll('div')
+        .data(genes)
+        .join('a')
+        .attr('xlink:href', (d) => drugs ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}` : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`)
+        .append('text')
+        .text('🧬')
+        .attr('x', -40)
+        .attr('y', (d, i) => (i + 0.60) * rect_height)
+        .on('mouseover', function (d) {
+            const tooltipDiv = tooltip
+                .style('visibility', 'visible')
+                .style('left', `${d3.event.pageX - 100}px`)
+                .style('top', `${d3.event.pageY + 15}px`)
+                .style('color', `${colors.black}`)
+                .style('background-color', `${colors.white}`)
+
+            // add text to tooltip
+            tooltipDiv
+                .append('text')
+                .attr('id', 'tooltip-biomarker')
+                .text('Redirect to Biomarker Page');
+        })
+        .on('mouseout', function () {
+            // hide the tooltip
+            tooltip
+                .style('visibility', 'hidden');
+
+            // remove the biomarker tooltip data
+            d3.select('#tooltip-biomarker').remove();
+        });
+}
+
 /**
  * @param {Array} genes - array of genes.
  * @param {Array} genes_mut - array of genes for mutation.
@@ -241,6 +279,8 @@ const patientAlteration = (hmap_patients, genes_mut, genes_cnv) => {
     return patient_alterations;
 };
 
+
+/* ****************************************** Make Oncoprint ****************************************** */
 /**
  * main function to create the oncoprint
  * @param {Array} hmap_patients - patient array
@@ -256,6 +296,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
     const { data_mut, data_rna, data_cnv } = props;
     const { genes_mut, genes_rna, genes_cnv } = props;
     const { patient_mut, patient_rna, patient_cnv } = props;
+    const { drugs } = props;
 
     // unique patients and genes.
     const genes = [...new Set([...genes_mut, ...genes_rna, ...genes_cnv])];
@@ -289,8 +330,9 @@ const makeOncoprint = (hmap_patients, props, context) => {
     /** Appending Circle to the  Y-Axis */
     sortingCircles(genes, svg, rect_height);
 
-    /* *  Gene Names on Y-Axis * */
+    /* *  Gene Names on Y-Axis and Biomarker Image* */
     createGeneYAxis(skeleton, genes, rect_height, rect_width, tooltip, data_mut, data_cnv, data_rna, props, context);
+    createBiomarkerImage(skeleton, genes, drugs, rect_height, rect_width, tooltip);
 
     /* ****************************************** Setting Alterations ****************************************** */
     // alterations: mutations are #1a9850 and a third, AMP/del are #e41a1c/#0033CC and full respectively
@@ -412,7 +454,6 @@ const makeOncoprint = (hmap_patients, props, context) => {
     }
 
     /** *******************************************ALTERATION GRAPHS******************************************* * */
-
     /** ******************************************* Vertical Graph  ******************************************** */
     if ((genes_mut.length > 0 || genes_cnv.length > 0) && isAlteration) {
         // calculating max width
@@ -631,10 +672,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('fill', 'rgb(0,0,0)')
         .attr('y', 0)
         .style('opacity', 0);
-    // }
 
     /** ******************************** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint ******************************** */
-
     // This will create rectangles on right side for alterations.
     // legends
     const target_rect = skeleton.append('g')
@@ -768,6 +807,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
     }
 };
 
+
+/** ******************************** Rank Oncoprint ******************************** */
 /**
  * ranking oncoprint based on the gene clicked.
  * @param {string} gene - gene name.
@@ -885,6 +926,8 @@ const rankOncoprint = (gene, data, props, context) => {
         .style('visibility', 'visible');
 };
 
+
+/** ******************************** Oncoprint Main Component ******************************** */
 /**
  * main component
  * @param {Object} props - props object
@@ -944,6 +987,7 @@ Oncoprint.propTypes = {
     data_mut: PropTypes.object.isRequired,
     data_rna: PropTypes.object.isRequired,
     data_cnv: PropTypes.object.isRequired,
+    drugs: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default Oncoprint;
