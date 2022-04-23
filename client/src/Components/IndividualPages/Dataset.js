@@ -47,7 +47,7 @@ class Dataset extends React.Component {
                                 datasetId={dataset}
                             />
                             <OncoprintData
-                                dataset={dataset}
+                                datasetId={dataset}
                             />
                         </PatientProvider>
                     </div>

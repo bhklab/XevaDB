@@ -33,19 +33,19 @@ class OncoprintData extends React.Component {
         };
     }
 
-    static getDerivedStateFromProps(props) {
-        const { dataset } = props;
-        return {
-            dataset,
-        };
-    }
-
     componentDidMount() {
-        if (this.state.dataset > 0) {
-            const mutation_data = axios.get(`/api/v1/mutation?genes=${OncoprintGenes}&dataset=${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const rnaseq_data = axios.get(`/api/v1/rnaseq?genes=${OncoprintGenes}&dataset=${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const cnv_data = axios.get(`/api/v1/cnv?genes=${OncoprintGenes}&dataset=${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const drugs = axios.get(`/api/v1/datasets/detail/${this.state.dataset}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const { datasetId } = this.props;
+
+        // if the dataset id is equals to 4.
+        if (datasetId === '4' || datasetId === 4) {
+            this.setState({
+                loading: false,
+            });
+        } else if (datasetId > 0) {
+            const mutation_data = axios.get(`/api/v1/mutation?genes=${OncoprintGenes}&dataset=${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const rnaseq_data = axios.get(`/api/v1/rnaseq?genes=${OncoprintGenes}&dataset=${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const cnv_data = axios.get(`/api/v1/cnv?genes=${OncoprintGenes}&dataset=${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const drugs = axios.get(`/api/v1/datasets/detail/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
 
             Promise.all([mutation_data, rnaseq_data, cnv_data, drugs])
                 .then((response) => {
@@ -57,7 +57,7 @@ class OncoprintData extends React.Component {
                         error: true,
                     });
                 });
-        }
+        };
     }
 
     // creates an object from the data response mapping the data to the data types
@@ -80,13 +80,6 @@ class OncoprintData extends React.Component {
 
         // delete the drug object from the inputData object
         delete inputData.drugs;
-
-        // if the dataset id is equals to 4.
-        if (this.state.dataset === '4') {
-            this.setState({
-                loading: false,
-            });
-        }
 
         // total patients for the dataset.
         let hmap_patients;
@@ -155,17 +148,30 @@ class OncoprintData extends React.Component {
             patient_mut, patient_rna, patient_cnv,
             data_mut, data_rna, data_cnv, drugs,
             dimensions, margin, threshold,
-            hmap_patients, loading, error, dataset,
+            hmap_patients, loading, error
         } = this.state;
 
+        const { datasetId } = this.props;
+
         function renderingData() {
-            let data = '';
+            // if error occures render the error component!
+            if (error) {
+                return <ErrorComponent message="Page not found!!" />;
+            };
+
+            // if the dataset id is 4 then there is no data available!
+            if (datasetId === '4' || datasetId === 4) {
+                return (
+                    <ErrorComponent message="There is no data available for PDXE (Gastric Cancer)" />
+                );
+            };
+
             if (
                 Object.keys(data_mut).length > 0 ||
                 Object.keys(data_cnv).length > 0 ||
                 Object.keys(data_rna).length > 0
             ) {
-                data = (
+                return (
                     <Oncoprint
                         className="oprint"
                         dimensions={dimensions}
@@ -184,12 +190,7 @@ class OncoprintData extends React.Component {
                         drugs={drugs}
                     />
                 );
-            } else if (dataset === '4' || dataset === 4) {
-                return <ErrorComponent message="There is no data available for PDXE (Gastric Cancer)" />;
-            } else if (error) {
-                return <ErrorComponent message="Page not found!!" />;
             }
-            return data;
         }
 
         return (
@@ -203,7 +204,10 @@ class OncoprintData extends React.Component {
 }
 
 OncoprintData.propTypes = {
-    dataset: PropTypes.string.isRequired,
+    datasetId: PropTypes.string.isRequired,
+    geneList: PropTypes.string,
+    genomicsList: PropTypes.string,
+    threshold: PropTypes.string,
 };
 
 export default OncoprintData;
