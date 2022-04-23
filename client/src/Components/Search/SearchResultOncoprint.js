@@ -27,8 +27,6 @@ class SearchResultOncoprint extends React.Component {
             loading: true,
             error: false,
         };
-        // binding the functions declared.
-        this.updateResults = this.updateResults.bind(this);
     }
 
 
@@ -65,7 +63,7 @@ class SearchResultOncoprint extends React.Component {
             });
     }
 
-    updateResults(result, genomics) {
+    updateResults = (result, genomics) => {
         // makes a copy of the data
         const inputData = JSON.parse(JSON.stringify(result));
 
