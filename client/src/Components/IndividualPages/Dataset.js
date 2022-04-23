@@ -44,7 +44,7 @@ class Dataset extends React.Component {
                     <div className='heatmap-oncoprint-wrapper center-component'>
                         <PatientProvider value={providerData}>
                             <HeatMapData
-                                dataset={dataset}
+                                datasetId={dataset}
                             />
                             <OncoprintData
                                 dataset={dataset}

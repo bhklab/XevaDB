@@ -14,32 +14,43 @@ class HeatMapData extends React.Component {
             data: [],
             patientId: [],
             drugId: [],
-            datasetParam: 0,
-            dimensions: {},
-            margin: {},
+            datasetIdProp: 0,
+            drugListProp: '',
+            geneListProp: '',
+            dimensions: { height: 30, width: 14 },
+            margin: { top: 200, right: 250, bottom: 50, left: 250 },
             loading: true,
         };
     }
 
-
     static getDerivedStateFromProps(props) {
-        const { dataset } = props;
+        const { datasetId, geneList, drugList } = props;
         return {
-            datasetParam: dataset,
+            datasetIdProp: datasetId,
+            geneListProp: geneList ? geneList.split(',') : OncoprintGenes,
+            drugListProp: drugList,
         };
     }
 
     componentDidMount() {
-        const { datasetParam } = this.state;
-        if (datasetParam > 0) {
-            this.fetchData(datasetParam);
+        const { datasetIdProp } = this.state;
+        if (datasetIdProp > 0) {
+            this.fetchData();
         }
     }
 
-    fetchData = async (datasetId) => {
+    fetchData = async () => {
         // get model response data and list of patients based on the dataset id
-        const modelResponse = axios.get(`/api/v1/modelresponse/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
-        const patients = axios.get(`/api/v1/datasets/detail/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
+        let modelResponse = '';
+
+        if (this.state.drugListProp) {
+            modelResponse = axios.get(`/api/v1/modelresponse?drug=${this.state.drugListProp}&dataset=${this.state.datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
+        } else {
+            modelResponse = axios.get(`/api/v1/modelresponse/${this.state.datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
+        };
+
+        // patient API call
+        const patients = axios.get(`/api/v1/datasets/detail/${this.state.datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
 
         // running both API calls in parallel
         const data = await Promise.all([modelResponse, patients]);
@@ -123,45 +134,43 @@ class HeatMapData extends React.Component {
             patientId: patientArray,
             // data: dataset,
             data: transformedData,
-            dimensions: { height: 30, width: 14 },
-            margin: {
-                top: 200, right: 250, bottom: 50, left: 250,
-            },
             loading: false,
         });
     }
 
     render() {
         const {
-            data, drugId, loading,
-            patientId, dimensions,
-            margin, datasetParam,
+            data, drugId, loading, patientId, dimensions,
+            margin, datasetIdProp, geneListProp,
         } = this.state;
-
-        console.log(drugId);
 
         return (
             <div>
-                {loading ? <Spinner loading={loading} />
-                    : (
-                        <HeatMap
-                            data={data}
-                            drugId={drugId}
-                            patientId={patientId}
-                            dimensions={dimensions}
-                            margin={margin}
-                            dataset={datasetParam}
-                            className="heatmap"
-                            geneList={OncoprintGenes}
-                        />
-                    )}
+                {
+                    loading
+                        ? <Spinner loading={loading} />
+                        : (
+                            <HeatMap
+                                data={data}
+                                drugId={drugId}
+                                patientId={patientId}
+                                dimensions={dimensions}
+                                margin={margin}
+                                dataset={datasetIdProp}
+                                className='heatmap'
+                                geneList={geneListProp}
+                            />
+                        )
+                }
             </div>
         );
     }
 }
 
 HeatMapData.propTypes = {
-    dataset: PropTypes.string.isRequired,
+    datasetId: PropTypes.string.isRequired,
+    drugList: PropTypes.string,
+    geneList: PropTypes.string,
 };
 
 export default HeatMapData;

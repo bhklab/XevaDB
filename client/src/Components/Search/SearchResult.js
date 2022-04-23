@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchResultHeatMap from './SearchResultHeatMap';
+import HeatMapData from '../Plots/HeatMap/HeatMapData';
 import SearchResultOncoprint from './SearchResultOncoprint';
 import GlobalStyles from '../../GlobalStyles';
 import { PatientProvider } from '../Context/PatientContext';
@@ -59,10 +59,10 @@ class SearchResult extends React.Component {
                 <div className="wrapper">
                     <div className='heatmap-oncoprint-wrapper center-component'>
                         <PatientProvider value={providerData}>
-                            <SearchResultHeatMap
-                                drugParam={drugParam}
-                                datasetParam={datasetParam}
-                                geneParam={geneParam}
+                            <HeatMapData
+                                drugList={drugParam}
+                                datasetId={datasetParam}
+                                geneList={geneParam}
                             />
                             <SearchResultOncoprint
                                 geneParam={geneParam}
