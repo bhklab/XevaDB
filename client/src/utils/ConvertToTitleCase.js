@@ -6,7 +6,7 @@
  */
 const convertToTitleCase = (string = '', splitBy = ' ') => {
     if (typeof (string) !== 'string') {
-        return Error('Enter a valid string!!');
+        return new Error('Enter a valid string!!');
     }
 
     const capitalString = string.split(splitBy).map((str) => {

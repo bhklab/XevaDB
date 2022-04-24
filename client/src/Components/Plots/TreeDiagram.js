@@ -152,10 +152,19 @@ const createTreeDiagram = (margin, dimensions, data) => {
 
 // Tree Diagram component.
 const TreeDiagram = (props) => {
+    // data from the props
+    const { data } = props;
+
+    // count the number of children
+    const childrenCount = data.children.reduce((previous, current, currentIndex) => {
+        return previous + current.children.length;
+    }, 0);
+
     // margin and dimensions.
+    const childrenDistance = 20;
     const margin = props.margin || defaultMargin;
     const dimensions = props.dimensions || defaultDimensions;
-    const { data } = props;
+    dimensions.height = childrenCount * childrenDistance > dimensions.height ? childrenCount * childrenDistance : dimensions.height;
 
     // create the tree diagram.
     useEffect(() => {

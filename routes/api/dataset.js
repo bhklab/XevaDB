@@ -17,7 +17,9 @@ const getAllDatasetsQuery = () => knex.select()
  */
 const getAllDatasetsDetailQuery = () => knex.select()
     .from('datasets as d')
-    .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'dt.dataset_id')
+    .leftJoin('datasets_drugs as dd', 'd.dataset_id', 'dd.dataset_id')
+    .leftJoin('drugs as dg', 'dd.drug_id', 'dg.drug_id')
+    .leftJoin('datasets_tissues as dt', 'd.dataset_id', 'dt.dataset_id')
     .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id')
     .leftJoin('patients as p', 'p.dataset_id', 'd.dataset_id')
     .leftJoin('models as m', 'm.patient_id', 'p.patient_id');
@@ -53,6 +55,7 @@ const transformDatasetDetail = (data) => {
                 tissue: value.tissue_name,
                 patients: [value.patient],
                 models: [value.model],
+                drugs: [value.drug_name]
             };
         }
         if (!transformedData[value.dataset_name].models.includes(value.model)) {
@@ -60,6 +63,9 @@ const transformDatasetDetail = (data) => {
         }
         if (!transformedData[value.dataset_name].patients.includes(value.patient)) {
             transformedData[value.dataset_name].patients.push(value.patient);
+        }
+        if (!transformedData[value.dataset_name].drugs.includes(value.drug_name)) {
+            transformedData[value.dataset_name].drugs.push(value.drug_name);
         }
     });
     return transformedData;
