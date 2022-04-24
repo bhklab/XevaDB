@@ -31,18 +31,23 @@ class OncoprintData extends React.Component {
             loading: true,
             error: false,
         };
-        this.genomics = {
-            'Mutation': 'mutation',
-            'RNASeq': 'rnaseq',
-            'Gene Expression': 'rnaseq',
-            'CNV': 'cnv',
-        }
+        this.defaultGenomics = ['mutation', 'rnaseq', 'cnv'];
     }
 
     componentDidMount() {
+        // dataset prop
         const { datasetId: datasetIdProp } = this.props;
+
+        // drug list prop 'string` type convert to 'array'
         const drugListProp = this.props.drugList?.split(',');
-        const genomicsListProp = this.props.genomicsList?.split(',');
+
+        // setting the genomics prop and updating the list
+        let genomicsListProp = this.props.genomicsList?.split(',') || this.defaultGenomics;
+        genomicsListProp = genomicsListProp.map(genomics => {
+            return genomics === 'Gene Expression' ? 'rnaseq' : genomics.toLowerCase();
+        });
+
+        // gene list prop
         const geneListProp = this.props.geneList || OncoprintGenes;
 
         // if the dataset id is equals to 4.
@@ -50,21 +55,37 @@ class OncoprintData extends React.Component {
             this.setState({
                 loading: false,
             });
-        } else if (genomicsListProp) {
+        } else if (Number(datasetIdProp) > 0) {
             const queries = genomicsListProp.map((genomics) => {
+                // return the API call
                 return axios.get(
-                    `/api/v1/${this.genomics[genomics]}?genes=${geneListProp}&dataset=${datasetIdProp}`,
+                    `/api/v1/${genomics}?genes=${geneListProp}&dataset=${datasetIdProp}`,
                     { headers: { Authorization: localStorage.getItem('user') } }
                 );
-            })
+            });
+
+            if (!drugListProp) {
+                queries.push(
+                    axios.get(
+                        `/api/v1/datasets/detail/${datasetIdProp}`,
+                        { headers: { Authorization: localStorage.getItem('user') } }
+                    )
+                )
+            };
 
             Promise.all([...queries])
                 .then((response) => {
+                    // updated response object
                     const updatedResponseObject = {};
+
+                    // maps the genomics type to response
                     genomicsListProp.forEach((genomics, i) => {
-                        updatedResponseObject[this.genomics[genomics]] = response[i];
+                        updatedResponseObject[genomics] = response[i];
                     });
-                    updatedResponseObject.drugs = drugListProp;
+
+                    // add drug detail to the response object
+                    updatedResponseObject.drugs = drugListProp || response.at(-1).data.datasets[0].drugs;
+
                     this.updateResults(updatedResponseObject);
                 })
                 .catch((err) => {
@@ -72,32 +93,6 @@ class OncoprintData extends React.Component {
                         error: true,
                     });
                 });
-        } else if (datasetIdProp > 0) {
-            const mutation_data = axios.get(`/api/v1/mutation?genes=${geneListProp}&dataset=${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const rnaseq_data = axios.get(`/api/v1/rnaseq?genes=${geneListProp}&dataset=${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const cnv_data = axios.get(`/api/v1/cnv?genes=${geneListProp}&dataset=${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const drugs = axios.get(`/api/v1/datasets/detail/${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
-
-            Promise.all([mutation_data, rnaseq_data, cnv_data, drugs])
-                .then((response) => {
-                    const updatedResponse = this.createObjectFromResponse(response);
-                    this.updateResults(updatedResponse);
-                })
-                .catch((err) => {
-                    this.setState({
-                        error: true,
-                    });
-                });
-        };
-    }
-
-    // creates an object from the data response mapping the data to the data types
-    createObjectFromResponse = (response) => {
-        return {
-            mutation: response[0],
-            rnaseq: response[1],
-            cnv: response[2],
-            drugs: response[3].data.datasets[0].drugs,
         }
     }
 
