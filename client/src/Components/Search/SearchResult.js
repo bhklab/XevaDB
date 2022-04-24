@@ -1,6 +1,6 @@
 import React from 'react';
 import HeatMapData from '../Plots/HeatMap/HeatMapData';
-import SearchResultOncoprint from './SearchResultOncoprint';
+import OncoprintData from '../Plots/Oncoprint/OncoprintData';
 import GlobalStyles from '../../GlobalStyles';
 import { PatientProvider } from '../Context/PatientContext';
 
@@ -64,11 +64,12 @@ class SearchResult extends React.Component {
                                 datasetId={datasetParam}
                                 geneList={geneParam}
                             />
-                            <SearchResultOncoprint
-                                geneParam={geneParam}
-                                datasetParam={datasetParam}
-                                genomicsParam={genomicsParam}
+                            <OncoprintData
+                                geneList={geneParam}
+                                datasetId={datasetParam}
+                                genomicsList={genomicsParam}
                                 threshold={threshold}
+                                drugList={drugParam}
                             />
                         </PatientProvider>
                     </div>

@@ -31,21 +31,52 @@ class OncoprintData extends React.Component {
             loading: true,
             error: false,
         };
+        this.genomics = {
+            'Mutation': 'mutation',
+            'RNASeq': 'rnaseq',
+            'Gene Expression': 'rnaseq',
+            'CNV': 'cnv',
+        }
     }
 
     componentDidMount() {
-        const { datasetId } = this.props;
+        const { datasetId: datasetIdProp } = this.props;
+        const drugListProp = this.props.drugList?.split(',');
+        const genomicsListProp = this.props.genomicsList?.split(',');
+        const geneListProp = this.props.geneList || OncoprintGenes;
 
         // if the dataset id is equals to 4.
-        if (datasetId === '4' || datasetId === 4) {
+        if (datasetIdProp === '4' || datasetIdProp === 4) {
             this.setState({
                 loading: false,
             });
-        } else if (datasetId > 0) {
-            const mutation_data = axios.get(`/api/v1/mutation?genes=${OncoprintGenes}&dataset=${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const rnaseq_data = axios.get(`/api/v1/rnaseq?genes=${OncoprintGenes}&dataset=${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const cnv_data = axios.get(`/api/v1/cnv?genes=${OncoprintGenes}&dataset=${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
-            const drugs = axios.get(`/api/v1/datasets/detail/${datasetId}`, { headers: { Authorization: localStorage.getItem('user') } });
+        } else if (genomicsListProp) {
+            const queries = genomicsListProp.map((genomics) => {
+                return axios.get(
+                    `/api/v1/${this.genomics[genomics]}?genes=${geneListProp}&dataset=${datasetIdProp}`,
+                    { headers: { Authorization: localStorage.getItem('user') } }
+                );
+            })
+
+            Promise.all([...queries])
+                .then((response) => {
+                    const updatedResponseObject = {};
+                    genomicsListProp.forEach((genomics, i) => {
+                        updatedResponseObject[this.genomics[genomics]] = response[i];
+                    });
+                    updatedResponseObject.drugs = drugListProp;
+                    this.updateResults(updatedResponseObject);
+                })
+                .catch((err) => {
+                    this.setState({
+                        error: true,
+                    });
+                });
+        } else if (datasetIdProp > 0) {
+            const mutation_data = axios.get(`/api/v1/mutation?genes=${geneListProp}&dataset=${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const rnaseq_data = axios.get(`/api/v1/rnaseq?genes=${geneListProp}&dataset=${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const cnv_data = axios.get(`/api/v1/cnv?genes=${geneListProp}&dataset=${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
+            const drugs = axios.get(`/api/v1/datasets/detail/${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
 
             Promise.all([mutation_data, rnaseq_data, cnv_data, drugs])
                 .then((response) => {
@@ -66,7 +97,7 @@ class OncoprintData extends React.Component {
             mutation: response[0],
             rnaseq: response[1],
             cnv: response[2],
-            drugs: response[3],
+            drugs: response[3].data.datasets[0].drugs,
         }
     }
 
@@ -76,7 +107,7 @@ class OncoprintData extends React.Component {
         const inputData = JSON.parse(JSON.stringify(onco));
 
         // grab drugs
-        const drugs = inputData.drugs.data.datasets[0].drugs;
+        const drugs = inputData.drugs;
 
         // delete the drug object from the inputData object
         delete inputData.drugs;
@@ -95,6 +126,21 @@ class OncoprintData extends React.Component {
                 }
             });
         }
+
+        // this is according to the object and heatmap sequence.
+        // inputData.forEach((value, i) => { // can't break in forEach use for if wanna break.
+        //     const dataObject = {};
+        //     if (value.data.length > 0) {
+        //         hmapPatients.forEach((patient) => {
+        //             if (!inputData[i].data[0][patient]) {
+        //                 dataObject[patient] = '';
+        //             } else {
+        //                 dataObject[patient] = inputData[i].data[0][patient];
+        //             }
+        //         });
+        //     }
+        //     hmapPatients = Object.keys(dataObject);
+        // });
 
         // setting patients genes and data for
         // each of mutation, cnv and rna (given they are present)
@@ -151,7 +197,8 @@ class OncoprintData extends React.Component {
             hmap_patients, loading, error
         } = this.state;
 
-        const { datasetId } = this.props;
+        const { datasetId: datasetIdProp } = this.props;
+        const thresholdProp = this.props.threshold || threshold;
 
         function renderingData() {
             // if error occures render the error component!
@@ -160,7 +207,7 @@ class OncoprintData extends React.Component {
             };
 
             // if the dataset id is 4 then there is no data available!
-            if (datasetId === '4' || datasetId === 4) {
+            if (datasetIdProp === '4' || datasetIdProp === 4) {
                 return (
                     <ErrorComponent message="There is no data available for PDXE (Gastric Cancer)" />
                 );
@@ -176,7 +223,7 @@ class OncoprintData extends React.Component {
                         className="oprint"
                         dimensions={dimensions}
                         margin={margin}
-                        threshold={threshold}
+                        threshold={thresholdProp}
                         hmap_patients={hmap_patients}
                         genes_mut={genes_mut}
                         genes_rna={genes_rna}
@@ -206,6 +253,7 @@ class OncoprintData extends React.Component {
 OncoprintData.propTypes = {
     datasetId: PropTypes.string.isRequired,
     geneList: PropTypes.string,
+    drugList: PropTypes.string,
     genomicsList: PropTypes.string,
     threshold: PropTypes.string,
 };
