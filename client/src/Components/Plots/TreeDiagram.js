@@ -1,6 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/require-default-props */
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom'
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
@@ -56,6 +57,16 @@ const textMouseOutEvent = () => {
     d3.selectAll('#tooltiptext').remove();
 };
 
+// click event handler for drug name
+const clickEventHandler = (d, history) => {
+    const patient = d.parent.data.name;
+    const dataset = d.parent.data.dataset;
+    const drug = d.data.name;
+    history.push(
+        `/curve?patient=${patient}&drug=${drug}&dataset=${dataset}`
+    );
+};
+
 // this will create the svg element for the chart
 const createSVGBody = (margin, dimensions) => (
     // make the svg element
@@ -96,6 +107,7 @@ const createLinks = (svg, root) => {
             .y((d) => d.x));
 };
 
+// create nodes
 const createNodes = (svg, root) => {
     const node = svg.append('g')
         .attr('stroke-linejoin', 'round')
@@ -108,19 +120,22 @@ const createNodes = (svg, root) => {
     return node;
 };
 
+// create circles for the node
 const createCircles = (node) => {
     node.append('circle')
         .attr('fill', (d) => (d.children ? `${colors.pink_header}` : `${colors.light_pink_header}`))
         .attr('r', 4.0);
 };
 
+// this will set the X axis of the text
 const setTextXAxis = {
     0: -10,
     1: -20,
     2: 10,
 };
 
-const appendText = (node) => {
+// appends the text to the chart
+const appendText = (node, history) => {
     node.append('text')
         .attr('dy', '0.28em')
         .attr('x', (d) => setTextXAxis[d.depth])
@@ -134,13 +149,16 @@ const appendText = (node) => {
         .on('mouseout', () => {
             textMouseOutEvent();
         })
+        .on('click', (d) => {
+            clickEventHandler(d, history);
+        })
         .attr('fill', `${colors.blue_header}`)
         .clone(true)
         .lower();
 };
 
 // main function that creates the tree diagram.
-const createTreeDiagram = (margin, dimensions, data) => {
+const createTreeDiagram = (margin, dimensions, data, history) => {
     // create the svg body for the chart.
     const svg = createSVGBody(margin, dimensions);
     // create tooltip.
@@ -154,11 +172,14 @@ const createTreeDiagram = (margin, dimensions, data) => {
     // create circles.
     createCircles(node);
     // appending the drug text.
-    appendText(node);
+    appendText(node, history);
 };
 
 // Tree Diagram component.
 const TreeDiagram = (props) => {
+    // grab history!
+    const history = useHistory();
+
     // data from the props
     const { data } = props;
 
@@ -176,7 +197,7 @@ const TreeDiagram = (props) => {
     // create the tree diagram.
     useEffect(() => {
         // creates the tree diagram.
-        createTreeDiagram(margin, dimensions, data);
+        createTreeDiagram(margin, dimensions, data, history);
     }, []);
 
     return (
