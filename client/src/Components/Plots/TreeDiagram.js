@@ -114,11 +114,18 @@ const createCircles = (node) => {
         .attr('r', 4.0);
 };
 
+const setTextXAxis = {
+    0: -10,
+    1: -20,
+    2: 10,
+};
+
 const appendText = (node) => {
     node.append('text')
         .attr('dy', '0.28em')
-        .attr('x', (d) => (d.children ? -10 : 10))
-        .attr('text-anchor', (d) => (d.children ? 'end' : 'start'))
+        .attr('x', (d) => setTextXAxis[d.depth])
+        .attr('y', (d) => d.depth === 1 ? -20 : 0)
+        .attr('text-anchor', (d) => d.depth === 0 ? 'end' : 'start')
         .attr('font-size', '.85em')
         .text((d) => d.data.name)
         .on('mouseover', (d) => {
