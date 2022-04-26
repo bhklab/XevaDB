@@ -23,15 +23,16 @@ const defaultDimensions = {
 
 // mouse over event for the tree diagram text.
 const textMouseOverEvent = (data) => {
-    // tooltip data only if data height is zero (it's a leaf node).
-    if (data.height === 0) {
-        const toolTip = d3.select('#tooltip')
-            .style('visibility', 'visible')
-            .style('left', `${d3.event.pageX + 10}px`)
-            .style('top', `${d3.event.pageY + 10}px`)
-            .style('color', `${colors.black}`)
-            .style('background-color', `${colors.white}`);
+    // initialize the tooltip
+    const toolTip = d3.select('#tooltip')
+        .style('visibility', 'visible')
+        .style('left', `${d3.event.pageX + 10}px`)
+        .style('top', `${d3.event.pageY + 10}px`)
+        .style('color', `${colors.black}`)
+        .style('background-color', `${colors.white}`);
 
+    // tooltip data only if data height is zero (it's a leaf node).
+    if (data.height === 0) { // if on the model name
         const tooltipData = [
             `Drug: ${data.parent.data.name}`, `Model: ${data.data.name}`,
         ];
@@ -44,9 +45,15 @@ const textMouseOverEvent = (data) => {
                 const text = d.split(':');
                 return `<b>${text[0]}</b>: ${text[1]}`;
             })
-            .attr('x', `${d3.event.pageX + 10}px`)
-            .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
+    } else if (data.height === 1) { // this is for the drug name
+        const tooltipData = 'Redirect to Growth Curve'
+
+        toolTip.append('text').text(tooltipData).attr('id', 'tooltiptext');
     }
+
+    // add the x and y location for the tooltip!
+    toolTip.attr('x', `${d3.event.pageX + 10}px`)
+        .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
 };
 
 // text mouse out event.
