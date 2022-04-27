@@ -1,5 +1,5 @@
 exports.up = (knex) => (
-    knex.schema.hasTable('')
+    knex.schema.hasTable('modelid_moleculardata_mapping')
         .then((exists) => {
             let query = '';
             if (!exists) {

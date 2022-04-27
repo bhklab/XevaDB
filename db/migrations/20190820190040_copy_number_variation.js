@@ -1,5 +1,5 @@
 exports.up = (knex) => (
-    knex.schema.hasTable('')
+    knex.schema.hasTable('copy_number_variation')
         .then((exists) => {
             let query = '';
             if (!exists) {
