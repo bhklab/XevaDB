@@ -1,7 +1,7 @@
-exports.up = function (knex, Promise) {
+exports.up = (knex) => (
     knex.schema.hasTable('gene_drug_tissue')
         .then((exists) => {
-            let query;
+            let query = '';
             if (!exists) {
                 query = knex.schema.createTable('gene_drug_tissue', (table) => {
                     table.increments('id')
@@ -40,9 +40,13 @@ exports.up = function (knex, Promise) {
                     table.string('metric');
                 })
             }
+            return query;
         })
-};
+        .catch((err) => {
+            throw err;
+        })
+);
 
-exports.down = function (knex, Promise) {
-    knex.schema.dropTable('gene_drug_tissue');
-};
+exports.down = (knex) => (
+    knex.schema.dropTable('gene_drug_tissue')
+);
