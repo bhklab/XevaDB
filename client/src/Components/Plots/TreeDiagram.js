@@ -137,7 +137,7 @@ const createCircles = (node) => {
 // this will set the X axis of the text
 const setTextXAxis = {
     0: -10,
-    1: -20,
+    1: -25,
     2: 10,
 };
 
@@ -146,7 +146,7 @@ const appendText = (node, history) => {
     node.append('text')
         .attr('dy', '0.28em')
         .attr('x', (d) => setTextXAxis[d.depth])
-        .attr('y', (d) => d.depth === 1 ? -20 : 0)
+        .attr('y', (d) => d.depth === 1 ? -12 : 0)
         .attr('text-anchor', (d) => d.depth === 0 ? 'end' : 'start')
         .attr('font-size', '.85em')
         .text((d) => d.data.name)
@@ -196,7 +196,7 @@ const TreeDiagram = (props) => {
     }, 0);
 
     // margin and dimensions.
-    const childrenDistance = 20;
+    const childrenDistance = 35;
     const margin = props.margin || defaultMargin;
     const dimensions = props.dimensions || defaultDimensions;
     dimensions.height = childrenCount * childrenDistance > dimensions.height ? childrenCount * childrenDistance : dimensions.height;
