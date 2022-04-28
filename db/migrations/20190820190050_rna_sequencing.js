@@ -1,5 +1,5 @@
 exports.up = (knex) => (
-    knex.schema.hasTable('')
+    knex.schema.hasTable('rna_sequencing')
         .then((exists) => {
             let query = '';
             if (!exists) {

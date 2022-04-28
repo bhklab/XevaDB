@@ -1,5 +1,5 @@
 exports.up = (knex) => (
-    knex.schema.hasTable('')
+    knex.schema.hasTable('model_response')
         .then((exists) => {
             let query = '';
             if (!exists) {

@@ -1,5 +1,5 @@
 exports.up = (knex) => (
-    knex.schema.hasTable('')
+    knex.schema.hasTable('mutation')
         .then((exists) => {
             let query = '';
             if (!exists) {

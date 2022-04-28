@@ -1,5 +1,5 @@
 exports.up = (knex) => (
-    knex.schema.hasTable('')
+    knex.schema.hasTable('model_sheet')
         .then((exists) => {
             let query = '';
             if (!exists) {

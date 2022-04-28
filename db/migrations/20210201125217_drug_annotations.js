@@ -1,5 +1,5 @@
 exports.up = (knex) => (
-    knex.schema.hasTable('')
+    knex.schema.hasTable('drug_annotations')
         .then((exists) => {
             let query = '';
             if (!exists) {

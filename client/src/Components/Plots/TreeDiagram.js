@@ -1,6 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/require-default-props */
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom'
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
@@ -22,15 +23,16 @@ const defaultDimensions = {
 
 // mouse over event for the tree diagram text.
 const textMouseOverEvent = (data) => {
-    // tooltip data only if data height is zero (it's a leaf node).
-    if (data.height === 0) {
-        const toolTip = d3.select('#tooltip')
-            .style('visibility', 'visible')
-            .style('left', `${d3.event.pageX + 10}px`)
-            .style('top', `${d3.event.pageY + 10}px`)
-            .style('color', `${colors.black}`)
-            .style('background-color', `${colors.white}`);
+    // initialize the tooltip
+    const toolTip = d3.select('#tooltip')
+        .style('visibility', 'visible')
+        .style('left', `${d3.event.pageX + 10}px`)
+        .style('top', `${d3.event.pageY + 10}px`)
+        .style('color', `${colors.black}`)
+        .style('background-color', `${colors.white}`);
 
+    // tooltip data only if data height is zero (it's a leaf node).
+    if (data.height === 0) { // if on the model name
         const tooltipData = [
             `Drug: ${data.parent.data.name}`, `Model: ${data.data.name}`,
         ];
@@ -43,9 +45,15 @@ const textMouseOverEvent = (data) => {
                 const text = d.split(':');
                 return `<b>${text[0]}</b>: ${text[1]}`;
             })
-            .attr('x', `${d3.event.pageX + 10}px`)
-            .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
+    } else if (data.height === 1) { // this is for the drug name
+        const tooltipData = 'Redirect to Growth Curve'
+
+        toolTip.append('text').text(tooltipData).attr('id', 'tooltiptext');
     }
+
+    // add the x and y location for the tooltip!
+    toolTip.attr('x', `${d3.event.pageX + 10}px`)
+        .attr('y', (d, i) => (`${d3.event.pageY + 10 + i * 10}px`));
 };
 
 // text mouse out event.
@@ -54,6 +62,16 @@ const textMouseOutEvent = () => {
         .style('visibility', 'hidden');
     // remove all the divs with id tooltiptext.
     d3.selectAll('#tooltiptext').remove();
+};
+
+// click event handler for drug name
+const clickEventHandler = (d, history) => {
+    const patient = d.parent.data.name;
+    const dataset = d.parent.data.dataset;
+    const drug = d.data.name;
+    history.push(
+        `/curve?patient=${patient}&drug=${drug}&dataset=${dataset}`
+    );
 };
 
 // this will create the svg element for the chart
@@ -96,6 +114,7 @@ const createLinks = (svg, root) => {
             .y((d) => d.x));
 };
 
+// create nodes
 const createNodes = (svg, root) => {
     const node = svg.append('g')
         .attr('stroke-linejoin', 'round')
@@ -108,17 +127,27 @@ const createNodes = (svg, root) => {
     return node;
 };
 
+// create circles for the node
 const createCircles = (node) => {
     node.append('circle')
         .attr('fill', (d) => (d.children ? `${colors.pink_header}` : `${colors.light_pink_header}`))
         .attr('r', 4.0);
 };
 
-const appendText = (node) => {
+// this will set the X axis of the text
+const setTextXAxis = {
+    0: -10,
+    1: -25,
+    2: 10,
+};
+
+// appends the text to the chart
+const appendText = (node, history) => {
     node.append('text')
         .attr('dy', '0.28em')
-        .attr('x', (d) => (d.children ? -10 : 10))
-        .attr('text-anchor', (d) => (d.children ? 'end' : 'start'))
+        .attr('x', (d) => setTextXAxis[d.depth])
+        .attr('y', (d) => d.depth === 1 ? -12 : 0)
+        .attr('text-anchor', (d) => d.depth === 0 ? 'end' : 'start')
         .attr('font-size', '.85em')
         .text((d) => d.data.name)
         .on('mouseover', (d) => {
@@ -127,13 +156,16 @@ const appendText = (node) => {
         .on('mouseout', () => {
             textMouseOutEvent();
         })
+        .on('click', (d) => {
+            clickEventHandler(d, history);
+        })
         .attr('fill', `${colors.blue_header}`)
         .clone(true)
         .lower();
 };
 
 // main function that creates the tree diagram.
-const createTreeDiagram = (margin, dimensions, data) => {
+const createTreeDiagram = (margin, dimensions, data, history) => {
     // create the svg body for the chart.
     const svg = createSVGBody(margin, dimensions);
     // create tooltip.
@@ -147,11 +179,14 @@ const createTreeDiagram = (margin, dimensions, data) => {
     // create circles.
     createCircles(node);
     // appending the drug text.
-    appendText(node);
+    appendText(node, history);
 };
 
 // Tree Diagram component.
 const TreeDiagram = (props) => {
+    // grab history!
+    const history = useHistory();
+
     // data from the props
     const { data } = props;
 
@@ -161,7 +196,7 @@ const TreeDiagram = (props) => {
     }, 0);
 
     // margin and dimensions.
-    const childrenDistance = 20;
+    const childrenDistance = 35;
     const margin = props.margin || defaultMargin;
     const dimensions = props.dimensions || defaultDimensions;
     dimensions.height = childrenCount * childrenDistance > dimensions.height ? childrenCount * childrenDistance : dimensions.height;
@@ -169,7 +204,7 @@ const TreeDiagram = (props) => {
     // create the tree diagram.
     useEffect(() => {
         // creates the tree diagram.
-        createTreeDiagram(margin, dimensions, data);
+        createTreeDiagram(margin, dimensions, data, history);
     }, []);
 
     return (
