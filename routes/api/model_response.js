@@ -176,7 +176,7 @@ const getModelResponse = (request, response) => {
     let drugArray = [];
     if (drugQueryParam) {
         // drug array from the input
-        drugArray = drugQueryParam.split(',').map((value) => value.replaceAll('_', ' + '));
+        drugArray = drugQueryParam.split(',').map((value) => value.replace(/_/ig, ' + '));
 
         // update modelresponse query if there is drug query parameter
         modelResponse = modelResponse.whereIn('drugs.drug_name', drugArray);
