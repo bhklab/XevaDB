@@ -5,8 +5,41 @@ const knex = require('../../db/knex1');
 const geneDrugTissueQuery = () => knex.select()
     .from('gene_drug_tissue')
     .join('genes', 'gene_drug_tissue.gene_id', 'genes.gene_id')
-    .join('drugs', 'gene_drug_tissue.drug_id', 'drugs.drug_id');
+    .join('drugs', 'gene_drug_tissue.drug_id', 'drugs.drug_id')
+    .join('datasets', 'gene_drug_tissue.dataset_id', 'datasets.dataset_id')
+    .join('tissues', 'gene_drug_tissue.tissue_id', 'tissues.tissue_id');
 
+
+// ************************************** Transform Functions *************************************************
+const transformBiomarkerData = (data) => {
+    return data.map((element) => ({
+        id: element.id,
+        estimate: element.estimate,
+        ci_lower: element.ci_lower,
+        ci_upper: element.ci_upper,
+        pvalue: element.pvalue,
+        fdr: element.fdr,
+        n: element.n,
+        mDataType: element.mDataType,
+        metric: element.metric,
+        gene: {
+            id: element.gene_id,
+            name: element.gene_name,
+        },
+        drug: {
+            id: element.drug_id,
+            name: element.drug_name,
+        },
+        tissue: {
+            id: element.tissue_id,
+            name: element.tissue_name,
+        },
+        dataset: {
+            id: element.dataset_id,
+            name: element.dataset_name,
+        },
+    }));
+};
 
 // ************************************** API Endpoints Functions ***************************************************
 /**
@@ -35,10 +68,13 @@ const getBiomarkers = async (request, response) => {
             .where('gene_name', gene)
             .andWhere('drug_name', drug);
 
+        // updated/transformed biomarker data
+        const transformedBiomarkerData = transformBiomarkerData(biomarkers);
+
         // send response
         response.status(200).json({
             status: 'success',
-            data: biomarkers,
+            data: transformedBiomarkerData,
         });
 
     } catch (error) {
