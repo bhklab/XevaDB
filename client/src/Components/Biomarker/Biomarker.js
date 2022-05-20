@@ -30,15 +30,18 @@ const getAllDataTypes = (data) => {
  */
 const Biomarker = (props) => {
     const { location } = props;
-    // get genes param
+
+    // get gene and drug list from params
+    // selected drug and selected gene from params also
     const params = new URLSearchParams(location.search);
     const geneList = params.get('geneList');
     const selectedGene = params.get('selectedGene');
     const drugList = params.get('drugList');
     const selectedDrug = params.get('selectedDrug');
+
+    // get different data types present in the data
     const mDataTypes = getAllDataTypes(data.gctd);
 
-    console.log(geneList, selectedDrug, selectedGene, drugList);
 
     return (
         <StyledBiomarker>
