@@ -8,30 +8,49 @@ import { StyledSelect } from './BiomarkerStyle';
 
 /**
  * 
+ * @param {Array} data - array of input data
+ */
+const getAllDataTypes = (data) => {
+    // variable to store the different data types.
+    const dataTypes = [];
+    // looping through and storing the data type if it's not already present.
+    data.forEach(el => {
+        if (!dataTypes.includes(el.mDataType)) {
+            dataTypes.push(el.mDataType);
+        }
+    });
+    return dataTypes;
+};
+
+// get different data types present in the data
+// const mDataTypes = getAllDataTypes(data.gctd);
+
+/**
+ * 
  * @param {Object} props 
  * @returns - Biomarker Select Component
  */
 const BiomarkerSelect = (props) => {
     // props
     const { geneList: geneListProp } = props;
-    const { selectedGene: selectedGeneProp } = props;
     const { drugList: drugListProp } = props;
+    const { selectedGene: selectedGeneProp } = props;
     const { selectedDrug: selectedDrugProp } = props;
-    const { dataTypes: dataTypesProp } = props;
 
     // component states
     const [drugs, setDrugs] = useState([]);
     const [genes, setGenes] = useState([]);
     const [dataTypes, setDataTypes] = useState([]);
+    const [biomarkerData, setBiomarkerData] = useState([]);
 
     // function to prepare data type array for selection
-    const updateDataTypes = function () {
-        const updatedData = dataTypesProp.map(el => ({
+    const updateDataTypes = function (data) {
+        const updatedData = data.map(el => ({
             value: el,
             label: el,
         }));
-        // setting the state
-        setDataTypes(updatedData);
+
+        return updatedData;
     };
 
     // function to get the drug data
@@ -46,7 +65,10 @@ const BiomarkerSelect = (props) => {
             }));
         } else {
             // API call to get the list of drugs
-            const drugResponse = await axios.get('/api/v1/drugs', { headers: { Authorization: localStorage.getItem('user') } });
+            const drugResponse = await axios.get(
+                '/api/v1/drugs',
+                { headers: { Authorization: localStorage.getItem('user') } }
+            );
             // prepare data for drug selection
             drugSelectionData = drugResponse.data.map(el => ({
                 value: el.drug_id,
@@ -73,7 +95,10 @@ const BiomarkerSelect = (props) => {
             }));
         } else {
             geneList = await (
-                await axios.get('/api/v1/genes', { headers: { Authorization: localStorage.getItem('user') } })
+                await axios.get(
+                    '/api/v1/genes',
+                    { headers: { Authorization: localStorage.getItem('user') } }
+                )
             ).data.data;
 
             geneSelectionData = geneList.map(gene => ({
@@ -86,17 +111,40 @@ const BiomarkerSelect = (props) => {
         setGenes(geneSelectionData);
     };
 
+    // function call the biomarker API end point to get the biomarker data
+    const getBiomarkerData = async function () {
+        const { data } = await axios.get(
+            `/api/v1/biomarkers?drug=BGJ398&gene=TP53`,
+            { headers: { Authorization: localStorage.getItem('user') } }
+        );
+        return data;
+    };
+
     useEffect(() => {
-        // calling getDrugs function
+        // drug data function
         getDrugs();
-        // calling getGenes function
+
+        // gene data function
         getGenes();
-        // update data types
-        updateDataTypes();
+
+        // get biomarker data 
+        // and set the data types state
+        getBiomarkerData()
+            .then(biomarkers => {
+                // update biomarker data state
+                setBiomarkerData(biomarkers.data);
+
+                // get the data types
+                const datatypes = getAllDataTypes(biomarkers.data);
+                // update data type state and set the data type state
+                const datatypeObject = updateDataTypes(datatypes);
+                setDataTypes(datatypeObject);
+            })
+            .catch(err => console.log('An error occurred', err));
     }, []);
 
     return (
-        <StyledSelect className='biomarker-select' >
+        <StyledSelect className='biomarker-select'>
             <div className='drug-select'>
                 <span> Select Drug </span>
                 <Select
@@ -128,7 +176,8 @@ export default BiomarkerSelect;
 
 
 BiomarkerSelect.propTypes = {
-    genes: PropTypes.string,
-    drug: PropTypes.string,
-    dataTypes: PropTypes.arrayOf(PropTypes.string),
+    geneList: PropTypes.string.isRequired,
+    drugList: PropTypes.string.isRequired,
+    selectedDrug: PropTypes.string,
+    selectedGene: PropTypes.string,
 };
