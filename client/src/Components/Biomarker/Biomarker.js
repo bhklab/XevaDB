@@ -6,21 +6,6 @@ import BiomarkerSelect from './BiomarkerSelect';
 import data from './data';
 import { StyledBiomarker } from './BiomarkerStyle';
 
-/**
- * 
- * @param {Array} data - array of input data
- */
-const getAllDataTypes = (data) => {
-    // variable to store the different data types.
-    const dataTypes = [];
-    // looping through and storing the data type if it's not already present.
-    data.forEach(el => {
-        if (!dataTypes.includes(el.mDataType)) {
-            dataTypes.push(el.mDataType);
-        }
-    });
-    return dataTypes;
-};
 
 
 /**
@@ -39,10 +24,6 @@ const Biomarker = (props) => {
     const drugList = params.get('drugList');
     const selectedDrug = params.get('selectedDrug');
 
-    // get different data types present in the data
-    const mDataTypes = getAllDataTypes(data.gctd);
-
-
     return (
         <StyledBiomarker>
             <GlobalStyles />
@@ -53,7 +34,6 @@ const Biomarker = (props) => {
                         selectedGene={selectedGene}
                         drugList={drugList}
                         selectedDrug={selectedDrug}
-                        dataTypes={mDataTypes}
                     />
                     <ForestPlot data={data.gctd} />
                 </div>
