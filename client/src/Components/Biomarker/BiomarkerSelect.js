@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
 import Select from 'react-select';
@@ -6,21 +6,8 @@ import { customStyles } from '../Search/SearchStyle';
 import { StyledSelect } from './BiomarkerStyle';
 
 
-/**
- * 
- * @param {Array} data - array of input data
- */
-const getAllDataTypes = (data) => {
-    // variable to store the different data types.
-    const dataTypes = [];
-    // looping through and storing the data type if it's not already present.
-    data.forEach(el => {
-        if (!dataTypes.includes(el.mDataType)) {
-            dataTypes.push(el.mDataType);
-        }
-    });
-    return dataTypes;
-};
+// data types array
+const DATA_TYPES = ['CNV', 'RNASeq'];
 
 // function to get the drug data
 const createSelectionArray = function (data) {
@@ -30,49 +17,58 @@ const createSelectionArray = function (data) {
     }));
 };
 
+
 /**
  * 
  * @param {Object} props 
  * @returns - Biomarker Select Component
  */
 const BiomarkerSelect = (props) => {
-
+    // props
     const geneListProp = createSelectionArray(props.geneList);
     const drugListProp = createSelectionArray(props.drugList);
     const { selectedGene: selectedGeneProp } = props;
     const { selectedDrug: selectedDrugProp } = props;
 
+    // data type array for the selection
+    const dataTypes = createSelectionArray(DATA_TYPES);
+
     // component states
-    const [dataTypes, setDataTypes] = useState([]);
     const [biomarkerData, setBiomarkerData] = useState([]);
-    const [selectedDrug, updateSelectedDrug] = useState(selectedDrugProp);
-    const [selectedGene, updateSelectedGene] = useState(selectedGeneProp);
+    const [selectedDrug, updateSelectedDrug] = useState(
+        selectedDrugProp ? { value: selectedDrug, label: selectedDrugProp } : ''
+    );
+    const [selectedGene, updateSelectedGene] = useState(
+        selectedGeneProp ? { value: selectedGene, label: selectedGeneProp } : ''
+    );
+    const [selectedDataType, updateSelectedDataType] = useState('');
 
     // function call the biomarker API end point to get the biomarker data
-    const getBiomarkerData = async function () {
+    const getBiomarkerData = async function (drug, gene) {
         const { data } = await axios.get(
-            `/api/v1/biomarkers?drug=BGJ398&gene=TP53`,
+            `/api/v1/biomarkers?drug=${drug}&gene=${gene}`,
             { headers: { Authorization: localStorage.getItem('user') } }
         );
         return data;
     };
 
-    useEffect(() => {
+    // event handler on button
+    const clickEventHandler = function () {
+        console.log(selectedDataType, selectedDrug, selectedGene);
+        const drug = selectedDrug.label;
+        const gene = selectedGene.label;
+        const dataType = selectedDataType.label;
+
         // get biomarker data 
         // and set the data types state
-        getBiomarkerData()
+        getBiomarkerData(drug, gene)
             .then(biomarkers => {
+                console.log(biomarkers);
                 // update biomarker data state
                 setBiomarkerData(biomarkers.data);
-
-                // get the data types
-                const datatypes = getAllDataTypes(biomarkers.data);
-                // update data type state and set the data type state
-                const datatypeObject = createSelectionArray(datatypes);
-                setDataTypes(datatypeObject);
             })
             .catch(err => console.log('An error occurred', err));
-    }, []);
+    };
 
     return (
         <StyledSelect className='biomarker-select'>
@@ -81,9 +77,8 @@ const BiomarkerSelect = (props) => {
                 <Select
                     styles={customStyles}
                     options={drugListProp}
-                    defaultValue={
-                        selectedDrugProp ? { value: selectedDrug, label: selectedDrugProp } : ''
-                    }
+                    value={selectedDrug}
+                    onChange={(event) => updateSelectedDrug(event)}
                 />
             </div>
             <div className='gene-select'>
@@ -91,9 +86,8 @@ const BiomarkerSelect = (props) => {
                 <Select
                     styles={customStyles}
                     options={geneListProp}
-                    defaultValue={
-                        selectedGeneProp ? { value: selectedGene, label: selectedGeneProp } : ''
-                    }
+                    value={selectedGene}
+                    onChange={(event) => updateSelectedGene(event)}
                 />
             </div>
             <div className='genomics-select'>
@@ -101,7 +95,12 @@ const BiomarkerSelect = (props) => {
                 <Select
                     styles={customStyles}
                     options={dataTypes}
+                    value={selectedDataType}
+                    onChange={(event) => updateSelectedDataType(event)}
                 />
+            </div>
+            <div>
+                <button onClick={clickEventHandler}> Click! </button>
             </div>
         </StyledSelect >
     )
