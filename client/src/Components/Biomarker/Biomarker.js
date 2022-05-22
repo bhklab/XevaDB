@@ -27,6 +27,7 @@ const Biomarker = (props) => {
     // gene and drug list 
     const [geneList, setGeneList] = useState([]);
     const [drugList, setDrugList] = useState([]);
+    const [biomarkerData, setBiomarkerData] = useState([]);
 
     // function to get the drug data
     const getDrugs = async function () {
@@ -92,9 +93,15 @@ const Biomarker = (props) => {
                                 selectedGene={selectedGene}
                                 drugList={drugList}
                                 selectedDrug={selectedDrug}
+                                setBiomarkerData={setBiomarkerData}
                             /> : ''
                     }
-                    <ForestPlot data={data.gctd} />
+                    {
+                        biomarkerData.length > 0
+                            ? <ForestPlot data={biomarkerData} />
+                            : ''
+                    }
+
                 </div>
             </div>
             <Footer />

@@ -5,7 +5,6 @@ import Select from 'react-select';
 import { customStyles } from '../Search/SearchStyle';
 import { StyledSelect } from './BiomarkerStyle';
 
-
 // data types array
 const DATA_TYPES = ['CNV', 'RNASeq'];
 
@@ -29,12 +28,12 @@ const BiomarkerSelect = (props) => {
     const drugListProp = createSelectionArray(props.drugList);
     const { selectedGene: selectedGeneProp } = props;
     const { selectedDrug: selectedDrugProp } = props;
+    const { setBiomarkerData } = props;
 
     // data type array for the selection
     const dataTypes = createSelectionArray(DATA_TYPES);
 
     // component states
-    const [biomarkerData, setBiomarkerData] = useState([]);
     const [selectedDrug, updateSelectedDrug] = useState(
         selectedDrugProp ? { value: selectedDrug, label: selectedDrugProp } : ''
     );
@@ -63,7 +62,6 @@ const BiomarkerSelect = (props) => {
         // and set the data types state
         getBiomarkerData(drug, gene)
             .then(biomarkers => {
-                console.log(biomarkers);
                 // update biomarker data state
                 setBiomarkerData(biomarkers.data);
             })
