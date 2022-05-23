@@ -41,6 +41,12 @@ const BiomarkerSelect = (props) => {
         selectedGeneProp ? { value: selectedGene, label: selectedGeneProp } : ''
     );
     const [selectedDataType, updateSelectedDataType] = useState('');
+    const [isSelected, updateIsSelected] = useState({
+        drug: selectedDrug ? true : false,
+        gene: selectedGene ? true : false,
+        dataType: false,
+    });
+    const [isButtonClicked, updateButtonClickState] = useState(false);
 
     // function call the biomarker API end point to get the biomarker data
     const getBiomarkerData = async function (drug, gene, dataType) {
@@ -53,6 +59,9 @@ const BiomarkerSelect = (props) => {
 
     // event handler on button
     const clickEventHandler = function () {
+        // update button click state
+        updateButtonClickState(true);
+
         const drug = selectedDrug.label;
         const gene = selectedGene.label;
         const dataType = selectedDataType.label;
@@ -66,37 +75,67 @@ const BiomarkerSelect = (props) => {
                     setBiomarkerData(biomarkers.data);
                 })
                 .catch(err => console.log('An error occurred', err));
-        }
+        };
     };
 
     return (
         <StyledSelect className='biomarker-select'>
             <div className='drug-select'>
-                <span> Drug </span>
+                <span> Drug * </span>
                 <Select
                     styles={customStyles}
                     options={drugListProp}
                     value={selectedDrug}
-                    onChange={(event) => updateSelectedDrug(event)}
+                    onChange={(event) => {
+                        updateSelectedDrug(event);
+                        updateIsSelected({ ...isSelected, drug: true })
+                    }}
                 />
+                {
+                    <span
+                        className={!isSelected.drug && isButtonClicked ? 'visible' : 'hidden'}
+                    >
+                        Field is required!
+                    </span>
+                }
             </div>
             <div className='gene-select'>
-                <span> Gene </span>
+                <span> Gene * </span>
                 <Select
                     styles={customStyles}
                     options={geneListProp}
                     value={selectedGene}
-                    onChange={(event) => updateSelectedGene(event)}
+                    onChange={(event) => {
+                        updateSelectedGene(event);
+                        updateIsSelected({ ...isSelected, gene: true })
+                    }}
                 />
+                {
+                    <span
+                        className={!isSelected.gene && isButtonClicked ? 'visible' : 'hidden'}
+                    >
+                        Field is required!
+                    </span>
+                }
             </div>
             <div className='genomics-select'>
-                <span> Genomics </span>
+                <span> Genomics * </span>
                 <Select
                     styles={customStyles}
                     options={dataTypes}
                     value={selectedDataType}
-                    onChange={(event) => updateSelectedDataType(event)}
+                    onChange={(event) => {
+                        updateSelectedDataType(event);
+                        updateIsSelected({ ...isSelected, dataType: true })
+                    }}
                 />
+                {
+                    <span
+                        className={!isSelected.dataType && isButtonClicked ? 'visible' : 'hidden'}
+                    >
+                        Field is required!
+                    </span>
+                }
             </div>
             <div className='display-button'>
                 <button onClick={clickEventHandler}> Display Plot </button>
