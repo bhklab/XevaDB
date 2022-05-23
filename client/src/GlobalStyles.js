@@ -88,7 +88,11 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .biomarker-wrapper {
-    background: ${colors.white}
+    background: ${colors.white};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     min-width: 80vw;
   }
 
