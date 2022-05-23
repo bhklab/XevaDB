@@ -502,7 +502,7 @@ const ForestPlot = ({ height, width, margin, data }) => {
 
         // create forest plot.
         createForestPlot(margin, height, width, data);
-    }, []);
+    }, [data]);
 
     return (
         <StyledForestPlot>

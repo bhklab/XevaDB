@@ -43,9 +43,9 @@ const BiomarkerSelect = (props) => {
     const [selectedDataType, updateSelectedDataType] = useState('');
 
     // function call the biomarker API end point to get the biomarker data
-    const getBiomarkerData = async function (drug, gene) {
+    const getBiomarkerData = async function (drug, gene, dataType) {
         const { data } = await axios.get(
-            `/api/v1/biomarkers?drug=${drug}&gene=${gene}`,
+            `/api/v1/biomarkers?drug=${drug}&gene=${gene}&dataType=${dataType}`,
             { headers: { Authorization: localStorage.getItem('user') } }
         );
         return data;
@@ -53,19 +53,20 @@ const BiomarkerSelect = (props) => {
 
     // event handler on button
     const clickEventHandler = function () {
-        console.log(selectedDataType, selectedDrug, selectedGene);
         const drug = selectedDrug.label;
         const gene = selectedGene.label;
         const dataType = selectedDataType.label;
 
         // get biomarker data 
         // and set the data types state
-        getBiomarkerData(drug, gene)
-            .then(biomarkers => {
-                // update biomarker data state
-                setBiomarkerData(biomarkers.data);
-            })
-            .catch(err => console.log('An error occurred', err));
+        if (drug && gene && dataType) {
+            getBiomarkerData(drug, gene, dataType)
+                .then(biomarkers => {
+                    // update biomarker data state
+                    setBiomarkerData(biomarkers.data);
+                })
+                .catch(err => console.log('An error occurred', err));
+        }
     };
 
     return (
