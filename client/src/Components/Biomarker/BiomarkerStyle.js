@@ -24,7 +24,7 @@ const StyledSelect = styled.div`
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    margin: 2% 5% 7.5% 10%;
+    margin: 4% 5% 7.5% 10%;
     
     .drug-select, .gene-select, .genomics-select {
         width: 26%;
@@ -34,11 +34,12 @@ const StyledSelect = styled.div`
     .display-button {
         button {
             padding: 12px;
-            margin: 20px 0 0 15px;
-            // background-color: ${colors.pink_header};
+            margin: 0 0 0 15px;
+            background-color: ${colors.pink_header};
             border: 0;
             border-radius: 5px;
-            font-size: 1.05rem;
+            font-size: 1.08rem;
+            color: ${colors.white};
         }
 
         button:hover {
@@ -52,6 +53,16 @@ const StyledSelect = styled.div`
         font-size: 1.15rem;
         font-weight: 600;
         display: inline-block;
+    }
+
+    .hidden {
+        font-size: 0.75rem;
+        visibility: hidden;
+    }
+
+    .visible {
+        font-size: 0.75rem;
+        visibility: visible;
     }
 `;
 
