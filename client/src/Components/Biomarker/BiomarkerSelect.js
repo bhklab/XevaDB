@@ -71,7 +71,7 @@ const BiomarkerSelect = (props) => {
     return (
         <StyledSelect className='biomarker-select'>
             <div className='drug-select'>
-                <span> Select Drug </span>
+                <span> Drug </span>
                 <Select
                     styles={customStyles}
                     options={drugListProp}
@@ -80,7 +80,7 @@ const BiomarkerSelect = (props) => {
                 />
             </div>
             <div className='gene-select'>
-                <span> Select Gene </span>
+                <span> Gene </span>
                 <Select
                     styles={customStyles}
                     options={geneListProp}
@@ -89,7 +89,7 @@ const BiomarkerSelect = (props) => {
                 />
             </div>
             <div className='genomics-select'>
-                <span> Select Genomics </span>
+                <span> Genomics </span>
                 <Select
                     styles={customStyles}
                     options={dataTypes}
@@ -97,8 +97,8 @@ const BiomarkerSelect = (props) => {
                     onChange={(event) => updateSelectedDataType(event)}
                 />
             </div>
-            <div>
-                <button onClick={clickEventHandler}> Click! </button>
+            <div className='display-button'>
+                <button onClick={clickEventHandler}> Display Plot </button>
             </div>
         </StyledSelect >
     )

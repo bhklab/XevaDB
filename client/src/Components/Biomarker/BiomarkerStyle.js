@@ -19,15 +19,31 @@ const StyledBiomarker = styled.div`
 
 // Selection Styles
 const StyledSelect = styled.div`
-    width: 80%;
+    width: 90%;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    align-items: center;
     margin: 2% 5% 7.5% 10%;
     
     .drug-select, .gene-select, .genomics-select {
-        width: 30%;
+        width: 26%;
         margin: 15px;
+    }
+
+    .display-button {
+        button {
+            padding: 12px;
+            margin: 20px 0 0 15px;
+            // background-color: ${colors.pink_header};
+            border: 0;
+            border-radius: 5px;
+            font-size: 1.05rem;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
     }
 
     span {
