@@ -51,6 +51,8 @@ const getBiomarkers = async (request, response) => {
     // drug and gene query parameter
     const { drug } = request.query;
     const { gene } = request.query;
+    // data type parameter
+    const dataType = request.query.dataType ?? '%%';
 
     try {
         // check if the drug includes a single element 
@@ -66,7 +68,8 @@ const getBiomarkers = async (request, response) => {
         // get biomarker data
         const biomarkers = await geneDrugTissueQuery()
             .where('gene_name', gene)
-            .andWhere('drug_name', drug);
+            .andWhere('drug_name', drug)
+            .andWhere('mDataType', 'like', dataType);
 
         // updated/transformed biomarker data
         const transformedBiomarkerData = transformBiomarkerData(biomarkers);
