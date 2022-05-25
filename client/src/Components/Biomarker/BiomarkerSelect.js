@@ -29,6 +29,7 @@ const BiomarkerSelect = (props) => {
     const { selectedGene: selectedGeneProp } = props;
     const { selectedDrug: selectedDrugProp } = props;
     const { setBiomarkerData } = props;
+    const { setDisplayMessage } = props;
 
     // data type array for the selection
     const dataTypes = createSelectionArray(DATA_TYPES);
@@ -72,7 +73,12 @@ const BiomarkerSelect = (props) => {
             getBiomarkerData(drug, gene, dataType)
                 .then(biomarkers => {
                     // update biomarker data state
-                    setBiomarkerData(biomarkers.data);
+                    if (biomarkers.data.length > 0) {
+                        setBiomarkerData(biomarkers.data);
+                        setDisplayMessage('');
+                    } else {
+                        setDisplayMessage('Data is not available!');
+                    };
                 })
                 .catch(err => console.log('An error occurred', err));
         };
@@ -81,7 +87,7 @@ const BiomarkerSelect = (props) => {
     return (
         <StyledSelect className='biomarker-select'>
             <div className='drug-select'>
-                <span> Drug * </span>
+                <span> Drug* </span>
                 <Select
                     styles={customStyles}
                     options={drugListProp}
@@ -100,7 +106,7 @@ const BiomarkerSelect = (props) => {
                 }
             </div>
             <div className='gene-select'>
-                <span> Gene * </span>
+                <span> Gene* </span>
                 <Select
                     styles={customStyles}
                     options={geneListProp}
@@ -119,7 +125,7 @@ const BiomarkerSelect = (props) => {
                 }
             </div>
             <div className='genomics-select'>
-                <span> Genomics * </span>
+                <span> Genomics* </span>
                 <Select
                     styles={customStyles}
                     options={dataTypes}
