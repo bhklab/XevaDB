@@ -49,7 +49,7 @@ const transformBiomarkerData = (data) => {
  */
 const getBiomarkers = async (request, response) => {
     // drug and gene query parameter
-    const { drug } = request.query;
+    const drug = request.query.drug.replace(/\s\s\s/g, ' + ');
     const { gene } = request.query;
     // data type parameter
     const dataType = request.query.dataType ?? '%%';
