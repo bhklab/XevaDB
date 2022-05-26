@@ -1,9 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
 import Select from 'react-select';
 import { customStyles } from '../Search/SearchStyle';
 import { StyledSelect } from './BiomarkerStyle';
+
+// data types array
+const DATA_TYPES = ['CNV', 'RNASeq'];
+
+// function to get the drug data
+const createSelectionArray = function (data) {
+    return data.map(el => ({
+        value: el,
+        label: el,
+    }));
+};
 
 
 /**
@@ -13,112 +24,127 @@ import { StyledSelect } from './BiomarkerStyle';
  */
 const BiomarkerSelect = (props) => {
     // props
-    const { geneList: geneListProp } = props;
+    const geneListProp = createSelectionArray(props.geneList);
+    const drugListProp = createSelectionArray(props.drugList);
     const { selectedGene: selectedGeneProp } = props;
-    const { drugList: drugListProp } = props;
     const { selectedDrug: selectedDrugProp } = props;
-    const { dataTypes: dataTypesProp } = props;
+    const { setBiomarkerData } = props;
+    const { setDisplayMessage } = props;
+
+    // data type array for the selection
+    const dataTypes = createSelectionArray(DATA_TYPES);
 
     // component states
-    const [drugs, setDrugs] = useState([]);
-    const [genes, setGenes] = useState([]);
-    const [dataTypes, setDataTypes] = useState([]);
+    const [selectedDrug, updateSelectedDrug] = useState(
+        selectedDrugProp ? { value: selectedDrugProp, label: selectedDrugProp } : ''
+    );
+    const [selectedGene, updateSelectedGene] = useState(
+        selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : ''
+    );
+    const [selectedDataType, updateSelectedDataType] = useState('');
+    const [isSelected, updateIsSelected] = useState({
+        drug: selectedDrugProp ? true : false,
+        gene: selectedGeneProp ? true : false,
+        dataType: false,
+    });
+    const [isButtonClicked, updateButtonClickState] = useState(false);
 
-    // function to prepare data type array for selection
-    const updateDataTypes = function () {
-        const updatedData = dataTypesProp.map(el => ({
-            value: el,
-            label: el,
-        }));
-        // setting the state
-        setDataTypes(updatedData);
+    // function call the biomarker API end point to get the biomarker data
+    const getBiomarkerData = async function (drug, gene, dataType) {
+        const { data } = await axios.get(
+            `/api/v1/biomarkers?drug=${drug}&gene=${gene}&dataType=${dataType}`,
+            { headers: { Authorization: localStorage.getItem('user') } }
+        );
+        return data;
     };
 
-    // function to get the drug data
-    const getDrugs = async function () {
-        // final data array
-        let drugSelectionData = [];
+    // event handler on button
+    const clickEventHandler = function () {
+        // update button click state
+        updateButtonClickState(true);
 
-        if (drugListProp) {
-            drugSelectionData = drugListProp.split(',').map(drug => ({
-                value: drug,
-                label: drug,
-            }));
-        } else {
-            // API call to get the list of drugs
-            const drugResponse = await axios.get('/api/v1/drugs', { headers: { Authorization: localStorage.getItem('user') } });
-            // prepare data for drug selection
-            drugSelectionData = drugResponse.data.map(el => ({
-                value: el.drug_id,
-                label: el.drug_name,
-            }));
-        }
+        const drug = selectedDrug.label;
+        const gene = selectedGene.label;
+        const dataType = selectedDataType.label;
 
-        // set the drug state with the data
-        setDrugs(drugSelectionData);
+        // get biomarker data 
+        // and set the data types state
+        if (drug && gene && dataType) {
+            getBiomarkerData(drug, gene, dataType)
+                .then(biomarkers => {
+                    // update biomarker data state
+                    if (biomarkers.data.length > 0) {
+                        setBiomarkerData(biomarkers.data);
+                        setDisplayMessage('');
+                    } else {
+                        setDisplayMessage('Data is not available!');
+                    };
+                })
+                .catch(err => console.log('An error occurred', err));
+        };
     };
-
-    // function to get the gene data
-    const getGenes = async function () {
-        // API call to get the list of genes
-        let geneList = [];
-        let geneSelectionData = [];
-
-        if (geneListProp) {
-            geneList = geneListProp.split(',');
-
-            geneSelectionData = geneList.map(gene => ({
-                value: gene,
-                label: gene,
-            }));
-        } else {
-            geneList = await (
-                await axios.get('/api/v1/genes', { headers: { Authorization: localStorage.getItem('user') } })
-            ).data.data;
-
-            geneSelectionData = geneList.map(gene => ({
-                value: gene.gene_name,
-                label: gene.gene_name,
-            }));
-        }
-
-        // setting the gene state
-        setGenes(geneSelectionData);
-    };
-
-    useEffect(() => {
-        // calling getDrugs function
-        getDrugs();
-        // calling getGenes function
-        getGenes();
-        // update data types
-        updateDataTypes();
-    }, []);
 
     return (
-        <StyledSelect className='biomarker-select' >
+        <StyledSelect className='biomarker-select'>
             <div className='drug-select'>
-                <span> Select Drug </span>
+                <span> Drug* </span>
                 <Select
                     styles={customStyles}
-                    options={drugs}
-                    defaultValue={selectedDrugProp ? { value: selectedDrugProp, label: selectedDrugProp } : ''}
+                    options={drugListProp}
+                    value={selectedDrug}
+                    onChange={(event) => {
+                        updateSelectedDrug(event);
+                        updateIsSelected({ ...isSelected, drug: true })
+                    }}
                 />
+                {
+                    <span
+                        className={!isSelected.drug && isButtonClicked ? 'visible' : 'hidden'}
+                    >
+                        Field is required!
+                    </span>
+                }
             </div>
             <div className='gene-select'>
-                <span> Select Gene </span>
+                <span> Gene* </span>
                 <Select
                     styles={customStyles}
-                    options={genes}
-                    defaultValue={selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : ''}
+                    options={geneListProp}
+                    value={selectedGene}
+                    onChange={(event) => {
+                        updateSelectedGene(event);
+                        updateIsSelected({ ...isSelected, gene: true })
+                    }}
                 />
+                {
+                    <span
+                        className={!isSelected.gene && isButtonClicked ? 'visible' : 'hidden'}
+                    >
+                        Field is required!
+                    </span>
+                }
             </div>
             <div className='genomics-select'>
-                <span> Select Genomics </span>
+                <span> Genomics* </span>
                 <Select
                     styles={customStyles}
                     options={dataTypes}
+                    value={selectedDataType}
+                    onChange={(event) => {
+                        updateSelectedDataType(event);
+                        updateIsSelected({ ...isSelected, dataType: true })
+                    }}
                 />
+                {
+                    <span
+                        className={!isSelected.dataType && isButtonClicked ? 'visible' : 'hidden'}
+                    >
+                        Field is required!
+                    </span>
+                }
+            </div>
+            <div className='display-button'>
+                <button onClick={clickEventHandler}> Display Plot </button>
             </div>
         </StyledSelect >
     )
@@ -128,7 +154,8 @@ export default BiomarkerSelect;
 
 
 BiomarkerSelect.propTypes = {
-    genes: PropTypes.string,
-    drug: PropTypes.string,
-    dataTypes: PropTypes.arrayOf(PropTypes.string),
+    geneList: PropTypes.arrayOf(string).isRequired,
+    drugList: PropTypes.arrayOf(string).isRequired,
+    selectedDrug: PropTypes.string,
+    selectedGene: PropTypes.string,
 };

@@ -86,37 +86,6 @@ const updateData = (data, isAnalytic) => {
 };
 
 /**
- * 
- * @param {Array} data
- * @returns {Array} - of different data types. 
- */
-// const getAllDataTypes = (data) => {
-//     // variable to store the different data types.
-//     const dataTypes = [];
-//     // looping through and storing the data type if it's not already present.
-//     data.forEach(el => {
-//         if (!dataTypes.includes(el.mDataType)) {
-//             dataTypes.push(el.mDataType);
-//         }
-//     });
-//     return dataTypes;
-// };
-
-/**
- * data based on the default molecular type.
- * @param {Array} data 
- * @param {string} mDataType 
- */
-const createFilteredData = (data, mDataType) => {
-    const filteredData = data.filter(el => {
-        if (el.mDataType === mDataType) {
-            return el;
-        }
-    });
-    return filteredData;
-};
-
-/**
  * @param {Array} data - input data.
  */
 const calculateMinMax = (data) => {
@@ -125,8 +94,8 @@ const calculateMinMax = (data) => {
     const maxEstimate = Math.max(...data.map((val) => val.estimate));
 
     // calculates the minimum and maximum analytic from the data.
-    const min = Math.min(...data.map((val) => val.lower));
-    const max = Math.max(...data.map((val) => val.upper));
+    const min = Math.min(...data.map((val) => val.ci_lower));
+    const max = Math.max(...data.map((val) => val.ci_upper));
 
     return {
         min,
@@ -150,7 +119,7 @@ const calculateMinMaxN = (data) => {
  * @param {Object} element 
  * @param {boolean} isAnalytic
  */
-const mouseOverEvent = (event, element, isAnalytic) => {
+const mouseOverEvent = (event, element) => {
     // make the visibility of the tool tip to visible.
     const toolTip = d3.select('#tooltip')
         .style('visibility', 'visible')
@@ -160,9 +129,9 @@ const mouseOverEvent = (event, element, isAnalytic) => {
         .style('background-color', `${colors.white}`);
 
     // append text.
-    const fdr = isAnalytic ? element.fdr_analytic : element.fdr_permutation;
-    const pc = isAnalytic ? element.upper_analytic : element.upper_permutation;
-    const text = fdr < 0.05 && pc > 0.70 ? 'Strong Biomarker' : 'Weak Biomarker';
+    // const fdr = isAnalytic ? element.fdr_analytic : element.fdr_permutation;
+    const pc = element.ci_upper;
+    const text = element.fdr < 0.05 && pc > 0.70 ? 'Strong Biomarker' : 'Weak Biomarker';
 
     toolTip.
         append('text')
@@ -170,8 +139,8 @@ const mouseOverEvent = (event, element, isAnalytic) => {
         .text(text);
 
     // show pearson correlation cofficient on mouse over.
-    d3.select(`#estimate-${element.dataset.name}-x1`).attr('visibility', 'visible');
-    d3.select(`#estimate-${element.dataset.name}-x2`).attr('visibility', 'visible');
+    d3.select(`#estimate-${element.id}-x1`).attr('visibility', 'visible');
+    d3.select(`#estimate-${element.id}-x2`).attr('visibility', 'visible');
 };
 
 /**
@@ -186,8 +155,8 @@ const mouseOutEvent = (event, element) => {
     // remove all the divs with id tooltiptext.
     d3.selectAll('#tooltiptext').remove();
     // hide pearson correlation cofficient on mouse over.
-    d3.select(`#estimate-${element.dataset.name}-x1`).attr('visibility', 'hidden');
-    d3.select(`#estimate-${element.dataset.name}-x2`).attr('visibility', 'hidden');
+    d3.select(`#estimate-${element.id}-x1`).attr('visibility', 'hidden');
+    d3.select(`#estimate-${element.id}-x2`).attr('visibility', 'hidden');
 };
 
 /**
@@ -263,15 +232,15 @@ const createHorizontalLines = (svg, scale, data, height) => {
         .attr('id', `horizontal-lines`)
 
     data.forEach((element, i) => {
-        if (element.lower && element.upper) {
+        if (element.ci_lower && element.ci_upper) {
             horizontal
                 .append('line')
                 .attr('id', `horizontal-line-${element.dataset.name}`)
                 .style('stroke', `${colors.fade_blue}`)
                 .style('stroke-width', 1.25)
-                .attr('x1', scale(element.lower))
+                .attr('x1', scale(element.ci_lower))
                 .attr('y1', ((i + 1) * height) / (data.length + ADDITIONAL))
-                .attr('x2', scale(element.upper))
+                .attr('x2', scale(element.ci_upper))
                 .attr('y2', ((i + 1) * height) / (data.length + ADDITIONAL))
                 .on('mouseover', (event) => {
                     mouseOverEvent(d3.event, element);
@@ -298,7 +267,7 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
     data.forEach((element, i) => {
         // fdr and pearson cofficient.
         const fdr = element.fdr;
-        const pc = element.upper;
+        const pc = element.ci_upper;
 
         circles
             .append('circle')
@@ -315,27 +284,6 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
             });
     });
 };
-
-/**
- * creates the rhombus for the forest plot.
- * @param {Object} svg - svg selection for the global canvas.
- * @param {Object} scale - x axis scale.
- */
-// const createPolygon = (svg, scale) => {
-//     const lineFunction = d3
-//         .line()
-//         .x(function (d) {
-//             return d.x;
-//         })
-//         .y(function (d) {
-//             return d.y;
-//         });
-
-//     svg.append('path')
-//         .attr('d', lineFunction(poly))
-//         .attr('stroke', `${colors.fade_blue}`)
-//         .attr('fill', `${colors.teal}`);
-// };
 
 /**
  * Appends dataset name to the right of the forest plot.
@@ -383,28 +331,30 @@ const appendEstimateText = (svg, data, height, width, scale) => {
     // append dataset name.
     data.forEach((element, i) => {
 
-        if (element.lower) {
+        console.log(element);
+
+        if (element.ci_lower) {
             estimate
                 .append('text')
-                .attr('id', `estimate-${element.dataset.name}-x1`)
+                .attr('id', `estimate-${element.id}-x1`)
                 .attr('font-weight', 200)
-                .attr('x', scale(element.lower) - 15)
+                .attr('x', scale(element.ci_lower) - 15)
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL) - 10)
                 .attr('fill', `${colors.blue_header}`)
-                .text(`${(element.lower)}`)
+                .text(`${(element.ci_lower)}`)
                 .attr('visibility', 'hidden')
                 .attr('font-size', '14px');
         }
 
-        if (element.upper) {
+        if (element.ci_upper) {
             estimate
                 .append('text')
-                .attr('id', `estimate-${element.dataset.name}-x2`)
+                .attr('id', `estimate-${element.id}-x2`)
                 .attr('font-weight', 200)
-                .attr('x', scale(element.upper) - 15)
+                .attr('x', scale(element.ci_upper) - 15)
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL) - 10)
                 .attr('fill', `${colors.blue_header}`)
-                .text(`${(element.upper)}`)
+                .text(`${(element.ci_upper)}`)
                 .attr('visibility', 'hidden')
                 .attr('font-size', '14px');
         }
@@ -485,38 +435,6 @@ const createLegend = (svg, height, width) => {
 };
 
 /**
- * 
- * @param {Array} mDataTypes - an array of mDataTypes.
- */
-// const createSelectionOptions = (mDataTypes, data, molecularType, setMolecularType) => {
-//     // options for the selection.
-//     d3.select('.select')
-//         .selectAll('option')
-//         .data(mDataTypes)
-//         .enter()
-//         .append('option')
-//         .text((d) => d)
-//         .attr('value', (d) => d);
-
-//     // on change event handler on selection.
-//     d3.select('.select').on('change', function () {
-//         // selection.
-//         const selection = d3.select(this).property('value');
-
-//         // update molecular type.
-//         setMolecularType(selection);
-
-//         // create the filtered data based on the selection.
-//         const filteredData = createFilteredData(data, selection);
-
-//         // remove the already drawn forest plot with it's id.
-//         d3.select(`#${CANVAS_ID}`).remove();
-
-//         createForestPlot(margin, 350, width, filteredData);
-//     });
-// };
-
-/**
  * Main function to create the forest plot.
  * @param {Object} margin - margin for the svg canavas.
  * @param {number} height - height of the svg canvas.
@@ -576,22 +494,6 @@ const createForestPlot = (margin, heightInput, width, data) => {
  * @returns {component} - returns the forest plot component.
  */
 const ForestPlot = ({ height, width, margin, data }) => {
-    // check for analytic and permuted data.
-    const isPermutedAvailable = data.filter(el => el.lower_permutation && el.upper_permutation).length > 0;
-    const isAnalyticAvailable = data.filter(el => el.lower_analytic && el.upper_analytic).length > 0;
-
-    // initial analytic state value.
-    const initialAnalyticValueState = !isPermutedAvailable && isAnalyticAvailable;
-
-    // set state for toggle.
-    const [isAnalytic, setAnalyticValue] = useState(initialAnalyticValueState);
-    const [molecularType, setMolecularType] = useState('rna microarray');
-
-    // update the data based on the isAnalytic state.
-    const updatedData = updateData(data, isAnalytic);
-
-    // get all the data types available in the data.
-    // const mDataTypes = getAllDataTypes(updatedData);
 
     useEffect(() => {
         // remove the svg canvas.
@@ -600,34 +502,12 @@ const ForestPlot = ({ height, width, margin, data }) => {
         // create tooltip.
         createToolTip(`${TOOLTIP_ID}`);
 
-        // create selection options.
-        // createSelectionOptions(mDataTypes, updatedData, molecularType, setMolecularType);
-
         // create forest plot.
-        createForestPlot(margin, height, width, updatedData);
-    }, [isAnalytic, molecularType]);
+        createForestPlot(margin, height, width, data);
+    }, [data]);
 
     return (
         <StyledForestPlot>
-            {/* <div style={{ position: 'relative' }}>
-                <select
-                    className='select'
-                    id='selection'
-                    style={{
-                        display: 'block',
-                        align: 'right',
-                        height: '30px',
-                        position: 'absolute',
-                        width: '140px',
-                        right: '-50px',
-                        top: '-50px',
-                        fontSize: '16px',
-                        color: `${colors.blue_header}`,
-                        borderRadius: '5px',
-                        border: `1px solid ${colors.blue_header}`,
-                    }}
-                />
-            </div> */}
             <div id='forestplot' />
             <div id='forestplot-tooltip' />
         </StyledForestPlot>

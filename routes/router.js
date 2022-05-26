@@ -6,6 +6,7 @@ const router = express.Router();
 const awtauthentication = require('./api/auth');
 const batchResponse = require('./api/batch_response');
 const batches = require('./api/batch');
+const biomarker = require('./api/biomarker');
 const copyNumberVariation = require('./api/copy_number_variation');
 const counter = require('./api/counter');
 const datasets = require('./api/dataset');
@@ -31,6 +32,9 @@ router.get('/v1/batchresponse/stats', verifytoken, batchResponse.getBatchRespons
 
 // APIs related to batches table.
 router.get('/v1/batches', batches.getAllBatches);
+
+// API related to gene_drug_tissue table.
+router.get('/v1/biomarkers', biomarker.getBiomarkers);
 
 // APIs related to copy_number_variation table.
 router.get('/v1/cnv', verifytoken, copyNumberVariation.getCopyNumberVariationBasedOnDatasetAndGenes);
