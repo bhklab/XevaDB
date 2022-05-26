@@ -36,15 +36,15 @@ const BiomarkerSelect = (props) => {
 
     // component states
     const [selectedDrug, updateSelectedDrug] = useState(
-        selectedDrugProp ? { value: selectedDrug, label: selectedDrugProp } : ''
+        selectedDrugProp ? { value: selectedDrugProp, label: selectedDrugProp } : ''
     );
     const [selectedGene, updateSelectedGene] = useState(
-        selectedGeneProp ? { value: selectedGene, label: selectedGeneProp } : ''
+        selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : ''
     );
     const [selectedDataType, updateSelectedDataType] = useState('');
     const [isSelected, updateIsSelected] = useState({
-        drug: selectedDrug ? true : false,
-        gene: selectedGene ? true : false,
+        drug: selectedDrugProp ? true : false,
+        gene: selectedGeneProp ? true : false,
         dataType: false,
     });
     const [isButtonClicked, updateButtonClickState] = useState(false);

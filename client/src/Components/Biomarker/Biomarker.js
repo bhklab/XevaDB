@@ -9,6 +9,16 @@ import { StyledBiomarker } from './BiomarkerStyle';
 
 
 /**
+ * function replaces '\s\s\s' with ' + ' in the drugs
+ * @param {Array} drugs - takes a drug list
+ * @returns {Array} - returns an array of modified drug list
+ */
+const updateDrugList = (drugs) => {
+    return drugs.map(drug => drug.replace(/\s\s\s/g, ' + '));
+};
+
+
+/**
  * 
  * @param {Object} props 
  * @returns - Biomarker Component
@@ -55,13 +65,14 @@ const Biomarker = (props) => {
         // setting the drug list
         if (drugParam) {
             // set drug list
-            setDrugList(drugParam?.split(','));
+            const drugs = updateDrugList(drugParam?.split(','));
+            setDrugList(drugs);
         } else {
             getDrugs()
                 .then(drugs => {
                     const drugArray = Object.values(drugs.data).map(el => el.drug_name);
                     // set drug list
-                    setDrugList(drugArray);
+                    setDrugList(updateDrugList(drugArray));
                 })
                 .catch(error => console.log(error));
         };
