@@ -22,7 +22,7 @@ const Drug = (props) => {
 
     // state to save the drug information data and setting loader state
     const [drugData, setDrugData] = useState([]);
-    const [modelResponseData, setModelResponseData] = useState([]);
+    const [modelResponseDataPerDrug, setModelResponseDataPerDrug] = useState([]);
     const [isLoading, setLoadingState] = useState(true);
 
     // query to fetch the drug information data
@@ -32,17 +32,17 @@ const Drug = (props) => {
             `/api/v1/drugs/${drugId}`,
             { headers: { Authorization: localStorage.getItem('user') } }
         );
-        const modelResponse = await axios.get(
+        const modelResponseBasedOnDrug = await axios.get(
             `/api/v1/modelresponse?drug=${drugInformation.data[0].drug_name.replace(/\s/g, '').replace('+', '_')}`,
             { headers: { Authorization: localStorage.getItem('user') } }
         );
 
         const { data } = drugInformation;
-        const { data: modelData } = modelResponse;
+        const { data: modelData } = modelResponseBasedOnDrug;
 
         // set drug and model response data
         setDrugData(data[0]);
-        setModelResponseData(modelData[0]);
+        setModelResponseDataPerDrug(modelData[0]);
 
         // set loader state
         setLoadingState(false);
@@ -66,8 +66,8 @@ const Drug = (props) => {
                                 <h1> {drugData.drug_name} </h1>
                                 <Annotation data={drugData} />
                                 <h1> Model Response </h1>
-                                <PatientResponsePieChart data={modelResponseData} />
-                                <PatientResponseScatterPlot data={modelResponseData} />
+                                <PatientResponsePieChart data={modelResponseDataPerDrug} />
+                                <PatientResponseScatterPlot data={modelResponseDataPerDrug} />
                                 <h4 style={h4Style}> Patient </h4>
                             </div>
                         )
