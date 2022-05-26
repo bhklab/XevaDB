@@ -139,8 +139,8 @@ const mouseOverEvent = (event, element) => {
         .text(text);
 
     // show pearson correlation cofficient on mouse over.
-    d3.select(`#estimate-${element.dataset.name}-x1`).attr('visibility', 'visible');
-    d3.select(`#estimate-${element.dataset.name}-x2`).attr('visibility', 'visible');
+    d3.select(`#estimate-${element.id}-x1`).attr('visibility', 'visible');
+    d3.select(`#estimate-${element.id}-x2`).attr('visibility', 'visible');
 };
 
 /**
@@ -155,8 +155,8 @@ const mouseOutEvent = (event, element) => {
     // remove all the divs with id tooltiptext.
     d3.selectAll('#tooltiptext').remove();
     // hide pearson correlation cofficient on mouse over.
-    d3.select(`#estimate-${element.dataset.name}-x1`).attr('visibility', 'hidden');
-    d3.select(`#estimate-${element.dataset.name}-x2`).attr('visibility', 'hidden');
+    d3.select(`#estimate-${element.id}-x1`).attr('visibility', 'hidden');
+    d3.select(`#estimate-${element.id}-x2`).attr('visibility', 'hidden');
 };
 
 /**
@@ -331,10 +331,12 @@ const appendEstimateText = (svg, data, height, width, scale) => {
     // append dataset name.
     data.forEach((element, i) => {
 
-        if (element.lower) {
+        console.log(element);
+
+        if (element.ci_lower) {
             estimate
                 .append('text')
-                .attr('id', `estimate-${element.dataset.name}-x1`)
+                .attr('id', `estimate-${element.id}-x1`)
                 .attr('font-weight', 200)
                 .attr('x', scale(element.ci_lower) - 15)
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL) - 10)
@@ -344,10 +346,10 @@ const appendEstimateText = (svg, data, height, width, scale) => {
                 .attr('font-size', '14px');
         }
 
-        if (element.upper) {
+        if (element.ci_upper) {
             estimate
                 .append('text')
-                .attr('id', `estimate-${element.dataset.name}-x2`)
+                .attr('id', `estimate-${element.id}-x2`)
                 .attr('font-weight', 200)
                 .attr('x', scale(element.ci_upper) - 15)
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL) - 10)
