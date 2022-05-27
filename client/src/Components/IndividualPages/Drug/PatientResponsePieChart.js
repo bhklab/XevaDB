@@ -18,23 +18,26 @@ const transformData = (data) => {
     let finalData = {};
 
     // loops through data and prepare data based on the 'mRECIST' value
-    Object.values(data).forEach(element => {
-        if (typeof (element) === 'object') {
-            element.mRECIST.forEach(value => {
-                if (value !== 'NA') {
-                    if (finalData.hasOwnProperty(value)) {
-                        finalData[value].value += 1;
-                    } else {
-                        finalData[value] = {
-                            id: value,
-                            parameter: 1,
-                            value: 1,
+    data.forEach(element => {
+        Object.values(element).forEach(patientResponse => {
+            if (typeof (patientResponse) === 'object') {
+                patientResponse.mRECIST.forEach(value => {
+                    if (value !== 'NA') {
+                        if (finalData.hasOwnProperty(value)) {
+                            finalData[value].value += 1;
+                        } else {
+                            finalData[value] = {
+                                id: value,
+                                parameter: 1,
+                                value: 1,
+                            }
                         }
                     }
-                }
-            })
-        }
+                })
+            }
+        })
     });
+
     // return the values for the object
     return Object.values(finalData);
 };
@@ -42,23 +45,14 @@ const transformData = (data) => {
 
 // main component
 const PatientResponsePieChart = ({ data }) => {
-    // set the data states
-    const [responseData, setResponseData] = useState([]);
-
-    useEffect(() => {
-        // get the transformed data
-        const transformedData = transformData(data);
-        // set data state
-        setResponseData(transformedData);
-    }, [data]);
+    const transformedData = transformData(data);
 
     return (
-        responseData.length === 0 ? '' :
-            <DonutChart
-                data={responseData}
-                chartId='patient-response-donut'
-                tooltipMapper={mapper}
-            />
+        <DonutChart
+            data={transformedData}
+            chartId='patient-response-donut'
+            tooltipMapper={mapper}
+        />
     );
 };
 
