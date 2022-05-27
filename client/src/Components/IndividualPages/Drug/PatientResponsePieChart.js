@@ -44,13 +44,14 @@ const transformData = (data) => {
 
 
 // main component
-const PatientResponsePieChart = ({ data }) => {
+const PatientResponsePieChart = ({ data, chartId, arcRadius }) => {
     const transformedData = transformData(data);
 
     return (
         <DonutChart
             data={transformedData}
-            chartId='patient-response-donut'
+            chartId={chartId}
+            arcRadius={arcRadius}
             tooltipMapper={mapper}
         />
     );
