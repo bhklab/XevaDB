@@ -29,15 +29,18 @@ class DonutChart extends React.Component {
             left, top, bottom, right,
         } = margin;
         const { tooltipMapper } = this.props;
-        this.makeDonutChart(data, height, width, left, top, bottom, right, tooltipMapper);
+        const arcRadius = this.props.arcRadius || this.arc;
+
+        this.makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper);
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(data, height, width, left, top, bottom, right, tooltipMapper) {
+    makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper) {
         const { chartId } = this.props;
 
+
         /** SETTING SVG ATTRIBUTES * */
-        d3.select('svg').remove();
+        // d3.select('svg').remove();
 
         // make the SVG element.
         const svg = d3.select('#donut')
@@ -86,7 +89,6 @@ class DonutChart extends React.Component {
 
 
         /* Arc for the main pie chart and label arc */
-        const arcRadius = this.props.arcRadius || this.arc;
         // arc generator
         const arc = d3.arc()
             .outerRadius(arcRadius.outerRadius)
