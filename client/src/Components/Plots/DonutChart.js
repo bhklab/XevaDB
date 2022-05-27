@@ -43,9 +43,9 @@ class DonutChart extends React.Component {
         // d3.select('svg').remove();
 
         // make the SVG element.
-        const svg = d3.select('#donut')
+        const svg = d3.select(`#donut-${chartId}`)
             .append('svg')
-            .attr('id', `donutchart-${chartId}`)
+            .attr('id', `donutchart-${chartId}-svg`)
             .attr('xmlns', 'http://wwww.w3.org/2000/svg')
             .attr('xmlns:xlink', 'http://wwww.w3.org/1999/xlink')
             .attr('height', height + top + bottom)
@@ -276,7 +276,7 @@ class DonutChart extends React.Component {
     render() {
         return (
             <div
-                id="donut"
+                id={`donut-${this.props.chartId}`}
                 className="donut-chart"
             />
         );
