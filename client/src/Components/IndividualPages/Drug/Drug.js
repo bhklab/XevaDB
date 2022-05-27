@@ -23,6 +23,7 @@ const Drug = (props) => {
     // state to save the drug information data and setting loader state
     const [drugData, setDrugData] = useState([]);
     const [modelResponseDataPerDrug, setModelResponseDataPerDrug] = useState([]);
+    const [modelResponseData, setModelResponseData] = useState([]);
     const [isLoading, setLoadingState] = useState(true);
 
     // query to fetch the drug information data
@@ -36,13 +37,19 @@ const Drug = (props) => {
             `/api/v1/modelresponse?drug=${drugInformation.data[0].drug_name.replace(/\s/g, '').replace('+', '_')}`,
             { headers: { Authorization: localStorage.getItem('user') } }
         );
+        const modelResponse = await axios.get(
+            `/api/v1/modelresponse`,
+            { headers: { Authorization: localStorage.getItem('user') } }
+        );
 
-        const { data } = drugInformation;
-        const { data: modelData } = modelResponseBasedOnDrug;
+        const { data: drugData } = drugInformation;
+        const { data: modelDataPerDrug } = modelResponseBasedOnDrug;
+        const { data: modelData } = modelResponse;
 
         // set drug and model response data
-        setDrugData(data[0]);
-        setModelResponseDataPerDrug(modelData[0]);
+        setDrugData(drugData[0]);
+        setModelResponseDataPerDrug(modelDataPerDrug);
+        setModelResponseData(modelData);
 
         // set loader state
         setLoadingState(false);
@@ -59,7 +66,7 @@ const Drug = (props) => {
             <GlobalStyles />
             <div className='wrapper'>
                 {
-                    isLoading && drugData.length === 0
+                    isLoading
                         ? <Spinner loading={isLoading} />
                         : (
                             <div className='component-wrapper center-component'>
@@ -67,7 +74,8 @@ const Drug = (props) => {
                                 <Annotation data={drugData} />
                                 <h1> Model Response </h1>
                                 <PatientResponsePieChart data={modelResponseDataPerDrug} />
-                                <PatientResponseScatterPlot data={modelResponseDataPerDrug} />
+                                <PatientResponsePieChart data={modelResponseData} />
+                                <PatientResponseScatterPlot data={modelResponseDataPerDrug[0]} />
                                 <h4 style={h4Style}> Patient </h4>
                             </div>
                         )
