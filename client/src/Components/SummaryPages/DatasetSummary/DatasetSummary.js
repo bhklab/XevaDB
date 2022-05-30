@@ -94,7 +94,6 @@ class DatasetSummary extends React.Component {
                                             dataLength={data.length}
                                         />
                                     </>
-
                                 )
                         }
                     </div>
