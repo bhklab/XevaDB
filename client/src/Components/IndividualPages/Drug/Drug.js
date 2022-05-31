@@ -34,7 +34,7 @@ const Drug = (props) => {
             { headers: { Authorization: localStorage.getItem('user') } }
         );
         const modelResponseBasedOnDrug = await axios.get(
-            `/api/v1/modelresponse?drug=${drugInformation.data[0].drug_name.replace(/\s/g, '').replace('+', '_')}`,
+            `/api/v1/modelresponse?drug=${drugInformation.data[0].drug_name.replace(/\s/g, '').replace(/\+/g, '_')}`,
             { headers: { Authorization: localStorage.getItem('user') } }
         );
         const modelResponse = await axios.get(
