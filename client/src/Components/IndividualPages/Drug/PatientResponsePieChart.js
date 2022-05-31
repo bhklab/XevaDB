@@ -45,7 +45,7 @@ const transformData = (data) => {
 
 
 // main component
-const PatientResponsePieChart = ({ data, chartId, arcRadius }) => {
+const PatientResponsePieChart = ({ data, chartId, arcRadius, shouldDisplayLegend }) => {
     const transformedData = transformData(data);
 
     return (
@@ -55,6 +55,7 @@ const PatientResponsePieChart = ({ data, chartId, arcRadius }) => {
             arcRadius={arcRadius}
             tooltipMapper={mapper}
             colorMapper={mRECISTColorMapper}
+            shouldDisplayLegend={shouldDisplayLegend}
         />
     );
 };

@@ -31,12 +31,13 @@ class DonutChart extends React.Component {
         const { tooltipMapper } = this.props;
         const arcRadius = this.props.arcRadius || this.arc;
         const { colorMapper } = this.props;
+        const shouldDisplayLegend = this.props.shouldDisplayLegend ?? true;
 
-        this.makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper, colorMapper);
+        this.makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper, colorMapper, shouldDisplayLegend);
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper, colorMapper) {
+    makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper, colorMapper, shouldDisplayLegend) {
         const { chartId } = this.props;
 
 
@@ -245,33 +246,35 @@ class DonutChart extends React.Component {
         /**   Legends for the Donut Chart * */
 
         // small side rectangles or legends for the donut chart.
-        const donutRect = svg.append('g')
-            .attr('id', 'donut_small_rect');
+        if (shouldDisplayLegend) {
+            const donutRect = svg.append('g')
+                .attr('id', 'donut_legend');
 
-        donutRect.selectAll('rect')
-            .data(data)
-            .enter()
-            .append('rect')
-            .attr('x', (width) - 290)
-            .attr('y', (d, i) => ((30 * i) - (data.length * 15)))
-            .attr('width', 20)
-            .attr('height', 20)
-            .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id));
+            donutRect.selectAll('rect')
+                .data(data)
+                .enter()
+                .append('rect')
+                .attr('x', (width) - 290)
+                .attr('y', (d, i) => ((30 * i) - (data.length * 15)))
+                .attr('width', 20)
+                .attr('height', 20)
+                .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id));
 
-        donutRect.selectAll('text')
-            .data(data)
-            .enter()
-            .append('a')
-            .attr('xlink:href', (d, i) => {
-                if (chartId === 'donut_datasets') {
-                    return `/dataset/${data[i].parameter}`;
-                }
-            })
-            .append('text')
-            .attr('x', (width) - 250)
-            .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
-            .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id))
-            .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`);
+            donutRect.selectAll('text')
+                .data(data)
+                .enter()
+                .append('a')
+                .attr('xlink:href', (d, i) => {
+                    if (chartId === 'donut_datasets') {
+                        return `/dataset/${data[i].parameter}`;
+                    }
+                })
+                .append('text')
+                .attr('x', (width) - 250)
+                .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
+                .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id))
+                .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`);
+        }
     }
 
     render() {
@@ -307,6 +310,7 @@ DonutChart.propTypes = {
     }),
     tooltipMapper: PropTypes.object.isRequired,
     colorMapper: PropTypes.object,
+    shouldDisplayLegend: PropTypes.bool,
 };
 
 export default DonutChart;

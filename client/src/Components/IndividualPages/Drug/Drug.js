@@ -81,6 +81,7 @@ const Drug = (props) => {
                                             data={modelResponseDataPerDrug}
                                             chartId='model-response-per-drug'
                                             arcRadius={{ outerRadius: 160, innerRadius: 100 }}
+                                            shouldDisplayLegend={false}
                                         />
                                     </div>
                                     <div>
@@ -88,6 +89,7 @@ const Drug = (props) => {
                                             data={modelResponseData}
                                             chartId='model-response-all-drugs'
                                             arcRadius={{ outerRadius: 300, innerRadius: 200 }}
+                                            shouldDisplayLegend={true}
                                         />
                                     </div>
                                 </div>
