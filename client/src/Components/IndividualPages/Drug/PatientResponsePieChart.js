@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DonutChart from '../../Plots/DonutChart';
+import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
 
 
 // tooltip mapper to be passed as a Prop to the donut chart
@@ -53,6 +54,7 @@ const PatientResponsePieChart = ({ data, chartId, arcRadius }) => {
             chartId={chartId}
             arcRadius={arcRadius}
             tooltipMapper={mapper}
+            colorMapper={mRECISTColorMapper}
         />
     );
 };

@@ -30,12 +30,13 @@ class DonutChart extends React.Component {
         } = margin;
         const { tooltipMapper } = this.props;
         const arcRadius = this.props.arcRadius || this.arc;
+        const { colorMapper } = this.props;
 
-        this.makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper);
+        this.makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper, colorMapper);
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper) {
+    makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper, colorMapper) {
         const { chartId } = this.props;
 
 
@@ -122,7 +123,7 @@ class DonutChart extends React.Component {
         // here we are appending path and use of d element to create the path.
         const piearc = arcs.append('path')
             .attr('d', arc)
-            .attr('fill', (d) => color(d.data.id))
+            .attr('fill', (d) => colorMapper?.[d.data.id] ?? color(d.data.id))
             .attr('stroke', 'black')
             .style('stroke-width', '.5px');
 
@@ -185,7 +186,7 @@ class DonutChart extends React.Component {
                 .style('left', `${d3.event.pageX + 10}px`)
                 .style('top', `${d3.event.pageY + 10}px`)
                 .style('color', 'white')
-                .style('background-color', color(d.data.id));
+                .style('background-color', colorMapper?.[d.data.id] ?? color(d.data.id));
         };
 
         const mouseout = function (d) {
@@ -255,7 +256,7 @@ class DonutChart extends React.Component {
             .attr('y', (d, i) => ((30 * i) - (data.length * 15)))
             .attr('width', 20)
             .attr('height', 20)
-            .attr('fill', (d) => color(d.id));
+            .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id));
 
         donutRect.selectAll('text')
             .data(data)
@@ -269,7 +270,7 @@ class DonutChart extends React.Component {
             .append('text')
             .attr('x', (width) - 250)
             .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
-            .attr('fill', (d) => color(d.id))
+            .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id))
             .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`);
     }
 
@@ -305,6 +306,7 @@ DonutChart.propTypes = {
         outerRadius: PropTypes.number,
     }),
     tooltipMapper: PropTypes.object.isRequired,
+    colorMapper: PropTypes.object,
 };
 
 export default DonutChart;
