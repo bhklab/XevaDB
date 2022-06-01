@@ -105,7 +105,7 @@ class DonutChart extends React.Component {
 
         // pie generator/layout
         const pie = d3.pie()
-            .sort(null)
+            // .sort(d => d.id)
             .value((d) => d.value);
 
         // this will send the data to the pie generator and appending the class arc.
