@@ -33,8 +33,9 @@ const TOOLTIP_ID = 'forestplot-tooltip';
 
 // legend variable.
 const legend = [
-    { text: 'FDR < 0.05 and r > 0.7', color: `${colors.pink_header}` },
-    { text: 'FDR > 0.05 and r < 0.7', color: `${colors.silver}` },
+    // { text: 'FDR < 0.05 and r > 0.7', color: `${colors.pink_header}` },
+    { text: 'FDR < 0.05', color: `${colors.pink_header}` },
+    { text: 'FDR > 0.05', color: `${colors.silver}` },
 ];
 
 // margin for the svg element.
@@ -48,42 +49,6 @@ const margin = {
 // width and height of the SVG canvas.
 const width = 1200 - margin.left - margin.right;
 const height = 550 - margin.top - margin.bottom;
-
-
-/**
- * updates the data based on if we want analytic or permuted values.
- * @param {Array} data
- * @param {boolean} isAnalytic
- */
-const updateData = (data, isAnalytic) => {
-    // new data array to select analytic or permuted values.
-    const updatedData = data.map(el => {
-        return {
-            compound: el.compound,
-            dataset: el.dataset,
-            gene: el.gene,
-            tissue: el.tissue,
-            estimate: el.estimate,
-            id: el.id,
-            mDataType: el.mDataType,
-            n: el.n,
-            permutation_done: el.permutation_done,
-            sens_stat: el.sens_stat,
-            significant_permutation: el.significant_permutation,
-            fdr: Number.parseFloat(`${isAnalytic ? el.fdr_analytic : el.fdr_permutation}`).toExponential(2),
-            pvalue: Number.parseFloat(`${isAnalytic ? el.pvalue_analytic : el.pvalue_permutation}`).toExponential(2),
-            upper: Number.parseFloat(`${isAnalytic ? el.upper_analytic : el.upper_permutation}`).toExponential(2),
-            lower: Number.parseFloat(`${isAnalytic ? el.lower_analytic : el.lower_permutation}`).toExponential(2),
-        };
-    });
-
-    // filter data if lower and upper values are not available.
-    return updatedData.filter(el => {
-        if (el.upper !== 'NaN' && el.lower !== 'NaN') {
-            return el;
-        }
-    });
-};
 
 /**
  * @param {Array} data - input data.
@@ -130,8 +95,8 @@ const mouseOverEvent = (event, element) => {
 
     // append text.
     // const fdr = isAnalytic ? element.fdr_analytic : element.fdr_permutation;
-    const pc = element.ci_upper;
-    const text = element.fdr < 0.05 && pc > 0.70 ? 'Strong Biomarker' : 'Weak Biomarker';
+    // const pc = element.estimate;
+    const text = element.fdr < 0.05 ? 'Strong Biomarker' : 'Weak Biomarker';
 
     toolTip.
         append('text')
@@ -267,7 +232,6 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
     data.forEach((element, i) => {
         // fdr and pearson cofficient.
         const fdr = element.fdr;
-        const pc = element.ci_upper;
 
         circles
             .append('circle')
@@ -275,7 +239,8 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
             .attr('cx', xScale(element.estimate))
             .attr('cy', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('r', circleScale(element.n))
-            .attr('fill', (fdr < 0.05 && pc > 0.70) ? `${colors.pink_header}` : `${colors.silver}`)
+            // .attr('fill', (fdr < 0.05 && pc > 0.70) ? `${colors.pink_header}` : `${colors.silver}`)
+            .attr('fill', fdr < 0.05 ? `${colors.pink_header}` : `${colors.silver}`)
             .on('mouseover', function () {
                 mouseOverEvent(d3.event, element);
             })
