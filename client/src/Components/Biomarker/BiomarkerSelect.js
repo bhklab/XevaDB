@@ -84,6 +84,18 @@ const BiomarkerSelect = (props) => {
         };
     };
 
+    // display that field is required
+    const displayRequiredFieldText = function (type, isButtonClicked) {
+        return (
+            <span
+                className={!isSelected[type] && isButtonClicked ? 'visible' : 'hidden'}
+            >
+                Field is required!
+            </span>
+        )
+    };
+
+
     return (
         <StyledSelect className='biomarker-select'>
             <div className='drug-select'>
@@ -98,11 +110,7 @@ const BiomarkerSelect = (props) => {
                     }}
                 />
                 {
-                    <span
-                        className={!isSelected.drug && isButtonClicked ? 'visible' : 'hidden'}
-                    >
-                        Field is required!
-                    </span>
+                    displayRequiredFieldText('drug', isButtonClicked)
                 }
             </div>
             <div className='gene-select'>
@@ -117,11 +125,7 @@ const BiomarkerSelect = (props) => {
                     }}
                 />
                 {
-                    <span
-                        className={!isSelected.gene && isButtonClicked ? 'visible' : 'hidden'}
-                    >
-                        Field is required!
-                    </span>
+                    displayRequiredFieldText('gene', isButtonClicked)
                 }
             </div>
             <div className='genomics-select'>
@@ -136,11 +140,7 @@ const BiomarkerSelect = (props) => {
                     }}
                 />
                 {
-                    <span
-                        className={!isSelected.dataType && isButtonClicked ? 'visible' : 'hidden'}
-                    >
-                        Field is required!
-                    </span>
+                    displayRequiredFieldText('dataType', isButtonClicked)
                 }
             </div>
             <div className='display-button'>
