@@ -8,6 +8,22 @@ import { StyledSelect } from './BiomarkerStyle';
 // data types array
 const DATA_TYPES = ['CNV', 'RNASeq'];
 
+// metrics array
+const METRICS = [
+    'metric',
+    'best response time',
+    'lmm',
+    'OS',
+    'slope',
+    'best response',
+    'TGI',
+    'best average response time',
+    'AUC',
+    'best average response',
+    'abc',
+    'angle'
+];
+
 // function to get the drug data
 const createSelectionArray = function (data) {
     return data.map(el => ({
@@ -34,6 +50,9 @@ const BiomarkerSelect = (props) => {
     // data type array for the selection
     const dataTypes = createSelectionArray(DATA_TYPES);
 
+    // get the list of metric types in the data
+    const metrics = createSelectionArray(METRICS);
+
     // component states
     const [selectedDrug, updateSelectedDrug] = useState(
         selectedDrugProp ? { value: selectedDrugProp, label: selectedDrugProp } : ''
@@ -42,10 +61,12 @@ const BiomarkerSelect = (props) => {
         selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : ''
     );
     const [selectedDataType, updateSelectedDataType] = useState('');
+    const [selectedMetric, updateSelectedMetric] = useState('');
     const [isSelected, updateIsSelected] = useState({
         drug: selectedDrugProp ? true : false,
         gene: selectedGeneProp ? true : false,
         dataType: false,
+        metric: false,
     });
     const [isButtonClicked, updateButtonClickState] = useState(false);
 
@@ -141,6 +162,22 @@ const BiomarkerSelect = (props) => {
                 />
                 {
                     displayRequiredFieldText('dataType', isButtonClicked)
+                }
+            </div>
+            <div className='metric-select'>
+                <span> Metric* </span>
+                <Select
+                    styles={customStyles}
+                    options={metrics}
+                    value={selectedMetric}
+                    onChange={(event) => {
+                        updateSelectedMetric(event);
+                        updateIsSelected({ ...isSelected, metric: true })
+                    }}
+                    isMulti
+                />
+                {
+                    displayRequiredFieldText('metric', isButtonClicked)
                 }
             </div>
             <div className='display-button'>

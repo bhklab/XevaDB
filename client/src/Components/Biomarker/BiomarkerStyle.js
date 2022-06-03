@@ -26,8 +26,8 @@ const StyledSelect = styled.div`
     align-items: center;
     margin: 4% 5% 7.5% 10%;
     
-    .drug-select, .gene-select, .genomics-select {
-        width: 26%;
+    .drug-select, .gene-select, .genomics-select, .metric-select {
+        width: 20%;
         margin: 15px;
     }
 
