@@ -10,7 +10,6 @@ const DATA_TYPES = ['CNV', 'RNASeq'];
 
 // metrics array
 const METRICS = [
-    'metric',
     'best response time',
     'lmm',
     'OS',
@@ -79,6 +78,14 @@ const BiomarkerSelect = (props) => {
         return data;
     };
 
+    // function to filter data based on the metric type
+    const getBiomarkerDataBasedOnMetric = function (data, metricArray) {
+        // metrics array
+        const metrics = metricArray.map(metric => metric.label);
+
+        return data.filter(el => metrics.includes(el['metric'].replace(/\./g, ' ')));
+    };
+
     // event handler on button
     const clickEventHandler = function () {
         // update button click state
@@ -95,7 +102,11 @@ const BiomarkerSelect = (props) => {
                 .then(biomarkers => {
                     // update biomarker data state
                     if (biomarkers.data.length > 0) {
-                        setBiomarkerData(biomarkers.data);
+                        const data = selectedMetric.length > 0
+                            ? getBiomarkerDataBasedOnMetric(biomarkers.data, selectedMetric)
+                            : biomarkers.data;
+
+                        setBiomarkerData(data);
                         setDisplayMessage('');
                     } else {
                         setDisplayMessage('Data is not available!');

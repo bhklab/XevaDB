@@ -296,8 +296,6 @@ const appendEstimateText = (svg, data, height, width, scale) => {
     // append dataset name.
     data.forEach((element, i) => {
 
-        console.log(element);
-
         if (element.ci_lower) {
             estimate
                 .append('text')
