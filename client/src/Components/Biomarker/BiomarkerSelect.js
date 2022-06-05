@@ -65,7 +65,7 @@ const BiomarkerSelect = (props) => {
         drug: selectedDrugProp ? true : false,
         gene: selectedGeneProp ? true : false,
         dataType: false,
-        metric: false,
+        metric: true,
     });
     const [isButtonClicked, updateButtonClickState] = useState(false);
 
@@ -101,8 +101,8 @@ const BiomarkerSelect = (props) => {
             getBiomarkerData(drug, gene, dataType)
                 .then(biomarkers => {
                     // update biomarker data state
-                    if (biomarkers.data.length > 0) {
-                        const data = selectedMetric.length > 0
+                    if (biomarkers.data?.length > 0) {
+                        const data = selectedMetric?.length > 0
                             ? getBiomarkerDataBasedOnMetric(biomarkers.data, selectedMetric)
                             : biomarkers.data;
 
@@ -176,7 +176,7 @@ const BiomarkerSelect = (props) => {
                 }
             </div>
             <div className='metric-select'>
-                <span> Metric* </span>
+                <span> Metric </span>
                 <Select
                     styles={customStyles}
                     options={metrics}
