@@ -20,7 +20,7 @@ const StyledForestPlot = styled.div`
 const ADDITIONAL = 2;
 
 // variable to calculate chart width relative to the svg width.
-const CHART_WIDTH = 0.65;
+const CHART_WIDTH = 0.75;
 
 // width & height of square/rectangle for legend.
 const RECTANGLE_DIMENSIONS = 20;
@@ -47,7 +47,7 @@ const margin = {
 };
 
 // width and height of the SVG canvas.
-const width = 1200 - margin.left - margin.right;
+const width = 1300 - margin.left - margin.right;
 const height = 550 - margin.top - margin.bottom;
 
 /**
@@ -142,7 +142,7 @@ const createXScale = (min, max, width) => {
 
     return d3.scaleLinear()
         .domain([updatedMin, max])
-        .range([200, (width * CHART_WIDTH)])
+        .range([300, (width * CHART_WIDTH)])
         .nice();
 };
 
@@ -162,7 +162,7 @@ const createXAxis = (svg, scale, height, width, margin) => {
         .attr('id', 'x-axis-label')
         .append('text')
         .attr('font-weight', 500)
-        .attr('x', (width * CHART_WIDTH * 0.40))
+        .attr('x', (width * CHART_WIDTH * 0.55))
         .attr('y', height + margin.bottom / 5 + 10)
         .attr('fill', `${colors.blue_header}`)
         .text('pearson correlation coefficient (r)')
@@ -251,7 +251,7 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
 };
 
 /**
- * Appends dataset name to the right of the forest plot.
+ * Appends dataset name to the left of the forest plot.
  * @param {Object} svg
  * @param {Array} data - data array.
  */
@@ -265,7 +265,7 @@ const appendDatasetName = (svg, data, height) => {
         .attr('y', -20)
         .attr('fill', `${colors.blue_header}`)
         .text('Dataset Name')
-        .attr('font-size', '20px');
+        .attr('font-size', '18px');
 
     const dataset = svg.append('g')
         .attr('id', 'dataset-names');
@@ -280,7 +280,43 @@ const appendDatasetName = (svg, data, height) => {
             .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('fill', `${colors.blue_header}`)
             .text(`${element.dataset.name}`)
-            .attr('font-size', '16px');
+            .attr('font-size', '14px');
+    });
+};
+
+
+/**
+ * Appends dataset name to the left of the forest plot.
+ * @param {Object} svg
+ * @param {Array} data - data array.
+ */
+const appendMetricName = (svg, data, height) => {
+    // append header (dataset)
+    svg.append('g')
+        .attr('id', 'dataset-header')
+        .append('text')
+        .attr('font-weight', 700)
+        .attr('x', 150)
+        .attr('y', -20)
+        .attr('fill', `${colors.blue_header}`)
+        .text('Metric')
+        .attr('font-size', '18px');
+
+    const dataset = svg.append('g')
+        .attr('id', 'dataset-names');
+
+    // append dataset name.
+    data.forEach((element, i) => {
+        console.log(element);
+        dataset
+            .append('text')
+            .attr('id', `dataset-${element.dataset.name}`)
+            .attr('font-weight', 200)
+            .attr('x', 150)
+            .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
+            .attr('fill', `${colors.blue_header}`)
+            .text(`${element.metric.replace(/\./g, ' ')}`)
+            .attr('font-size', '14px');
     });
 };
 
@@ -339,7 +375,7 @@ const appendFdrText = (svg, data, height, width) => {
         .attr('y', -20)
         .attr('fill', `${colors.blue_header}`)
         .text('FDR')
-        .attr('font-size', '20px');
+        .attr('font-size', '18px');
 
     const estimate = svg.append('g')
         .attr('id', 'estimate');
@@ -355,7 +391,7 @@ const appendFdrText = (svg, data, height, width) => {
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
                 .attr('fill', `${colors.blue_header}`)
                 .text(`${element.fdr}`)
-                .attr('font-size', '16px');
+                .attr('font-size', '14px');
         }
     });
 };
@@ -389,7 +425,7 @@ const createLegend = (svg, height, width) => {
         legendText
             .append('text')
             .attr('id', `legend-${el}`)
-            .attr('x', width * CHART_WIDTH + 122)
+            .attr('x', width * CHART_WIDTH + 125)
             .attr('y', ((height * 0.2) + (((i + 1) * RECTANGLE_DIMENSIONS) + (0.75 * RECTANGLE_DIMENSIONS))))
             .text(`${el.text}`)
             .attr('font-size', '12px')
@@ -445,6 +481,9 @@ const createForestPlot = (margin, heightInput, width, data) => {
 
     // append the dataset names corresponding to each horizontal line.
     appendDatasetName(svg, data, height);
+
+    // append metric names
+    appendMetricName(svg, data, height);
 
     // append estimate as text to the svg.
     appendFdrText(svg, data, height, width);
