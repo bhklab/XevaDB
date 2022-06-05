@@ -373,7 +373,7 @@ const createLegend = (svg, height, width) => {
 
     legend.forEach((el, i) => {
         legends.append('rect')
-            .attr('x', width * 0.75)
+            .attr('x', width * CHART_WIDTH + 100)
             .attr('y', ((height * 0.2) + ((i + 1) * RECTANGLE_DIMENSIONS)))
             .attr('width', RECTANGLE_DIMENSIONS)
             .attr('height', RECTANGLE_DIMENSIONS)
@@ -389,7 +389,7 @@ const createLegend = (svg, height, width) => {
         legendText
             .append('text')
             .attr('id', `legend-${el}`)
-            .attr('x', width * 0.77)
+            .attr('x', width * CHART_WIDTH + 122)
             .attr('y', ((height * 0.2) + (((i + 1) * RECTANGLE_DIMENSIONS) + (0.75 * RECTANGLE_DIMENSIONS))))
             .text(`${el.text}`)
             .attr('font-size', '12px')
