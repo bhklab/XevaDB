@@ -77,12 +77,12 @@ const Drug = (props) => {
                                 <h1> Model Response </h1>
                                 <div>
                                     <div style={{ position: 'absolute' }}>
-                                        <PatientResponsePieChart
+                                        {/* <PatientResponsePieChart
                                             data={modelResponseDataPerDrug}
                                             chartId='model-response-per-drug'
-                                            arcRadius={{ outerRadius: 160, innerRadius: 100 }}
+                                            arcRadius={{ outerRadius: 300, innerRadius: 200 }}
                                             shouldDisplayLegend={false}
-                                        />
+                                        /> */}
                                     </div>
                                     <div>
                                         <PatientResponsePieChart
@@ -90,6 +90,7 @@ const Drug = (props) => {
                                             chartId='model-response-all-drugs'
                                             arcRadius={{ outerRadius: 300, innerRadius: 200 }}
                                             shouldDisplayLegend={true}
+                                            opacity={0.25}
                                         />
                                     </div>
                                 </div>
