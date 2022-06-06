@@ -2,7 +2,9 @@
 import React from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-
+import addOpacityToColor from '../../utils/AddOpacityToColor';
+import createToolTip from '../../utils/ToolTip';
+import donutColors from '../../utils/PieChartColors';
 
 class DonutChart extends React.Component {
     constructor(props) {
@@ -25,25 +27,25 @@ class DonutChart extends React.Component {
         const margin = this.props.margin || this.margin;
         const { data } = this.props;
         const { height, width } = dimensions;
-        const {
-            left, top, bottom, right,
-        } = margin;
+        const { left, top, bottom, right } = margin;
         const { tooltipMapper } = this.props;
         const arcRadius = this.props.arcRadius || this.arc;
         const { colorMapper } = this.props;
         const shouldDisplayLegend = this.props.shouldDisplayLegend ?? true;
+        const { opacity } = this.props;
+        const { chartId } = this.props;
 
-        this.makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper, colorMapper, shouldDisplayLegend);
+        this.makeDonutChart(
+            data, height, width, left, top, bottom, right, arcRadius,
+            tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId
+        );
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(data, height, width, left, top, bottom, right, arcRadius, tooltipMapper, colorMapper, shouldDisplayLegend) {
-        const { chartId } = this.props;
-
-
-        /** SETTING SVG ATTRIBUTES * */
-        // d3.select('svg').remove();
-
+    makeDonutChart(
+        data, height, width, left, top, bottom, right, arcRadius,
+        tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId
+    ) {
         // make the SVG element.
         const svg = d3.select(`#donut-${chartId}`)
             .append('svg')
@@ -55,40 +57,17 @@ class DonutChart extends React.Component {
             .append('g')
             .attr('transform', `translate(${left},${top})`);
 
-        /* Skeleton for the pie/donut chart */
         // structure of the chart
         const skeleton = svg.append('g')
             .attr('id', 'skeleton');
 
-        /* Donut Chart */
-
-        // color scheme for the pie/donut chart using the ordinal scale.
-
-        const colors = ['#E64B35FF', '#4DBBD5FF', '#00A087FF', '#3C5488FF',
-            '#F39B7FFF', '#8491B4FF', '#91D1C2FF', '#B09C85FF',
-            '#0073C2FF', '#868686FF', '#CD534CFF', '#7AA6DCFF',
-            '#003C67FF', '#3B3B3BFF', '#A73030FF', '#4A6990FF',
-            '#00468BBF', '#42B540BF', '#0099B4BF', '#925E9FBF',
-            '#FDAF91BF', '#AD002ABF', '#ADB6B6BF',
-        ];
-
+        // color scale
         const color = d3.scaleOrdinal()
             .domain(data.map((val) => val.id))
-            .range(colors);
+            .range(donutColors);
 
-        /* div element for the tooltip */
         // create a tooltip
-        const tooltip = d3.select('#donut')
-            .append('div')
-            .style('position', 'absolute')
-            .style('visibility', 'hidden')
-            .style('border', 'solid')
-            .style('border-width', '2px')
-            .style('border-radius', '5px')
-            .style('padding', '5px')
-            .attr('top', 10)
-            .attr('left', 20);
-
+        const tooltip = createToolTip(`donut-${chartId}`);
 
         /* Arc for the main pie chart and label arc */
         // arc generator
@@ -102,10 +81,9 @@ class DonutChart extends React.Component {
             .innerRadius(arcRadius.innerRadius + 10);
 
         /* Pie/Donut chart layout */
-
         // pie generator/layout
         const pie = d3.pie()
-            // .sort(d => d.id)
+            // .sort(null)
             .value((d) => d.value);
 
         // this will send the data to the pie generator and appending the class arc.
@@ -124,9 +102,11 @@ class DonutChart extends React.Component {
         // here we are appending path and use of d element to create the path.
         const piearc = arcs.append('path')
             .attr('d', arc)
-            .attr('fill', (d) => colorMapper?.[d.data.id] ?? color(d.data.id))
+            .attr('fill', (d) =>
+                colorMapper ? addOpacityToColor(colorMapper?.[d.data.id], 0.5) : color(d.data.id)
+            )
             .attr('stroke', 'black')
-            .style('stroke-width', '.5px');
+            .style('stroke-width', '0.75px');
 
         function pieTween(b) {
             b.innerRadius = 0;
@@ -141,21 +121,13 @@ class DonutChart extends React.Component {
             .duration(500)
             .attrTween('d', pieTween);
 
-        // this is a very basic tooltip.
-        /*
-                piearc.append('title')
-                    .text((d) => {
-                        return 'value is ' + d.data.value
-                    })
-                */
         /* event listeners */
-
         const mouseover = function (d) {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
                 .duration(300)
-                .style('opacity', 0.4)
+                .style('opacity', opacity ? 1.0 : 0.5)
                 .style('cursor', 'pointer');
             // tooltip on mousever setting the div to visible.
             tooltip
@@ -167,14 +139,8 @@ class DonutChart extends React.Component {
             d3.select(`.${selection}_Arc`)
                 .transition()
                 .duration(300)
-                .style('opacity', 0.4)
+                .style('opacity', opacity ? 1.0 : 0.5)
                 .style('cursor', 'pointer');
-
-            // const value1 = `
-            //     Dataset: ${d.data.id} <br/>
-            //     Patients: ${d.data.value} <br/>
-            //     Models: ${d.data.models}
-            // `;
 
             const value = Object.keys(mapper).map(key =>
                 `${key}: ${d.data[mapper[key]]}`
@@ -311,6 +277,7 @@ DonutChart.propTypes = {
     tooltipMapper: PropTypes.object.isRequired,
     colorMapper: PropTypes.object,
     shouldDisplayLegend: PropTypes.bool,
+    opacity: PropTypes.number,
 };
 
 export default DonutChart;
