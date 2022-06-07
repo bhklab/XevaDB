@@ -30,7 +30,7 @@ const options = [
 
 // margin object to be passed as a prop to BarPlot component
 const margin = {
-    top: 50, right: 150, bottom: 50, left: 100,
+    top: 20, right: 150, bottom: 50, left: 100,
 };
 
 // transform model response data
