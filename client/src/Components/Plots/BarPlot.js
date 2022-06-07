@@ -102,7 +102,8 @@ const createXAxis = (svg, xScale, height, isScatter) => {
 
     if (isScatter) {
         xAxis
-            .attr('transform', 'translate(14,28) rotate(90)')
+            .attr('transform', 'translate(14,10) rotate(90)')
+            .style('text-anchor', 'start')
     } else {
         xAxis
             .attr('transform', 'translate(-10,0) rotate(-45)')
