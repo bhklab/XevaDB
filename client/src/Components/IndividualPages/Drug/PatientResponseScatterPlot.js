@@ -33,21 +33,23 @@ const margin = {
     top: 20, right: 150, bottom: 50, left: 100,
 };
 
-// transform model response data
+// transform model response data based on response type!
 const transformModelResponseData = (data, responseType) => {
     // transformed object
     const transformedArray = [];
 
     // iterate through data and add an object to transformed Array
     Object.keys(data).forEach(element => {
-        if (element !== 'Drug' && data[element][responseType] !== 'NA') {
+        if (element !== 'Drug' && data[element][responseType].length > 0) {
             data[element][responseType].forEach(response => {
-                transformedArray.push({
-                    id: element,
-                    // value: mRECISTMapper[data[element].mRECIST],
-                    value: response,
-                    // color: mRECISTColorMapper[response],
-                });
+                if (response !== 'NA') {
+                    transformedArray.push({
+                        id: element,
+                        // value: mRECISTMapper[data[element].mRECIST],
+                        value: response,
+                        // color: mRECISTColorMapper[response],
+                    });
+                }
             });
         };
     });
