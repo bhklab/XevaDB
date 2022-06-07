@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import styled from 'styled-components';
 import colors from '../../styles/colors';
+import barPlotColors from '../../utils/ChartColors';
 
 // bar plot styles
 const StyledBarPlot = styled.div`
@@ -25,20 +26,8 @@ const StyledBarPlot = styled.div`
     }
 `;
 
-// color list
-const colorList = [
-    '#E64B35FF', '#4DBBD5FF', '#00A087FF', '#3C5488FF',
-    '#F39B7FFF', '#8491B4FF', '#91D1C2FF', '#B09C85FF',
-    '#0073C2FF', '#868686FF', '#CD534CFF', '#7AA6DCFF',
-    '#003C67FF', '#3B3B3BFF', '#A73030FF', '#4A6990FF',
-    '#00468BBF', '#42B540BF', '#0099B4BF', '#925E9FBF',
-    '#FDAF91BF', '#AD002ABF', '#ADB6B6BF',
-];
-
 // defaul parameters.
-const defaultMargin = {
-    top: 50, right: 150, bottom: 200, left: 100,
-};
+const defaultMargin = { top: 50, right: 150, bottom: 200, left: 100 };
 const defaultDimensions = { width: 850, height: 400 };
 const defaultArc = { outerRadius: 260, innerRadius: 150 };
 const minBarWidth = 60;
@@ -57,11 +46,14 @@ const createSvg = (width, height, left, right, top, bottom) => {
 };
 
 // x scale for the plot
-const createXScale = (width, data) => {
-    const scale = d3.scaleBand()
+const createXScale = (width, data, isScatter) => {
+    let scale = d3.scaleBand()
         .domain([...new Set(data.map((d) => d.id))])
-        .range([0, width])
-        .padding([0.3]);
+        .range([0, width]);
+
+    if (!isScatter) {
+        scale = scale.padding([0.3]);
+    };
 
     return scale;
 };
@@ -97,18 +89,25 @@ const colorScale = (data, colors) => {
 };
 
 // create the x axis for the chart
-const createXAxis = (svg, xScale, height) => {
-    const axis = d3.axisBottom()
+const createXAxis = (svg, xScale, height, isScatter) => {
+    const bottomAxis = d3.axisBottom()
         .scale(xScale)
         .ticks(7);
 
-    svg.append('g')
-        .call(axis)
+    let xAxis = svg.append('g')
+        .call(bottomAxis)
         .attr('transform', `translate(0,${height})`)
         .selectAll('text')
-        .attr('transform', 'translate(-10,0)rotate(-45)')
-        .style('text-anchor', 'end')
         .style('font-size', 13);
+
+    if (isScatter) {
+        xAxis
+            .attr('transform', 'translate(14,28) rotate(90)')
+    } else {
+        xAxis
+            .attr('transform', 'translate(-10,0) rotate(-45)')
+            .style('text-anchor', 'end')
+    }
 };
 
 // create y axis for the plot
@@ -142,9 +141,9 @@ const createCircles = (svg, data, xScale, yScale, height, color) => {
         .data(data)
         .enter()
         .append('circle')
-        .attr('cx', (d) => xScale(d.id) + 20)
+        .attr('cx', (d) => xScale(d.id) + (minBarWidth / 7))
         .attr('cy', (d) => yScale(d.value))
-        .attr('r', 7.5)
+        .attr('r', 5)
         .attr('id', (d) => `circle_${d.id}`)
         .attr('fill', `${colors.pink_header}`)
         .attr('stroke', `${colors.pink_header}`)
@@ -194,7 +193,11 @@ const BarPlot = (props) => {
     if (minBarWidth * dataLength > dimensions.width) {
         dimensions.width = minBarWidth * dataLength;
     };
+    if (isScatter) {
+        dimensions.width = minBarWidth / 3.5 * dataLength;
+    }
     const { width, height } = dimensions;
+
 
     // calulcates the max value in the data.
     let max = 0;
@@ -215,11 +218,11 @@ const BarPlot = (props) => {
         const svg = createSvg(width, height, left, right, top, bottom);
 
         // scales and axis.
-        const xScale = createXScale(width, data);
+        const xScale = createXScale(width, data, isScatter);
         const yScale = yAxisTicks ? createYScaleWithText(height, yAxisTicks) : createYScale(height, max);
-        const color = colorScale(data, colorList);
+        const color = colorScale(data, barPlotColors);
 
-        createXAxis(svg, xScale, height);
+        createXAxis(svg, xScale, height, isScatter);
         createYAxis(svg, yScale);
 
         // append text.
