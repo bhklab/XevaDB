@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import addOpacityToColor from '../../utils/AddOpacityToColor';
 import createToolTip from '../../utils/ToolTip';
-import donutColors from '../../utils/PieChartColors';
+import donutColors from '../../utils/ChartColors';
 
 class DonutChart extends React.Component {
     constructor(props) {
@@ -126,7 +126,7 @@ class DonutChart extends React.Component {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
-                .duration(300)
+                .duration(200)
                 .style('opacity', opacity ? 1.0 : 0.5)
                 .style('cursor', 'pointer');
             // tooltip on mousever setting the div to visible.
@@ -138,7 +138,7 @@ class DonutChart extends React.Component {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
-                .duration(300)
+                .duration(200)
                 .style('opacity', opacity ? 1.0 : 0.5)
                 .style('cursor', 'pointer');
 
@@ -160,7 +160,7 @@ class DonutChart extends React.Component {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
-                .duration(300)
+                .duration(200)
                 .style('opacity', 1)
                 .style('cursor', 'pointer');
             // tooltip on mouseout.
@@ -182,7 +182,6 @@ class DonutChart extends React.Component {
             });
 
         /* Label with event listeners */
-
         // append the text labels.
         if (chartId !== 'donut_drugs' && chartId !== 'donut_datasets' && chartId !== 'donut_tissues') {
             arcs.append('text')
@@ -197,6 +196,8 @@ class DonutChart extends React.Component {
                 .style('text-anchor', 'middle')
                 .style('font-size', 14)
                 .attr('fill', 'white')
+                .style('opacity', 1)
+                .style('font-weight', 700)
                 .on('mouseover', (d) => {
                     mouseover(d);
                 })
