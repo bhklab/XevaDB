@@ -9,14 +9,22 @@ const mapper = {
     'Models': 'value',
 };
 
+// initial mRECIST object
+const mRECISTObject = {
+    'SD': { id: 'SD', value: 0 },
+    'PD': { id: 'PD', value: 0 },
+    'PR': { id: 'PR', value: 0 },
+    'CR': { id: 'CR', value: 0 },
+};
+
 /**
  * 
  * @param {Object} data 
  * @returns {Array} - an array of the transformed data
  */
-const transformData = (data) => {
+const transformData = (data, mRECISTObject) => {
     // stores the final data
-    let finalData = {};
+    let finalData = mRECISTObject;
 
     // loops through data and prepare data based on the 'mRECIST' value
     data.forEach(element => {
@@ -24,15 +32,7 @@ const transformData = (data) => {
             if (typeof (patientResponse) === 'object') {
                 patientResponse.mRECIST.forEach(value => {
                     if (value !== 'NA') {
-                        if (finalData.hasOwnProperty(value)) {
-                            finalData[value].value += 1;
-                        } else {
-                            finalData[value] = {
-                                id: value,
-                                parameter: 1,
-                                value: 1,
-                            }
-                        }
+                        finalData[value].value += 1;
                     }
                 })
             }
@@ -46,7 +46,7 @@ const transformData = (data) => {
 
 // main component
 const PatientResponsePieChart = ({ data, chartId, arcRadius, shouldDisplayLegend, opacity }) => {
-    const transformedData = transformData(data);
+    const transformedData = transformData(data, mRECISTObject);
 
     return (
         <DonutChart
