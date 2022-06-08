@@ -34,17 +34,20 @@ class DonutChart extends React.Component {
         const shouldDisplayLegend = this.props.shouldDisplayLegend ?? true;
         const { opacity } = this.props;
         const { chartId } = this.props;
+        const shouldDisplayTextLabels = this.props.shouldDisplayTextLabels ?? false;
 
         this.makeDonutChart(
             data, height, width, left, top, bottom, right, arcRadius,
-            tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId
+            tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
+            shouldDisplayTextLabels
         );
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
     makeDonutChart(
         data, height, width, left, top, bottom, right, arcRadius,
-        tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId
+        tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
+        shouldDisplayTextLabels
     ) {
         // make the SVG element.
         const svg = d3.select(`#donut-${chartId}`)
@@ -84,7 +87,8 @@ class DonutChart extends React.Component {
         // pie generator/layout
         const pie = d3.pie()
             .sort(null)
-            .value((d) => d.value);
+            .value((d) => d.value)
+            .padAngle(.02);
 
         // this will send the data to the pie generator and appending the class arc.
         const arcs = skeleton.selectAll('.arc')
@@ -103,10 +107,10 @@ class DonutChart extends React.Component {
         const piearc = arcs.append('path')
             .attr('d', arc)
             .attr('fill', (d) =>
-                colorMapper ? addOpacityToColor(colorMapper?.[d.data.id], 0.5) : color(d.data.id)
+                colorMapper ? addOpacityToColor(colorMapper?.[d.data.id], opacity) : color(d.data.id)
             )
-            .attr('stroke', 'black')
-            .style('stroke-width', '0.75px');
+        // .attr('stroke', 'black')
+        // .style('stroke-width', '0.75px');
 
         function pieTween(b) {
             b.innerRadius = 0;
@@ -183,7 +187,7 @@ class DonutChart extends React.Component {
 
         /* Label with event listeners */
         // append the text labels.
-        if (chartId !== 'donut_drugs' && chartId !== 'donut_datasets' && chartId !== 'donut_tissues') {
+        if (shouldDisplayTextLabels) {
             arcs.append('text')
                 .attr('transform', (d) => `translate(${labelArc.centroid(d)})`)
                 .attr('dy', '0.35em')
@@ -194,9 +198,9 @@ class DonutChart extends React.Component {
                 })
                 // .attr('font-weight', 'bold')
                 .style('text-anchor', 'middle')
-                .style('font-size', 14)
-                .attr('fill', 'white')
-                .style('opacity', 1)
+                .style('font-size', 12.5)
+                .attr('fill', 'black')
+                .style('opacity', 0.75)
                 .style('font-weight', 700)
                 .on('mouseover', (d) => {
                     mouseover(d);
@@ -278,6 +282,7 @@ DonutChart.propTypes = {
     tooltipMapper: PropTypes.object.isRequired,
     colorMapper: PropTypes.object,
     shouldDisplayLegend: PropTypes.bool,
+    shouldDisplayTextLabels: PropTypes.bool,
     opacity: PropTypes.number,
 };
 

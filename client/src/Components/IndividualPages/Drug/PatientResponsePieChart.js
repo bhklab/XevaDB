@@ -45,7 +45,10 @@ const transformData = (data, mRECISTObject) => {
 
 
 // main component
-const PatientResponsePieChart = ({ data, chartId, arcRadius, shouldDisplayLegend, opacity }) => {
+const PatientResponsePieChart = ({
+    data, chartId, arcRadius,
+    shouldDisplayLegend, opacity, shouldDisplayTextLabels
+}) => {
     const transformedData = transformData(data, mRECISTObject);
 
     return (
@@ -56,6 +59,7 @@ const PatientResponsePieChart = ({ data, chartId, arcRadius, shouldDisplayLegend
             tooltipMapper={mapper}
             colorMapper={mRECISTColorMapper}
             shouldDisplayLegend={shouldDisplayLegend}
+            shouldDisplayTextLabels={shouldDisplayTextLabels}
             opacity={opacity}
         />
     );
