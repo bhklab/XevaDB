@@ -9,8 +9,6 @@ import donutColors from '../../utils/ChartColors';
 class DonutChart extends React.Component {
     constructor(props) {
         super(props);
-        this.DonutChart = this.DonutChart.bind(this);
-        this.makeDonutChart = this.makeDonutChart.bind(this);
         this.dimensions = { width: 650, height: 250 };
         this.arc = { outerRadius: 260, innerRadius: 150 };
         this.margin = {
@@ -22,18 +20,18 @@ class DonutChart extends React.Component {
         this.DonutChart();
     }
 
-    DonutChart() {
+    DonutChart = () => {
         const dimensions = this.props.dimensions || this.dimensions;
         const margin = this.props.margin || this.margin;
-        const { data } = this.props;
         const { height, width } = dimensions;
         const { left, top, bottom, right } = margin;
-        const { tooltipMapper } = this.props;
+        const { data } = this.props;
         const arcRadius = this.props.arcRadius || this.arc;
+        const { tooltipMapper } = this.props;
         const { colorMapper } = this.props;
-        const shouldDisplayLegend = this.props.shouldDisplayLegend ?? true;
         const { opacity } = this.props;
         const { chartId } = this.props;
+        const shouldDisplayLegend = this.props.shouldDisplayLegend ?? true;
         const shouldDisplayTextLabels = this.props.shouldDisplayTextLabels ?? false;
 
         this.makeDonutChart(
@@ -44,11 +42,11 @@ class DonutChart extends React.Component {
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(
+    makeDonutChart = (
         data, height, width, left, top, bottom, right, arcRadius,
         tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
         shouldDisplayTextLabels
-    ) {
+    ) => {
         // make the SVG element.
         const svg = d3.select(`#donut-${chartId}`)
             .append('svg')
