@@ -24,7 +24,7 @@ const mRECISTObject = {
  */
 const transformData = (data, mRECISTObject) => {
     // stores the final data
-    let finalData = mRECISTObject;
+    let finalData = JSON.parse(JSON.stringify(mRECISTObject));
 
     // loops through data and prepare data based on the 'mRECIST' value
     data.forEach(element => {
