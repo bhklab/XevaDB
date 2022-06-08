@@ -142,9 +142,9 @@ const createCircles = (svg, data, xScale, yScale, height, color) => {
         .data(data)
         .enter()
         .append('circle')
-        .attr('cx', (d) => xScale(d.id) + (minBarWidth / 7))
+        .attr('cx', (d) => xScale(d.id) + (minBarWidth / 8))
         .attr('cy', (d) => yScale(d.value))
-        .attr('r', 5)
+        .attr('r', 4.5)
         .attr('id', (d) => `circle_${d.id}`)
         .attr('fill', `${colors.pink_header}`)
         .attr('stroke', `${colors.pink_header}`)
@@ -195,7 +195,7 @@ const BarPlot = (props) => {
         dimensions.width = minBarWidth * dataLength;
     };
     if (isScatter) {
-        dimensions.width = minBarWidth / 3.5 * dataLength;
+        dimensions.width = minBarWidth / 4 * dataLength;
     }
     const { width, height } = dimensions;
 
