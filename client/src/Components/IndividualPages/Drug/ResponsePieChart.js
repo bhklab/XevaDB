@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DonutChart from '../../Plots/DonutChart';
+import OverlayArcs from './OverlayArcs';
 import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
 
 
@@ -51,16 +52,31 @@ const ResponsePieChart = ({ totalResponsedata, individualDrugResponseData }) => 
     const transformedIndividualDrugResponseData = transformData(individualDrugResponseData, mRECISTObject);
 
     return (
-        <DonutChart
-            data={transformedTotalResponseData}
-            tooltipMapper={mapper}
-            colorMapper={mRECISTColorMapper}
-            chartId='model-response-all-drugs'
-            arcRadius={{ outerRadius: 280, innerRadius: 180 }}
-            shouldDisplayLegend={true}
-            shouldDisplayTextLabels={true}
-            opacity={0.2}
-        />
+        <div>
+            <div style={{ position: 'absolute' }}>
+                <DonutChart
+                    data={transformedTotalResponseData}
+                    tooltipMapper={mapper}
+                    colorMapper={mRECISTColorMapper}
+                    chartId='model-response-all-drugs'
+                    arcRadius={{ outerRadius: 280, innerRadius: 180 }}
+                    dimensions={{ width: 650, height: 250 }}
+                    margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
+                    shouldDisplayLegend={true}
+                    shouldDisplayTextLabels={true}
+                    opacity={0.2}
+                />
+            </div>
+            <div>
+                <OverlayArcs
+                    totalResponseData={transformedTotalResponseData}
+                    individualDrugResponseData={transformedIndividualDrugResponseData}
+                    dimensions={{ width: 650, height: 250 }}
+                    arcRadius={{ outerRadius: 260, innerRadius: 150 }}
+                    margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
+                />
+            </div>
+        </div >
     );
 };
 
