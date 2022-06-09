@@ -4,8 +4,8 @@ import GlobalStyles from '../../../GlobalStyles';
 import Spinner from '../../Utils/Spinner';
 import Footer from '../../Footer/Footer';
 import Annotation from './Annotation';
-import PatientResponseScatterPlot from './PatientResponseScatterPlot';
-import PatientResponsePieChart from './PatientResponsePieChart';
+import ResponseScatterPlot from './ResponseScatterPlot';
+import ResponsePieChart from './ResponsePieChart';
 
 // h4 style
 const h4Style = {
@@ -76,26 +76,14 @@ const Drug = (props) => {
                                 />
                                 <h1> Model Response </h1>
                                 <div>
-                                    {/* <div style={{ position: 'absolute' }}>
-                                        <PatientResponsePieChart
-                                            data={modelResponseDataPerDrug}
-                                            chartId='model-response-per-drug'
-                                            arcRadius={{ outerRadius: 300, innerRadius: 200 }}
-                                            shouldDisplayLegend={false}
-                                        />
-                                    </div> */}
                                     <div>
-                                        <PatientResponsePieChart
-                                            data={modelResponseData}
-                                            chartId='model-response-all-drugs'
-                                            arcRadius={{ outerRadius: 280, innerRadius: 180 }}
-                                            shouldDisplayLegend={true}
-                                            shouldDisplayTextLabels={true}
-                                            opacity={0.2}
+                                        <ResponsePieChart
+                                            totalResponsedata={modelResponseData}
+                                            individualDrugResponseData={modelResponseDataPerDrug}
                                         />
                                     </div>
                                 </div>
-                                <PatientResponseScatterPlot
+                                <ResponseScatterPlot
                                     data={modelResponseDataPerDrug[0]}
                                 />
                                 <h4 style={h4Style}> Patient </h4>

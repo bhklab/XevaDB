@@ -45,24 +45,21 @@ const transformData = (data, mRECISTObject) => {
 
 
 // main component
-const PatientResponsePieChart = ({
-    data, chartId, arcRadius,
-    shouldDisplayLegend, opacity, shouldDisplayTextLabels
-}) => {
-    const transformedData = transformData(data, mRECISTObject);
+const ResponsePieChart = ({ totalResponsedata, individualDrugResponseData }) => {
+    const transformedData = transformData(totalResponsedata, mRECISTObject);
 
     return (
         <DonutChart
             data={transformedData}
-            chartId={chartId}
-            arcRadius={arcRadius}
             tooltipMapper={mapper}
             colorMapper={mRECISTColorMapper}
-            shouldDisplayLegend={shouldDisplayLegend}
-            shouldDisplayTextLabels={shouldDisplayTextLabels}
-            opacity={opacity}
+            chartId='model-response-all-drugs'
+            arcRadius={{ outerRadius: 280, innerRadius: 180 }}
+            shouldDisplayLegend={true}
+            shouldDisplayTextLabels={true}
+            opacity={0.2}
         />
     );
 };
 
-export default PatientResponsePieChart;
+export default ResponsePieChart;

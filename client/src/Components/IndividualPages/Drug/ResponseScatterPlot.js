@@ -75,7 +75,7 @@ const mRECISTArray = (data) => {
 
 
 // Patient Response Chart component 
-const PatientResponseScatterPlot = ({ data }) => {
+const ResponseScatterPlot = ({ data }) => {
     // model response data
     const [transformedModelResponseData, setTransformedModelResponseData] = useState([]);
     const [mRECISTTypes, setmRECISTTypes] = useState([]);
@@ -125,4 +125,4 @@ const PatientResponseScatterPlot = ({ data }) => {
 };
 
 
-export default PatientResponseScatterPlot;
+export default ResponseScatterPlot;
