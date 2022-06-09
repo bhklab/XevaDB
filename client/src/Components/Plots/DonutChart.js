@@ -105,7 +105,9 @@ class DonutChart extends React.Component {
         const piearc = arcs.append('path')
             .attr('d', arc)
             .attr('fill', (d) =>
-                colorMapper ? addOpacityToColor(colorMapper?.[d.data.id], opacity) : color(d.data.id)
+                colorMapper && opacity
+                    ? addOpacityToColor(colorMapper?.[d.data.id], opacity)
+                    : color(d.data.id)
             )
         // .attr('stroke', 'black')
         // .style('stroke-width', '0.75px');
@@ -128,7 +130,7 @@ class DonutChart extends React.Component {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
-                .duration(200)
+                .duration(100)
                 .style('opacity', opacity ? 1.0 : 0.5)
                 .style('cursor', 'pointer');
             // tooltip on mousever setting the div to visible.
@@ -140,7 +142,7 @@ class DonutChart extends React.Component {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
-                .duration(200)
+                .duration(100)
                 .style('opacity', opacity ? 1.0 : 0.5)
                 .style('cursor', 'pointer');
 
@@ -162,7 +164,7 @@ class DonutChart extends React.Component {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
-                .duration(200)
+                .duration(100)
                 .style('opacity', 1)
                 .style('cursor', 'pointer');
             // tooltip on mouseout.
