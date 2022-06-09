@@ -75,14 +75,10 @@ const Drug = (props) => {
                                     data={drugData}
                                 />
                                 <h1> Model Response </h1>
-                                <div>
-                                    <div>
-                                        <ResponsePieChart
-                                            totalResponsedata={modelResponseData}
-                                            individualDrugResponseData={modelResponseDataPerDrug}
-                                        />
-                                    </div>
-                                </div>
+                                <ResponsePieChart
+                                    totalResponsedata={modelResponseData}
+                                    individualDrugResponseData={modelResponseDataPerDrug}
+                                />
                                 <ResponseScatterPlot
                                     data={modelResponseDataPerDrug[0]}
                                 />
