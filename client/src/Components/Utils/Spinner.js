@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashLoader } from 'react-spinners';
+import { ClipLoader } from 'react-spinners';
 import { css } from '@emotion/core';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
@@ -13,16 +13,16 @@ const SpinnerUtil = (props) => {
     const { loading } = props;
     return loading ? (
         <div>
-            <HashLoader
+            <ClipLoader
                 css={override}
                 sizeUnit="px"
-                size={100}
+                size={70}
                 color={colors.pink_header}
             />
         </div>
     ) : (
-            <div />
-        );
+        <div />
+    );
 };
 
 SpinnerUtil.propTypes = {
