@@ -46,11 +46,13 @@ const transformData = (data, mRECISTObject) => {
 
 // main component
 const ResponsePieChart = ({ totalResponsedata, individualDrugResponseData }) => {
-    const transformedData = transformData(totalResponsedata, mRECISTObject);
+    // transformed data
+    const transformedTotalResponseData = transformData(totalResponsedata, mRECISTObject);
+    const transformedIndividualDrugResponseData = transformData(individualDrugResponseData, mRECISTObject);
 
     return (
         <DonutChart
-            data={transformedData}
+            data={transformedTotalResponseData}
             tooltipMapper={mapper}
             colorMapper={mRECISTColorMapper}
             chartId='model-response-all-drugs'
