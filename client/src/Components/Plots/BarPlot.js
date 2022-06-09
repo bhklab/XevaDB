@@ -9,7 +9,7 @@ import barPlotColors from '../../utils/ChartColors';
 
 // bar plot styles
 const StyledBarPlot = styled.div`
-    width: 90%;
+    width: 100%;
     margin: auto;
     overflow-x: scroll;
 
