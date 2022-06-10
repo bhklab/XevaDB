@@ -3,6 +3,8 @@ import * as d3 from 'd3';
 import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
 
+const PADDING = 0.01;
+
 /**
  * 
  * @param {Array} totalResponseData 
@@ -11,7 +13,7 @@ import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
  */
 const updateTotalResponseData = (totalResponseData, sumOfValues) => {
     // stores the current end angle
-    let currentStartAngle = 0;
+    let currentStartAngle = PADDING;
 
     // update data
     let updatedTotalResponseData = {};

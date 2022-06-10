@@ -74,7 +74,8 @@ class DonutChart extends React.Component {
         // arc generator
         const arc = d3.arc()
             .outerRadius(arcRadius.outerRadius)
-            .innerRadius(arcRadius.innerRadius);
+            .innerRadius(arcRadius.innerRadius)
+            .padAngle(0.02);
 
         // this is used to set the labels
         const labelArc = d3.arc()
@@ -85,8 +86,8 @@ class DonutChart extends React.Component {
         // pie generator/layout
         const pie = d3.pie()
             .sort(null)
-            .value((d) => d.value)
-            .padAngle(.02);
+            .value((d) => d.value);
+
 
         // this will send the data to the pie generator and appending the class arc.
         const arcs = skeleton.selectAll('.arc')
