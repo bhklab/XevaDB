@@ -72,7 +72,7 @@ const ResponsePieChart = ({ totalResponsedata, individualDrugResponseData }) => 
                     totalResponseData={transformedTotalResponseData}
                     individualDrugResponseData={transformedIndividualDrugResponseData}
                     dimensions={{ width: 650, height: 250 }}
-                    arcRadius={{ outerRadius: 260, innerRadius: 150 }}
+                    arcRadius={{ outerRadius: 280, innerRadius: 180 }}
                     margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
                 />
             </div>
