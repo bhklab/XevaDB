@@ -11,11 +11,11 @@ import { customStyles } from '../../Search/SearchStyle';
 
 // styling Patient Response Chart
 const StyledChart = styled.div`
-    max-width: 90%;
+    max-width: 100%;
 
     .select-container {
-        margin-top: 20px;
-        min-width: 180px;
+        margin: 20px 60px 0 0;
+        min-width: 200px;
         float: right;
     }
 `;
@@ -30,24 +30,26 @@ const options = [
 
 // margin object to be passed as a prop to BarPlot component
 const margin = {
-    top: 50, right: 150, bottom: 50, left: 100,
+    top: 0, right: 100, bottom: 80, left: 100,
 };
 
-// transform model response data
+// transform model response data based on response type!
 const transformModelResponseData = (data, responseType) => {
     // transformed object
     const transformedArray = [];
 
     // iterate through data and add an object to transformed Array
     Object.keys(data).forEach(element => {
-        if (element !== 'Drug' && data[element][responseType] !== 'NA') {
+        if (element !== 'Drug' && data[element][responseType].length > 0) {
             data[element][responseType].forEach(response => {
-                transformedArray.push({
-                    id: element,
-                    // value: mRECISTMapper[data[element].mRECIST],
-                    value: response,
-                    // color: mRECISTColorMapper[response],
-                });
+                if (response !== 'NA') {
+                    transformedArray.push({
+                        id: element,
+                        // value: mRECISTMapper[data[element].mRECIST],
+                        value: response,
+                        // color: mRECISTColorMapper[response],
+                    });
+                }
             });
         };
     });
@@ -73,7 +75,7 @@ const mRECISTArray = (data) => {
 
 
 // Patient Response Chart component 
-const PatientResponseScatterPlot = ({ data }) => {
+const ResponseScatterPlot = ({ data }) => {
     // model response data
     const [transformedModelResponseData, setTransformedModelResponseData] = useState([]);
     const [mRECISTTypes, setmRECISTTypes] = useState([]);
@@ -123,4 +125,4 @@ const PatientResponseScatterPlot = ({ data }) => {
 };
 
 
-export default PatientResponseScatterPlot;
+export default ResponseScatterPlot;

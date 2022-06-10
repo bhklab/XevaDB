@@ -2,13 +2,13 @@
 import React from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-
+import addOpacityToColor from '../../utils/AddOpacityToColor';
+import createToolTip from '../../utils/ToolTip';
+import donutColors from '../../utils/ChartColors';
 
 class DonutChart extends React.Component {
     constructor(props) {
         super(props);
-        this.DonutChart = this.DonutChart.bind(this);
-        this.makeDonutChart = this.makeDonutChart.bind(this);
         this.dimensions = { width: 650, height: 250 };
         this.arc = { outerRadius: 260, innerRadius: 150 };
         this.margin = {
@@ -20,29 +20,37 @@ class DonutChart extends React.Component {
         this.DonutChart();
     }
 
-    DonutChart() {
+    DonutChart = () => {
         const dimensions = this.props.dimensions || this.dimensions;
         const margin = this.props.margin || this.margin;
-        const { data } = this.props;
         const { height, width } = dimensions;
-        const {
-            left, top, bottom, right,
-        } = margin;
+        const { left, top, bottom, right } = margin;
+        const { data } = this.props;
+        const arcRadius = this.props.arcRadius || this.arc;
         const { tooltipMapper } = this.props;
-        this.makeDonutChart(data, height, width, left, top, bottom, right, tooltipMapper);
+        const { colorMapper } = this.props;
+        const { opacity } = this.props;
+        const { chartId } = this.props;
+        const shouldDisplayLegend = this.props.shouldDisplayLegend ?? true;
+        const shouldDisplayTextLabels = this.props.shouldDisplayTextLabels ?? false;
+
+        this.makeDonutChart(
+            data, height, width, left, top, bottom, right, arcRadius,
+            tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
+            shouldDisplayTextLabels
+        );
     }
 
     // data should be like => {id: 'Gastric Cancer', value: 1007}
-    makeDonutChart(data, height, width, left, top, bottom, right, tooltipMapper) {
-        const { chartId } = this.props;
-
-        /** SETTING SVG ATTRIBUTES * */
-        d3.select('svg').remove();
-
+    makeDonutChart = (
+        data, height, width, left, top, bottom, right, arcRadius,
+        tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
+        shouldDisplayTextLabels
+    ) => {
         // make the SVG element.
-        const svg = d3.select('#donut')
+        const svg = d3.select(`#donut-${chartId}`)
             .append('svg')
-            .attr('id', `donutchart-${chartId}`)
+            .attr('id', `donutchart-${chartId}-svg`)
             .attr('xmlns', 'http://wwww.w3.org/2000/svg')
             .attr('xmlns:xlink', 'http://wwww.w3.org/1999/xlink')
             .attr('height', height + top + bottom)
@@ -50,47 +58,24 @@ class DonutChart extends React.Component {
             .append('g')
             .attr('transform', `translate(${left},${top})`);
 
-        /* Skeleton for the pie/donut chart */
         // structure of the chart
         const skeleton = svg.append('g')
             .attr('id', 'skeleton');
 
-        /* Donut Chart */
-
-        // color scheme for the pie/donut chart using the ordinal scale.
-
-        const colors = ['#E64B35FF', '#4DBBD5FF', '#00A087FF', '#3C5488FF',
-            '#F39B7FFF', '#8491B4FF', '#91D1C2FF', '#B09C85FF',
-            '#0073C2FF', '#868686FF', '#CD534CFF', '#7AA6DCFF',
-            '#003C67FF', '#3B3B3BFF', '#A73030FF', '#4A6990FF',
-            '#00468BBF', '#42B540BF', '#0099B4BF', '#925E9FBF',
-            '#FDAF91BF', '#AD002ABF', '#ADB6B6BF',
-        ];
-
+        // color scale
         const color = d3.scaleOrdinal()
             .domain(data.map((val) => val.id))
-            .range(colors);
+            .range(donutColors);
 
-        /* div element for the tooltip */
         // create a tooltip
-        const tooltip = d3.select('#donut')
-            .append('div')
-            .style('position', 'absolute')
-            .style('visibility', 'hidden')
-            .style('border', 'solid')
-            .style('border-width', '2px')
-            .style('border-radius', '5px')
-            .style('padding', '5px')
-            .attr('top', 10)
-            .attr('left', 20);
-
+        const tooltip = createToolTip(`donut-${chartId}`);
 
         /* Arc for the main pie chart and label arc */
-        const arcRadius = this.props.arcRadius || this.arc;
         // arc generator
         const arc = d3.arc()
             .outerRadius(arcRadius.outerRadius)
-            .innerRadius(arcRadius.innerRadius);
+            .innerRadius(arcRadius.innerRadius)
+            .padAngle(0.02);
 
         // this is used to set the labels
         const labelArc = d3.arc()
@@ -98,11 +83,11 @@ class DonutChart extends React.Component {
             .innerRadius(arcRadius.innerRadius + 10);
 
         /* Pie/Donut chart layout */
-
         // pie generator/layout
         const pie = d3.pie()
             .sort(null)
             .value((d) => d.value);
+
 
         // this will send the data to the pie generator and appending the class arc.
         const arcs = skeleton.selectAll('.arc')
@@ -120,9 +105,13 @@ class DonutChart extends React.Component {
         // here we are appending path and use of d element to create the path.
         const piearc = arcs.append('path')
             .attr('d', arc)
-            .attr('fill', (d) => color(d.data.id))
-            .attr('stroke', 'black')
-            .style('stroke-width', '.5px');
+            .attr('fill', (d) =>
+                colorMapper && opacity
+                    ? addOpacityToColor(colorMapper?.[d.data.id], opacity)
+                    : color(d.data.id)
+            )
+        // .attr('stroke', 'black')
+        // .style('stroke-width', '0.75px');
 
         function pieTween(b) {
             b.innerRadius = 0;
@@ -137,21 +126,13 @@ class DonutChart extends React.Component {
             .duration(500)
             .attrTween('d', pieTween);
 
-        // this is a very basic tooltip.
-        /*
-                piearc.append('title')
-                    .text((d) => {
-                        return 'value is ' + d.data.value
-                    })
-                */
         /* event listeners */
-
         const mouseover = function (d) {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
-                .duration(300)
-                .style('opacity', 0.4)
+                .duration(100)
+                .style('opacity', opacity ? 1.0 : 0.5)
                 .style('cursor', 'pointer');
             // tooltip on mousever setting the div to visible.
             tooltip
@@ -162,15 +143,9 @@ class DonutChart extends React.Component {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
-                .duration(300)
-                .style('opacity', 0.4)
+                .duration(100)
+                .style('opacity', opacity ? 1.0 : 0.5)
                 .style('cursor', 'pointer');
-
-            // const value1 = `
-            //     Dataset: ${d.data.id} <br/>
-            //     Patients: ${d.data.value} <br/>
-            //     Models: ${d.data.models}
-            // `;
 
             const value = Object.keys(mapper).map(key =>
                 `${key}: ${d.data[mapper[key]]}`
@@ -183,14 +158,14 @@ class DonutChart extends React.Component {
                 .style('left', `${d3.event.pageX + 10}px`)
                 .style('top', `${d3.event.pageY + 10}px`)
                 .style('color', 'white')
-                .style('background-color', color(d.data.id));
+                .style('background-color', colorMapper?.[d.data.id] ?? color(d.data.id));
         };
 
         const mouseout = function (d) {
             const selection = (d.data.id).replace(/\s/g, '').replace(/[(-)]/g, '');
             d3.select(`.${selection}_Arc`)
                 .transition()
-                .duration(300)
+                .duration(100)
                 .style('opacity', 1)
                 .style('cursor', 'pointer');
             // tooltip on mouseout.
@@ -212,9 +187,8 @@ class DonutChart extends React.Component {
             });
 
         /* Label with event listeners */
-
         // append the text labels.
-        if (chartId !== 'donut_drugs' && chartId !== 'donut_datasets' && chartId !== 'donut_tissues') {
+        if (shouldDisplayTextLabels) {
             arcs.append('text')
                 .attr('transform', (d) => `translate(${labelArc.centroid(d)})`)
                 .attr('dy', '0.35em')
@@ -225,8 +199,10 @@ class DonutChart extends React.Component {
                 })
                 // .attr('font-weight', 'bold')
                 .style('text-anchor', 'middle')
-                .style('font-size', 14)
-                .attr('fill', 'white')
+                .style('font-size', 12.5)
+                .attr('fill', 'black')
+                .style('opacity', 0.75)
+                .style('font-weight', 700)
                 .on('mouseover', (d) => {
                     mouseover(d);
                 })
@@ -242,39 +218,41 @@ class DonutChart extends React.Component {
         /**   Legends for the Donut Chart * */
 
         // small side rectangles or legends for the donut chart.
-        const donutRect = svg.append('g')
-            .attr('id', 'donut_small_rect');
+        if (shouldDisplayLegend) {
+            const donutRect = svg.append('g')
+                .attr('id', 'donut_legend');
 
-        donutRect.selectAll('rect')
-            .data(data)
-            .enter()
-            .append('rect')
-            .attr('x', (width) - 290)
-            .attr('y', (d, i) => ((30 * i) - (data.length * 15)))
-            .attr('width', 20)
-            .attr('height', 20)
-            .attr('fill', (d) => color(d.id));
+            donutRect.selectAll('rect')
+                .data(data)
+                .enter()
+                .append('rect')
+                .attr('x', (width) - 290)
+                .attr('y', (d, i) => ((30 * i) - (data.length * 15)))
+                .attr('width', 20)
+                .attr('height', 20)
+                .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id));
 
-        donutRect.selectAll('text')
-            .data(data)
-            .enter()
-            .append('a')
-            .attr('xlink:href', (d, i) => {
-                if (chartId === 'donut_datasets') {
-                    return `/dataset/${data[i].parameter}`;
-                }
-            })
-            .append('text')
-            .attr('x', (width) - 250)
-            .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
-            .attr('fill', (d) => color(d.id))
-            .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`);
+            donutRect.selectAll('text')
+                .data(data)
+                .enter()
+                .append('a')
+                .attr('xlink:href', (d, i) => {
+                    if (chartId === 'donut_datasets') {
+                        return `/dataset/${data[i].parameter}`;
+                    }
+                })
+                .append('text')
+                .attr('x', (width) - 250)
+                .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
+                .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id))
+                .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`);
+        }
     }
 
     render() {
         return (
             <div
-                id="donut"
+                id={`donut-${this.props.chartId}`}
                 className="donut-chart"
             />
         );
@@ -303,6 +281,10 @@ DonutChart.propTypes = {
         outerRadius: PropTypes.number,
     }),
     tooltipMapper: PropTypes.object.isRequired,
+    colorMapper: PropTypes.object,
+    shouldDisplayLegend: PropTypes.bool,
+    shouldDisplayTextLabels: PropTypes.bool,
+    opacity: PropTypes.number,
 };
 
 export default DonutChart;

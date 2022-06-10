@@ -53,7 +53,7 @@ const AnnotationStyle = styled.div`
  */
 const createTableValue = (key, value) => {
     if (key === 'pubchemid') {
-        return <a href={`${pubchemURL}${value}`} target='_blank'> {value} </a>
+        return <a href={`${pubchemURL}${value}`} target='_blank'> {value?.split(' ,').join(', ')} </a>
     } else {
         return value;
     }

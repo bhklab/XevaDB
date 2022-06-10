@@ -8,6 +8,21 @@ import { StyledSelect } from './BiomarkerStyle';
 // data types array
 const DATA_TYPES = ['CNV', 'RNASeq'];
 
+// metrics array
+const METRICS = [
+    'best response time',
+    'lmm',
+    'OS',
+    'slope',
+    'best response',
+    'TGI',
+    'best average response time',
+    'AUC',
+    'best average response',
+    'abc',
+    'angle'
+];
+
 // function to get the drug data
 const createSelectionArray = function (data) {
     return data.map(el => ({
@@ -34,6 +49,9 @@ const BiomarkerSelect = (props) => {
     // data type array for the selection
     const dataTypes = createSelectionArray(DATA_TYPES);
 
+    // get the list of metric types in the data
+    const metrics = createSelectionArray(METRICS);
+
     // component states
     const [selectedDrug, updateSelectedDrug] = useState(
         selectedDrugProp ? { value: selectedDrugProp, label: selectedDrugProp } : ''
@@ -42,10 +60,12 @@ const BiomarkerSelect = (props) => {
         selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : ''
     );
     const [selectedDataType, updateSelectedDataType] = useState('');
+    const [selectedMetric, updateSelectedMetric] = useState('');
     const [isSelected, updateIsSelected] = useState({
         drug: selectedDrugProp ? true : false,
         gene: selectedGeneProp ? true : false,
         dataType: false,
+        metric: true,
     });
     const [isButtonClicked, updateButtonClickState] = useState(false);
 
@@ -56,6 +76,14 @@ const BiomarkerSelect = (props) => {
             { headers: { Authorization: localStorage.getItem('user') } }
         );
         return data;
+    };
+
+    // function to filter data based on the metric type
+    const getBiomarkerDataBasedOnMetric = function (data, metricArray) {
+        // metrics array
+        const metrics = metricArray.map(metric => metric.label);
+
+        return data.filter(el => metrics.includes(el['metric'].replace(/\./g, ' ')));
     };
 
     // event handler on button
@@ -73,8 +101,12 @@ const BiomarkerSelect = (props) => {
             getBiomarkerData(drug, gene, dataType)
                 .then(biomarkers => {
                     // update biomarker data state
-                    if (biomarkers.data.length > 0) {
-                        setBiomarkerData(biomarkers.data);
+                    if (biomarkers.data?.length > 0) {
+                        const data = selectedMetric?.length > 0
+                            ? getBiomarkerDataBasedOnMetric(biomarkers.data, selectedMetric)
+                            : biomarkers.data;
+
+                        setBiomarkerData(data);
                         setDisplayMessage('');
                     } else {
                         setDisplayMessage('Data is not available!');
@@ -83,6 +115,18 @@ const BiomarkerSelect = (props) => {
                 .catch(err => console.log('An error occurred', err));
         };
     };
+
+    // display that field is required
+    const displayRequiredFieldText = function (type, isButtonClicked) {
+        return (
+            <span
+                className={!isSelected[type] && isButtonClicked ? 'visible' : 'hidden'}
+            >
+                Field is required!
+            </span>
+        )
+    };
+
 
     return (
         <StyledSelect className='biomarker-select'>
@@ -98,11 +142,7 @@ const BiomarkerSelect = (props) => {
                     }}
                 />
                 {
-                    <span
-                        className={!isSelected.drug && isButtonClicked ? 'visible' : 'hidden'}
-                    >
-                        Field is required!
-                    </span>
+                    displayRequiredFieldText('drug', isButtonClicked)
                 }
             </div>
             <div className='gene-select'>
@@ -117,11 +157,7 @@ const BiomarkerSelect = (props) => {
                     }}
                 />
                 {
-                    <span
-                        className={!isSelected.gene && isButtonClicked ? 'visible' : 'hidden'}
-                    >
-                        Field is required!
-                    </span>
+                    displayRequiredFieldText('gene', isButtonClicked)
                 }
             </div>
             <div className='genomics-select'>
@@ -136,11 +172,23 @@ const BiomarkerSelect = (props) => {
                     }}
                 />
                 {
-                    <span
-                        className={!isSelected.dataType && isButtonClicked ? 'visible' : 'hidden'}
-                    >
-                        Field is required!
-                    </span>
+                    displayRequiredFieldText('dataType', isButtonClicked)
+                }
+            </div>
+            <div className='metric-select'>
+                <span> Metric </span>
+                <Select
+                    styles={customStyles}
+                    options={metrics}
+                    value={selectedMetric}
+                    onChange={(event) => {
+                        updateSelectedMetric(event);
+                        updateIsSelected({ ...isSelected, metric: true })
+                    }}
+                    isMulti
+                />
+                {
+                    displayRequiredFieldText('metric', isButtonClicked)
                 }
             </div>
             <div className='display-button'>

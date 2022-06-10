@@ -4,8 +4,8 @@ import GlobalStyles from '../../../GlobalStyles';
 import Spinner from '../../Utils/Spinner';
 import Footer from '../../Footer/Footer';
 import Annotation from './Annotation';
-import PatientResponseScatterPlot from './PatientResponseScatterPlot';
-import PatientResponsePieChart from './PatientResponsePieChart';
+import ResponseScatterPlot from './ResponseScatterPlot';
+import ResponsePieChart from './ResponsePieChart';
 
 // h4 style
 const h4Style = {
@@ -22,6 +22,7 @@ const Drug = (props) => {
 
     // state to save the drug information data and setting loader state
     const [drugData, setDrugData] = useState([]);
+    const [modelResponseDataPerDrug, setModelResponseDataPerDrug] = useState([]);
     const [modelResponseData, setModelResponseData] = useState([]);
     const [isLoading, setLoadingState] = useState(true);
 
@@ -32,17 +33,23 @@ const Drug = (props) => {
             `/api/v1/drugs/${drugId}`,
             { headers: { Authorization: localStorage.getItem('user') } }
         );
+        const modelResponseBasedOnDrug = await axios.get(
+            `/api/v1/modelresponse?drug=${drugInformation.data[0].drug_name.replace(/\s/g, '').replace(/\+/g, '_')}`,
+            { headers: { Authorization: localStorage.getItem('user') } }
+        );
         const modelResponse = await axios.get(
-            `/api/v1/modelresponse?drug=${drugInformation.data[0].drug_name.replace(/\s/g, '').replace('+', '_')}`,
+            `/api/v1/modelresponse`,
             { headers: { Authorization: localStorage.getItem('user') } }
         );
 
-        const { data } = drugInformation;
+        const { data: drugData } = drugInformation;
+        const { data: modelDataPerDrug } = modelResponseBasedOnDrug;
         const { data: modelData } = modelResponse;
 
         // set drug and model response data
-        setDrugData(data[0]);
-        setModelResponseData(modelData[0]);
+        setDrugData(drugData[0]);
+        setModelResponseDataPerDrug(modelDataPerDrug);
+        setModelResponseData(modelData);
 
         // set loader state
         setLoadingState(false);
@@ -59,15 +66,22 @@ const Drug = (props) => {
             <GlobalStyles />
             <div className='wrapper'>
                 {
-                    isLoading && drugData.length === 0
+                    isLoading
                         ? <Spinner loading={isLoading} />
                         : (
                             <div className='component-wrapper center-component'>
                                 <h1> {drugData.drug_name} </h1>
-                                <Annotation data={drugData} />
+                                <Annotation
+                                    data={drugData}
+                                />
                                 <h1> Model Response </h1>
-                                <PatientResponsePieChart data={modelResponseData} />
-                                <PatientResponseScatterPlot data={modelResponseData} />
+                                <ResponsePieChart
+                                    totalResponsedata={modelResponseData}
+                                    individualDrugResponseData={modelResponseDataPerDrug}
+                                />
+                                <ResponseScatterPlot
+                                    data={modelResponseDataPerDrug[0]}
+                                />
                                 <h4 style={h4Style}> Patient </h4>
                             </div>
                         )

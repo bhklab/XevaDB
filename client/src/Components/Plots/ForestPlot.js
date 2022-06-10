@@ -20,7 +20,7 @@ const StyledForestPlot = styled.div`
 const ADDITIONAL = 2;
 
 // variable to calculate chart width relative to the svg width.
-const CHART_WIDTH = 0.65;
+const CHART_WIDTH = 0.75;
 
 // width & height of square/rectangle for legend.
 const RECTANGLE_DIMENSIONS = 20;
@@ -33,8 +33,9 @@ const TOOLTIP_ID = 'forestplot-tooltip';
 
 // legend variable.
 const legend = [
-    { text: 'FDR < 0.05 and r > 0.7', color: `${colors.pink_header}` },
-    { text: 'FDR > 0.05 and r < 0.7', color: `${colors.silver}` },
+    // { text: 'FDR < 0.05 and r > 0.7', color: `${colors.pink_header}` },
+    { text: 'FDR < 0.05', color: `${colors.pink_header}` },
+    { text: 'FDR > 0.05', color: `${colors.silver}` },
 ];
 
 // margin for the svg element.
@@ -46,44 +47,8 @@ const margin = {
 };
 
 // width and height of the SVG canvas.
-const width = 1200 - margin.left - margin.right;
+const width = 1300 - margin.left - margin.right;
 const height = 550 - margin.top - margin.bottom;
-
-
-/**
- * updates the data based on if we want analytic or permuted values.
- * @param {Array} data
- * @param {boolean} isAnalytic
- */
-const updateData = (data, isAnalytic) => {
-    // new data array to select analytic or permuted values.
-    const updatedData = data.map(el => {
-        return {
-            compound: el.compound,
-            dataset: el.dataset,
-            gene: el.gene,
-            tissue: el.tissue,
-            estimate: el.estimate,
-            id: el.id,
-            mDataType: el.mDataType,
-            n: el.n,
-            permutation_done: el.permutation_done,
-            sens_stat: el.sens_stat,
-            significant_permutation: el.significant_permutation,
-            fdr: Number.parseFloat(`${isAnalytic ? el.fdr_analytic : el.fdr_permutation}`).toExponential(2),
-            pvalue: Number.parseFloat(`${isAnalytic ? el.pvalue_analytic : el.pvalue_permutation}`).toExponential(2),
-            upper: Number.parseFloat(`${isAnalytic ? el.upper_analytic : el.upper_permutation}`).toExponential(2),
-            lower: Number.parseFloat(`${isAnalytic ? el.lower_analytic : el.lower_permutation}`).toExponential(2),
-        };
-    });
-
-    // filter data if lower and upper values are not available.
-    return updatedData.filter(el => {
-        if (el.upper !== 'NaN' && el.lower !== 'NaN') {
-            return el;
-        }
-    });
-};
 
 /**
  * @param {Array} data - input data.
@@ -130,8 +95,8 @@ const mouseOverEvent = (event, element) => {
 
     // append text.
     // const fdr = isAnalytic ? element.fdr_analytic : element.fdr_permutation;
-    const pc = element.ci_upper;
-    const text = element.fdr < 0.05 && pc > 0.70 ? 'Strong Biomarker' : 'Weak Biomarker';
+    // const pc = element.estimate;
+    const text = element.fdr < 0.05 ? 'Strong Biomarker' : 'Weak Biomarker';
 
     toolTip.
         append('text')
@@ -177,7 +142,7 @@ const createXScale = (min, max, width) => {
 
     return d3.scaleLinear()
         .domain([updatedMin, max])
-        .range([200, (width * CHART_WIDTH)])
+        .range([300, (width * CHART_WIDTH)])
         .nice();
 };
 
@@ -197,7 +162,7 @@ const createXAxis = (svg, scale, height, width, margin) => {
         .attr('id', 'x-axis-label')
         .append('text')
         .attr('font-weight', 500)
-        .attr('x', (width * CHART_WIDTH * 0.40))
+        .attr('x', (width * CHART_WIDTH * 0.55))
         .attr('y', height + margin.bottom / 5 + 10)
         .attr('fill', `${colors.blue_header}`)
         .text('pearson correlation coefficient (r)')
@@ -267,7 +232,6 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
     data.forEach((element, i) => {
         // fdr and pearson cofficient.
         const fdr = element.fdr;
-        const pc = element.ci_upper;
 
         circles
             .append('circle')
@@ -275,7 +239,8 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
             .attr('cx', xScale(element.estimate))
             .attr('cy', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('r', circleScale(element.n))
-            .attr('fill', (fdr < 0.05 && pc > 0.70) ? `${colors.pink_header}` : `${colors.silver}`)
+            // .attr('fill', (fdr < 0.05 && pc > 0.70) ? `${colors.pink_header}` : `${colors.silver}`)
+            .attr('fill', fdr < 0.05 ? `${colors.pink_header}` : `${colors.silver}`)
             .on('mouseover', function () {
                 mouseOverEvent(d3.event, element);
             })
@@ -286,7 +251,7 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
 };
 
 /**
- * Appends dataset name to the right of the forest plot.
+ * Appends dataset name to the left of the forest plot.
  * @param {Object} svg
  * @param {Array} data - data array.
  */
@@ -300,7 +265,7 @@ const appendDatasetName = (svg, data, height) => {
         .attr('y', -20)
         .attr('fill', `${colors.blue_header}`)
         .text('Dataset Name')
-        .attr('font-size', '20px');
+        .attr('font-size', '18px');
 
     const dataset = svg.append('g')
         .attr('id', 'dataset-names');
@@ -315,7 +280,43 @@ const appendDatasetName = (svg, data, height) => {
             .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('fill', `${colors.blue_header}`)
             .text(`${element.dataset.name}`)
-            .attr('font-size', '16px');
+            .attr('font-size', '14px');
+    });
+};
+
+
+/**
+ * Appends dataset name to the left of the forest plot.
+ * @param {Object} svg
+ * @param {Array} data - data array.
+ */
+const appendMetricName = (svg, data, height) => {
+    // append header (dataset)
+    svg.append('g')
+        .attr('id', 'dataset-header')
+        .append('text')
+        .attr('font-weight', 700)
+        .attr('x', 150)
+        .attr('y', -20)
+        .attr('fill', `${colors.blue_header}`)
+        .text('Metric')
+        .attr('font-size', '18px');
+
+    const dataset = svg.append('g')
+        .attr('id', 'dataset-names');
+
+    // append dataset name.
+    data.forEach((element, i) => {
+        console.log(element);
+        dataset
+            .append('text')
+            .attr('id', `dataset-${element.dataset.name}`)
+            .attr('font-weight', 200)
+            .attr('x', 150)
+            .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
+            .attr('fill', `${colors.blue_header}`)
+            .text(`${element.metric.replace(/\./g, ' ')}`)
+            .attr('font-size', '14px');
     });
 };
 
@@ -330,8 +331,6 @@ const appendEstimateText = (svg, data, height, width, scale) => {
 
     // append dataset name.
     data.forEach((element, i) => {
-
-        console.log(element);
 
         if (element.ci_lower) {
             estimate
@@ -376,7 +375,7 @@ const appendFdrText = (svg, data, height, width) => {
         .attr('y', -20)
         .attr('fill', `${colors.blue_header}`)
         .text('FDR')
-        .attr('font-size', '20px');
+        .attr('font-size', '18px');
 
     const estimate = svg.append('g')
         .attr('id', 'estimate');
@@ -392,7 +391,7 @@ const appendFdrText = (svg, data, height, width) => {
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
                 .attr('fill', `${colors.blue_header}`)
                 .text(`${element.fdr}`)
-                .attr('font-size', '16px');
+                .attr('font-size', '14px');
         }
     });
 };
@@ -410,7 +409,7 @@ const createLegend = (svg, height, width) => {
 
     legend.forEach((el, i) => {
         legends.append('rect')
-            .attr('x', width * 0.75)
+            .attr('x', width * CHART_WIDTH + 100)
             .attr('y', ((height * 0.2) + ((i + 1) * RECTANGLE_DIMENSIONS)))
             .attr('width', RECTANGLE_DIMENSIONS)
             .attr('height', RECTANGLE_DIMENSIONS)
@@ -426,7 +425,7 @@ const createLegend = (svg, height, width) => {
         legendText
             .append('text')
             .attr('id', `legend-${el}`)
-            .attr('x', width * 0.77)
+            .attr('x', width * CHART_WIDTH + 125)
             .attr('y', ((height * 0.2) + (((i + 1) * RECTANGLE_DIMENSIONS) + (0.75 * RECTANGLE_DIMENSIONS))))
             .text(`${el.text}`)
             .attr('font-size', '12px')
@@ -482,6 +481,9 @@ const createForestPlot = (margin, heightInput, width, data) => {
 
     // append the dataset names corresponding to each horizontal line.
     appendDatasetName(svg, data, height);
+
+    // append metric names
+    appendMetricName(svg, data, height);
 
     // append estimate as text to the svg.
     appendFdrText(svg, data, height, width);
