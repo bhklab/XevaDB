@@ -12,6 +12,7 @@ const h4Style = {
     margin: '10px 0px 125px 0px',
     color: 'black',
     fontWeight: 200,
+    fontSize: '15px',
 };
 
 // Individual drug page component
