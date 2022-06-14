@@ -4,8 +4,8 @@ import colors from '../../styles/colors';
 const CounterStyle = styled.div`
     display: flex;
     background-color: ${colors.white};
-    min-height: 8vh;
-    max-height: 8vh;
+    min-height: 6vh;
+    max-height: 6vh;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -15,7 +15,6 @@ const CounterStyle = styled.div`
     justify-content: space-evenly;
     font-family: 'Open Sans', 'Roboto';
     font-weight: 500;
-    font-size: 1.2vw;
     a {
         color: ${colors.blue_header};
         letter-spacing: 2px;
@@ -32,7 +31,7 @@ const CounterStyle = styled.div`
     // when screen size is greater than 1800px
     @media only screen and (min-width: 1800px) {
         a {
-            font-size: 1.1vw;
+            font-size: 0.9vw;
         }
     }
 `;

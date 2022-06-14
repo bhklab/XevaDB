@@ -6,8 +6,8 @@ const HeaderStyle = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    min-height: 9vh;
-    max-height: 9vh;
+    min-height: 7vh;
+    max-height: 7vh;
     background-color: ${colors.white};
     position: absolute;
     top: 0;
@@ -55,7 +55,7 @@ const HeaderStyle = styled.div`
     // when screen size is greater than 1800px
     @media only screen and (min-width: 1800px) {
         a {
-            font-size: 1.2vw;
+            font-size: 1vw;
         }
     }
 `;
@@ -63,7 +63,7 @@ const HeaderStyle = styled.div`
 const LogoStyle = styled.img`
     margin-left: 20%;
     z-index: 999;
-    height: 7vh;
+    height: 5vh;
 `;
 
 export {

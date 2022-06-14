@@ -32,7 +32,7 @@ const SubmitStyle = styled.div`
 
 const LogoStyle = styled.img`
     width: calc(5em + 2vw);
-    height: 7vh;
+    height: 5vh;
     margin-top: 1vh;
     z-index: 999;
     position: relative;
@@ -40,7 +40,7 @@ const LogoStyle = styled.img`
 `;
 
 const LogoBack = styled.div`
-    height: 9vh;
+    height: 7vh;
     background-image: linear-gradient(
         to right,
         ${colors.fade_blue},
