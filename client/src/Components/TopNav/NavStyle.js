@@ -6,8 +6,8 @@ const HeaderStyle = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    min-height: 7vh;
-    max-height: 7vh;
+    min-height: 8vh;
+    max-height: 8vh;
     background-color: ${colors.white};
     position: absolute;
     top: 0;
@@ -37,11 +37,11 @@ const HeaderStyle = styled.div`
     }
 
     .logo {
-        width: 35%;
+        width: 40%;
     }
 
     .nav-links {
-        width: 65%;
+        width: 60%;
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -58,12 +58,23 @@ const HeaderStyle = styled.div`
             font-size: 1vw;
         }
     }
+
+    // when the height is greater than 1000px
+    @media only screen and (min-height: 1000px) {
+        min-height: 7vh;
+        max-height: 7vh;
+    }
 `;
 
 const LogoStyle = styled.img`
-    margin-left: 20%;
+    margin-left: 10%;
     z-index: 999;
-    height: 5vh;
+    height: 6vh;
+
+    // when the height is greater than 1000px
+    @media only screen and (min-height: 1000px) {
+        height: 5vh;
+    }
 `;
 
 export {
