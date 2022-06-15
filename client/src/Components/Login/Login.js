@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import {
-    Paper, SubmitStyle, LogoStyle, PaperGradient, LogoBack,
+    Form, SubmitStyle, LogoStyle, FormContainer, LogoBack, FormHeading
 } from './LoginStyle';
 import logo from '../../images/new_logo.png';
 import colors from '../../styles/colors';
@@ -72,19 +72,11 @@ const Login = () => {
                             <LogoStyle src={logo} alt="logo" />
                         </LogoBack>
                     </Link>
-
-                    <PaperGradient>
-                        <Paper>
-                            <Typography
-                                component="h1"
-                                variant="h5"
-                                style={{
-                                    color: `${colors.blue_header}`, marginTop: '4.5vh', fontWeight: '700', fontSize: '30px',
-                                }}
-                            >
+                    <FormContainer>
+                        <Form>
+                            <FormHeading>
                                 Sign in
-                            </Typography>
-
+                            </FormHeading>
                             <form onSubmit={handleSubmit}>
                                 <TextField
                                     variant="outlined"
@@ -128,10 +120,8 @@ const Login = () => {
                                     </Grid>
                                 </Grid>
                             </form>
-
-                        </Paper>
-                    </PaperGradient>
-
+                        </Form>
+                    </FormContainer>
                 </div>
             )}
         </div>

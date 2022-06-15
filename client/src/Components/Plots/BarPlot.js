@@ -172,7 +172,7 @@ const appendYAxisLabel = (svg, height, left, label) => {
         .attr('y', 0)
         .attr('font-family', 'Open Sans')
         .attr('transform', `translate(${-left / 2}, ${height / 1.5})rotate(270)`)
-        .attr('font-size', '14px')
+        .attr('font-size', '15px')
         .style('text-anchor', 'start')
         .attr('fill', 'black')
         .text(`${label}`);
