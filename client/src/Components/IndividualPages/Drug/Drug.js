@@ -6,6 +6,7 @@ import Footer from '../../Footer/Footer';
 import Annotation from './Annotation';
 import ResponseScatterPlot from './ResponseScatterPlot';
 import ResponsePieChart from './ResponsePieChart';
+import SunburstPlot from '../../Plots/SunburstPlot';
 
 // h4 style
 const h4Style = {
@@ -80,6 +81,7 @@ const Drug = (props) => {
                                     totalResponsedata={modelResponseData}
                                     individualDrugResponseData={modelResponseDataPerDrug}
                                 />
+                                {/* <SunburstPlot /> */}
                                 <ResponseScatterPlot
                                     data={modelResponseDataPerDrug[0]}
                                 />
