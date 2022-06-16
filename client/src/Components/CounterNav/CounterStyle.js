@@ -13,7 +13,6 @@ const CounterStyle = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    font-family: 'Open Sans', 'Roboto';
     font-weight: 500;
     a {
         color: ${colors.blue_header};

@@ -3,7 +3,6 @@ import colors from '../../styles/colors';
 
 const TableWrapper = styled.div`
     padding: 0 2.5% 2.5% 2.5%;
-    font-family: 'Open Sans', 'Roboto';
     width: 100%;
 
     .ReactTable * {

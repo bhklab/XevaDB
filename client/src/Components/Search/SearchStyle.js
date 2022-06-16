@@ -3,7 +3,6 @@ import colors from '../../styles/colors';
 
 const StyleBar = styled.div`
     margin-top: 30vh;
-    font-family: 'Open Sans', 'Roboto';
     display: flex;
     margin: auto;
 
@@ -172,7 +171,6 @@ const StyleButton = styled.button`
     text-decoration: none;
     display: inline-block;
     font-size: 30px;
-    font-family: 'Open Sans', 'Roboto';
     font-weight: 700;
     transition: .3s;
     outline-style: none;
