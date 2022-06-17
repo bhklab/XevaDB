@@ -54,12 +54,14 @@ const createSunburstPlotData = (totalResponsedata, individualDrugResponseData) =
     let labels = [' '];
     let parents = [''];
     let values = [0];
+    let colors = [];
 
     // get the data from total response first
     Object.values(totalResponsedata).forEach(response => {
         labels.push(response.id);
         parents.push(labels[0]);
         values.push(response.value);
+        colors.push(mRECISTColorMapper[response.id]);
     });
 
     // get the values from individual drug response data
@@ -71,7 +73,7 @@ const createSunburstPlotData = (totalResponsedata, individualDrugResponseData) =
         }
     });
 
-    return [labels, parents, values];
+    return [labels, parents, values, colors];
 };
 
 
@@ -80,7 +82,7 @@ const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseDat
     // transformed data
     const transformedTotalResponseData = transformData(totalResponsedata, mRECISTObject);
     const transformedIndividualDrugResponseData = transformData(individualDrugResponseData, mRECISTObject);
-    const [labels, parents, values] = createSunburstPlotData(transformedTotalResponseData, transformedIndividualDrugResponseData);
+    const [labels, parents, values, colors] = createSunburstPlotData(transformedTotalResponseData, transformedIndividualDrugResponseData);
 
 
     return (
@@ -116,6 +118,7 @@ const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseDat
                     labels={labels}
                     parents={parents}
                     values={values}
+                    sunburstcolorway={colors}
                 />
             </div>
         </div >

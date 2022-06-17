@@ -1,23 +1,26 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
+import colors from '../../styles/colors';
 
-const SunburstPlot = ({ labels, parents, values }) => {
-    console.log(labels, parents, values);
+const SunburstPlot = (
+    { labels, parents, values, sunburstcolorway }
+) => {
     return (
         <Plot
             data={[{
                 type: "sunburst",
-                labels: labels,
-                parents: parents,
-                values: values,
-                outsidetextfont: { size: 20, color: "#377eb8" },
+                labels,
+                parents,
+                values,
+                outsidetextfont: { size: 20, color: colors.black },
                 // leaf: { opacity: 0.4 },
-                marker: { line: { width: 2 } },
+                marker: { line: { width: 3 } },
             }]}
             layout={{
                 margin: { l: 0, r: 0, b: 0, t: 0 },
+                sunburstcolorway,
                 width: 800,
-                height: 800
+                height: 800,
             }}
         />
     );
