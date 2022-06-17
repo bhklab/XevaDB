@@ -86,42 +86,41 @@ const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseDat
 
 
     return (
-        <div>
-            <div style={{ position: 'absolute' }}>
-                <DonutChart
-                    data={transformedTotalResponseData}
-                    tooltipMapper={mapper}
-                    colorMapper={mRECISTColorMapper}
-                    chartId='model-response-all-drugs'
-                    arcRadius={{ outerRadius: 280, innerRadius: 180 }}
-                    dimensions={{ width: 650, height: 250 }}
-                    margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
-                    shouldDisplayLegend={true}
-                    shouldDisplayTextLabels={true}
-                    opacity={0.2}
-                />
-            </div>
+        <>
             <div>
-                <OverlayArcs
-                    totalResponseData={transformedTotalResponseData}
-                    individualDrugResponseData={transformedIndividualDrugResponseData}
-                    dimensions={{ width: 650, height: 250 }}
-                    arcRadius={{ outerRadius: 280, innerRadius: 180 }}
-                    margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
-                />
+                <div style={{ position: 'absolute' }}>
+                    <DonutChart
+                        data={transformedTotalResponseData}
+                        tooltipMapper={mapper}
+                        colorMapper={mRECISTColorMapper}
+                        chartId='model-response-all-drugs'
+                        arcRadius={{ outerRadius: 280, innerRadius: 180 }}
+                        dimensions={{ width: 600, height: 250 }}
+                        margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
+                        shouldDisplayLegend={false}
+                        shouldDisplayTextLabels={true}
+                        opacity={0.2}
+                    />
+                </div>
+                <div style={{ border: '1px solid black', width: '100%' }}>
+                    <OverlayArcs
+                        totalResponseData={transformedTotalResponseData}
+                        individualDrugResponseData={transformedIndividualDrugResponseData}
+                        dimensions={{ width: 600, height: 250 }}
+                        arcRadius={{ outerRadius: 280, innerRadius: 180 }}
+                        margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
+                    />
+                </div>
             </div>
-            <div>
+            <div style={{ border: '1px solid black' }}>
                 <SunburstPlot
-                    // labels={[" ", "Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"]}
-                    // parents={["", " ", " ", "Seth", "Seth", " ", " ", "Awan", " "]}
-                    // values={[10, 14, 12, 10, 2, 6, 6, 4, 4]}
                     labels={labels}
                     parents={parents}
                     values={values}
                     sunburstcolorway={colors}
                 />
             </div>
-        </div >
+        </ >
     );
 };
 
