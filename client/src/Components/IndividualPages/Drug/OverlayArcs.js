@@ -84,8 +84,6 @@ const createOverlayArcs = ({
         individualDrugResponseData, updatedTotalResponseData, sumOfValues
     );
 
-    console.log(updatedTotalResponseData, updatedIndividualDrugResponseData);
-
     // creates the arcs
     updatedIndividualDrugResponseData.forEach(response => {
         const arc = d3.arc()

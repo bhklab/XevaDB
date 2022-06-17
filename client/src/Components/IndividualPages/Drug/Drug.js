@@ -5,8 +5,7 @@ import Spinner from '../../Utils/Spinner';
 import Footer from '../../Footer/Footer';
 import Annotation from './Annotation';
 import ResponseScatterPlot from './ResponseScatterPlot';
-import ResponsePieChart from './ResponsePieChart';
-import SunburstPlot from '../../Plots/SunburstPlot';
+import ResponsePieSunburstChart from './ResponsePieSunburstChart';
 
 // h4 style
 const h4Style = {
@@ -77,11 +76,10 @@ const Drug = (props) => {
                                     data={drugData}
                                 />
                                 <h1> Model Response </h1>
-                                <ResponsePieChart
+                                <ResponsePieSunburstChart
                                     totalResponsedata={modelResponseData}
                                     individualDrugResponseData={modelResponseDataPerDrug}
                                 />
-                                {/* <SunburstPlot /> */}
                                 <ResponseScatterPlot
                                     data={modelResponseDataPerDrug[0]}
                                 />

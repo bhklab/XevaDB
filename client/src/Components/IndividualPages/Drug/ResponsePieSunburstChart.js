@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DonutChart from '../../Plots/DonutChart';
 import OverlayArcs from './OverlayArcs';
 import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
-
+import SunburstPlot from '../../Plots/SunburstPlot';
 
 // tooltip mapper to be passed as a Prop to the donut chart
 const mapper = {
@@ -44,12 +44,44 @@ const transformData = (data, mRECISTObject) => {
     return Object.values(finalData);
 };
 
+/**
+ * 
+ * @param {Object} totalResponsedata 
+ * @param {Object} individualDrugResponseData 
+ * @returns {Array} - array of labels, parents and values
+ */
+const createSunburstPlotData = (totalResponsedata, individualDrugResponseData) => {
+    let labels = [' '];
+    let parents = [''];
+    let values = [0];
+
+    // get the data from total response first
+    Object.values(totalResponsedata).forEach(response => {
+        labels.push(response.id);
+        parents.push(labels[0]);
+        values.push(response.value);
+    });
+
+    // get the values from individual drug response data
+    Object.values(individualDrugResponseData).forEach(response => {
+        if (response.value > 0) {
+            labels.push(`${response.id} `);
+            parents.push(response.id);
+            values.push(response.value);
+        }
+    });
+
+    return [labels, parents, values];
+};
+
 
 // main component
-const ResponsePieChart = ({ totalResponsedata, individualDrugResponseData }) => {
+const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseData }) => {
     // transformed data
     const transformedTotalResponseData = transformData(totalResponsedata, mRECISTObject);
     const transformedIndividualDrugResponseData = transformData(individualDrugResponseData, mRECISTObject);
+    const [labels, parents, values] = createSunburstPlotData(transformedTotalResponseData, transformedIndividualDrugResponseData);
+
 
     return (
         <div>
@@ -76,8 +108,18 @@ const ResponsePieChart = ({ totalResponsedata, individualDrugResponseData }) => 
                     margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
                 />
             </div>
+            <div>
+                <SunburstPlot
+                    // labels={[" ", "Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"]}
+                    // parents={["", " ", " ", "Seth", "Seth", " ", " ", "Awan", " "]}
+                    // values={[10, 14, 12, 10, 2, 6, 6, 4, 4]}
+                    labels={labels}
+                    parents={parents}
+                    values={values}
+                />
+            </div>
         </div >
     );
 };
 
-export default ResponsePieChart;
+export default ResponsePieSunburstChart;
