@@ -102,7 +102,7 @@ const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseDat
                         opacity={0.2}
                     />
                 </div>
-                <div style={{ border: '1px solid black', width: '100%' }}>
+                <div style={{ border: '1px solid black' }}>
                     <OverlayArcs
                         totalResponseData={transformedTotalResponseData}
                         individualDrugResponseData={transformedIndividualDrugResponseData}
