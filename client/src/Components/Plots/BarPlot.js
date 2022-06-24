@@ -27,9 +27,8 @@ const StyledBarPlot = styled.div`
 `;
 
 // defaul parameters.
-const defaultMargin = { top: 50, right: 150, bottom: 200, left: 100 };
+const defaultMargin = { top: 50, right: 50, bottom: 200, left: 100 };
 const defaultDimensions = { width: 850, height: 400 };
-const defaultArc = { outerRadius: 260, innerRadius: 150 };
 const minBarWidth = 60;
 
 // create the svg canvas.
@@ -246,7 +245,8 @@ const BarPlot = (props) => {
         <StyledBarPlot>
             <div
                 id="barplot"
-                style={{ textAlign: 'center' }}
+                className='center-component'
+            // style={{ textAlign: 'center' }}
             />
         </StyledBarPlot>
     );
