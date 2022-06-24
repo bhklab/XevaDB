@@ -15,7 +15,8 @@ const getAllDatasetsQuery = () => knex.select()
 /**
  * @return {Object} - knex query to get detailed information for all datasets
  */
-const getAllDatasetsDetailQuery = () => knex.select()
+const getAllDatasetsDetailQuery = () => knex
+    .select('d.dataset_id', 'd.dataset_name', 'dg.drug_name', 't.tissue_name', 'p.patient', 'm.model')
     .from('datasets as d')
     .leftJoin('datasets_drugs as dd', 'd.dataset_id', 'dd.dataset_id')
     .leftJoin('drugs as dg', 'dd.drug_id', 'dg.drug_id')
