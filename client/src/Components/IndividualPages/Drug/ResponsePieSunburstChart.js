@@ -112,14 +112,14 @@ const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseDat
                     />
                 </div>
             </div>
-            <div>
+            {/* <div>
                 <SunburstPlot
                     labels={labels}
                     parents={parents}
                     values={values}
                     sunburstcolorway={colors}
                 />
-            </div>
+            </div> */}
         </ >
     );
 };
