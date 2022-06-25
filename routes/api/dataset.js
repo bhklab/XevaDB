@@ -26,6 +26,21 @@ const getAllDatasetsDetailQuery = () => knex
     .leftJoin('models as m', 'm.patient_id', 'p.patient_id');
 
 
+/**
+ * 
+ * @returns {Object} - dataset statistics
+ */
+const datasetStatisticsQuery = () => knex
+    .select('d.dataset_name as dataset', 'd.dataset_id')
+    .countDistinct('patient_id as patients')
+    .countDistinct('model_id as models')
+    .countDistinct('drug_id as drugs')
+    .countDistinct('tissue_id as tissues')
+    .from('model_information as mi')
+    .join('datasets as d', 'mi.dataset_id', 'd.dataset_id')
+    .groupBy('mi.dataset_id');
+
+
 // ************************************** Transform Functions *************************************************
 /**
  * 
@@ -186,9 +201,34 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
 };
 
 
+/**
+ * 
+ * @param {Object} request - request object.
+ * @param {Object} response - response object with authorization header.
+ * @returns {Object} - returns an array of object where 
+ *                      each object provide data type count for a particular dataset
+ */
+const getAllDatasetStatistics = (request, response) => {
+    // user variable.
+    const { user } = response.locals;
+
+    datasetStatisticsQuery()
+        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .then(data => response.status(200).json({
+            status: 'success',
+            data,
+        }))
+        .catch((error) => response.status(500).json({
+            status: 'Could not find data, getAllDatasetsStatistics',
+            data: error,
+        }));
+};
+
+
 module.exports = {
     getAllDatasets,
     getAllDatasetsDetailedInformation,
     getSingleDatasetDetailedInformationBasedOnDatasetId,
     postDrugsandPatientsBasedOnDataset,
+    getAllDatasetStatistics,
 };
