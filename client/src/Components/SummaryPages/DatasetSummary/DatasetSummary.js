@@ -27,13 +27,13 @@ class DatasetSummary extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/api/v1/datasets/detail', { headers: { Authorization: localStorage.getItem('user') } })
+        axios.get('/api/v1/datasets/stats', { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
-                const data = response.data.datasets.map((element) => ({
-                    dataset_name: element.name,
-                    dataset_id: element.id,
-                    totalPatients: element.patients.length,
-                    totalModels: element.models.length,
+                const data = response.data.data.map((element) => ({
+                    dataset_name: element.dataset,
+                    dataset_id: element.dataset_id,
+                    totalPatients: element.patients,
+                    totalModels: element.models,
                 }));
                 this.setState({
                     data,

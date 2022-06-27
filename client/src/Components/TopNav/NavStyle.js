@@ -6,8 +6,8 @@ const HeaderStyle = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    min-height: 8vh;
-    max-height: 8vh;
+    min-height: 9vh;
+    max-height: 9vh;
     background-color: ${colors.white};
     position: absolute;
     top: 0;
@@ -53,7 +53,7 @@ const HeaderStyle = styled.div`
     }
 
     // when screen size is greater than 1800px
-    @media only screen and (min-width: 1800px) {
+    @media only screen and (min-width: 2000px) {
         a {
             font-size: 1vw;
         }

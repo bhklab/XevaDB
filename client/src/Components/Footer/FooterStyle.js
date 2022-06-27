@@ -3,9 +3,9 @@ import colors from '../../styles/colors';
 const styles = {
     color: `${colors.blue_header}`,
     backgroundColor: `${colors.white}`,
-    fontSize: '1.20em',
-    minHeight: '8vh',
-    maxHeight: '8vh',
+    fontSize: '1.15em',
+    minHeight: '7vh',
+    maxHeight: '7vh',
     minWidth: '100vw',
     position: 'absolute',
     bottom: '0',

@@ -4,8 +4,8 @@ import colors from '../../styles/colors';
 const CounterStyle = styled.div`
     display: flex;
     background-color: ${colors.white};
-    min-height: 6.5vh;
-    max-height: 6.5vh;
+    min-height: 7.5vh;
+    max-height: 7.5vh;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -13,7 +13,6 @@ const CounterStyle = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    font-family: 'Open Sans', 'Roboto';
     font-weight: 500;
     a {
         color: ${colors.blue_header};

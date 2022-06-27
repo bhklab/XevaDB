@@ -10,8 +10,8 @@ const createToolTip = function (id) {
         .style('border-width', '1px')
         .style('border-radius', '5px')
         .style('padding', '5px')
-        .attr('top', 10)
-        .attr('left', 10)
+        .attr('top', 0)
+        .attr('left', 0)
 };
 
 export default createToolTip;

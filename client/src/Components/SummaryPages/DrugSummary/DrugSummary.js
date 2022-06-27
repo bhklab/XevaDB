@@ -34,13 +34,10 @@ class DrugSummary extends React.Component {
                 });
                 this.setState({
                     data: newValues,
-                    // dimensions: { width: 650, height: 250 },
-                    dimensions: { width: 850, height: 400 },
+                    dimensions: { width: 800, height: 400 },
                     margin: {
-                        // top: 320, right: 100, bottom: 100, left: 380,
-                        top: 50, right: 150, bottom: 200, left: 150,
+                        top: 50, right: 50, bottom: 200, left: 100,
                     },
-                    arc: { outerRadius: 260, innerRadius: 150 },
                     loading: false,
                 });
             });
@@ -52,20 +49,20 @@ class DrugSummary extends React.Component {
             dimensions, margin,
         } = this.state;
         return (
-            <div>
+            <>
                 <GlobalStyles />
                 <div className="wrapper">
                     <div className="component-wrapper center-component">
                         <h1> Number of Models per Drug Class </h1>
                         {
-                            loading ? <Spinner loading={loading} />
+                            loading
+                                ? <Spinner loading={loading} />
                                 : (
                                     <BarPlot
                                         dimensions={dimensions}
                                         margin={margin}
-                                        chartId="donut_drugs"
+                                        chartId="barplot_drug"
                                         data={data}
-                                        arcRadius={arc}
                                         label="Number of models"
                                         shouldAppendBarText={true}
                                     />
@@ -77,7 +74,7 @@ class DrugSummary extends React.Component {
                     </div>
                     <Footer />
                 </div>
-            </div>
+            </>
         );
     }
 }

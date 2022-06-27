@@ -17,6 +17,7 @@ const transformData = (data) => {
             transformedData[row.patient].model_count += 1;
             patient.models.push(row.model);
         }
+
         if (patient && !patient.drugs.includes(row.drug)) {
             transformedData[row.patient].drug_count += 1;
             patient.drugs.push(row.drug_name);
@@ -74,20 +75,23 @@ const PatientSummary = () => {
                 <div className="component-wrapper center-component">
                     <h1> Number of Patients per Dataset </h1>
                     {
-                        loading ? <Spinner loading={loading} />
+                        loading
+                            ? <Spinner loading={loading} />
                             : (
                                 <BarPlot
                                     data={barPlotData(datasetsDetailedInformation)}
                                     shouldAppendBarText={true}
                                     label="Number of patients"
+                                    dimensions={{ width: 750, height: 400 }}
                                 />
                             )
                     }
                 </div>
                 <div className="component-wrapper center-component">
                     {
-                        loading ? (<Spinner loading={loading} />)
-                            : (<PatientTable patientData={patientData} />)
+                        loading
+                            ? <Spinner loading={loading} />
+                            : <PatientTable patientData={patientData} />
                     }
                 </div>
             </div>

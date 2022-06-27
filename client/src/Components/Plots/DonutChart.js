@@ -68,7 +68,7 @@ class DonutChart extends React.Component {
             .range(donutColors);
 
         // create a tooltip
-        const tooltip = createToolTip(`donut-${chartId}`);
+        const tooltip = createToolTip('tooltip');
 
         /* Arc for the main pie chart and label arc */
         // arc generator
@@ -155,8 +155,8 @@ class DonutChart extends React.Component {
             // and set color according to the ordinal scale.
             tooltip
                 .html([value])
-                .style('left', `${d3.event.pageX + 10}px`)
-                .style('top', `${d3.event.pageY + 10}px`)
+                .style('left', `${d3.event.layerX + 10}px`)
+                .style('top', `${d3.event.layerY + 10}px`)
                 .style('color', 'white')
                 .style('background-color', colorMapper?.[d.data.id] ?? color(d.data.id));
         };
@@ -251,10 +251,13 @@ class DonutChart extends React.Component {
 
     render() {
         return (
-            <div
-                id={`donut-${this.props.chartId}`}
-                className="donut-chart"
-            />
+            <>
+                <div id='tooltip' />
+                <div
+                    id={`donut-${this.props.chartId}`}
+                    className="donut-chart"
+                />
+            </>
         );
     }
 }
