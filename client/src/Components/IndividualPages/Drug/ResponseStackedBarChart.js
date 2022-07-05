@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import mRECISTObject from '../../../utils/mRECISTObject';
 import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
 import styled from 'styled-components';
 
+// default width of the single bar
+const BAR_WIDTH = 17;
+
 const ChartStyle = styled.div`
-    width: 1000px;
+    width: 90%;
     overflow: scroll;
-    margin: 0 0 40px 0;
 
     ::-webkit-scrollbar {
         -webkit-appearance: none;
-        width: 10px;
-        height: 10px;
+        width: 6px;
+        height: 6px;
     }
       
     ::-webkit-scrollbar-thumb {
@@ -79,11 +81,14 @@ const createPlotTrace = (data, name) => {
  * @param {Object} data - input data
  * @param {Object} mRECISTObject - mRECIST mapper
  */
-const createPlot = (data, mRECISTObject) => {
+const createPlot = (data, mRECISTObject, elementWidth) => {
     // creates a trace array
     const traceArray = Object.keys(mRECISTObject).map(key => createPlotTrace(data, key));
 
-    const width = Object.keys(data).length * 16;
+    const dataLength = Object.keys(data).length;
+    const width = elementWidth > BAR_WIDTH * dataLength
+        ? elementWidth * 0.9
+        : BAR_WIDTH * dataLength;
 
     return (
         <Plot
@@ -93,7 +98,7 @@ const createPlot = (data, mRECISTObject) => {
                 barmode: 'stack',
                 showlegend: true,
                 width: width,
-                height: 400,
+                height: 350,
             }}
             config={{
                 responsive: true,
@@ -108,16 +113,29 @@ const createPlot = (data, mRECISTObject) => {
  * Component function creates the histogram chart for the individual drug page
  */
 const ResponseStackedBarChart = function ({
-    individualDrugResponseData,
+    individualDrugResponseData
 }) {
+    // reference for the div wrapper.
+    const ref = useRef(null);
+
+    // state to set the width of the styled div used for the plot
+    const [elementWidth, setElementWidth] = useState(0);
+
+    useEffect(() => {
+        setElementWidth(ref.current.offsetWidth);
+    }, []);
+
     // transformed data object
     const transformedData = transformData(individualDrugResponseData[0]);
 
     return (
         // create plot
-        <ChartStyle>
-            {createPlot(transformedData, mRECISTObject)}
+        <ChartStyle ref={ref}>
+            {
+                elementWidth && createPlot(transformedData, mRECISTObject, elementWidth)
+            }
         </ChartStyle>
+
     );
 };
 
