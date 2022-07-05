@@ -9,9 +9,8 @@ import barPlotColors from '../../utils/ChartColors';
 
 // bar plot styles
 const StyledBarPlot = styled.div`
-    width: 100%;
-    margin: auto;
-    overflow-x: scroll;
+    overflow: scroll;
+    max-width: 1100px;
 
     ::-webkit-scrollbar {
         -webkit-appearance: none;
@@ -245,8 +244,6 @@ const BarPlot = (props) => {
         <StyledBarPlot>
             <div
                 id="barplot"
-                className='center-component'
-            // style={{ textAlign: 'center' }}
             />
         </StyledBarPlot>
     );

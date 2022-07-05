@@ -11,11 +11,9 @@ import { customStyles } from '../../Search/SearchStyle';
 
 // styling Patient Response Chart
 const StyledChart = styled.div`
-    max-width: 100%;
-
     .select-container {
         margin: 20px 60px 0 0;
-        min-width: 200px;
+        width: 180px;
         float: right;
     }
 `;
@@ -30,7 +28,7 @@ const options = [
 
 // margin object to be passed as a prop to BarPlot component
 const margin = {
-    top: 0, right: 100, bottom: 80, left: 100,
+    top: 50, right: 100, bottom: 80, left: 100,
 };
 
 // transform model response data based on response type!
