@@ -13,7 +13,7 @@ const SunburstPlot = (
     return (
         <Plot
             data={[{
-                type: "sunburst",
+                type: 'sunburst',
                 labels,
                 parents,
                 values,
