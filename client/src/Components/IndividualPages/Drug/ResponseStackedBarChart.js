@@ -87,20 +87,24 @@ const createPlot = (data, mRECISTObject, elementWidth) => {
 
     const dataLength = Object.keys(data).length;
     const width = elementWidth > BAR_WIDTH * dataLength
-        ? elementWidth * 0.9
+        ? elementWidth * 0.95
         : BAR_WIDTH * dataLength;
 
     return (
         <Plot
             data={traceArray}
             layout={{
-                margin: { l: 70, r: 0, b: 100, t: 40 },
+                margin: { l: 50, r: 0, b: 100, t: 40 },
                 autosize: true,
                 barmode: 'stack',
                 showlegend: true,
                 width: width,
                 height: 400,
-                xaxis: { type: 'category' }
+                xaxis: {
+                    type: 'category',
+                    title: { text: 'Patient', standoff: 10 },
+                    tickfont: { size: 10 }
+                }
             }}
             config={{
                 responsive: true,
