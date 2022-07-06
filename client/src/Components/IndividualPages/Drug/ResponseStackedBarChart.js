@@ -9,7 +9,7 @@ import styled from 'styled-components';
 const BAR_WIDTH = 17;
 
 const ChartStyle = styled.div`
-    width: 85%;
+    width: 90%;
     overflow: scroll;
 
     ::-webkit-scrollbar {
@@ -62,7 +62,7 @@ const transformData = (data, response = 'mRECIST') => {
  * @param {string} name - type corresponding to which the trace object is created
  */
 const createPlotTrace = (data, name) => {
-    const xAxis = Object.keys(data).map(el => String(`~${el}`));
+    const xAxis = Object.keys(data);
     const yAxis = Object.values(data).map(row => row[name]);
 
     return {
@@ -94,11 +94,13 @@ const createPlot = (data, mRECISTObject, elementWidth) => {
         <Plot
             data={traceArray}
             layout={{
+                margin: { l: 70, r: 0, b: 100, t: 40 },
                 autosize: true,
                 barmode: 'stack',
                 showlegend: true,
                 width: width,
-                height: 350,
+                height: 400,
+                xaxis: { type: 'category' }
             }}
             config={{
                 responsive: true,
