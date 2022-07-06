@@ -9,7 +9,7 @@ import styled from 'styled-components';
 const BAR_WIDTH = 17;
 
 const ChartStyle = styled.div`
-    width: 90%;
+    width: 85%;
     overflow: scroll;
 
     ::-webkit-scrollbar {

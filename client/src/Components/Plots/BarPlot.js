@@ -7,23 +7,6 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 import barPlotColors from '../../utils/ChartColors';
 
-// bar plot styles
-const StyledBarPlot = styled.div`
-    overflow: scroll;
-    max-width: 1100px;
-
-    ::-webkit-scrollbar {
-        -webkit-appearance: none;
-        width: 10px;
-        height: 10px;
-    }
-      
-    ::-webkit-scrollbar-thumb {
-        border-radius: 5px;
-        background-color: rgba(0, 0, 0, .5);
-        box-shadow: 0 0 1px rgba(255, 255, 255, .5);
-    }
-`;
 
 // defaul parameters.
 const defaultMargin = { top: 50, right: 50, bottom: 200, left: 100 };
@@ -241,11 +224,9 @@ const BarPlot = (props) => {
     }, [data]);
 
     return (
-        <StyledBarPlot>
-            <div
-                id="barplot"
-            />
-        </StyledBarPlot>
+        <div
+            id="barplot"
+        />
     );
 };
 

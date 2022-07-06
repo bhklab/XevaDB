@@ -7,9 +7,12 @@ const config = {
     displayModeBar: false,
 };
 
-const SunburstPlot = (
-    { labels, parents, values, sunburstcolorway }
-) => {
+const SunburstPlot = ({
+    labels,
+    parents,
+    values,
+    sunburstcolorway
+}) => {
     return (
         <Plot
             data={[{
