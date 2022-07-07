@@ -1,24 +1,23 @@
 import colors from '../../styles/colors';
 import styled from 'styled-components';
 
+// setting the width of the div
+const width = '80vw';
+
+// footer styled component
 const FooterStyle = styled.div`
-    color: ${colors['--bg-color']};
-    font-size:  1.10em;
-    min-height: 7vh;
-    max-height: 7vh;
-    min-width: 100vw;
+    border-top: 1px solid ${colors['--font-color']};
+    height: 80px;
+    width: ${width};
     position: absolute;
     bottom: 0;
-    right: 0;
+    left: calc((100vw - ${width}) / 2);
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-
-    hr {
-        width: 80vw;
-        color: ${colors['--bg-color']};
-    }
+    color: ${colors['--bg-color']};
+    font-size: 17px;
 `;
 
 export default FooterStyle;
