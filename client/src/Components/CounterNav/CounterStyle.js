@@ -12,8 +12,8 @@ const CounterStyle = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    font-size: 14px;
-    font-weight: 100;
+    font-size: 0.9rem;
+    font-weight: 400;
 
     a {
         color: ${colors.white};

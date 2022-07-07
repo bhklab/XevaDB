@@ -48,6 +48,7 @@ const GlobalStyles = createGlobalStyle`
       text-align: left;
       color: ${colors['--font-color']};
       font-size: 1.75rem;
+      font-weight: 700;
       padding: 1.5% 0 0.25% 1.5%;
     }
 

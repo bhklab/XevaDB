@@ -17,7 +17,7 @@ const HeaderStyle = styled.div`
         text-decoration: none;
         letter-spacing: 1px;
         font-size: 1.3rem; // fallback
-        font-size: 18px;
+        font-size: 1.1em;
         &:hover {
             ccolor: ${colors['--table-bg-color']};
             cursor: pointer;
@@ -46,14 +46,16 @@ const HeaderStyle = styled.div`
     button {
         background-color: ${colors.white};
         color: ${colors['--bg-color']};
-        &:hover {
-            background-color: ${colors.pink_header} !important;
-        }
         width: 80px;
         height: 40px;
         border: 0;
         border-radius: 5px;
-        font-size: 16px;
+        font-size: 0.9em;
+
+        &:hover {
+            background-color: ${colors['--table-bg-color']} !important;
+            cursor: pointer;
+        }
     }
 
     // // when screen size is greater than 1800px
