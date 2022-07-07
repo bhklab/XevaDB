@@ -1,10 +1,13 @@
 import React from 'react';
-import styles from './FooterStyle';
+import FooterStyle from './FooterStyle';
 
 const Footer = () => (
-    <footer style={styles}>
-        ©BHKLab 2021
-    </footer>
+    <FooterStyle>
+        <hr />
+        <footer>
+            ©BHKLab 2021
+        </footer>
+    </FooterStyle>
 );
 
 export default Footer;

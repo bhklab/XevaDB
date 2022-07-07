@@ -42,29 +42,31 @@ const SubmitStyle = styled.div`
 `;
 
 const LogoStyle = styled.img`
-    width: calc(5em + 2vw);
-    height: 60px;
+    width: calc(5em + 1vw);
+    height: 50px;
     margin-top: 10px;
     z-index: 999;
     position: relative;
     margin-left: calc(100vw - (3vw + 5em));
 
-    @media only screen and (min-height: 900px) {
-        height: 70px;
-    }
+    // @media only screen and (min-height: 900px) {
+    //     height: 70px;
+    // }
 `;
 
 const LogoBack = styled.div`
-    height: 80px;
-    background-image: linear-gradient(
-        to right,
-        ${colors.fade_blue},
-        ${colors.white_smoke}
-    );
+    height: 70px;
+    background: ${colors['--bg-color']};
+    
+    // background-image: linear-gradient(
+    //     to right,
+    //     ${colors.fade_blue},
+    //     ${colors.white_smoke}
+    // );
 
-    @media only screen and (min-height: 900px) {
-        height: 90px;
-    }
+    // @media only screen and (min-height: 900px) {
+    //     height: 90px;
+    // }
 `;
 
 

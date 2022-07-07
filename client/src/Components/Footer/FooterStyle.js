@@ -1,19 +1,24 @@
 import colors from '../../styles/colors';
+import styled from 'styled-components';
 
-const styles = {
-    color: `${colors.blue_header}`,
-    backgroundColor: `${colors.white}`,
-    fontSize: '1.15em',
-    minHeight: '7vh',
-    maxHeight: '7vh',
-    minWidth: '100vw',
-    position: 'absolute',
-    bottom: '0',
-    right: '0',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-};
+const FooterStyle = styled.div`
+    color: ${colors['--bg-color']};
+    font-size:  1.10em;
+    min-height: 7vh;
+    max-height: 7vh;
+    min-width: 100vw;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 
-export default styles;
+    hr {
+        width: 80vw;
+        color: ${colors['--bg-color']};
+    }
+`;
+
+export default FooterStyle;
