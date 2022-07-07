@@ -3,9 +3,8 @@ import colors from '../../styles/colors';
 
 const CounterStyle = styled.div`
     display: flex;
-    background-color: ${colors.white};
-    min-height: 7.5vh;
-    max-height: 7.5vh;
+    background-color: ${colors['--bg-color']};
+    height: 60px;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -13,25 +12,18 @@ const CounterStyle = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 100;
+
     a {
-        color: ${colors.blue_header};
+        color: ${colors.white};
         letter-spacing: 2px;
-        font-weight: bold;
         text-decoration: none;
-        &:hover {
-            color: ${colors.pink_header};
-        }
-        text-align:center;
+        text-align: center;
     }
+
     h4 {
         margin: 0px;
-    }
-    // when screen size is greater than 1800px
-    @media only screen and (min-width: 1800px) {
-        a {
-            font-size: 0.9vw;
-        }
     }
 `;
 

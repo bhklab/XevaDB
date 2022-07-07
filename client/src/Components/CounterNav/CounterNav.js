@@ -49,9 +49,9 @@ class CounterNav extends React.Component {
                                     duration={3}
                                     useEasing
                                 />
-                                <h4>
+                                <div>
                                     {type.toUpperCase()}
-                                </h4>
+                                </div>
                             </Link>
                         ))
                     }
