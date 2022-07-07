@@ -17,7 +17,7 @@ const SpinnerUtil = (props) => {
                 css={override}
                 sizeUnit="px"
                 size={70}
-                color={colors.pink_header}
+                color={colors['--bg-color']}
             />
         </div>
     ) : (
