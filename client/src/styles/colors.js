@@ -25,4 +25,9 @@ export default {
     bg_fade_white: '#f0f2f5',
     circle_green: '#5b8c85',
     silver: '#C0C0C0',
+    '--bg-color': '#0A5181',
+    '--white-text': '#ffffff',
+    '--font-color': '#212529',
+    '--link-color': '#0968c3',
+    '--table-bg-color': '#f0f2f5',
 };

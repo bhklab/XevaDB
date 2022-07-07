@@ -11,14 +11,6 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    background: linear-gradient(
-      to right top, 
-      ${colors.fade_blue}, 
-      ${colors.white_red}
-    );
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
     margin: auto;
     width: 100%;
     font-size: 16px;
@@ -50,11 +42,17 @@ const GlobalStyles = createGlobalStyle`
     margin-bottom: 12vh;
 
     h1 {
-      font-weight: 700;
-      text-align: center;
-      color: ${colors.blue_header};
-      font-size: 1.75rem;
-      padding: 25px;
+      text-align: left;
+      color: ${colors['--font-color']};
+      font-size: 1.5rem;
+      padding: 1.5% 0 0.25% 1.5%;
+    }
+
+    h4 {
+      font-weight: 100;
+      color: ${colors['--font-color']};
+      font-size: 1.05rem;
+      padding: 0 0 0.5% 1.5%;
     }
   }
 
@@ -63,6 +61,7 @@ const GlobalStyles = createGlobalStyle`
     margin: 2vh;
     min-width: 75vw;
     max-width: 75vw;
+    // border: 1px solid ${colors['--table-bg-color']};
 
     @media only screen and (min-width: 1800px) {
       min-width: 70vw;
@@ -133,7 +132,7 @@ const GlobalStyles = createGlobalStyle`
       text-decoration: none;
       font-size: 16px;
       padding: 10px;
-      color: ${colors.blue_header};
+      color: ${colors['--link-color']};
     }
   }
 `;
