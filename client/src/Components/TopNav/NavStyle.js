@@ -5,76 +5,79 @@ const HeaderStyle = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
-    min-height: 9vh;
-    max-height: 9vh;
-    background-color: ${colors.white};
+    height: 70px;
+    background-color: ${colors['--bg-color']};
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
 
-    button {
-        background-color: ${colors.blue_header};
-        &:hover {
-            background-color: ${colors.pink_header} !important;
-        }
-        width: 80px;
-        height: 40px;
-    }
-    
     a {
-        color: ${colors.blue_header};
+        color: ${colors['--white-text']};
         text-decoration: none;
         letter-spacing: 1px;
-        font-weight: 700;
         font-size: 1.3rem; // fallback
-        font-size: 1.35vw;
+        font-size: 18px;
         &:hover {
-            color: ${colors.pink_header};
+            ccolor: ${colors['--table-bg-color']};
             cursor: pointer;
         }
     }
 
     .logo {
-        width: 40%;
+        width: 25%;
+        display: flex;
+        justify-content: flex-end;
     }
 
     .nav-links {
-        width: 60%;
+        width: 30%;
         display: flex;
         justify-content: space-around;
-        align-items: center;
-        margin-right: 2%;
+        margin: 0 0 0 50px;
     }
 
     .login-button {
-        display: inline !important;
+        width: 25%;
+        display: flex;
+        justify-content: center;
     }
 
-    // when screen size is greater than 1800px
-    @media only screen and (min-width: 2000px) {
-        a {
-            font-size: 1vw;
+    button {
+        background-color: ${colors.white};
+        color: ${colors['--bg-color']};
+        &:hover {
+            background-color: ${colors.pink_header} !important;
         }
+        width: 80px;
+        height: 40px;
+        border: 0;
+        border-radius: 5px;
+        font-size: 16px;
     }
 
-    // when the height is greater than 1000px
-    @media only screen and (min-height: 1000px) {
-        min-height: 7vh;
-        max-height: 7vh;
-    }
+    // // when screen size is greater than 1800px
+    // @media only screen and (min-width: 2000px) {
+    //     a {
+    //         font-size: 1vw;
+    //     }
+    // }
+
+    // // when the height is greater than 1000px
+    // @media only screen and (min-height: 1000px) {
+    //     min-height: 7vh;
+    //     max-height: 7vh;
+    // }
 `;
 
 const LogoStyle = styled.img`
-    margin-left: 10%;
     z-index: 999;
-    height: 6vh;
+    height: 45px;
 
-    // when the height is greater than 1000px
-    @media only screen and (min-height: 1000px) {
-        height: 5vh;
-    }
+    // // when the height is greater than 1000px
+    // @media only screen and (min-height: 1000px) {
+    //     height: 5vh;
+    // }
 `;
 
 export {

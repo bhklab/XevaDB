@@ -37,7 +37,7 @@ class TopNav extends React.Component {
             <HeaderStyle>
                 <div className='logo'>
                     <Link to="/">
-                        <LogoStyle src={logo} alt="logo" />
+                        {/* <LogoStyle src={logo} alt="logo" /> */}
                     </Link>
                 </div>
                 <div className='nav-links'>
@@ -47,19 +47,15 @@ class TopNav extends React.Component {
                     <Link to="/patients"> Patients </Link>
                     <Link to="/tissues"> Tissues </Link>
                     <Link to="/doc"> Documentation </Link>
-                    <div className='login-button'>
-                        <Link to={`${isLink}`}>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                onClick={this.isLoggedIn}
-                            >
-                                {isLogged}
-                            </Button>
-                        </Link>
-                    </div>
+                </div>
+                <div className='login-button'>
+                    <Link to={`${isLink}`}>
+                        <button
+                            onClick={this.isLoggedIn}
+                        >
+                            {isLogged}
+                        </button>
+                    </Link>
                 </div>
             </HeaderStyle>
         );
