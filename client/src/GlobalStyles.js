@@ -7,7 +7,10 @@ const GlobalStyles = createGlobalStyle`
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    font-family: 'Open Sans', 'Roboto';
+    font-family: 'Lato', sans-serif;
+    // font-family: 'Merriweather', serif;
+    // font-family: 'Montserrat', sans-serif;
+    // font-family: 'Open Sans', sans-serif;
   }
 
   body {
@@ -44,14 +47,14 @@ const GlobalStyles = createGlobalStyle`
     h1 {
       text-align: left;
       color: ${colors['--font-color']};
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       padding: 1.5% 0 0.25% 1.5%;
     }
 
     h4 {
-      font-weight: 100;
+      font-weight: 300;
       color: ${colors['--font-color']};
-      font-size: 1.05rem;
+      font-size: 1.15rem;
       padding: 0 0 0.5% 1.5%;
     }
   }

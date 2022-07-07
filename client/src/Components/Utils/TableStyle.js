@@ -5,6 +5,10 @@ const TableWrapper = styled.div`
     padding: 1.5%;
     width: 100%;
 
+    a {
+        color: ${colors['--link-color']} !important;
+    }
+
     .ReactTable * {
         box-sizing: border-box;
     }
@@ -26,7 +30,8 @@ const TableWrapper = styled.div`
 
     .ReactTable .rt-thead {
         color: ${colors['--font-color']};
-        font-size: 18px;
+        font-size: 1.2rem;
+        font-weight: 400;
         box-shadow: none !important;
     }
 
@@ -36,7 +41,8 @@ const TableWrapper = styled.div`
 
     .ReactTable .rt-tbody {
         color: ${colors['--font-color']};
-        font-size: 16px;
+        font-weight: 400;
+        font-size: 1rem;
     }
 
     .-previous, .-next, .-btn {
