@@ -1,9 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-plusplus */
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
-/* eslint-disable react/no-deprecated */
-
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
@@ -20,54 +14,36 @@ class Search extends React.Component {
             return 'McGill (Breast Cancer)';
         }
         return dataset;
-    }
+    };
 
     constructor(props) {
         super(props);
         this.state = {
             drugs: [],
             datasets: [],
-            genes: [],
+            genes: this.getGenesSelectOptions(GeneList),
             selectedGeneSearch: ['Enter Gene Symbols (Max 50 genes)'],
             selectedDrugs: [],
             selectedDataset: '',
-            genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'],
+            genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'].map((item, i) => ({
+                label: item,
+                value: i,
+            })),
             selectedGenomics: [],
             allDrugs: [],
             threshold: 2,
             toggleRNA: false,
             genomics: [],
             drugValue: [],
-            axiosConfig: {},
-            geneLimit: 50,
-        };
-    }
-
-    componentWillMount() {
-        const { genomicsValue } = this.state;
-        const genes = GeneList.map((item) => ({
-            value: item.split('=')[1].replace(/\s/g, ','),
-            label: `${item.split('=')[0]} (${item.split('=')[1].split(' ').length})`,
-        }));
-
-        this.setState({
-            genes: [{ value: 'user defined list', label: 'User-Defined List (Max 50 genes)' }, ...genes],
-        });
-
-        const genomic = genomicsValue.map((item, i) => ({
-            label: item,
-            value: i,
-        }));
-        this.setState({
-            genomicsValue: [...genomic],
             axiosConfig: {
                 headers: {
                     'Content-Type': 'application/json;charset=UTF-8',
                     Accept: 'application/json',
-                },
+                }
             },
-        });
-    }
+            geneLimit: 50,
+        };
+    };
 
     componentDidMount() {
         axios.get('/api/v1/datasets', { headers: { Authorization: localStorage.getItem('user') } })
@@ -80,7 +56,18 @@ class Search extends React.Component {
                     datasets: [...datasets],
                 });
             });
-    }
+    };
+
+    getGenesSelectOptions = (geneList) => {
+        const genes = geneList.map((item) => ({
+            value: item.split('=')[1].replace(/\s/g, ','),
+            label: `${item.split('=')[0]} (${item.split('=')[1].split(' ').length})`,
+        }));
+
+        return (
+            [{ value: 'user defined list', label: 'User-Defined List (Max 50 genes)' }, ...genes]
+        )
+    };
 
     handleDrugChange = (selectedOption) => {
         if (selectedOption !== null && selectedOption.length > 0) {
