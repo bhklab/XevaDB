@@ -48,6 +48,10 @@ const App = () => {
     return (
         <div>
             <Router>
+                <Route
+                    path="/"
+                    render={(props) => props.location.pathname !== '/login' && (<TopNav />)}
+                />
                 <Switch>
                     <Route path="/" exact component={Home} />
                     <Route path="/biomarker" exact component={Biomarker} />
@@ -68,10 +72,6 @@ const App = () => {
                     <Route path="/stat" exact component={StatTable} />
                     <Route render={() => <h1> 404 Error </h1>} />
                 </Switch>
-                <Route
-                    path="/"
-                    render={(props) => props.location.pathname !== '/login' && (<TopNav />)}
-                />
             </Router>
         </div>
     );
