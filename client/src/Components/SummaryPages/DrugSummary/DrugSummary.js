@@ -69,8 +69,11 @@ class DrugSummary extends React.Component {
                                 )
                         }
                     </div>
-                    <div className="component-wrapper center-component">
-                        <DrugTable />
+                    <div className="component-wrapper">
+                        <>
+                            <h1> List of Drugs </h1>
+                            <DrugTable />
+                        </>
                     </div>
                     <Footer />
                 </div>
