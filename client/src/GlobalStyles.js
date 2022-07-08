@@ -7,10 +7,11 @@ const GlobalStyles = createGlobalStyle`
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    font-family: 'Lato', sans-serif;
+    // font-family: 'Lato', sans-serif;
     // font-family: 'Merriweather', serif;
     // font-family: 'Montserrat', sans-serif;
     // font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
 
   body {
@@ -55,7 +56,7 @@ const GlobalStyles = createGlobalStyle`
     h4 {
       font-weight: 300;
       color: ${colors['--font-color']};
-      font-size: 1.15rem;
+      font-size: 1rem;
       padding: 0 0 0.5% 1.5%;
     }
   }
