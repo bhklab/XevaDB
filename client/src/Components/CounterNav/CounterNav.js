@@ -3,7 +3,6 @@ import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CounterStyle from './CounterStyle';
-import GlobalStyles from '../../GlobalStyles';
 
 class CounterNav extends React.Component {
     constructor(props) {
@@ -38,7 +37,6 @@ class CounterNav extends React.Component {
 
         return (
             <div>
-                <GlobalStyles />
                 <CounterStyle>
                     {
                         types.map((type, i) => (
