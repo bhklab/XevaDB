@@ -30,7 +30,7 @@ const TableWrapper = styled.div`
 
     .ReactTable .rt-thead {
         color: ${colors['--font-color']};
-        font-size: 1.2rem;
+        font-size: 1.1em;
         font-weight: 400;
         box-shadow: none !important;
     }
@@ -42,7 +42,7 @@ const TableWrapper = styled.div`
     .ReactTable .rt-tbody {
         color: ${colors['--font-color']};
         font-weight: 400;
-        font-size: 1rem;
+        font-size: 0.9em;
     }
 
     .-previous, .-next, .-btn {

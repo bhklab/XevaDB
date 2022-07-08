@@ -7,7 +7,7 @@ const width = '80vw';
 // footer styled component
 const FooterStyle = styled.div`
     border-top: 1px solid ${colors['--font-color']};
-    height: 80px;
+    height: 60px;
     width: ${width};
     position: absolute;
     bottom: 0;
@@ -17,7 +17,7 @@ const FooterStyle = styled.div`
     justify-content: center;
     align-items: center;
     color: ${colors['--bg-color']};
-    font-size: 17px;
+    font-size: 15px;
 `;
 
 export default FooterStyle;
