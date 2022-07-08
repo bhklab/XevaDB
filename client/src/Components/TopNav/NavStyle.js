@@ -1,61 +1,50 @@
 import styled from 'styled-components';
 import colors from '../../styles/colors';
 
-const HeaderStyle = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+const MainConatiner = styled.div`
     height: 70px;
+    width: 100%;
     background-color: ${colors['--bg-color']};
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+`;
 
-    a {
+const TopNavContainer = styled.div`
+    height: inherit;
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`;
+
+const LogoNavLinksContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    div.logo > a {
+        margin-right: 75px;
+    }
+
+    div.nav-links > a {
         color: ${colors['--white-text']};
         text-decoration: none;
         letter-spacing: 1px;
-        font-size: 1.3rem; // fallback
-        font-size: 1.1em;
+        margin-right: 25px;
         &:hover {
-            ccolor: ${colors['--table-bg-color']};
+            color: ${colors['--table-bg-color']};
             cursor: pointer;
         }
     }
 
-    .logo {
-        width: 25%;
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .nav-links {
-        width: 30%;
-        display: flex;
-        justify-content: space-around;
-        margin: 0 0 0 50px;
-    }
-
-    .login-button {
-        width: 25%;
-        display: flex;
-        justify-content: center;
-    }
-
-    button {
-        background-color: ${colors.white};
-        color: ${colors['--bg-color']};
-        width: 80px;
-        height: 40px;
-        border: 0;
-        border-radius: 5px;
-        font-size: 0.9em;
-
-        &:hover {
-            background-color: ${colors['--table-bg-color']} !important;
-            cursor: pointer;
-        }
+    img {
+        height: 45px;
+        z-index: 999;
     }
 
     // // when screen size is greater than 1800px
@@ -72,17 +61,25 @@ const HeaderStyle = styled.div`
     // }
 `;
 
-const LogoStyle = styled.img`
-    z-index: 999;
-    height: 45px;
+const ButtonStyle = styled.div`
+    button {
+        background-color: ${colors.white};
+        width: 80px;
+        height: 40px;
+        border: 0;
+        border-radius: 5px;
+        font-size: 0.9em;
+    }
 
-    // // when the height is greater than 1000px
-    // @media only screen and (min-height: 1000px) {
-    //     height: 5vh;
-    // }
+    button:hover {
+        background-color: ${colors['--table-bg-color']} !important;
+        cursor: pointer;
+    }
 `;
 
 export {
-    HeaderStyle,
-    LogoStyle,
+    MainConatiner,
+    TopNavContainer,
+    LogoNavLinksContainer,
+    ButtonStyle,
 };
