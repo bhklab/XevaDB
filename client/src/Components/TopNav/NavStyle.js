@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const MainConatiner = styled.div`
-    height: 70px;
+    height: 60px;
     width: 100%;
     background-color: ${colors['--bg-color']};
     position: absolute;
