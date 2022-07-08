@@ -12,7 +12,7 @@ const CounterStyle = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    font-size: 0.9rem;
+    font-size: 0.9em;
     font-weight: 400;
 
     a {
