@@ -8,10 +8,11 @@ const FormContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-family: 'Lato', sans-serif;
 `;
 
 const Form = styled.div`
-    background: ${colors.fade_blue};
+    background: ${colors['--table-bg-color']};
     height: 400px;
     width: 550px;
     border-radius: 10px;
@@ -21,22 +22,24 @@ const Form = styled.div`
     justify-content: center;
 
     a {
-        color: ${colors.blue_header}
+        color: ${colors['--link-color']}
     }
 `;
 
 const FormHeading = styled.div`
-    color: ${colors.blue_header};
-    font-size: 1.75rem;
+    color: ${colors['--font-color']};
+    font-size: 1.85em;
     font-weight: 700;
 `;
 
 const SubmitStyle = styled.div`
     margin-top: 20px;
     button {
-        background: ${colors.blue_header}
+        background: ${colors['--font-color']};
+
         &:hover {
-            background: ${colors.pink_header}
+            background: ${colors['--table-bg-color']};
+            color: ${colors['--font-color']};
         }
     }
 `;
@@ -44,9 +47,6 @@ const SubmitStyle = styled.div`
 const LogoStyle = styled.img`
     width: calc(5em + 1vw);
     height: 50px;
-    margin-top: 10px;
-    z-index: 999;
-    position: relative;
     margin-left: calc(100vw - (3vw + 5em));
 
     // @media only screen and (min-height: 900px) {
@@ -56,11 +56,15 @@ const LogoStyle = styled.img`
 
 const LogoBack = styled.div`
     height: 70px;
-    background: ${colors['--bg-color']};
+    background:  #0d76bd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     
     // background-image: linear-gradient(
     //     to right,
-    //     ${colors.fade_blue},
+    //     ${colors['--bg-color']},
+    //     #0d76bd,
     //     ${colors.white_smoke}
     // );
 
