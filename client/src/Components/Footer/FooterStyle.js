@@ -6,7 +6,7 @@ const width = '80vw';
 
 // footer styled component
 const FooterStyle = styled.div`
-    border-top: 1px solid ${colors['--font-color']};
+    border-top: 1px solid ${colors['--main-font-color']};
     height: 60px;
     width: ${width};
     position: absolute;

@@ -27,7 +27,7 @@ const Form = styled.div`
 `;
 
 const FormHeading = styled.div`
-    color: ${colors['--font-color']};
+    color: ${colors['--main-font-color']};
     font-size: 1.85em;
     font-weight: 700;
 `;
@@ -35,11 +35,11 @@ const FormHeading = styled.div`
 const SubmitStyle = styled.div`
     margin-top: 20px;
     button {
-        background: ${colors['--font-color']};
+        background: ${colors['--main-font-color']};
 
         &:hover {
             background: ${colors['--table-bg-color']};
-            color: ${colors['--font-color']};
+            color: ${colors['--main-font-color']};
         }
     }
 `;
