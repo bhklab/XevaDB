@@ -2,19 +2,13 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const StyleBar = styled.div`
-    margin-top: 30vh;
-    display: flex;
-    margin: auto;
-
-    span {
-        font-size: 26px;
-    }
+    height: 100%;
 
     h1 {
-        color: ${colors.blue_header};
+        color: ${colors['--bg-color']};
         text-align: center;
-        font-size: 27px;
-        padding: 15px 0px 15px 0px;
+        padding: 15px 0;
+        font-size: 1.7em;
     }  
     
     .search-container {
@@ -28,14 +22,14 @@ const StyleBar = styled.div`
     }
 
     .select-component {
-        background: ${colors.white};
+        background: ${colors['--table-bg-color']};
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-around;
+        justify-content: center;
         border-radius: 20px;
-        padding: 10px 50px 20px 50px;
-
-        .two-col {
+        padding: 10px 40px 20px 40px;
+        
+        .dataset-drug-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
@@ -65,13 +59,12 @@ const StyleBar = styled.div`
         .div-rnaseq {
             text-align: left;
             width: 100%;
-            font-size: 15px;
-            color: ${colors.blue_header};
+            color: ${colors['--font-color']};
             
             input {
-                color: ${colors.blue_header};
-                font-size: 14px;
-                border: 1px solid ${colors.blue_header};
+                color: ${colors['--font-color']};
+                font-size: 0.9em;
+                border: 1px solid ${colors['--font-color']};
                 border-radius: 4px;
                 outline-style: none;
                 padding: 2px;
@@ -89,28 +82,27 @@ const StyleBar = styled.div`
                 min-height: 120px;
                 outline-style: none;
                 border-radius: 10px;
-                color: ${colors.blue_header};
-                font-weight: 300;
-                font-size: 15px;
-                border: 1px solid ${colors.blue_header};
+                color: ${colors['--font-color']};
+                font-size: 0.9em;
+                border: 1px solid ${colors['--font-color']};
                 padding: 10px;
                 overflow-wrap: break-word;
                 box-sizing: border-box;
-                resize: none
+                resize: none;
             }
         }
 
         .sample {
             width: 100%;
-            font-size: 16px;
+            font-size: 1em;
             text-align: left;
-            font-weight: 550;
+            font-weight: 700;
             a {
-                color: ${colors.blue_header};
+                color: ${colors['--bg-color']};
                 text-decoration: none;
             }
             a:hover {
-                color: ${colors.pink_header};
+                color: ${colors['--font-color']};
                 cursor: pointer;
             }
             font-style: italic;
@@ -120,20 +112,20 @@ const StyleBar = styled.div`
 
    @media screen and (max-width: 1700px) {
         h1 {
-            font-size: 22px;
+            font-size: 1.55em;
         }
 
         .select-component {
-            padding: 10px 50px 20px 50px;
+            padding: 30px;
             max-width: 90%;
         }
 
         .div-genomics, .div-gene, .div-dataset, .div-drug {
-            margin-bottom: 15px !important;
+            margin-bottom: 10px !important;
         }
 
         div > input {
-            margin-bottom: 15px !important;
+            margin-bottom: 10px !important;
         }
 
         .div-gene-enter {
@@ -145,11 +137,11 @@ const StyleBar = styled.div`
         }
 
         .sample {
-            font-size: 14px !important;
+            font-size: 0.9em !important;
         }
         
         .stylebutton {
-            font-size: 28px;
+            font-size: 1.5em;
             padding: 8px 10px 8px 10px;
         }
    }
@@ -162,15 +154,15 @@ const StyleBar = styled.div`
 `;
 
 const StyleButton = styled.button`
-    background-color: ${colors.blue_header};
-    border: none;
+    background-color: ${colors['--bg-color']};
     border-radius: 6px;
-    color: ${colors.white};
+    color: ${colors['--white']};
+    border: none;
     padding: 8px 16px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 30px;
+    font-size: 1.5em;
     font-weight: 700;
     transition: .3s;
     outline-style: none;
@@ -178,24 +170,24 @@ const StyleButton = styled.button`
     &:hover {
         opacity: 1;
         cursor: pointer;
-        color:  ${colors.blue_header};
-        background-color: ${colors.white};
-        border: 1px solid ${colors.blue_header};
+        color: ${colors['--bg-color']};
+        background-color: ${colors['--white']};
+        border: 1px solid ${colors['--bg-color']};
     }
 `;
 
 const customStyles = {
     placeholder: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--font-color']}`,
         fontWeight: '400',
         fontSize: '15px',
     }),
 
     control: (provided) => ({
         ...provided,
-        '&:hover': { borderColor: `${colors.blue_header}` },
-        border: `1px solid ${colors.blue_header}`,
+        '&:hover': { borderColor: `${colors['--font-color']}` },
+        border: `1px solid ${colors['--font-color']}`,
         boxShadow: 'none',
         padding: '0px 5px',
         borderRadius: '5px',
@@ -204,23 +196,23 @@ const customStyles = {
 
     indicatorSeparator: (provided) => ({
         ...provided,
-        background: `${colors.blue_header}`,
-        '&:hover': { background: `${colors.blue_header}` },
+        background: `${colors['--font-color']}`,
+        '&:hover': { background: `${colors['--font-color']}` },
         height: '30px',
     }),
 
     dropdownIndicator: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--font-color']}`,
         '&:hover': {
-            color: `${colors.blue_header}`,
+            color: `${colors['--font-color']}`,
             cursor: 'pointer',
         },
     }),
 
     option: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--font-color']}`,
         background: `${colors.white}`,
         margin: '0px 0px',
         '&:hover': {
@@ -232,26 +224,26 @@ const customStyles = {
 
     singleValue: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--font-color']}`,
         fontSize: '15px',
     }),
 
     multiValue: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--font-color']}`,
         fontSize: '15px',
     }),
 
     input: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--font-color']}`,
     }),
 
     clearIndicator: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--font-color']}`,
         '&:hover': {
-            color: `${colors.blue_header}`,
+            color: `${colors['--font-color']}`,
         },
     }),
 

@@ -272,9 +272,9 @@ class Search extends React.Component {
     // text for the pop up
     popupText = () => {
         if (this.state.selectedGeneSearch.length > 1) {
-            return this.ifGeneNumberLessThanFifty() ? 'Complete all the fields!!' : 'Please keep gene list less than 50!';
+            return this.ifGeneNumberLessThanFifty() ? 'Complete all the fields!' : 'Please keep gene list less than 50!';
         }
-        return 'Complete all the fields!!';
+        return 'Complete all the fields!';
     }
 
 
@@ -284,31 +284,27 @@ class Search extends React.Component {
             threshold, toggleRNA, genes, selectedGeneSearch,
         } = this.state;
         return (
-
-            <StyleBar className="wrapper">
-                <div className="search-container">
-                    <div className="select-component" onKeyPress={this.handleKeyPress}>
+            <StyleBar className='wrapper'>
+                <div className='search-container'>
+                    <div className='select-component' onKeyPress={this.handleKeyPress}>
                         <h1>
-                            {' '}
-                            <span style={{ color: `${colors.pink_header}` }}>XevaDB:</span>
-                            {' '}
-                            A Database For PDX Pharmacogenomic Data
-                            {' '}
+                            XevaDB: A Database For PDX Pharmacogenomic Data
                         </h1>
-                        <div className="two-col">
-                            <div className="div-dataset">
+
+                        <div className='dataset-drug-container'>
+                            <div className='div-dataset'>
                                 <Select
                                     options={datasets}
                                     styles={customStyles}
-                                    placeholder="Select the Dataset"
+                                    placeholder='Select the Dataset'
                                     onChange={this.handleDatasetChange}
                                 />
                             </div>
-                            <div className="div-drug">
+                            <div className='div-drug'>
                                 <Select
                                     options={drugs}
                                     styles={customStyles}
-                                    placeholder="Search for the Drug (eg. CLR457)"
+                                    placeholder='Search for the Drug (eg. CLR457)'
                                     onChange={this.handleDrugChange}
                                     isMulti
                                     isSearchable
@@ -318,11 +314,11 @@ class Search extends React.Component {
                             </div>
                         </div>
 
-                        <div className="div-genomics">
+                        <div className='div-genomics'>
                             <Select
                                 options={genomicsValue}
                                 styles={customStyles}
-                                placeholder="Genomics"
+                                placeholder='Genomics'
                                 onChange={this.handleExpressionChange}
                                 isMulti
                                 isClearable
@@ -330,15 +326,15 @@ class Search extends React.Component {
                             />
                         </div>
 
-                        <div className="div-rnaseq">
+                        <div className='div-rnaseq'>
                             {
                                 toggleRNA
                                     ? (
                                         <div>
                                             Enter a z-score threshold ±
                                             <input
-                                                type="text"
-                                                name="title"
+                                                type='text'
+                                                name='title'
                                                 value={threshold}
                                                 onChange={this.handleThreshold}
                                             />
@@ -348,19 +344,19 @@ class Search extends React.Component {
                             }
                         </div>
 
-                        <div className="div-gene">
+                        <div className='div-gene'>
                             <Select
                                 options={genes}
                                 styles={customStyles}
-                                placeholder="User Defined or Pre-Defined Gene List"
+                                placeholder='User Defined or Pre-Defined Gene List'
                                 onChange={this.handleGeneListChange}
                             />
                         </div>
 
-                        <div className="div-gene-enter">
+                        <div className='div-gene-enter'>
                             <form>
                                 <textarea
-                                    type="text"
+                                    type='text'
                                     value={selectedGeneSearch}
                                     onChange={this.handleGeneSearchChange}
                                     onClick={this.clearText}
@@ -368,15 +364,15 @@ class Search extends React.Component {
                             </form>
                         </div>
 
-                        <div className="sample">
+                        <div className='sample'>
                             <a href={`${feelingLuckyRequest}`}> Feeling Lucky? </a>
                         </div>
 
-                        <div>
+                        <div className='search-button'>
                             {
                                 this.ifAllDataAvailable() && this.ifGeneNumberLessThanFifty()
                                     ? (
-                                        <StyleButton onClick={this.redirectUser} type="button" className="stylebutton">
+                                        <StyleButton onClick={this.redirectUser} type='button' className='stylebutton'>
                                             <span>
                                                 Search
                                             </span>
@@ -385,16 +381,16 @@ class Search extends React.Component {
                                     : (
                                         <Popup
                                             trigger={(
-                                                <StyleButton onClick={this.redirectUser} type="button" className="stylebutton">
+                                                <StyleButton onClick={this.redirectUser} type='button' className='stylebutton'>
                                                     <span>
                                                         Search
                                                     </span>
                                                 </StyleButton>
                                             )}
-                                            position="right center"
+                                            position='right center'
                                         >
                                             <div style={{
-                                                color: `${colors.blue_header}`, fontFamily: 'Open Sans', fontSize: '17px', fontWeight: '500',
+                                                color: `${colors['--bg-color']}`, fontSize: '0.9em', fontWeight: '300',
                                             }}
                                             >
                                                 {this.popupText()}
