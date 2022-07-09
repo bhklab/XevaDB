@@ -8,12 +8,12 @@ const StyleBar = styled.div`
         color: ${colors['--bg-color']};
         text-align: center;
         padding: 15px 0;
-        font-size: 1.7em;
+        font-size: 1.85em;
     }  
     
     .search-container {
         height: 550px;
-        width: 750px;
+        width: 800px;
         text-align: center;
         display: flex;
         flex-wrap: wrap;
@@ -59,12 +59,12 @@ const StyleBar = styled.div`
         .div-rnaseq {
             text-align: left;
             width: 100%;
-            color: ${colors['--font-color']};
+            color: ${colors['--main-font-color']};
             
             input {
-                color: ${colors['--font-color']};
+                color: ${colors['--main-font-color']};
                 font-size: 0.9em;
-                border: 1px solid ${colors['--font-color']};
+                border: 1px solid ${colors['--main-font-color']};
                 border-radius: 4px;
                 outline-style: none;
                 padding: 2px;
@@ -82,9 +82,9 @@ const StyleBar = styled.div`
                 min-height: 120px;
                 outline-style: none;
                 border-radius: 10px;
-                color: ${colors['--font-color']};
+                color: ${colors['--main-font-color']};
                 font-size: 0.9em;
-                border: 1px solid ${colors['--font-color']};
+                border: 1px solid silver;
                 padding: 10px;
                 overflow-wrap: break-word;
                 box-sizing: border-box;
@@ -102,7 +102,7 @@ const StyleBar = styled.div`
                 text-decoration: none;
             }
             a:hover {
-                color: ${colors['--font-color']};
+                color: ${colors['--main-font-color']};
                 cursor: pointer;
             }
             font-style: italic;
@@ -112,12 +112,12 @@ const StyleBar = styled.div`
 
    @media screen and (max-width: 1700px) {
         h1 {
-            font-size: 1.55em;
+            font-size: 1.575em;
         }
 
         .select-component {
-            padding: 30px;
-            max-width: 90%;
+            padding: 20px 30px;
+            max-width: 85%;
         }
 
         .div-genomics, .div-gene, .div-dataset, .div-drug {
@@ -158,7 +158,7 @@ const StyleButton = styled.button`
     border-radius: 6px;
     color: ${colors['--white']};
     border: none;
-    padding: 8px 16px;
+    padding: 12px 16px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -179,15 +179,15 @@ const StyleButton = styled.button`
 const customStyles = {
     placeholder: (provided) => ({
         ...provided,
-        color: `${colors['--font-color']}`,
+        color: `${colors['--main-font-color']}`,
         fontWeight: '400',
         fontSize: '15px',
     }),
 
     control: (provided) => ({
         ...provided,
-        '&:hover': { borderColor: `${colors['--font-color']}` },
-        border: `1px solid ${colors['--font-color']}`,
+        '&:hover': { borderColor: `${colors['--main-font-color']}` },
+        // border: `1px solid ${colors['--main-font-color']}`,
         boxShadow: 'none',
         padding: '0px 5px',
         borderRadius: '5px',
@@ -196,27 +196,27 @@ const customStyles = {
 
     indicatorSeparator: (provided) => ({
         ...provided,
-        background: `${colors['--font-color']}`,
-        '&:hover': { background: `${colors['--font-color']}` },
+        background: `${colors['--main-font-color']}`,
+        '&:hover': { background: `${colors['--main-font-color']}` },
         height: '30px',
     }),
 
     dropdownIndicator: (provided) => ({
         ...provided,
-        color: `${colors['--font-color']}`,
+        color: `${colors['--main-font-color']}`,
         '&:hover': {
-            color: `${colors['--font-color']}`,
+            color: `${colors['--main-font-color']}`,
             cursor: 'pointer',
         },
     }),
 
     option: (provided) => ({
         ...provided,
-        color: `${colors['--font-color']}`,
+        color: `${colors['--main-font-color']}`,
         background: `${colors.white}`,
         margin: '0px 0px',
         '&:hover': {
-            background: `${colors.white_red}`,
+            background: `${colors['--table-bg-color']}`,
         },
         fontSize: '14px',
         textAlign: 'left',
@@ -224,13 +224,13 @@ const customStyles = {
 
     singleValue: (provided) => ({
         ...provided,
-        color: `${colors['--font-color']}`,
+        color: `${colors['--main-font-color']}`,
         fontSize: '15px',
     }),
 
     multiValue: (provided) => ({
         ...provided,
-        color: `${colors['--font-color']}`,
+        color: `${colors['--main-font-color']}`,
         fontSize: '15px',
     }),
 
@@ -241,9 +241,9 @@ const customStyles = {
 
     clearIndicator: (provided) => ({
         ...provided,
-        color: `${colors['--font-color']}`,
+        color: `${colors['--main-font-color']}`,
         '&:hover': {
-            color: `${colors['--font-color']}`,
+            color: `${colors['--main-font-color']}`,
         },
     }),
 

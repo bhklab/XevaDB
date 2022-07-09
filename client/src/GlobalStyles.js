@@ -47,7 +47,7 @@ const GlobalStyles = createGlobalStyle`
 
     h1 {
       text-align: left;
-      color: ${colors['--font-color']};
+      color: ${colors['--main-font-color']};
       font-size: 1.75em;
       font-weight: 700;
       padding: 1.5% 0 0.25% 1.5%;
@@ -55,7 +55,7 @@ const GlobalStyles = createGlobalStyle`
 
     h4 {
       font-weight: 300;
-      color: ${colors['--font-color']};
+      color: ${colors['--main-font-color']};
       font-size: 0.95em;
       padding: 0 0 0.5% 1.5%;
     }
