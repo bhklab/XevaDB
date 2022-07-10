@@ -165,7 +165,7 @@ const BarPlot = (props) => {
     const margin = props.margin || defaultMargin;
     let { data } = props;
     const { left, right, top, bottom } = margin;
-    const yAxisLabel = props.label;
+    const yAxisLabel = props.yLabel;
     const dimensions = props.dimensions || { ...defaultDimensions };
     const { yAxisTicks } = props;
     const { shouldAppendBarText, isScatter } = props;
@@ -243,7 +243,7 @@ BarPlot.propTypes = {
         left: PropTypes.number,
     }),
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
-    label: PropTypes.string.isRequired,
+    yLabel: PropTypes.string.isRequired,
     yAxisTicks: PropTypes.arrayOf(PropTypes.string),
     shouldAppendBarText: PropTypes.bool,
     isScatter: PropTypes.bool,

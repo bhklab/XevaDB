@@ -83,6 +83,14 @@ class DatasetSummary extends React.Component {
                         }
                     </div>
                     <div className="component-wrapper">
+                        <h1> XevaDB Dataset List </h1>
+                        <h4>
+                            6 datasets, last update 06/07/2022
+                            <br />
+                            There are 6 publically available datasets in XevaDB
+                            and there are currently 2 datasets that are private.
+                            The private datasets can be accessed by certain users only.
+                        </h4>
                         {
                             loading
                                 ? (
@@ -91,19 +99,10 @@ class DatasetSummary extends React.Component {
                                     </div>
                                 )
                                 : (
-                                    <>
-                                        <h1> XevaDB Dataset List </h1>
-                                        <h4>
-                                            6 datasets, last update 06/07/2022
-                                            <br />
-                                            There are 6 publically available datasets in XevaDB and there are currently 2 datasets that are private.
-                                            The private datasets can be accessed by certain users only.
-                                        </h4>
-                                        <DatasetTable
-                                            data={data}
-                                            dataLength={data.length}
-                                        />
-                                    </>
+                                    <DatasetTable
+                                        data={data}
+                                        dataLength={data.length}
+                                    />
                                 )
                         }
                     </div>
