@@ -2,12 +2,15 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const StyleBar = styled.div`
+    //  overriding the property set by the 
+    // wrapper class in the global styles
+    margin-top: 8vh !important;
     height: 100%;
 
     h1 {
         color: ${colors['--bg-color']};
         text-align: center;
-        padding: 15px 0;
+        padding: 0 0 15px 0;
         font-size: 1.95em;
         font-weight: 700;
     }
