@@ -31,7 +31,7 @@ const TableWrapper = styled.div`
     .ReactTable .rt-thead {
         color: ${colors['--main-font-color']};
         font-size: 1.1em;
-        font-weight: 400;
+        font-weight: 500;
         box-shadow: none !important;
     }
 
@@ -55,6 +55,10 @@ const TableWrapper = styled.div`
         border-top: 1px solid rgba(0,0,0,0.1) !important;
     }
 
+    .ReactTable .rt-thead.-filters input{
+        box-shadow: none !important;
+        background: ${colors['--table-bg-color']};
+    }
 `;
 
 export default TableWrapper;
