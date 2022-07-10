@@ -12,6 +12,11 @@ const MainConatiner = styled.div`
     align-items: center;
     justify-content: center;
     font-size: 1em;
+
+    // when screen size is greater than 2000px
+    @media only screen and (min-width: 2000px) {
+        height: 70px;
+    }
 `;
 
 const TopNavContainer = styled.div`
@@ -47,18 +52,12 @@ const LogoNavLinksContainer = styled.div`
         z-index: 999;
     }
 
-    // // when screen size is greater than 1800px
-    // @media only screen and (min-width: 2000px) {
-    //     a {
-    //         font-size: 1vw;
-    //     }
-    // }
-
-    // // when the height is greater than 1000px
-    // @media only screen and (min-height: 1000px) {
-    //     min-height: 7vh;
-    //     max-height: 7vh;
-    // }
+    // when screen size is greater than 2000px
+    @media only screen and (min-width: 2000px) {
+        a {
+            font-size: 1.15em;
+        }
+    }
 `;
 
 const ButtonStyle = styled.div`
