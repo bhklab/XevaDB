@@ -8,17 +8,14 @@ const StyleBar = styled.div`
         color: ${colors['--bg-color']};
         text-align: center;
         padding: 15px 0;
-        font-size: 1.85em;
-    }  
+        font-size: 1.95em;
+        font-weight: 700;
+    }
     
     .search-container {
         height: 550px;
         width: 800px;
         text-align: center;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-items: center;
     }
 
     .select-component {
@@ -27,7 +24,7 @@ const StyleBar = styled.div`
         flex-wrap: wrap;
         justify-content: center;
         border-radius: 20px;
-        padding: 10px 40px 20px 40px;
+        padding: 30px 40px 25px 40px;
         
         .dataset-drug-container {
             display: flex;
@@ -112,11 +109,11 @@ const StyleBar = styled.div`
 
    @media screen and (max-width: 1700px) {
         h1 {
-            font-size: 1.575em;
+            font-size: 1.70em;
         }
 
         .select-component {
-            padding: 20px 30px;
+            padding: 25px 30px 20px 30px;
             max-width: 85%;
         }
 
@@ -131,8 +128,8 @@ const StyleBar = styled.div`
         .div-gene-enter {
             min-height: 80px !important;
             textarea {
-                min-height: 90px !important;
-                max-height: 90px;
+                min-height: 80px !important;
+                max-height: 80px;
             }
         }
 

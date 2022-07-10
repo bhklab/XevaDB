@@ -25,6 +25,11 @@ const TopNavContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    // when screen size is greater than 2000px
+    @media only screen and (min-width: 2000px) {
+        width: 60%;
+    }
 `;
 
 const LogoNavLinksContainer = styled.div`
@@ -54,8 +59,12 @@ const LogoNavLinksContainer = styled.div`
 
     // when screen size is greater than 2000px
     @media only screen and (min-width: 2000px) {
+        img {
+            height: 55px;
+        }
+
         a {
-            font-size: 1.15em;
+            font-size: 1.2em;
         }
     }
 `;

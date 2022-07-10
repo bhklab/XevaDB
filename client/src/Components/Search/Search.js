@@ -285,12 +285,11 @@ class Search extends React.Component {
         } = this.state;
         return (
             <StyleBar className='wrapper'>
-                <div className='search-container'>
+                <div className='search-container center-component'>
+                    <h1>
+                        XevaDB: A Database For PDX Pharmacogenomic Data
+                    </h1>
                     <div className='select-component' onKeyPress={this.handleKeyPress}>
-                        <h1>
-                            XevaDB: A Database For PDX Pharmacogenomic Data
-                        </h1>
-
                         <div className='dataset-drug-container'>
                             <div className='div-dataset'>
                                 <Select
