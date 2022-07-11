@@ -71,9 +71,9 @@ const PatientSummary = () => {
     return (
         <>
             <GlobalStyles />
-            <div className="wrapper">
-                <div className="component-wrapper center-component">
-                    <h1> Number of Patients per Dataset </h1>
+            <div className='wrapper'>
+                <div className='component-wrapper center-component'>
+                    {/* <h1> Number of Patients per Dataset </h1> */}
                     {
                         loading
                             ? <Spinner loading={loading} />
@@ -81,13 +81,14 @@ const PatientSummary = () => {
                                 <BarPlot
                                     data={barPlotData(datasetsDetailedInformation)}
                                     shouldAppendBarText={true}
-                                    yLabel="Number of patients"
-                                    dimensions={{ width: 750, height: 400 }}
+                                    yLabel='Number of patients'
+                                    xLabel='Dataset'
+                                    dimensions={{ width: 700, height: 400 }}
                                 />
                             )
                     }
                 </div>
-                <div className="component-wrapper center-component">
+                <div className='component-wrapper center-component'>
                     {
                         loading
                             ? <Spinner loading={loading} />

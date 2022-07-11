@@ -51,27 +51,28 @@ class DrugSummary extends React.Component {
         return (
             <>
                 <GlobalStyles />
-                <div className="wrapper">
-                    <div className="component-wrapper center-component">
+                <div className='wrapper'>
+                    <div className='component-wrapper center-component'>
                         {
                             loading
                                 ? <Spinner loading={loading} />
                                 : (
                                     <div className='center-component'>
-                                        <h1> Number of Models per Drug Class </h1>
+                                        {/* <h1> Number of Models per Drug Class </h1> */}
                                         <BarPlot
                                             dimensions={dimensions}
                                             margin={margin}
-                                            chartId="barplot_drug"
+                                            chartId='barplot_drug'
                                             data={data}
-                                            label="Number of models"
+                                            yLabel='Number of models'
+                                            xLabel='Drug class'
                                             shouldAppendBarText={true}
                                         />
                                     </div>
                                 )
                         }
                     </div>
-                    <div className="component-wrapper">
+                    <div className='component-wrapper'>
                         <>
                             <h1> List of Drugs </h1>
                             <DrugTable />
