@@ -7,13 +7,6 @@ const StyleBar = styled.div`
     margin-top: 8vh !important;
     height: 100%;
 
-    h1 {
-        color: ${colors['--bg-color']};
-        text-align: center;
-        padding: 0 0 15px 0;
-        font-size: 1.95em;
-        font-weight: 700;
-    }
     
     .search-container {
         height: 550px;
@@ -21,13 +14,22 @@ const StyleBar = styled.div`
         text-align: center;
     }
 
+    h1 {
+        color: ${colors['--bg-color']};
+        text-align: center;
+        padding: 0 0 10px 0;
+        font-size: 1.85em;
+        font-weight: 700;
+    }
+
     .select-component {
         background: ${colors['--table-bg-color']};
+        width: 100%
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         border-radius: 20px;
-        padding: 30px 40px 25px 40px;
+        padding: 30px 30px 25px 30px;
         
         .dataset-drug-container {
             display: flex;
@@ -40,7 +42,7 @@ const StyleBar = styled.div`
         .div-dataset, .div-drug {
             min-width: 49%;
             max-width: 49%
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .div-dataset {
@@ -53,17 +55,18 @@ const StyleBar = styled.div`
 
         .div-genomics, .div-gene {
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .div-rnaseq {
             text-align: left;
             width: 100%;
             color: ${colors['--main-font-color']};
+            font-size: 0.85em;
             
             input {
                 color: ${colors['--main-font-color']};
-                font-size: 0.9em;
+                font-size: 0.85em;
                 border: 1px solid ${colors['--main-font-color']};
                 border-radius: 4px;
                 outline-style: none;
@@ -83,9 +86,9 @@ const StyleBar = styled.div`
                 outline-style: none;
                 border-radius: 10px;
                 color: ${colors['--main-font-color']};
-                font-size: 0.9em;
+                font-size: 0.8em;
                 border: 1px solid silver;
-                padding: 10px;
+                padding: 10px 15px;
                 overflow-wrap: break-word;
                 box-sizing: border-box;
                 resize: none;
@@ -94,25 +97,25 @@ const StyleBar = styled.div`
 
         .sample {
             width: 100%;
-            font-size: 1em;
+            font-size: 16px;
             text-align: left;
-            font-weight: 700;
+            font-style: italic;
             a {
                 color: ${colors['--bg-color']};
                 text-decoration: none;
+                font-weight: bold;
             }
             a:hover {
                 color: ${colors['--main-font-color']};
                 cursor: pointer;
             }
-            font-style: italic;
             margin: 0px 0px -10px 10px !important;
         }
     }  
 
    @media screen and (max-width: 1700px) {
         h1 {
-            font-size: 1.70em;
+            font-size: 1.55em;
         }
 
         .select-component {
@@ -137,13 +140,9 @@ const StyleBar = styled.div`
         }
 
         .sample {
-            font-size: 0.9em !important;
+            font-size: 0.85em !important;
         }
-        
-        .stylebutton {
-            font-size: 1.5em;
-            padding: 8px 10px 8px 10px;
-        }
+
    }
 
    @media screen and (max-width: 650px) {
@@ -162,7 +161,7 @@ const StyleButton = styled.button`
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1.5em;
+    font-size: 1.55em;
     font-weight: 700;
     transition: .3s;
     outline-style: none;
@@ -174,6 +173,11 @@ const StyleButton = styled.button`
         background-color: ${colors['--white']};
         border: 1px solid ${colors['--bg-color']};
     }
+
+    @media screen and (max-width: 1700px) {
+        font-size: 1.4em;
+        padding: 8px 10px 8px 10px;
+    }
 `;
 
 const customStyles = {
@@ -181,7 +185,7 @@ const customStyles = {
         ...provided,
         color: `${colors['--main-font-color']}`,
         fontWeight: '400',
-        fontSize: '15px',
+        fontSize: '13px',
     }),
 
     control: (provided) => ({
@@ -218,20 +222,20 @@ const customStyles = {
         '&:hover': {
             background: `${colors['--table-bg-color']}`,
         },
-        fontSize: '14px',
+        fontSize: '12px',
         textAlign: 'left',
     }),
 
     singleValue: (provided) => ({
         ...provided,
         color: `${colors['--main-font-color']}`,
-        fontSize: '15px',
+        fontSize: '13px',
     }),
 
     multiValue: (provided) => ({
         ...provided,
         color: `${colors['--main-font-color']}`,
-        fontSize: '15px',
+        fontSize: '13px',
     }),
 
     input: (provided) => ({
