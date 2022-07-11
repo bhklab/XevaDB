@@ -11,7 +11,7 @@ const MainConatiner = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1em;
+    font-size: 0.9em;
 
     // when screen size is greater than 2000px
     @media only screen and (min-width: 2000px) {
@@ -64,7 +64,7 @@ const LogoNavLinksContainer = styled.div`
         }
 
         a {
-            font-size: 1.2em;
+            font-size: 1.1em;
         }
     }
 `;

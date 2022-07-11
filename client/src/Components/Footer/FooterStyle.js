@@ -17,7 +17,7 @@ const FooterStyle = styled.div`
     justify-content: center;
     align-items: center;
     color: ${colors['--bg-color']};
-    font-size: 15px;
+    font-size: 0.9em;
 `;
 
 export default FooterStyle;
