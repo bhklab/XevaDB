@@ -6,6 +6,8 @@ import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 
 const TissueTable = ({ data }) => {
+    console.log(data);
+
     const columns = [
         {
             Header: 'Tissue',
@@ -41,13 +43,12 @@ const TissueTable = ({ data }) => {
 
     return (
         <TableWrapper>
-            <h1> List of Tissues </h1>
             <ReactTable
                 data={data}
                 columns={columns}
                 className="-highlight"
-                defaultPageSize={7}
-                filterable
+                showPagination={false}
+                defaultPageSize={data.length + 1}
             />
         </TableWrapper>
     );

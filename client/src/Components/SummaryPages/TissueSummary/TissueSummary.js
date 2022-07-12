@@ -110,7 +110,7 @@ const TissueSummary = () => {
         fetchData();
 
         // create tooltip.
-        createToolTip('tissue-summary');
+        createToolTip('tissue-summary-tooltip');
     }, []);
 
     return (
@@ -185,11 +185,20 @@ const TissueSummary = () => {
                         </div>
                     </StyleComponent>
                 </div>
-                <div className="component-wrapper center-component">
-                    {loading ? <Spinner loading={loading} /> : <TissueTable data={tissueData} />}
+                <div className="component-wrapper">
+                    <h1> List of Tissues </h1>
+                    {
+                        loading
+                            ? (
+                                <div className='center-component'>
+                                    <Spinner loading={loading} />
+                                </div>
+                            )
+                            : <TissueTable data={tissueData} />
+                    }
                 </div>
             </div>
-            <div id="tissue-summary" />
+            <div id="tissue-summary-tooltip" />
             <Footer />
         </div>
     );
