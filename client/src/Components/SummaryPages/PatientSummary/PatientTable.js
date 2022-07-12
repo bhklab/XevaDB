@@ -43,7 +43,6 @@ const PatientTable = (props) => {
 
     return (
         <TableWrapper>
-            <h1> List of Patients </h1>
             <ReactTable
                 data={patientData}
                 columns={columns}

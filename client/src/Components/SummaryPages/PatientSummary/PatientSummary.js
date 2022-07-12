@@ -88,10 +88,15 @@ const PatientSummary = () => {
                             )
                     }
                 </div>
-                <div className='component-wrapper center-component'>
+                <div className='component-wrapper'>
+                    <h1> List of Patients </h1>
                     {
                         loading
-                            ? <Spinner loading={loading} />
+                            ? (
+                                <div className='center-component'>
+                                    <Spinner loading={loading} />
+                                </div>
+                            )
                             : <PatientTable patientData={patientData} />
                     }
                 </div>

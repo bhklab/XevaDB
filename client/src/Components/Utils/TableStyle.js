@@ -53,6 +53,7 @@ const TableWrapper = styled.div`
     .-pagination, .pagination-bottom {
         box-shadow: none !important;
         border-top: 1px solid rgba(0,0,0,0.1) !important;
+        font-size: 0.9em;
     }
 
     .ReactTable .rt-thead.-filters input{
