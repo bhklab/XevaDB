@@ -128,8 +128,8 @@ const createCircles = (svg, data, xScale, yScale, height, color) => {
         .attr('cy', (d) => yScale(d.value))
         .attr('r', 4.5)
         .attr('id', (d) => `circle_${d.id}`)
-        .attr('fill', `${colors.pink_header}`)
-        .attr('stroke', `${colors.pink_header}`)
+        .attr('fill', `${colors['--bg-color']}`)
+        .attr('stroke', `${colors['--bg-color']}`)
         .attr('stroke-width', 1);
 };
 
