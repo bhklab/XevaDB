@@ -119,8 +119,12 @@ const TissueSummary = () => {
             <div className="wrapper">
                 <div className="component-wrapper">
                     <StyleComponent>
-                        <h1> PDXs Per Tissue Type </h1>
-                        <img src={HumanBody} alt="Human Body" style={{ paddingBottom: '20px' }} />
+                        <h1 className='center-component'> Tissue Detailed Information </h1>
+                        <img
+                            src={HumanBody}
+                            alt="Human Body"
+                            style={{ marginTop: '20px', paddingBottom: '20px' }}
+                        />
                         <div>
                             <div>
                                 <img
@@ -183,6 +187,7 @@ const TissueSummary = () => {
                                 />
                             </div>
                         </div>
+                        {/* <h4 className='center-component'> Figure A.) Detailed Tissue Information </h4> */}
                     </StyleComponent>
                 </div>
                 <div className="component-wrapper">
