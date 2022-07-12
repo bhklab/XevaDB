@@ -72,8 +72,8 @@ const LogoNavLinksContainer = styled.div`
 const ButtonStyle = styled.div`
     button {
         background-color: ${colors.white};
-        width: 80px;
-        height: 40px;
+        width: 70px;
+        height: 35px;
         border: 0;
         border-radius: 5px;
         font-size: 0.9em;
@@ -82,6 +82,14 @@ const ButtonStyle = styled.div`
     button:hover {
         background-color: ${colors['--table-bg-color']} !important;
         cursor: pointer;
+    }
+
+    // when screen size is greater than 2000px
+    @media only screen and (min-width: 2000px) {
+        button {
+            width: 80px;
+            height: 40px;
+        }
     }
 `;
 
