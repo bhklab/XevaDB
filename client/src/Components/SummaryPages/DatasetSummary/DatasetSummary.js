@@ -55,8 +55,8 @@ class DatasetSummary extends React.Component {
         return (
             <div>
                 <GlobalStyles />
-                <div className="wrapper">
-                    <div className="component-wrapper center-component">
+                <div className='wrapper'>
+                    <div className='component-wrapper center-component'>
                         {/* <h1> Datasets </h1> */}
                         {
                             loading
@@ -76,13 +76,14 @@ class DatasetSummary extends React.Component {
                                             ))
                                         }
                                         arcRadius={arc}
-                                        chartId="donut_datasets"
+                                        chartId='donut_datasets'
                                         tooltipMapper={mapper}
+                                        centerLegend='Datasets'
                                     />
                                 )
                         }
                     </div>
-                    <div className="component-wrapper">
+                    <div className='component-wrapper'>
                         <h1> XevaDB Dataset List </h1>
                         <h4>
                             6 datasets, last update 06/07/2022
@@ -94,7 +95,7 @@ class DatasetSummary extends React.Component {
                         {
                             loading
                                 ? (
-                                    <div className="center-component">
+                                    <div className='center-component'>
                                         <Spinner loading={loading} />
                                     </div>
                                 )

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import addOpacityToColor from '../../utils/AddOpacityToColor';
 import createToolTip from '../../utils/ToolTip';
 import donutColors from '../../utils/ChartColors';
+import colors from '../../styles/colors';
 
 class DonutChart extends React.Component {
     constructor(props) {
@@ -33,11 +34,12 @@ class DonutChart extends React.Component {
         const { chartId } = this.props;
         const shouldDisplayLegend = this.props.shouldDisplayLegend ?? true;
         const shouldDisplayTextLabels = this.props.shouldDisplayTextLabels ?? false;
+        const centerLegend = this.props.centerLegend ?? '';
 
         this.makeDonutChart(
             data, height, width, left, top, bottom, right, arcRadius,
             tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
-            shouldDisplayTextLabels
+            shouldDisplayTextLabels, centerLegend
         );
     }
 
@@ -45,7 +47,7 @@ class DonutChart extends React.Component {
     makeDonutChart = (
         data, height, width, left, top, bottom, right, arcRadius,
         tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
-        shouldDisplayTextLabels
+        shouldDisplayTextLabels, centerLegend
     ) => {
         // make the SVG element.
         const svg = d3.select(`#donut-${chartId}`)
@@ -248,6 +250,18 @@ class DonutChart extends React.Component {
                 .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id))
                 .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`)
                 .style('font-size', '0.9em');
+        }
+
+
+        // append center legend it it's available
+        if (centerLegend) {
+            d3.select('#skeleton').append('text')
+                .attr('x', -30)
+                .attr('y', 0)
+                .text(`${centerLegend}`)
+                .style('font-weight', 700)
+                .style('font-size', '1.1em')
+                .style('fill', `${colors['--main-font-color']}`);
         }
     }
 
