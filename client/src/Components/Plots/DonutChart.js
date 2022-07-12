@@ -158,7 +158,8 @@ class DonutChart extends React.Component {
                 .style('left', `${d3.event.layerX + 10}px`)
                 .style('top', `${d3.event.layerY + 10}px`)
                 .style('color', 'white')
-                .style('background-color', colorMapper?.[d.data.id] ?? color(d.data.id));
+                .style('background-color', colorMapper?.[d.data.id] ?? color(d.data.id))
+                .style('font-size', '0.85em');
         };
 
         const mouseout = function (d) {
@@ -199,7 +200,7 @@ class DonutChart extends React.Component {
                 })
                 // .attr('font-weight', 'bold')
                 .style('text-anchor', 'middle')
-                .style('font-size', 12.5)
+                .style('font-size', 12)
                 .attr('fill', 'black')
                 .style('opacity', 0.75)
                 .style('font-weight', 700)
@@ -245,7 +246,8 @@ class DonutChart extends React.Component {
                 .attr('x', (width) - 250)
                 .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
                 .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id))
-                .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`);
+                .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`)
+                .style('font-size', '0.9em');
         }
     }
 
