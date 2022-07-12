@@ -593,12 +593,13 @@ class HeatMap extends Component {
             .attr('transform', 'translate(-20, 0)');
 
         drugName.attr('stroke-width', '0')
-            .style('font-family', 'Open Sans')
             .style('font-size', '11px')
             .call(yAxis)
             .selectAll('text')
             .attr('fill', (d) => {
-                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return `${colors.pink_header}`; }
+                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) {
+                    return `${colors.pink_header}`;
+                }
                 return `${colors.blue_header}`;
             })
             .attr('font-weight', (d) => {
@@ -660,7 +661,6 @@ class HeatMap extends Component {
 
         patientId.attr('stroke-width', '0')
             .style('font-size', '11px')
-            .style('font-family', 'Open Sans')
             .style('text-anchor', (dataset === '7' ? 'start' : 'middle'))
             .call(xAxis)
             .selectAll('text')
