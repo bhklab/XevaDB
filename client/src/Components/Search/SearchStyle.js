@@ -10,7 +10,7 @@ const StyleBar = styled.div`
     
     .search-container {
         height: 550px;
-        width: 800px;
+        width: 750px;
         text-align: center;
     }
 
@@ -18,7 +18,7 @@ const StyleBar = styled.div`
         color: ${colors['--bg-color']};
         text-align: center;
         padding: 0 0 10px 0;
-        font-size: 1.85em;
+        font-size: 1.75em;
         font-weight: 700;
     }
 
@@ -120,7 +120,7 @@ const StyleBar = styled.div`
 
         .select-component {
             padding: 25px 30px 20px 30px;
-            max-width: 85%;
+            max-width: 90%;
         }
 
         .div-genomics, .div-gene, .div-dataset, .div-drug {
