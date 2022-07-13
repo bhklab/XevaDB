@@ -119,7 +119,7 @@ const TissueSummary = () => {
             <div className="wrapper">
                 <div className="component-wrapper">
                     <StyleComponent>
-                        <h1 className='center-component'> Tissue Detailed Information </h1>
+                        <h1 className='center-component'> Tissue Information </h1>
                         <img
                             src={HumanBody}
                             alt="Human Body"
