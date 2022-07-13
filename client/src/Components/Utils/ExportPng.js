@@ -11,7 +11,7 @@ const StyledButton = styled.div`
     margin: 40px 0px 0px 0px;
     
     button {
-        background-color: ${colors.moderate_blue} !important;
+        background-color: ${colors['--bg-color']} !important;
         color: ${colors.white} !important;
         padding: 6px 6px 8px 8px !important;
         margin-right: 5px;
@@ -20,7 +20,7 @@ const StyledButton = styled.div`
         font-size: 1.1em;
         width: 170px;
         :hover {
-        color: ${colors.moderate_blue} !important;
+        color: ${colors['--bg-color']} !important;
         background-color: ${colors.lightgray} !important;
         cursor: pointer;
         }

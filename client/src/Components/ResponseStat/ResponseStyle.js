@@ -16,7 +16,7 @@ export const StyledLink = styled.div`
         margin-left: 5px;
     }
     a:link {
-        background-color: ${colors.moderate_blue} !important;
+        background-color: ${colors['--bg-color']} !important;
         color: ${colors.white} !important;
         border-radius: 6px;
         text-decoration: none;
@@ -35,7 +35,7 @@ export const StyleTable = styled.div`
     max-width: 800px;
 
     table, th, td {
-        border: 1px solid ${colors.dark_gray};
+        border: 1px solid silver;
     }
 
     #stats-table {
@@ -45,22 +45,18 @@ export const StyleTable = styled.div`
     }
 
     th {
-        color: ${colors.moderate_blue};
+        color: ${colors['--main-font-color']};
         text-align: left;
         padding: 10px;
         height: 40px;
-        background-color: ${colors.lightgray};
+        background-color: ${colors['--table-bg-color']};
     }
 
     td {
-        color: ${colors.jet_black};
+        color: ${colors['--main-font-color']};
         padding: 10px;
         white-space: normal;
         max-width: 200px;
         overflow: scroll;
-    }
-
-    tr:hover {
-        background-color: ${colors.white_smoke};
     }
 `;

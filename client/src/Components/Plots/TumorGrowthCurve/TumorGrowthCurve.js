@@ -307,7 +307,7 @@ const tumorCurve = (data, plotId, minmax) => {
     legend.append('text')
         .attr('id', (d, i) => `legend-text-${expTypes[i]}`)
         .attr('class', 'legend')
-        .attr('fill', `${colors.black}`)
+        .attr('fill', `${colors['--main-font-color']}`)
         .style('font-size', '16px')
         .attr('x', width + 40)
         .attr('y', (d, i) => height / 2 - 45 + (i * 50))
@@ -345,7 +345,7 @@ const tumorCurve = (data, plotId, minmax) => {
     // X axis label
     svg.append('text')
         .attr('text-anchor', 'middle')
-        .attr('fill', `${colors.black}`)
+        .attr('fill', `${colors['--main-font-color']}`)
         .attr('transform', `translate(${width / 2},${height + 40})`)
         .text('Time (days)');
 
@@ -353,7 +353,7 @@ const tumorCurve = (data, plotId, minmax) => {
     const yAxisAdd = svg.append('g')
         .attr('class', 'y axis')
         .attr('fill', 'none')
-        .attr('stroke', `${colors.black}`)
+        .attr('stroke', `${colors['--main-font-color']}`)
         .attr('stroke-width', 1)
         .call(yAxis);
 
@@ -901,11 +901,12 @@ const TumorGrowthCurve = (props) => {
             <div className="wrapper">
                 <div className="growth-curve-wrapper center-component">
                     <h1>
-                        Drug: <span style={{ color: `${colors.pink_header}` }}> {updateDrug(drugParam)} </span>
+                        Drug:
+                        <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.9em' }}> {updateDrug(drugParam)} </span>
                         {' '}
                         and Patient:
                         {' '}
-                        <span style={{ color: `${colors.pink_header}` }}>{patientParam}</span>
+                        <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.9em' }}>{patientParam}</span>
                     </h1>
                     <ExportPng componentRef={componentRef} fileName={`DrugId = ${updateDrug(drugParam)}, PatientId = ${patientParam}`} />
                     <div id="svg-curve" ref={componentRef} />
@@ -914,7 +915,7 @@ const TumorGrowthCurve = (props) => {
                     }
                     <StatTable patientParam={patientParam} drugParam={drugParam} />
                 </div>
-                <div className="growth-curve-wrapper center-component" style={{ marginTop: '20px', padding: '10px 0px' }}>
+                <div className="growth-curve-wrapper center-component" style={{ marginTop: '20px' }}>
                     <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
                 </div>
             </div>
