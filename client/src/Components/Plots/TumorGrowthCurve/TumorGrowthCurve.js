@@ -1,8 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable no-shadow */
-/* eslint-disable func-names */
-/* eslint-disable no-extend-native */
-/* eslint-disable class-methods-use-this */
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Link } from 'react-router-dom';
@@ -12,6 +7,7 @@ import StatTable from '../../ResponseStat/ModelResponseStatTable';
 import colors from '../../../styles/colors';
 import ExportPng from '../../Utils/ExportPng';
 import DoseCurve from '../DoseChart';
+import { StyledCurve } from './CurveStyle';
 
 // this will initialize a tooltip.
 const initializeToolTip = () => d3.select('.wrapper')
@@ -899,25 +895,30 @@ const TumorGrowthCurve = (props) => {
         <div>
             <GlobalStyles />
             <div className="wrapper">
-                <div className="growth-curve-wrapper center-component">
-                    <h1>
-                        Drug:
-                        <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.9em' }}> {updateDrug(drugParam)} </span>
-                        {' '}
-                        and Patient:
-                        {' '}
-                        <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.9em' }}>{patientParam}</span>
-                    </h1>
-                    <ExportPng componentRef={componentRef} fileName={`DrugId = ${updateDrug(drugParam)}, PatientId = ${patientParam}`} />
-                    <div id="svg-curve" ref={componentRef} />
-                    {
-                        Number(datasetParam) === 7 ? <DoseCurve data={data} maxTime={minmax.maxTime} /> : ''
-                    }
-                    <StatTable patientParam={patientParam} drugParam={drugParam} />
-                </div>
-                <div className="growth-curve-wrapper center-component" style={{ marginTop: '20px' }}>
-                    <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
-                </div>
+                <StyledCurve>
+                    <div className="growth-curve-wrapper center-component">
+                        <h1>
+                            Drug:
+                            {' '}
+                            <span>{updateDrug(drugParam)}</span>
+                            {' '}
+                            and Patient:
+                            {' '}
+                            <span>{patientParam}</span>
+                        </h1>
+                        <ExportPng componentRef={componentRef} fileName={`DrugId = ${updateDrug(drugParam)}, PatientId = ${patientParam}`} />
+                        <div id="svg-curve" ref={componentRef} />
+                        {
+                            Number(datasetParam) === 7
+                                ? <DoseCurve data={data} maxTime={minmax.maxTime} />
+                                : ''
+                        }
+                        <StatTable patientParam={patientParam} drugParam={drugParam} />
+                    </div>
+                    <div className="growth-curve-wrapper center-component" style={{ marginTop: '20px' }}>
+                        <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
+                    </div>
+                </StyledCurve>
             </div>
         </div>
     );

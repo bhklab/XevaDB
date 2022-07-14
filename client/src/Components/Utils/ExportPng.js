@@ -8,26 +8,28 @@ const StyledButton = styled.div`
     font-weight: 500;
     display: inline !important;
     // align-self: flex-end;
-    margin: 40px 0px 0px 0px;
+    margin-top: 40px;
     
     button {
         background-color: ${colors['--bg-color']} !important;
-        color: ${colors.white} !important;
-        padding: 6px 6px 8px 8px !important;
+        color: ${colors['--white']} !important;
+        padding: 8px !important;
         margin-right: 5px;
         border-radius: 6px;
         border: 1px;
-        font-size: 1.1em;
+        font-size: 1.05em;
         width: 170px;
         :hover {
-        color: ${colors['--bg-color']} !important;
-        background-color: ${colors.lightgray} !important;
-        cursor: pointer;
+            border: 1px solid ${colors['--bg-color']};
+            color: ${colors['--bg-color']} !important;
+            background-color: ${colors['--white']} !important;
+            cursor: pointer;
         }
     }
+
     img {
         display: inline-block;
-        height: 20px;
+        height: 15px;
         width: 30px;
     }
 `;
