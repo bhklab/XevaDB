@@ -115,12 +115,12 @@ const StyleBar = styled.div`
 
    @media screen and (max-width: 1700px) {
         h1 {
-            font-size: 1.55em;
+            font-size: 1.47em;
         }
 
         .select-component {
             padding: 25px 30px 20px 30px;
-            max-width: 90%;
+            max-width: 85%;
         }
 
         .div-genomics, .div-gene, .div-dataset, .div-drug {
