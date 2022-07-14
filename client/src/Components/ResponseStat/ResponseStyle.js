@@ -3,18 +3,20 @@ import colors from '../../styles/colors';
 
 
 export const StyledLink = styled.div`
-    font-weight: 500;
+    font-weight: 300;
     margin-bottom: 5px;
     width: ${(props) => props.width || '800px'}
      
     h1 {
-        font-size: 1.5em;
+        font-size: 1.3em !important;
     }
+
     img {
-        height: 15px;
+        height: 13px;
         width: 25px;
         margin-left: 5px;
     }
+
     a:link {
         background-color: ${colors['--bg-color']} !important;
         color: ${colors.white} !important;
@@ -22,6 +24,7 @@ export const StyledLink = styled.div`
         text-decoration: none;
         font-size: 1em;
     }
+
     a:hover {
         color: ${colors.moderate_blue} !important;
         background-color: ${colors.lightgray} !important;
@@ -30,9 +33,9 @@ export const StyledLink = styled.div`
 
 
 export const StyleTable = styled.div`
-
+    
     margin-bottom: 40px;
-    max-width: 800px;
+    max-width: 1900px;
 
     table, th, td {
         border: 1px solid silver;
@@ -58,5 +61,6 @@ export const StyleTable = styled.div`
         white-space: normal;
         max-width: 200px;
         overflow: scroll;
+        font-size: 0.9em;
     }
 `;

@@ -892,7 +892,7 @@ const TumorGrowthCurve = (props) => {
     });
 
     return (
-        <div>
+        <>
             <GlobalStyles />
             <div className="wrapper">
                 <StyledCurve>
@@ -920,7 +920,7 @@ const TumorGrowthCurve = (props) => {
                     </div>
                 </StyledCurve>
             </div>
-        </div>
+        </>
     );
 };
 
