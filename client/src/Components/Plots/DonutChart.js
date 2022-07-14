@@ -256,8 +256,8 @@ class DonutChart extends React.Component {
         // append center legend it it's available
         if (centerLegend) {
             d3.select('#skeleton').append('text')
-                .attr('x', -30)
-                .attr('y', 0)
+                .attr('x', -37.5)
+                .attr('y', 5)
                 .text(`${centerLegend}`)
                 .style('font-weight', 700)
                 .style('font-size', '1.1em')
