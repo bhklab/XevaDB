@@ -47,6 +47,7 @@ class TopNav extends React.Component {
                             </Link>
                         </div>
                         <div className='nav-links'>
+                            <Link to="/"> Home </Link>
                             <Link to="/biomarker"> Biomarker </Link>
                             <Link to="/datasets"> Datasets </Link>
                             <Link to="/drugs"> Drugs </Link>
