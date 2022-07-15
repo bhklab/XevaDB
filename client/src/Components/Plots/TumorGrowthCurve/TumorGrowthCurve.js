@@ -559,7 +559,7 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
                 .style('visibility', 'hidden');
             // changing attributes back to normal of the line on mouseout.
             if (!(d3.select(`#path-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}`).classed('selected'))) {
-                tableSelect(d, 3, 0.7, `${colors.jet_black}`, background, `${colors.moderate_blue}`, background);
+                tableSelect(d, 3, 0.7, `${colors['--main-font-color']}`, background, `${colors.moderate_blue}`, background);
             }
         })
         .on('click', (d) => {
@@ -819,7 +819,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
                     if (val.className) {
                         d3.select(`.${val.className}`)
                             .selectAll('td')
-                            .style('color', `${colors.jet_black}`);
+                            .style('color', `${colors['--main-font-color']}`);
                         d3.select(`.${val.className}`)
                             .selectAll('a')
                             .style('color', `${colors['--bg-color']}`)

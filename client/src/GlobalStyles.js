@@ -7,11 +7,12 @@ const GlobalStyles = createGlobalStyle`
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+
     // font-family: 'Lato', sans-serif;
     // font-family: 'Merriweather', serif;
     // font-family: 'Montserrat', sans-serif;
-    // font-family: 'Open Sans', sans-serif;
-    font-family: 'Roboto', sans-serif;
+    // font-family: 'Roboto', sans-serif;
   }
 
   body {
@@ -62,11 +63,9 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .component-wrapper {
-    background: ${colors.white};
     margin: 2vh;
     min-width: 75vw;
     max-width: 75vw;
-    // border: 1px solid ${colors['--table-bg-color']};
 
     @media only screen and (min-width: 1800px) {
       min-width: 70vw;
@@ -101,7 +100,6 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .heatmap-oncoprint-wrapper {
-    background: ${colors.white};
     margin: 2vh;
     min-width: 95vw;
     max-width: 95vw;
@@ -128,7 +126,6 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .growth-curve-wrapper {
-    background: ${colors.white};
     margin: 2vh;
     min-width: 1300px;
     max-width: 1300px;

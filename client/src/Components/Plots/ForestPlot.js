@@ -33,7 +33,6 @@ const TOOLTIP_ID = 'forestplot-tooltip';
 
 // legend variable.
 const legend = [
-    // { text: 'FDR < 0.05 and r > 0.7', color: `${colors.pink_header}` },
     { text: 'FDR < 0.05', color: `${colors['--bg-color']}` },
     { text: 'FDR > 0.05', color: `${colors.silver}` },
 ];
@@ -179,7 +178,7 @@ const createVerticalLine = (svg, scale, height) => {
     svg.append('g')
         .attr('id', 'vertical-line')
         .append('line')
-        .style('stroke', `${colors.fade_blue}`)
+        .style('stroke', `${colors.lightgray}`)
         .attr('x1', scale(0))
         .attr('y1', 0)
         .attr('x2', scale(0))
@@ -201,8 +200,8 @@ const createHorizontalLines = (svg, scale, data, height) => {
             horizontal
                 .append('line')
                 .attr('id', `horizontal-line-${element.dataset.name}`)
-                .style('stroke', `${colors.fade_blue}`)
-                .style('stroke-width', 1.25)
+                .style('stroke', `${colors.lightgray}`)
+                .style('stroke-width', 1)
                 .attr('x1', scale(element.ci_lower))
                 .attr('y1', ((i + 1) * height) / (data.length + ADDITIONAL))
                 .attr('x2', scale(element.ci_upper))
@@ -239,7 +238,6 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
             .attr('cx', xScale(element.estimate))
             .attr('cy', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('r', circleScale(element.n))
-            // .attr('fill', (fdr < 0.05 && pc > 0.70) ? `${colors.pink_header}` : `${colors.silver}`)
             .attr('fill', fdr < 0.05 ? `${colors['--bg-color']}` : `${colors.silver}`)
             .on('mouseover', function () {
                 mouseOverEvent(d3.event, element);

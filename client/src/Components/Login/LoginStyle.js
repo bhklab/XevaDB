@@ -48,10 +48,6 @@ const LogoStyle = styled.img`
     width: calc(5em + 1vw);
     height: 50px;
     margin-left: calc(100vw - (3vw + 5em));
-
-    // @media only screen and (min-height: 900px) {
-    //     height: 70px;
-    // }
 `;
 
 const LogoBack = styled.div`
@@ -60,17 +56,6 @@ const LogoBack = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    // background-image: linear-gradient(
-    //     to right,
-    //     ${colors['--bg-color']},
-    //     #0d76bd,
-    //     ${colors.white_smoke}
-    // );
-
-    // @media only screen and (min-height: 900px) {
-    //     height: 90px;
-    // }
 `;
 
 
