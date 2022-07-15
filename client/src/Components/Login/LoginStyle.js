@@ -56,6 +56,11 @@ const LogoBack = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    // when screen size is greater than 2000px
+    @media only screen and (min-width: 2000px) {
+        height: 70px;
+    }
 `;
 
 
