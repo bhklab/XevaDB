@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import PatientContext, { PatientConsumer } from '../../Context/PatientContext';
-// import DensityPlot from '../DensityPlot/DensityPlot';
 import BoxPlot from '../BoxPlot';
 import colors from '../../../styles/colors';
 import createToolTip from '../../../utils/ToolTip';
@@ -559,7 +558,7 @@ class HeatMap extends Component {
             .join('a')
             .attr('xlink:href', (d) => geneList ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drug}&selectedDrug=${d}` : `/biomarker?selectedDrug=${d}`)
             .append('text')
-            .text('🧬')
+            .text('⭕️')
             .attr('x', -40)
             .attr('y', (d, i) => (i + 1.75) * rectHeight)
             .on('mouseover', function (d) {
