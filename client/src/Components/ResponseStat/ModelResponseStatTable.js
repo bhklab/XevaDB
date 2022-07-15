@@ -55,14 +55,6 @@ class StatTable extends React.Component {
             data: response[1].data,
             batchData: response[0].data,
         });
-        // if the dataset id is not 7 then table header won't include Link and Row Number.
-        // const { data } = this.state;
-        // if (data[0] && data[0].dataset_id !== 7) {
-        //     this.setState({
-        //         tableHeader: ['Type', 'Model', 'Drug',
-        //             'mRECIST', 'Best Average Response', 'Slope', 'AUC', 'Survival (Days)'],
-        //     });
-        // }
     }
 
     createTable() {
@@ -108,21 +100,9 @@ class StatTable extends React.Component {
                 AUC, survival, link,
             } = eachdata;
 
-            // will not return anything if there is no data.
-            // const checkData = (val) => {
-            //     let tableData = '';
-            //     if (val && val === link) {
-            //         tableData = <td style={{ minWidth: 150 }}><a href={val} target="_blank" rel="noopener noreferrer">Google-Sheet</a></td>;
-            //     } else if (val && val === row) {
-            //         tableData = <td>{val}</td>;
-            //     } else {
-            //         tableData = null;
-            //     }
-            //     return tableData;
-            // };
-
             const dataRow = (
-                <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`} style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}>
+                // style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}
+                <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
                     <td>{type}</td>
                     {
                         link
@@ -151,8 +131,6 @@ class StatTable extends React.Component {
                     <td>{slope}</td>
                     <td>{AUC}</td>
                     <td>{parseInt(survival, 10)}</td>
-                    {/* {checkData(link)}
-                    {checkData(row)} */}
                 </tr>
             );
 
@@ -186,14 +164,14 @@ class StatTable extends React.Component {
                 <BatchStatTable data={batchData} />
                 <div>
                     <StyledLink>
-                        <h1 id="titlemodel" style={{ display: 'inline-block', padding: '0', margin: '0' }}>Model Response</h1>
-                        <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv" style={{ float: 'right', display: 'inline-block', marginBottom: '10px' }}>
+                        <h1>Model Response</h1>
+                        <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv">
                             Export Data
                             <img src={downloadIcon} alt="download icon!" />
                         </CSVLink>
                     </StyledLink>
                     <StyleTable>
-                        <table id="stats-table">
+                        <table>
                             <tbody>
                                 <tr>{tableHeader}</tr>
                                 {table}

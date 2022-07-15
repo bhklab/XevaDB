@@ -3,12 +3,17 @@ import colors from '../../styles/colors';
 
 
 export const StyledLink = styled.div`
+    width: ${(props) => props.width || '800px'};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-weight: 300;
-    margin-bottom: 5px;
-    width: ${(props) => props.width || '800px'}
+    margin-bottom: 8px;
      
     h1 {
-        font-size: 1.3em !important;
+        font-size: 1.2em !important;
+        margin: 0;
+        padding: 0;
     }
 
     img {
@@ -26,22 +31,19 @@ export const StyledLink = styled.div`
     }
 
     a:hover {
-        color: ${colors.moderate_blue} !important;
-        background-color: ${colors.lightgray} !important;
+       opacity: 0.75;
     }
 `;
 
 
 export const StyleTable = styled.div`
-    
     margin-bottom: 40px;
-    max-width: 1900px;
 
     table, th, td {
         border: 1px solid silver;
     }
 
-    #stats-table {
+    table {
         text-align: left;
         border-collapse: collapse;
         width: 800px;
