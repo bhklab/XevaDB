@@ -42,7 +42,7 @@ const LogoNavLinksContainer = styled.div`
     }
 
     div.nav-links > a {
-        color: ${colors['--white-text']};
+        color: ${colors.white};
         text-decoration: none;
         letter-spacing: 1px;
         margin-right: 25px;

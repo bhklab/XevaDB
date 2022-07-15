@@ -155,7 +155,7 @@ const StyleBar = styled.div`
 const StyleButton = styled.button`
     background-color: ${colors['--bg-color']};
     border-radius: 6px;
-    color: ${colors['--white']};
+    color: ${colors.white};
     border: none;
     padding: 12px 16px;
     text-align: center;
@@ -170,7 +170,7 @@ const StyleButton = styled.button`
         opacity: 1;
         cursor: pointer;
         color: ${colors['--bg-color']};
-        background-color: ${colors['--white']};
+        background-color: ${colors.white};
         border: 1px solid ${colors['--bg-color']};
     }
 

@@ -544,7 +544,7 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
     // create a white line to let user hover over with opacity 0 and event listeners.
     createLine(4, 0, `${colors.white}`)
         .on('mouseover', (d) => {
-            const background = d.exp_type === 'control' ? `${colors.pink_header}` : `${colors.blue_header}`;
+            const background = d.exp_type === 'control' ? `${colors.pink_header}` : `${colors['--bg-color']}`;
             // creating tooltip.
             createToolTip(d, 'line', tooltip);
             // changing attributes of the line on mouseover.
@@ -563,7 +563,7 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
             }
         })
         .on('click', (d) => {
-            const background = d.exp_type === 'control' ? `${colors.pink_header}` : `${colors.blue_header}`;
+            const background = d.exp_type === 'control' ? `${colors.pink_header}` : `${colors['--bg-color']}`;
             d3.event.preventDefault();
             let selectedCurve = false;
             const selection = d3.select(`#path-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}`);

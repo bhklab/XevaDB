@@ -137,7 +137,7 @@ const sortingCircles = (genes, svg, rect_height) => {
             .attr('cy', i)
             .attr('r', 6)
             .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '').replace('.', '')}`)
-            .style('fill', `${colors.circle_green}`)
+            .style('fill', `${colors['--link-color']}`)
             .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
             .style('visibility', 'hidden');
     });
@@ -160,7 +160,7 @@ const createGeneYAxis = (
             .style('font-size', '11px')
             .attr('dy', i * (rect_height) + rect_width)
             .attr('font-weight', '550')
-            .attr('fill', `${colors.blue_header}`)
+            .attr('fill', `${colors['--main-font-color']}`)
             .text(genes[i])
             .on('mouseover', () => {
                 // tooltip on mousever setting the div to visible.
@@ -719,7 +719,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('width', rect_width)
         .text((d) => d.value)
         .attr('font-size', '12px')
-        .attr('fill', `${colors.blue_header}`);
+        .attr('fill', `${colors['--main-font-color']}`);
 
     /** ******************************************** Tooltip for oncoprint ******************************************** */
 

@@ -14,7 +14,7 @@ const PatientTable = (props) => {
             accessor: 'dataset',
             minWidth: 160,
             Cell: (row) => (
-                <Link to={`/dataset/${row.original.dataset_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                <Link to={`/dataset/${row.original.dataset_id}`}>
                     {row.original.dataset}
                 </Link>
             ),
@@ -24,7 +24,7 @@ const PatientTable = (props) => {
             accessor: 'patient',
             minWidth: 160,
             Cell: (row) => (
-                <Link to={`/patient/${row.original.patient_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                <Link to={`/patient/${row.original.patient_id}`}>
                     {row.original.patient}
                 </Link>
             ),

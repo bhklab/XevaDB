@@ -44,7 +44,7 @@ class DrugTable extends React.Component {
                 accessor: 'drug_name',
                 minWidth: 180,
                 Cell: (row) => (
-                    <Link to={`/drug/${row.original.drug_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                    <Link to={`/drug/${row.original.drug_id}`}>
                         {row.original.drug_name}
                     </Link>
                 ),
@@ -97,7 +97,6 @@ class DrugTable extends React.Component {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         href={`${pubchemURL}${row}`}
-                                        style={{ textDecoration: 'none', color: `${colors.blue_header}` }}
                                     >
                                         {pid}
                                     </a>

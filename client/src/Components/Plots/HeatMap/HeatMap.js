@@ -320,7 +320,7 @@ class HeatMap extends Component {
                 .attr('cy', i)
                 .attr('r', 6)
                 .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
-                .style('fill', `${colors.green_gradient}`)
+                .style('fill', `${colors['--link-color']}`)
                 .attr('transform', `translate(0,${yScale(val) + rectWidth - i})`)
                 .style('visibility', 'hidden');
         });
@@ -600,7 +600,7 @@ class HeatMap extends Component {
                 if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) {
                     return `${colors.pink_header}`;
                 }
-                return `${colors.blue_header}`;
+                return `${colors['--main-font-color']}`;
             })
             .attr('font-weight', (d) => {
                 if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return '700'; }
@@ -666,7 +666,7 @@ class HeatMap extends Component {
             .selectAll('text')
             .attr('transform', 'rotate(-90)')
             .attr('font-weight', '550')
-            .attr('fill', `${colors.blue_header}`)
+            .attr('fill', `${colors['--main-font-color']}`)
             .attr('x', (dataset === '7' ? '-2.4em' : '0.6em'))
             .attr('y', '.15em');
 
@@ -694,7 +694,7 @@ class HeatMap extends Component {
                 .attr('x', width * 1.23)
                 .attr('y', (d, i) => height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75 + 12) : (height / 6 + i * rectHeight * 0.75 + 12))
                 .text((d) => Object.keys(d))
-                .attr('fill', `${colors.blue_header}`)
+                .attr('fill', `${colors['--main-font-color']}`)
                 .attr('font-size', '14px');
 
 

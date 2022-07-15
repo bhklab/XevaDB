@@ -12,7 +12,7 @@ const StyledButton = styled.div`
     button {
         font-weight: 300;
         background-color: ${colors['--bg-color']} !important;
-        color: ${colors['--white']} !important;
+        color: ${colors.white} !important;
         padding: 10px 2px !important;
         margin-right: 5px;
         border-radius: 6px;

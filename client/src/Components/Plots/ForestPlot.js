@@ -164,9 +164,9 @@ const createXAxis = (svg, scale, height, width, margin) => {
         .attr('font-weight', 500)
         .attr('x', (width * CHART_WIDTH * 0.55))
         .attr('y', height + margin.bottom / 5 + 10)
-        .attr('fill', `${colors.blue_header}`)
+        .attr('fill', `${colors['--main-font-color']}`)
         .text('pearson correlation coefficient (r)')
-        .attr('font-size', '16px');
+        .attr('font-size', '14px');
 
 };
 
@@ -265,7 +265,7 @@ const appendDatasetName = (svg, data, height) => {
         .attr('y', -20)
         .attr('fill', `${colors['--main-font-color']}`)
         .text('Dataset Name')
-        .attr('font-size', '18px');
+        .attr('font-size', '16px');
 
     const dataset = svg.append('g')
         .attr('id', 'dataset-names');
@@ -300,7 +300,7 @@ const appendMetricName = (svg, data, height) => {
         .attr('y', -20)
         .attr('fill', `${colors['--main-font-color']}`)
         .text('Metric')
-        .attr('font-size', '18px');
+        .attr('font-size', '16px');
 
     const dataset = svg.append('g')
         .attr('id', 'dataset-names');
@@ -375,7 +375,7 @@ const appendFdrText = (svg, data, height, width) => {
         .attr('y', -20)
         .attr('fill', `${colors['--main-font-color']}`)
         .text('FDR')
-        .attr('font-size', '18px');
+        .attr('font-size', '16px');
 
     const estimate = svg.append('g')
         .attr('id', 'estimate');

@@ -4,7 +4,7 @@ import colors from '../../styles/colors';
 
 const ErrorStyle = styled.h1`
     margin: 400px;
-    color: ${colors.blue_header} !important;
+    color: ${colors['--main-font-color']} !important;
     font-size: 2.5rem !important;
 `;
 
