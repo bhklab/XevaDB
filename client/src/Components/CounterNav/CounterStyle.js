@@ -25,6 +25,10 @@ const CounterStyle = styled.div`
     h4 {
         margin: 0px;
     }
+
+    .count {
+        font-weight: 700;
+    }
 `;
 
 

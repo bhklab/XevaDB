@@ -41,12 +41,14 @@ class CounterNav extends React.Component {
                     {
                         types.map((type, i) => (
                             <Link to={type} key={i}>
-                                <CountUp
-                                    start={0}
-                                    end={this.state[type]}
-                                    duration={3}
-                                    useEasing
-                                />
+                                <div className='count'>
+                                    <CountUp
+                                        start={0}
+                                        end={this.state[type]}
+                                        duration={3}
+                                        useEasing
+                                    />
+                                </div>
                                 <div>
                                     {type.toUpperCase()}
                                 </div>
