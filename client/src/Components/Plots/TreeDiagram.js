@@ -103,7 +103,7 @@ const createTree = (data, { height, width }) => {
 const createLinks = (svg, root) => {
     svg.append('g')
         .attr('fill', 'none')
-        .attr('stroke', `${colors['--bg-color']}`)
+        .attr('stroke', `${colors.silver}`)
         .attr('stroke-opacity', 0.4)
         .attr('stroke-width', 1.5)
         .selectAll('path')
@@ -130,7 +130,7 @@ const createNodes = (svg, root) => {
 // create circles for the node
 const createCircles = (node) => {
     node.append('circle')
-        .attr('fill', (d) => (d.children ? `${colors['--bg-color']}` : `${colors['--table-bg-color']}`))
+        .attr('fill', (d) => (d.children ? `${colors['--bg-color']}` : `${colors.fade_blue}`))
         .attr('r', 4.0);
 };
 
@@ -159,7 +159,7 @@ const appendText = (node, history) => {
         .on('click', (d) => {
             clickEventHandler(d, history);
         })
-        .attr('fill', `${colors['--main-font-color']}`)
+        .attr('fill', d => d.depth === 1 ? `${colors['--link-color']}` : `${colors['--main-font-color']}`)
         .clone(true)
         .lower();
 };
@@ -209,17 +209,17 @@ const TreeDiagram = (props) => {
 
     return (
         <div className='component-wrapper center-component'>
-            <h1>
+            <h1 style={{ fontSize: '1.45em' }}>
                 Dataset =
                 {' '}
-                <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500' }}>
+                <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.9em' }}>
                     {data.dataset}
                 </span>
                 {' '}
                 and
                 Patient =
                 {' '}
-                <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500' }}>
+                <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.9em' }}>
                     {data.name}
                 </span>
             </h1>

@@ -57,7 +57,7 @@ const createRoot = (data) => {
 const createLineLinks = (svg, root) => (
     svg.append('g')
         .attr('fill', 'none')
-        .attr('stroke', `${colors['--bg-color']}`)
+        .attr('stroke', `${colors.silver}`)
         .selectAll('path')
         .data(root.links())
         .join('path')

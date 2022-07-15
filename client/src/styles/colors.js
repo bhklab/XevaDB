@@ -20,6 +20,5 @@ export default {
     fade_blue: '#ebebf5',
     white_smoke: '#F5F5F5',
     white_red: '#f2e7e4',
-    moderate_blue: '#575980',
     pink_header: '#cc8168',
 };

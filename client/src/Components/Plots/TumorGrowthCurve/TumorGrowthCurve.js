@@ -33,7 +33,7 @@ const createToolTip = (d, type, tooltip) => {
     const tooltipDiv = tooltip
         .style('left', `${d3.event.pageX + 10}px`)
         .style('top', `${d3.event.pageY + 10}px`)
-        .style('color', `${colors.black}`)
+        .style('color', `${colors['--main-font-color']}`)
         .style('background-color', `${colors.white}`);
 
     // tooltip data.
@@ -210,7 +210,7 @@ const plotErrorBars = (exp, times, newVolume, meanVolume, svg, xrange, yrange, y
             if (exp === 'control') {
                 return `${colors.pink_header}`;
             }
-            return `${colors.moderate_blue}`;
+            return `${colors['--bg-color']}`;
         })
         .attr('stroke-width', 2)
         .attr('x1', (d) => xrange(d))
@@ -228,7 +228,7 @@ const plotErrorBars = (exp, times, newVolume, meanVolume, svg, xrange, yrange, y
             if (exp === 'control') {
                 return `${colors.pink_header}`;
             }
-            return `${colors.moderate_blue}`;
+            return `${colors['--bg-color']}`;
         })
         .attr('stroke-width', 2)
         .attr('x1', (d) => xrange(d) - 4)
@@ -246,7 +246,7 @@ const plotErrorBars = (exp, times, newVolume, meanVolume, svg, xrange, yrange, y
             if (exp === 'control') {
                 return `${colors.pink_header}`;
             }
-            return `${colors.moderate_blue}`;
+            return `${colors['--bg-color']}`;
         })
         .attr('stroke-width', 2)
         .attr('x1', (d) => xrange(d) - 4)
@@ -302,11 +302,11 @@ const tumorCurve = (data, plotId, minmax) => {
     legend.append('text')
         .attr('id', (d, i) => `legend-text-${expTypes[i]}`)
         .attr('class', 'legend')
-        .attr('fill', `${colors['--main-font-color']}`)
         .style('font-size', '16px')
         .attr('x', width + 40)
         .attr('y', (d, i) => height / 2 - 45 + (i * 50))
-        .text((d, i) => expTypes[i]);
+        .text((d, i) => expTypes[i])
+        .style('color', `${colors['--main-font-color']}`);
 
     // set domain and range scaling
     const xrange = d3.scaleLinear()
@@ -333,16 +333,16 @@ const tumorCurve = (data, plotId, minmax) => {
         .attr('class', 'x axis')
         .attr('transform', `translate(0,${yrange(0)})`)
         .attr('fill', 'none')
-        .attr('stroke', `${colors.black}`)
+        .attr('stroke', `${colors['--main-font-color']}`)
         .attr('stroke-width', 1)
         .call(xAxis);
 
     // X axis label
     svg.append('text')
         .attr('text-anchor', 'middle')
-        .attr('fill', `${colors['--main-font-color']}`)
         .attr('transform', `translate(${width / 2},${height + 40})`)
-        .text('Time (days)');
+        .text('Time (days)')
+        .style('color', `${colors['--main-font-color']}`);
 
     // Add the Y Axis
     const yAxisAdd = svg.append('g')
@@ -355,16 +355,16 @@ const tumorCurve = (data, plotId, minmax) => {
     // Y axis label
     svg.append('text')
         .attr('text-anchor', 'middle')
-        .attr('fill', `${colors.black}`)
         .attr('id', 'volume-text')
         .attr('transform', `translate(${-60},${height / 2})rotate(-90)`)
-        .text('Volume (mm³)');
+        .text('Volume (mm³)')
+        .style('color', `${colors['--main-font-color']}`);
 
     // remove strokes for all ticks
     svg.selectAll('.tick').select('text')
-        .attr('fill', `${colors.black}`)
         .attr('stroke', 'none')
-        .attr('font-size', '14px');
+        .attr('font-size', '14px')
+        .style('color', `${colors['--main-font-color']}`);;
 
     const graph = svg.append('g')
         .attr('id', 'curves');
@@ -458,9 +458,9 @@ const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) 
                     if (expTypes[n] === 'control') {
                         return `${colors.pink_header}`;
                     }
-                    return `${colors.moderate_blue}`;
+                    return `${colors['--bg-color']}`;
                 })
-                .attr('stroke-width', 3.5)
+                .attr('stroke-width', 2.5)
                 .on('mouseover', function (d) {
                     createToolTip(d, 'line', tooltip);
                 })
@@ -517,7 +517,7 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
                 if (d.exp_type === 'control') {
                     return `${colors.pink_header}`;
                 }
-                return `${colors.moderate_blue}`;
+                return `${colors['--bg-color']}`;
             })
             .attr('stroke-width', stroke)
     );
@@ -559,7 +559,7 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
                 .style('visibility', 'hidden');
             // changing attributes back to normal of the line on mouseout.
             if (!(d3.select(`#path-${d.model.replace(/\./g, ' ').replace(/\s/g, '-')}`).classed('selected'))) {
-                tableSelect(d, 3, 0.7, `${colors['--main-font-color']}`, background, `${colors.moderate_blue}`, background);
+                tableSelect(d, 3, 0.7, `${colors['--main-font-color']}`, background, `${colors['--bg-color']}`, background);
             }
         })
         .on('click', (d) => {
@@ -663,7 +663,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
             case 'errorBarText':
             case 'allCurvesText':
                 rect = svg.append('text')
-                    .attr('fill', `${colors.black}`)
+                    .style('color', `${colors['--main-font-color']}`)
                     .style('font-size', '12px')
                     .attr('text-anchor', val === 'volRawText' ? 'middle' : 'null')
                     .attr('id', id)
@@ -718,7 +718,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
         let additionalHeight = 50;
         let color = `${colors.pink_header}`;
         let id = '';
-        let rawToggle = `${colors.moderate_blue}`;
+        let rawToggle = `${colors['--bg-color']}`;
         let normToggle = 'lightgray';
         let allToggle = `${colors.pink_header}`;
         let errorToggle = 'lightgray';
@@ -756,7 +756,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
             case 'volRaw':
                 additionalHeight = 120;
                 id = 'volRawToggle';
-                color = `${colors.moderate_blue}`;
+                color = `${colors['--bg-color']}`;
                 break;
 
             case 'volRawText':
@@ -773,7 +773,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
                 minimum = minVolNorm - 1;
                 maximum = maxVolNorm + 1;
                 rawToggle = 'lightgray';
-                normToggle = `${colors.moderate_blue}`;
+                normToggle = `${colors['--bg-color']}`;
                 break;
 
             case 'volNormText':
@@ -784,7 +784,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
                 minimum = minVolNorm - 1;
                 maximum = maxVolNorm + 1;
                 rawToggle = 'lightgray';
-                normToggle = `${colors.moderate_blue}`;
+                normToggle = `${colors['--bg-color']}`;
                 break;
 
             default:
@@ -842,9 +842,9 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
                 d3.selectAll('g.y.axis').call(yAxis);
                 // setting ticks.
                 svg.selectAll('.tick').select('text')
-                    .attr('fill', `${colors.black}`)
                     .attr('stroke', 'none')
-                    .attr('font-size', '14px');
+                    .attr('font-size', '14px')
+                    .style('color', `${colors['--main-font-color']}`);
                 // changing toggle color.
                 d3.select('#volRawToggle').attr('fill', rawToggle);
                 d3.select('#volNormToggle').attr('fill', normToggle);

@@ -92,12 +92,17 @@ const StyleBar = styled.div`
                 overflow-wrap: break-word;
                 box-sizing: border-box;
                 resize: none;
+
+                :hover {
+                    border-color: ${colors['--main-font-color']}
+                }
             }
         }
 
         .sample {
             width: 100%;
-            font-size: 16px;
+            font-weight: 500;
+            font-size: 0.95em;
             text-align: left;
             font-style: italic;
             a {
