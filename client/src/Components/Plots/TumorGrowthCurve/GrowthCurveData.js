@@ -4,6 +4,8 @@
 import React from 'react';
 import axios from 'axios';
 import TumorGrowthCurve from './TumorGrowthCurve';
+import Spinner from '../../Utils/Spinner';
+import GlobalStyles from '../../../GlobalStyles';
 
 class GrowthCurveData extends React.Component {
     constructor(props) {
@@ -13,6 +15,7 @@ class GrowthCurveData extends React.Component {
             dataFormatted: [],
             patientParam: '',
             drugParam: '',
+            loading: true,
         };
         // binding the function declarations.
         this.dataParse = this.dataParse.bind(this);
@@ -94,21 +97,31 @@ class GrowthCurveData extends React.Component {
             }
         }
         this.setState({ dataFormatted });
+        this.setState({ loading: false });
     }
 
     render() {
         const {
-            patientParam, drugParam, dataFormatted, datasetParam,
+            patientParam, drugParam,
+            dataFormatted, datasetParam,
+            loading
         } = this.state;
         return (
-            <div>
-                <TumorGrowthCurve
-                    patientParam={patientParam}
-                    drugParam={drugParam}
-                    datasetParam={datasetParam}
-                    data={dataFormatted}
-                />
-            </div>
+            <>
+                <GlobalStyles />
+                {
+                    loading
+                        ? <div className='wrapper center-component'> <Spinner loading={loading} /> </div>
+                        : (
+                            <TumorGrowthCurve
+                                patientParam={patientParam}
+                                drugParam={drugParam}
+                                datasetParam={datasetParam}
+                                data={dataFormatted}
+                            />
+                        )
+                }
+            </>
         );
     }
 }

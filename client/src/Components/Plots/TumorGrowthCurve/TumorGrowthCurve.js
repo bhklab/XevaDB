@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import GlobalStyles from '../../../GlobalStyles';
 import StatTable from '../../ResponseStat/ModelResponseStatTable';
 import colors from '../../../styles/colors';
 import ExportPng from '../../Utils/ExportPng';
@@ -295,7 +294,7 @@ const tumorCurve = (data, plotId, minmax) => {
             if (expTypes[i].match(/control/i)) {
                 return `${colors.pink_header}`;
             }
-            return `${colors.moderate_blue}`;
+            return `${colors['--bg-color']}`;
         })
         .attr('cx', width + 30)
         .attr('cy', (d, i) => height / 2 - 50 + (i * 50));
@@ -436,7 +435,7 @@ const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) 
                     if (expTypes[n] === 'control') {
                         return `${colors.pink_header}`;
                     }
-                    return `${colors.moderate_blue}`;
+                    return `${colors['--bg-color']}`;
                 })
                 .attr('cx', (d, i) => xrange(times[i]))
                 .attr('cy', (d, i) => yrange(meanVolume[i]));
@@ -610,7 +609,7 @@ const plotBatch = (data, graph, xrange, yrange, tooltip, norm) => {
             if (d.exp_type === 'control') {
                 return `${colors.pink_header}`;
             }
-            return `${colors.moderate_blue}`;
+            return `${colors['--bg-color']}`;
         })
         .style('opacity', 1.0)
         .attr('cx', (d) => xrange(d.time))
@@ -823,7 +822,7 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
                             .style('color', `${colors.jet_black}`);
                         d3.select(`.${val.className}`)
                             .selectAll('a')
-                            .style('color', `${colors.moderate_blue}`)
+                            .style('color', `${colors['--bg-color']}`)
                             .style('background', `${colors.white}`);
                     }
                 });
@@ -893,7 +892,6 @@ const TumorGrowthCurve = (props) => {
 
     return (
         <>
-            <GlobalStyles />
             <div className="wrapper">
                 <StyledCurve>
                     <div className="growth-curve-wrapper center-component">
