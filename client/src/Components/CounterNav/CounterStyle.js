@@ -12,7 +12,7 @@ const CounterStyle = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
-    font-size: 0.8em;
+    font-size: 0.80em;
     font-weight: 400;
 
     a {
@@ -28,6 +28,11 @@ const CounterStyle = styled.div`
 
     .count {
         font-weight: 700;
+    }
+
+    // when screen size is greater than 1800px
+    @media only screen and (min-width: 1800px) {
+        font-size: 0.85em;
     }
 `;
 
