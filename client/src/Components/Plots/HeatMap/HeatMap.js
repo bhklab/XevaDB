@@ -559,8 +559,9 @@ class HeatMap extends Component {
             .attr('xlink:href', (d) => geneList ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drug}&selectedDrug=${d}` : `/biomarker?selectedDrug=${d}`)
             .append('text')
             .text('⭕️')
+            .attr('font-size', '0.8em')
             .attr('x', -40)
-            .attr('y', (d, i) => (i + 1.75) * rectHeight)
+            .attr('y', (d, i) => (i + 1.70) * rectHeight)
             .on('mouseover', function (d) {
                 const tooltipDiv = tooltip
                     .style('visibility', 'visible')

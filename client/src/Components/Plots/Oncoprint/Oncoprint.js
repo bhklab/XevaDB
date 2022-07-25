@@ -215,8 +215,9 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
         .attr('xlink:href', (d) => drugs ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}` : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`)
         .append('text')
         .text('⭕️')
+        .attr('font-size', '0.8em')
         .attr('x', -40)
-        .attr('y', (d, i) => (i + 0.60) * rect_height)
+        .attr('y', (d, i) => (i + 0.55) * rect_height)
         .on('mouseover', function (d) {
             const tooltipDiv = tooltip
                 .style('visibility', 'visible')
