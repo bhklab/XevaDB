@@ -895,14 +895,14 @@ const TumorGrowthCurve = (props) => {
             <div className="wrapper">
                 <StyledCurve>
                     <div className="growth-curve-wrapper center-component">
-                        <h1>
+                        <h1 style={{ fontSize: '1.40em', fontWeight: '500' }}>
                             Drug:
                             {' '}
-                            <span>{updateDrug(drugParam)}</span>
+                            <span style={{ color: `${colors['--bg-color']}`, fontWeight: '700', fontSize: '0.85em' }}>{updateDrug(drugParam)}</span>
                             {' '}
                             and Patient:
                             {' '}
-                            <span>{patientParam}</span>
+                            <span style={{ color: `${colors['--bg-color']}`, fontWeight: '700', fontSize: '0.85em' }}>{patientParam}</span>
                         </h1>
                         <ExportPng componentRef={componentRef} fileName={`DrugId = ${updateDrug(drugParam)}, PatientId = ${patientParam}`} />
                         <div id="svg-curve" ref={componentRef} />
