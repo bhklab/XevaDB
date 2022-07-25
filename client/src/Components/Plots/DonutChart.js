@@ -303,6 +303,7 @@ DonutChart.propTypes = {
     colorMapper: PropTypes.object,
     shouldDisplayLegend: PropTypes.bool,
     shouldDisplayTextLabels: PropTypes.bool,
+    centerLegend: PropTypes.string,
     opacity: PropTypes.number,
 };
 
