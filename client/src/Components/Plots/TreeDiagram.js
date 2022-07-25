@@ -208,28 +208,12 @@ const TreeDiagram = (props) => {
     }, []);
 
     return (
-        <div className='component-wrapper center-component'>
-            <h1 style={{ fontSize: '1.45em' }}>
-                Dataset =
-                {' '}
-                <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.9em' }}>
-                    {data.dataset}
-                </span>
-                {' '}
-                and
-                Patient =
-                {' '}
-                <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.9em' }}>
-                    {data.name}
-                </span>
-            </h1>
-            <div id="treediagram" />
-        </div>
+        <div id="treediagram" />
     );
 };
 
 TreeDiagram.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    data: PropTypes.object.isRequired,
     margin: PropTypes.shape({
         top: PropTypes.number,
         right: PropTypes.number,

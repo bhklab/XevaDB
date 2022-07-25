@@ -58,7 +58,7 @@ const PatientTable = (props) => {
                 data={patientData}
                 columns={columns}
                 className="-highlight"
-                defaultPageSize={10}
+                defaultPageSize={patientData.length + 1}
                 filterable
             />
         </TableWrapper>
