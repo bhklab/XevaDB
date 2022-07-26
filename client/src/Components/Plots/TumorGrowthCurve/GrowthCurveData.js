@@ -1,11 +1,12 @@
-/* eslint-disable radix */
-/* eslint-disable no-extend-native */
-/* eslint-disable no-plusplus */
 import React from 'react';
 import axios from 'axios';
 import TumorGrowthCurve from './TumorGrowthCurve';
 import Spinner from '../../Utils/Spinner';
 import GlobalStyles from '../../../GlobalStyles';
+import { StyledCurve } from './CurveStyle';
+import colors from '../../../styles/colors';
+import StatTable from '../../ResponseStat/ModelResponseStatTable';
+import { Link } from 'react-router-dom';
 
 class GrowthCurveData extends React.Component {
     constructor(props) {
@@ -111,14 +112,35 @@ class GrowthCurveData extends React.Component {
                 <GlobalStyles />
                 {
                     loading
-                        ? <div className='wrapper center-component'> <Spinner loading={loading} /> </div>
+                        ? <div className='wrapper center-component'>
+                            <Spinner loading={loading} />
+                        </div>
                         : (
-                            <TumorGrowthCurve
-                                patientParam={patientParam}
-                                drugParam={drugParam}
-                                datasetParam={datasetParam}
-                                data={dataFormatted}
-                            />
+                            <div className="wrapper">
+                                <StyledCurve>
+                                    <div className="growth-curve-wrapper center-component">
+                                        <h1>
+                                            Drug:
+                                            {' '}
+                                            <span> {drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
+                                            {' '}
+                                            and Patient:
+                                            {' '}
+                                            <span>{patientParam}</span>
+                                        </h1>
+                                        <TumorGrowthCurve
+                                            patientParam={patientParam}
+                                            drugParam={drugParam}
+                                            datasetParam={datasetParam}
+                                            data={dataFormatted}
+                                        />
+                                        <StatTable patientParam={patientParam} drugParam={drugParam} />
+                                    </div>
+                                    <div className="growth-curve-wrapper center-component" style={{ marginTop: '20px' }}>
+                                        <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
+                                    </div>
+                                </StyledCurve>
+                            </div>
                         )
                 }
             </>

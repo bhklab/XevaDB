@@ -12,6 +12,7 @@ export const StyledLink = styled.div`
      
     h1 {
         font-size: 1.2em !important;
+        font-weight: 700;
         margin: 0;
         padding: 0;
     }
