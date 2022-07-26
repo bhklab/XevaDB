@@ -2,10 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import colors from '../../styles/colors';
 
-const ErrorStyle = styled.h1`
-    margin: 400px;
+const ErrorStyle = styled.div`
     color: ${colors['--main-font-color']} !important;
-    font-size: 2.5rem !important;
+    font-size: 1.75em;
+    font-weight: 700;
+    margin-top: 200px;
 `;
 
 const ErrorComponent = ({ message }) => {
