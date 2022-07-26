@@ -1,6 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable class-methods-use-this */
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -11,6 +8,7 @@ import { StyleTable, StyledLink } from './ResponseStyle';
 import BatchStatTable from './BatchResponseStatTable';
 import downloadIcon from '../../images/download.svg';
 import colors from '../../styles/colors';
+import Spinner from '../Utils/Spinner';
 
 class StatTable extends React.Component {
     constructor(props) {
@@ -19,9 +17,12 @@ class StatTable extends React.Component {
         this.state = {
             data: [],
             batchData: [],
-            tableHeader: ['Type', 'Model', 'Drug',
+            tableHeader: [
+                'Type', 'Model', 'Drug',
                 'mRECIST', 'Best Average Response', 'Slope', 'AUC',
-                'Survival (Days)'],
+                'Survival (Days)'
+            ],
+            loading: true,
         };
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
@@ -54,6 +55,7 @@ class StatTable extends React.Component {
         this.setState({
             data: response[1].data,
             batchData: response[0].data,
+            loading: false,
         });
     }
 
@@ -153,33 +155,37 @@ class StatTable extends React.Component {
     }
 
     render() {
-        const { batchData, data } = this.state;
+        const { batchData, data, loading } = this.state;
         // const datasetId = data[0] && data[0].dataset_id;
         const csvHeader = this.getCSVHeader(data);
         const tableHeader = this.createTableHeader();
         const table = this.createTable();
 
         return (
-            <>
-                <BatchStatTable data={batchData} />
-                <div>
-                    <StyledLink>
-                        <h1>Model Response</h1>
-                        <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv">
-                            Export Data
-                            <img src={downloadIcon} alt="download icon!" />
-                        </CSVLink>
-                    </StyledLink>
-                    <StyleTable>
-                        <table>
-                            <tbody>
-                                <tr>{tableHeader}</tr>
-                                {table}
-                            </tbody>
-                        </table>
-                    </StyleTable>
-                </div>
-            </>
+            loading
+                ? <Spinner loading={loading} />
+                : (
+                    <>
+                        <BatchStatTable data={batchData} />
+                        <div>
+                            <StyledLink>
+                                <h1>Model Response</h1>
+                                <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv">
+                                    Export Data
+                                    <img src={downloadIcon} alt="download icon!" />
+                                </CSVLink>
+                            </StyledLink>
+                            <StyleTable>
+                                <table>
+                                    <tbody>
+                                        <tr>{tableHeader}</tr>
+                                        {table}
+                                    </tbody>
+                                </table>
+                            </StyleTable>
+                        </div>
+                    </>
+                )
         );
     }
 }
