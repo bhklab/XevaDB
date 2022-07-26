@@ -104,17 +104,17 @@ const Patient = (props) => {
                     loading ? <Spinner loading={loading} /> : (
                         <>
                             <div className='component-wrapper center-component'>
-                                <h1 style={{ fontSize: '1.40em', fontWeight: '500' }}>
+                                <h1 style={{ fontSize: '1.40em', fontWeight: '700' }}>
                                     Dataset:
                                     {' '}
-                                    <span style={{ color: `${colors['--bg-color']}`, fontWeight: '600', fontSize: '0.85em' }}>
+                                    <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.85em' }}>
                                         {patientData[0].dataset.name}
                                     </span>
                                     {' '}
                                     and
                                     Patient:
                                     {' '}
-                                    <span style={{ color: `${colors['--bg-color']}`, fontWeight: '600', fontSize: '0.85em' }}>
+                                    <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.85em' }}>
                                         {patientData[0].name}
                                     </span>
                                 </h1>

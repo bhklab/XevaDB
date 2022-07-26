@@ -124,7 +124,7 @@ class CurveComponent extends React.Component {
                                             {' '}
                                             <span> {drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
                                             {' '}
-                                            and Patient:
+                                            Patient:
                                             {' '}
                                             <span>{patientParam}</span>
                                         </h1>
