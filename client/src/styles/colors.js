@@ -1,7 +1,7 @@
 export default {
     '--bg-color': '#0d4d78',
     '--main-font-color': '#212529',
-    '--secondary-font-color': '#6e7377',
+    '--secondary-font-color': '#3c444d',
     '--link-color': '#4e90cf',
     '--table-bg-color': '#f0f2f5',
     black: '#000000',
