@@ -6,6 +6,9 @@ import TableWrapper from '../../Utils/TableStyle';
 import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 
+// this size is used to set the props
+const DEFAULT_DATA_SIZE = 10;
+
 const PatientTable = (props) => {
     const { patientData } = props;
 
@@ -58,8 +61,17 @@ const PatientTable = (props) => {
                 data={patientData}
                 columns={columns}
                 className="-highlight"
-                defaultPageSize={patientData.length + 1}
-                filterable
+                defaultPageSize={
+                    patientData.length > DEFAULT_DATA_SIZE
+                        ? DEFAULT_DATA_SIZE
+                        : patientData.length + 1
+                }
+                showPagination={
+                    patientData.length > DEFAULT_DATA_SIZE
+                }
+                filterable={
+                    patientData.length > DEFAULT_DATA_SIZE
+                }
             />
         </TableWrapper>
     );
