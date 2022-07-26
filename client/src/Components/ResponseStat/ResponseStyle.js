@@ -56,6 +56,8 @@ export const StyleTable = styled.div`
         padding: 10px;
         height: 40px;
         background-color: ${colors['--table-bg-color']};
+        font-weight: 600;
+        font-size: 0.95em;
     }
 
     td {
