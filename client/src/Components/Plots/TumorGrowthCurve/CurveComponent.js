@@ -8,7 +8,7 @@ import colors from '../../../styles/colors';
 import StatTable from '../../ResponseStat/ModelResponseStatTable';
 import { Link } from 'react-router-dom';
 
-class GrowthCurveData extends React.Component {
+class CurveComponent extends React.Component {
     constructor(props) {
         super(props);
         // setting states.
@@ -149,4 +149,4 @@ class GrowthCurveData extends React.Component {
 }
 
 
-export default GrowthCurveData;
+export default CurveComponent;
