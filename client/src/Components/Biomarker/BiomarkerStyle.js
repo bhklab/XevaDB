@@ -31,6 +31,11 @@ const StyledSelect = styled.div`
         margin: 15px;
     }
 
+    // .dataset-select, .drug-select, .gene-select, .genomics-select, .metric-select {
+    //     width: 15%;
+    //     margin: 10px;
+    // }
+
     .display-button {
         button {
             padding: 12px;
