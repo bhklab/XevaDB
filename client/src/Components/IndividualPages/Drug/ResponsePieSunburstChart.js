@@ -95,8 +95,8 @@ const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseDat
                         colorMapper={mRECISTColorMapper}
                         chartId='model-response-all-drugs'
                         arcRadius={{ outerRadius: 280, innerRadius: 180 }}
-                        dimensions={{ width: 600, height: 250 }}
-                        margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
+                        dimensions={{ width: 500, height: 250 }}
+                        margin={{ top: 320, right: 0, bottom: 100, left: 500 }}
                         shouldDisplayLegend={false}
                         shouldDisplayTextLabels={true}
                         opacity={0.2}
@@ -106,9 +106,9 @@ const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseDat
                     <OverlayArcs
                         totalResponseData={transformedTotalResponseData}
                         individualDrugResponseData={transformedIndividualDrugResponseData}
-                        dimensions={{ width: 600, height: 250 }}
+                        dimensions={{ width: 500, height: 250 }}
                         arcRadius={{ outerRadius: 280, innerRadius: 180 }}
-                        margin={{ top: 320, right: 100, bottom: 100, left: 380 }}
+                        margin={{ top: 320, right: 0, bottom: 100, left: 500 }}
                     />
                 </div>
             </div>

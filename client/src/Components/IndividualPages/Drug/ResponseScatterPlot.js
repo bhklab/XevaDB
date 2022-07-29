@@ -11,12 +11,32 @@ import { customStyles } from '../../Search/SearchStyle';
 
 // styling Patient Response Chart
 const StyledChart = styled.div`
-    max-width: 100%;
+    margin: 80px 0 0 0;
+    width: 90%;
+    position: relative;
 
     .select-container {
-        margin: 20px 60px 0 0;
-        min-width: 200px;
-        float: right;
+        margin: 20px 0 0 0;
+        width: 180px;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .barplot-container {
+        overflow: auto;
+    
+        ::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 6px;
+            height: 6px;
+        }
+          
+        ::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, .5);
+            box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+        }
     }
 `;
 
@@ -30,7 +50,7 @@ const options = [
 
 // margin object to be passed as a prop to BarPlot component
 const margin = {
-    top: 0, right: 100, bottom: 80, left: 100,
+    top: 50, right: 100, bottom: 80, left: 100,
 };
 
 // transform model response data based on response type!
@@ -110,15 +130,16 @@ const ResponseScatterPlot = ({ data }) => {
                         defaultValue={{ value: 'mRECIST', label: 'mRECIST' }}
                     />
                 </div>
-                <BarPlot
-                    data={transformedModelResponseData}
-                    label="Model Response"
-                    yAxisTicks={mRECISTTypes}
-                    shouldAppendBarText={false}
-                    margin={margin}
-                    isScatter={true}
-                // yAxisTicks={['PD', 'SD', 'PR', 'CR']}
-                />
+                <div className='barplot-container'>
+                    <BarPlot
+                        data={transformedModelResponseData}
+                        label="Model Response"
+                        yAxisTicks={mRECISTTypes}
+                        shouldAppendBarText={false}
+                        margin={margin}
+                        isScatter={true}
+                    />
+                </div>
             </StyledChart>
         )
     )
