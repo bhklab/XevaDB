@@ -2,24 +2,22 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const TableWrapper = styled.div`
-    padding: 0 2.5% 2.5% 2.5%;
+    padding: 1.5%;
     width: 100%;
+
+    a {
+        color: ${colors['--link-color']} !important;
+    }
 
     .ReactTable * {
         box-sizing: border-box;
-    }
-
-    .rt-td:hover {
-        a {
-            color: ${colors.pink_header} !important;
-        }
     }
 
     .ReactTable .rt-table {
         align-items: stretch;
         width: 100%;
         border-collapse: collapse;
-        overflow: auto
+        overflow: auto;
     }
 
     .rt-thead.-header {
@@ -27,40 +25,40 @@ const TableWrapper = styled.div`
     }
 
     .ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
-        background: ${colors.white_red}
+        background: ${colors['--table-bg-color']};
     }
 
     .ReactTable .rt-thead {
-        color:  ${colors.blue_header};
-        font-size: 18px;
-        font-weight: 600;
-        box-shadow:none !important;
+        color: ${colors['--main-font-color']};
+        font-size: 1em;
+        font-weight: 500;
+        box-shadow: none !important;
     }
 
-    .ReactTable .rt-tbody{
-        color:  ${colors.blue_header};
-        font-size: 16px;
-        box-shadow:none !important;
+    .ReactTable .rt-thead .rt-th {
+        text-align: left;
+    }
+
+    .ReactTable .rt-tbody {
+        color: ${colors['--main-font-color']};
+        font-weight: 400;
+        font-size: 0.85em;
     }
 
     .-previous, .-next, .-btn {
-      background: ${colors.blue_header};
-      color:white !important;
+        background: ${colors['--table-bg-color']};
+        color: ${colors['--main-font-color']}
     }
 
     .-pagination, .pagination-bottom {
-        box-shadow:none !important;
-        border-top:1px solid rgba(0,0,0,0.1) !important;
+        box-shadow: none !important;
+        border-top: 1px solid rgba(0,0,0,0.1) !important;
+        font-size: 0.9em;
     }
 
-    .ReactTable .-pagination .-pageJump input, input{
-        color: ${colors.blue_header};
-        box-shadow:none !important;
-        background: ${colors.fade_blue} !important;
-    }
-
-    .ReactTable .-pagination select {
-        color: ${colors.blue_header};
+    .ReactTable .rt-thead.-filters input{
+        box-shadow: none !important;
+        background: ${colors['--table-bg-color']};
     }
 `;
 

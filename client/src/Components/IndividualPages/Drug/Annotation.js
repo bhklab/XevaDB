@@ -16,24 +16,24 @@ const AnnotationStyle = styled.div`
     justify-content: flex-start;
 
     h2 {
-        color: ${colors.pink_header};
-        font-size: 1.75rem;
+        color: ${colors['--bg-color']};
+        font-size: 1.65em;
         margin: 0 0 5px 0;
     };
     
     .key {
-        color: ${colors.blue_header};
-        font-size: 1.20rem;
+        color: ${colors['--main-font-color']};
+        font-size: 1em;
         font-weight: 600;
     }
 
     .value {
-        color: ${colors.moderate_blue};
-        font-size: 1.1rem;
+        color: ${colors['--main-font-color']};
+        font-size: 0.9em;
     }
 
     table, .key, .value {
-        border: 1.5px ${colors.fade_blue} solid;
+        border: 1.5px ${colors['--table-bg-color']} solid;
     }
     
     .key, .value {
@@ -42,7 +42,7 @@ const AnnotationStyle = styled.div`
     
     a {
         padding: 0px;
-        color: ${colors.pink_header};
+        color: ${colors['--link-color']};
     }
 `;
 

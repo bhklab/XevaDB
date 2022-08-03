@@ -5,6 +5,7 @@ import GlobalStyles from '../../../GlobalStyles';
 import Footer from '../../Footer/Footer';
 import PatientTable from './PatientTable';
 import TreeDiagram from '../../Plots/TreeDiagram';
+import colors from '../../../styles/colors';
 
 // header constant.
 const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
@@ -101,10 +102,29 @@ const Patient = (props) => {
             <div className="wrapper">
                 {
                     loading ? <Spinner loading={loading} /> : (
-                        <div className='component-wrapper center-component'>
-                            <TreeDiagram data={transformTreeDiagramData(patientData)} />
-                            <PatientTable patientData={patientData} />
-                        </div>
+                        <>
+                            <div className='component-wrapper center-component'>
+                                <h1 style={{ fontSize: '1.40em', fontWeight: '700' }}>
+                                    Dataset:
+                                    {' '}
+                                    <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.85em' }}>
+                                        {patientData[0].dataset.name}
+                                    </span>
+                                    {' '}
+                                    and
+                                    Patient:
+                                    {' '}
+                                    <span style={{ color: `${colors['--bg-color']}`, fontWeight: '500', fontSize: '0.85em' }}>
+                                        {patientData[0].name}
+                                    </span>
+                                </h1>
+                                <TreeDiagram data={transformTreeDiagramData(patientData)} />
+                            </div>
+                            <div className='component-wrapper'>
+                                <h1> List of Models </h1>
+                                <PatientTable patientData={patientData} />
+                            </div>
+                        </>
                     )
                 }
                 <Footer />

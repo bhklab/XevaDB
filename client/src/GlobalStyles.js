@@ -7,18 +7,15 @@ const GlobalStyles = createGlobalStyle`
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    font-family: 'Open Sans', 'Roboto';
+    font-family: 'Open Sans', sans-serif;
+
+    // font-family: 'Lato', sans-serif;
+    // font-family: 'Merriweather', serif;
+    // font-family: 'Montserrat', sans-serif;
+    // font-family: 'Roboto', sans-serif;
   }
 
   body {
-    background: linear-gradient(
-      to right top, 
-      ${colors.fade_blue}, 
-      ${colors.white_red}
-    );
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: center;
     margin: auto;
     width: 100%;
     font-size: 16px;
@@ -50,16 +47,22 @@ const GlobalStyles = createGlobalStyle`
     margin-bottom: 12vh;
 
     h1 {
+      text-align: left;
+      color: ${colors['--main-font-color']};
+      font-size: 1.75em;
       font-weight: 700;
-      text-align: center;
-      color: ${colors.blue_header};
-      font-size: 1.75rem;
-      padding: 25px;
+      padding: 1.5% 0 0.25% 1.5%;
+    }
+
+    h4 {
+      font-weight: 300;
+      color: ${colors['--main-font-color']};
+      font-size: 0.95em;
+      padding: 0 0 0.5% 1.5%;
     }
   }
 
   .component-wrapper {
-    background: ${colors.white};
     margin: 2vh;
     min-width: 75vw;
     max-width: 75vw;
@@ -97,7 +100,6 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .heatmap-oncoprint-wrapper {
-    background: ${colors.white};
     margin: 2vh;
     min-width: 95vw;
     max-width: 95vw;
@@ -124,7 +126,6 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .growth-curve-wrapper {
-    background: ${colors.white};
     margin: 2vh;
     min-width: 1300px;
     max-width: 1300px;
@@ -133,7 +134,7 @@ const GlobalStyles = createGlobalStyle`
       text-decoration: none;
       font-size: 16px;
       padding: 10px;
-      color: ${colors.blue_header};
+      color: ${colors['--link-color']};
     }
   }
 `;

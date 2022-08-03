@@ -6,11 +6,8 @@ import TableWrapper from '../../Utils/TableStyle';
 import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 
-// styling the links.
-const linkStyle = {
-    color: `${colors.blue_header}`,
-    textDecoration: 'none',
-};
+// this size is used to set the props
+const DEFAULT_DATA_SIZE = 10;
 
 const PatientTable = (props) => {
     const { patientData } = props;
@@ -41,7 +38,7 @@ const PatientTable = (props) => {
             accessor: 'dataset',
             minWidth: 160,
             Cell: ({ row }) => (
-                <Link to={`/dataset/${row.dataset.id}`} style={linkStyle}>
+                <Link to={`/dataset/${row.dataset.id}`}>
                     {row.dataset.name}
                 </Link>
             ),
@@ -51,7 +48,7 @@ const PatientTable = (props) => {
             accessor: 'tissue',
             minWidth: 160,
             Cell: ({ row }) => (
-                <Link to={`/tissue/${row.tissue.id}`} style={linkStyle}>
+                <Link to={`/tissue/${row.tissue.id}`}>
                     {row.tissue.name}
                 </Link>
             ),
@@ -60,13 +57,21 @@ const PatientTable = (props) => {
 
     return (
         <TableWrapper>
-            <h1> List of Models </h1>
             <ReactTable
                 data={patientData}
                 columns={columns}
                 className="-highlight"
-                defaultPageSize={10}
-                filterable
+                defaultPageSize={
+                    patientData.length > DEFAULT_DATA_SIZE
+                        ? DEFAULT_DATA_SIZE
+                        : patientData.length + 1
+                }
+                showPagination={
+                    patientData.length > DEFAULT_DATA_SIZE
+                }
+                filterable={
+                    patientData.length > DEFAULT_DATA_SIZE
+                }
             />
         </TableWrapper>
     );

@@ -73,16 +73,18 @@ class BatchStatTable extends React.Component {
         return (
             <div style={{ paddingTop: '100px' }}>
                 <StyledLink>
-                    <h1 id="title" style={{ display: 'inline-block', padding: '0', margin: '0' }}>Batch Response</h1>
-                    <CSVLink data={data} filename="batchresponse.csv" style={{ float: 'right', display: 'inline-block', marginBottom: '10px' }}>
+                    <h1>Batch Response</h1>
+                    <CSVLink data={data} filename="batchresponse.csv">
                         Export Data
                         <img src={downloadIcon} alt="download icon!" />
                     </CSVLink>
                 </StyledLink>
                 <StyleTable>
-                    <table id="stats-table">
+                    <table>
                         <tbody>
-                            <tr>{header}</tr>
+                            <tr>
+                                {header}
+                            </tr>
                             {table}
                         </tbody>
                     </table>

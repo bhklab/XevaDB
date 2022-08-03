@@ -5,29 +5,29 @@ import colors from '../../styles/colors';
 import downloadIcon from '../../images/download.svg';
 
 const StyledButton = styled.div`
-    font-weight: 500;
     display: inline !important;
     // align-self: flex-end;
-    margin: 40px 0px 0px 0px;
+    margin-top: 40px;
     
     button {
-        background-color: ${colors.moderate_blue} !important;
+        font-weight: 300;
+        background-color: ${colors['--bg-color']} !important;
         color: ${colors.white} !important;
-        padding: 6px 6px 8px 8px !important;
+        padding: 10px 2px !important;
         margin-right: 5px;
         border-radius: 6px;
-        border: 1px;
-        font-size: 1.1em;
-        width: 170px;
+        border: none;
+        font-size: 1em;
+        width: 150px;
         :hover {
-        color: ${colors.moderate_blue} !important;
-        background-color: ${colors.lightgray} !important;
-        cursor: pointer;
+            opacity: 0.75;
+            cursor: pointer;
         }
     }
+
     img {
         display: inline-block;
-        height: 20px;
+        height: 15px;
         width: 30px;
     }
 `;

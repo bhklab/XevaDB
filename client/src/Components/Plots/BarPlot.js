@@ -79,7 +79,8 @@ const createXAxis = (svg, xScale, height, isScatter) => {
         .call(bottomAxis)
         .attr('transform', `translate(0,${height})`)
         .selectAll('text')
-        .style('font-size', 13);
+        .style('font-size', 13)
+        .style('fill', `${colors['--main-font-color']}`);
 
     if (isScatter) {
         xAxis
@@ -87,7 +88,7 @@ const createXAxis = (svg, xScale, height, isScatter) => {
             .style('text-anchor', 'start')
     } else {
         xAxis
-            .attr('transform', 'translate(-10,0) rotate(-45)')
+            .attr('transform', 'translate(-10,0) rotate(-30)')
             .style('text-anchor', 'end')
     }
 };
@@ -127,8 +128,8 @@ const createCircles = (svg, data, xScale, yScale, height, color) => {
         .attr('cy', (d) => yScale(d.value))
         .attr('r', 4.5)
         .attr('id', (d) => `circle_${d.id}`)
-        .attr('fill', `${colors.pink_header}`)
-        .attr('stroke', `${colors.pink_header}`)
+        .attr('fill', `${colors['--bg-color']}`)
+        .attr('stroke', `${colors['--bg-color']}`)
         .attr('stroke-width', 1);
 };
 
@@ -138,26 +139,39 @@ const appendBarText = (svg, data, xScale, yScale) => {
         svg.append('text')
             .attr('x', xScale(element.id) + (xScale.bandwidth() / 3))
             .attr('y', yScale(element.value) - 4)
-            .attr('font-family', 'Open Sans')
             .attr('font-size', '12px')
             .style('text-anchor', 'start')
-            .attr('fill', 'black')
+            .style('fill', `${colors['--main-font-color']}`)
             .text(element.value);
     });
 };
 
-// append label
+// append y axis label
 const appendYAxisLabel = (svg, height, left, label) => {
     svg.append('text')
         .attr('x', 0)
         .attr('y', 0)
-        .attr('font-family', 'Open Sans')
-        .attr('transform', `translate(${-left / 2}, ${height / 1.5})rotate(270)`)
-        .attr('font-size', '15px')
+        .attr('transform', `translate(${-left / 1.5}, ${height / 1.5})rotate(270)`)
+        .attr('font-size', '0.95em')
+        .attr('font-weight', 700)
+        .style('fill', `${colors['--main-font-color']}`)
         .style('text-anchor', 'start')
-        .attr('fill', 'black')
         .text(`${label}`);
 };
+
+// append x axis label
+const appendXAxisLabel = (svg, height, width, bottom, label) => {
+    svg.append('text')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('transform', `translate(${width / 2.5}, ${height + bottom / 1.25})`)
+        .attr('font-size', '0.95em')
+        .attr('font-weight', 700)
+        .style('fill', `${colors['--main-font-color']}`)
+        .style('text-anchor', 'start')
+        .text(`${label}`);
+};
+
 
 // main component function for the bar plot
 const BarPlot = (props) => {
@@ -165,7 +179,8 @@ const BarPlot = (props) => {
     const margin = props.margin || defaultMargin;
     let { data } = props;
     const { left, right, top, bottom } = margin;
-    const yAxisLabel = props.label;
+    const yAxisLabel = props.yLabel || '';
+    const xAxisLabel = props.xLabel || '';
     const dimensions = props.dimensions || { ...defaultDimensions };
     const { yAxisTicks } = props;
     const { shouldAppendBarText, isScatter } = props;
@@ -221,6 +236,9 @@ const BarPlot = (props) => {
 
         // append y-axis test/label.
         appendYAxisLabel(svg, height, left, yAxisLabel);
+
+        // append x-axis label.
+        appendXAxisLabel(svg, height, width, bottom, xAxisLabel);
     }, [data]);
 
     return (
@@ -243,7 +261,8 @@ BarPlot.propTypes = {
         left: PropTypes.number,
     }),
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
-    label: PropTypes.string.isRequired,
+    yLabel: PropTypes.string,
+    xLabel: PropTypes.string,
     yAxisTicks: PropTypes.arrayOf(PropTypes.string),
     shouldAppendBarText: PropTypes.bool,
     isScatter: PropTypes.bool,

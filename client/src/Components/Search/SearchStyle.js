@@ -2,40 +2,36 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const StyleBar = styled.div`
-    margin-top: 30vh;
-    display: flex;
-    margin: auto;
+    //  overriding the property set by the 
+    // wrapper class in the global styles
+    margin-top: 8vh !important;
+    height: 100%;
 
-    span {
-        font-size: 26px;
-    }
-
-    h1 {
-        color: ${colors.blue_header};
-        text-align: center;
-        font-size: 27px;
-        padding: 15px 0px 15px 0px;
-    }  
     
     .search-container {
         height: 550px;
         width: 750px;
         text-align: center;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-items: center;
+    }
+
+    h1 {
+        color: ${colors['--bg-color']};
+        text-align: center;
+        padding: 0 0 10px 0;
+        font-size: 1.75em;
+        font-weight: 700;
     }
 
     .select-component {
-        background: ${colors.white};
+        background: ${colors['--table-bg-color']};
+        width: 100%
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-around;
+        justify-content: center;
         border-radius: 20px;
-        padding: 10px 50px 20px 50px;
-
-        .two-col {
+        padding: 30px 30px 25px 30px;
+        
+        .dataset-drug-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
@@ -46,7 +42,7 @@ const StyleBar = styled.div`
         .div-dataset, .div-drug {
             min-width: 49%;
             max-width: 49%
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .div-dataset {
@@ -59,19 +55,19 @@ const StyleBar = styled.div`
 
         .div-genomics, .div-gene {
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .div-rnaseq {
             text-align: left;
             width: 100%;
-            font-size: 15px;
-            color: ${colors.blue_header};
+            color: ${colors['--main-font-color']};
+            font-size: 0.85em;
             
             input {
-                color: ${colors.blue_header};
-                font-size: 14px;
-                border: 1px solid ${colors.blue_header};
+                color: ${colors['--main-font-color']};
+                font-size: 0.85em;
+                border: 1px solid ${colors['--main-font-color']};
                 border-radius: 4px;
                 outline-style: none;
                 padding: 2px;
@@ -89,69 +85,69 @@ const StyleBar = styled.div`
                 min-height: 120px;
                 outline-style: none;
                 border-radius: 10px;
-                color: ${colors.blue_header};
-                font-weight: 300;
-                font-size: 15px;
-                border: 1px solid ${colors.blue_header};
-                padding: 10px;
+                color: ${colors['--main-font-color']};
+                font-size: 0.8em;
+                border: 1px solid silver;
+                padding: 10px 15px;
                 overflow-wrap: break-word;
                 box-sizing: border-box;
-                resize: none
+                resize: none;
+
+                :hover {
+                    border-color: ${colors['--main-font-color']}
+                }
             }
         }
 
         .sample {
             width: 100%;
-            font-size: 16px;
+            font-weight: 500;
+            font-size: 0.95em;
             text-align: left;
-            font-weight: 550;
+            font-style: italic;
             a {
-                color: ${colors.blue_header};
+                color: ${colors['--bg-color']};
                 text-decoration: none;
+                font-weight: bold;
             }
             a:hover {
-                color: ${colors.pink_header};
+                color: ${colors['--main-font-color']};
                 cursor: pointer;
             }
-            font-style: italic;
             margin: 0px 0px -10px 10px !important;
         }
     }  
 
    @media screen and (max-width: 1700px) {
         h1 {
-            font-size: 22px;
+            font-size: 1.47em;
         }
 
         .select-component {
-            padding: 10px 50px 20px 50px;
-            max-width: 90%;
+            padding: 25px 30px 20px 30px;
+            max-width: 85%;
         }
 
         .div-genomics, .div-gene, .div-dataset, .div-drug {
-            margin-bottom: 15px !important;
+            margin-bottom: 10px !important;
         }
 
         div > input {
-            margin-bottom: 15px !important;
+            margin-bottom: 10px !important;
         }
 
         .div-gene-enter {
             min-height: 80px !important;
             textarea {
-                min-height: 90px !important;
-                max-height: 90px;
+                min-height: 80px !important;
+                max-height: 80px;
             }
         }
 
         .sample {
-            font-size: 14px !important;
+            font-size: 0.85em !important;
         }
-        
-        .stylebutton {
-            font-size: 28px;
-            padding: 8px 10px 8px 10px;
-        }
+
    }
 
    @media screen and (max-width: 650px) {
@@ -162,15 +158,15 @@ const StyleBar = styled.div`
 `;
 
 const StyleButton = styled.button`
-    background-color: ${colors.blue_header};
-    border: none;
+    background-color: ${colors['--bg-color']};
     border-radius: 6px;
     color: ${colors.white};
-    padding: 8px 16px;
+    border: none;
+    padding: 12px 16px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 30px;
+    font-size: 1.55em;
     font-weight: 700;
     transition: .3s;
     outline-style: none;
@@ -178,24 +174,29 @@ const StyleButton = styled.button`
     &:hover {
         opacity: 1;
         cursor: pointer;
-        color:  ${colors.blue_header};
+        color: ${colors['--bg-color']};
         background-color: ${colors.white};
-        border: 1px solid ${colors.blue_header};
+        border: 1px solid ${colors['--bg-color']};
+    }
+
+    @media screen and (max-width: 1700px) {
+        font-size: 1.4em;
+        padding: 8px 10px 8px 10px;
     }
 `;
 
 const customStyles = {
     placeholder: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--main-font-color']}`,
         fontWeight: '400',
-        fontSize: '15px',
+        fontSize: '13px',
     }),
 
     control: (provided) => ({
         ...provided,
-        '&:hover': { borderColor: `${colors.blue_header}` },
-        border: `1px solid ${colors.blue_header}`,
+        '&:hover': { borderColor: `${colors['--main-font-color']}` },
+        // border: `1px solid ${colors['--main-font-color']}`,
         boxShadow: 'none',
         padding: '0px 5px',
         borderRadius: '5px',
@@ -204,54 +205,54 @@ const customStyles = {
 
     indicatorSeparator: (provided) => ({
         ...provided,
-        background: `${colors.blue_header}`,
-        '&:hover': { background: `${colors.blue_header}` },
+        background: `${colors['--main-font-color']}`,
+        '&:hover': { background: `${colors['--main-font-color']}` },
         height: '30px',
     }),
 
     dropdownIndicator: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--main-font-color']}`,
         '&:hover': {
-            color: `${colors.blue_header}`,
+            color: `${colors['--main-font-color']}`,
             cursor: 'pointer',
         },
     }),
 
     option: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--main-font-color']}`,
         background: `${colors.white}`,
         margin: '0px 0px',
         '&:hover': {
-            background: `${colors.white_red}`,
+            background: `${colors['--table-bg-color']}`,
         },
-        fontSize: '14px',
+        fontSize: '12px',
         textAlign: 'left',
     }),
 
     singleValue: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
-        fontSize: '15px',
+        color: `${colors['--main-font-color']}`,
+        fontSize: '13px',
     }),
 
     multiValue: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
-        fontSize: '15px',
+        color: `${colors['--main-font-color']}`,
+        fontSize: '13px',
     }),
 
     input: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--font-color']}`,
     }),
 
     clearIndicator: (provided) => ({
         ...provided,
-        color: `${colors.blue_header}`,
+        color: `${colors['--main-font-color']}`,
         '&:hover': {
-            color: `${colors.blue_header}`,
+            color: `${colors['--main-font-color']}`,
         },
     }),
 

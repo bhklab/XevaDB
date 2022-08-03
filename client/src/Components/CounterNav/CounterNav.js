@@ -3,7 +3,6 @@ import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CounterStyle from './CounterStyle';
-import GlobalStyles from '../../GlobalStyles';
 
 class CounterNav extends React.Component {
     constructor(props) {
@@ -38,20 +37,21 @@ class CounterNav extends React.Component {
 
         return (
             <div>
-                <GlobalStyles />
                 <CounterStyle>
                     {
                         types.map((type, i) => (
                             <Link to={type} key={i}>
-                                <CountUp
-                                    start={0}
-                                    end={this.state[type]}
-                                    duration={3}
-                                    useEasing
-                                />
-                                <h4>
+                                <div className='count'>
+                                    <CountUp
+                                        start={0}
+                                        end={this.state[type]}
+                                        duration={3}
+                                        useEasing
+                                    />
+                                </div>
+                                <div>
                                     {type.toUpperCase()}
-                                </h4>
+                                </div>
                             </Link>
                         ))
                     }

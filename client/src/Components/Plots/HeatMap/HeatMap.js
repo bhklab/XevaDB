@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import PatientContext, { PatientConsumer } from '../../Context/PatientContext';
-// import DensityPlot from '../DensityPlot/DensityPlot';
 import BoxPlot from '../BoxPlot';
 import colors from '../../../styles/colors';
 import createToolTip from '../../../utils/ToolTip';
@@ -320,7 +319,7 @@ class HeatMap extends Component {
                 .attr('cy', i)
                 .attr('r', 6)
                 .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
-                .style('fill', `${colors.green_gradient}`)
+                .style('fill', `${colors['--link-color']}`)
                 .attr('transform', `translate(0,${yScale(val) + rectWidth - i})`)
                 .style('visibility', 'hidden');
         });
@@ -559,9 +558,10 @@ class HeatMap extends Component {
             .join('a')
             .attr('xlink:href', (d) => geneList ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drug}&selectedDrug=${d}` : `/biomarker?selectedDrug=${d}`)
             .append('text')
-            .text('🧬')
+            .text('⭕️')
+            .attr('font-size', '0.8em')
             .attr('x', -40)
-            .attr('y', (d, i) => (i + 1.75) * rectHeight)
+            .attr('y', (d, i) => (i + 1.70) * rectHeight)
             .on('mouseover', function (d) {
                 const tooltipDiv = tooltip
                     .style('visibility', 'visible')
@@ -593,13 +593,14 @@ class HeatMap extends Component {
             .attr('transform', 'translate(-20, 0)');
 
         drugName.attr('stroke-width', '0')
-            .style('font-family', 'Open Sans')
             .style('font-size', '11px')
             .call(yAxis)
             .selectAll('text')
             .attr('fill', (d) => {
-                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return `${colors.pink_header}`; }
-                return `${colors.blue_header}`;
+                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) {
+                    return `${colors.pink_header}`;
+                }
+                return `${colors['--main-font-color']}`;
             })
             .attr('font-weight', (d) => {
                 if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return '700'; }
@@ -660,13 +661,12 @@ class HeatMap extends Component {
 
         patientId.attr('stroke-width', '0')
             .style('font-size', '11px')
-            .style('font-family', 'Open Sans')
             .style('text-anchor', (dataset === '7' ? 'start' : 'middle'))
             .call(xAxis)
             .selectAll('text')
             .attr('transform', 'rotate(-90)')
             .attr('font-weight', '550')
-            .attr('fill', `${colors.blue_header}`)
+            .attr('fill', `${colors['--main-font-color']}`)
             .attr('x', (dataset === '7' ? '-2.4em' : '0.6em'))
             .attr('y', '.15em');
 
@@ -681,7 +681,7 @@ class HeatMap extends Component {
                 .data(targetEval)
                 .enter()
                 .append('rect')
-                .attr('x', width * 1.20)
+                .attr('x', width + margin.right / 2)
                 .attr('y', (d, i) => height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75) : (height / 6 + i * rectHeight * 0.75))
                 .attr('height', rectWidth)
                 .attr('width', rectWidth)
@@ -691,10 +691,10 @@ class HeatMap extends Component {
                 .data(targetEval)
                 .enter()
                 .append('text')
-                .attr('x', width * 1.23)
+                .attr('x', width + margin.right / 2 + 20)
                 .attr('y', (d, i) => height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75 + 12) : (height / 6 + i * rectHeight * 0.75 + 12))
                 .text((d) => Object.keys(d))
-                .attr('fill', `${colors.blue_header}`)
+                .attr('fill', `${colors['--main-font-color']}`)
                 .attr('font-size', '14px');
 
 

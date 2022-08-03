@@ -1,19 +1,23 @@
 import colors from '../../styles/colors';
+import styled from 'styled-components';
 
-const styles = {
-    color: `${colors.blue_header}`,
-    backgroundColor: `${colors.white}`,
-    fontSize: '1.15em',
-    minHeight: '7vh',
-    maxHeight: '7vh',
-    minWidth: '100vw',
-    position: 'absolute',
-    bottom: '0',
-    right: '0',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-};
+// setting the width of the div
+const width = '80vw';
 
-export default styles;
+// footer styled component
+const FooterStyle = styled.div`
+    border-top: 1px solid ${colors['--main-font-color']};
+    height: 60px;
+    width: ${width};
+    position: absolute;
+    bottom: 0;
+    left: calc((100vw - ${width}) / 2);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: ${colors['--bg-color']};
+    font-size: 0.9em;
+`;
+
+export default FooterStyle;

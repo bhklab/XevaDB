@@ -4,9 +4,8 @@ import Footer from '../Footer/Footer';
 import ForestPlot from '../Plots/ForestPlot';
 import BiomarkerSelect from './BiomarkerSelect';
 import axios from 'axios';
-import data from './data';
 import { StyledBiomarker } from './BiomarkerStyle';
-
+import Spinner from '../Utils/Spinner';
 
 /**
  * function replaces '\s\s\s' with ' + ' in the drugs
@@ -35,8 +34,8 @@ const Biomarker = (props) => {
     const selectedDrug = params.get('selectedDrug');
 
     // gene and drug list 
-    const [geneList, setGeneList] = useState([]);
-    const [drugList, setDrugList] = useState([]);
+    const [geneList, setGeneList] = useState(geneParam?.split(',') || []);
+    const [drugList, setDrugList] = useState(drugParam?.split(',') || []);
     const [biomarkerData, setBiomarkerData] = useState([]);
     const [displayMessage, setDisplayMessage] = useState('');
 
@@ -63,11 +62,7 @@ const Biomarker = (props) => {
     // use effect; setting gene and drug list
     useEffect(() => {
         // setting the drug list
-        if (drugParam) {
-            // set drug list
-            const drugs = updateDrugList(drugParam?.split(','));
-            setDrugList(drugs);
-        } else {
+        if (drugList.length === 0) {
             getDrugs()
                 .then(drugs => {
                     const drugArray = Object.values(drugs.data).map(el => el.drug_name);
@@ -78,10 +73,7 @@ const Biomarker = (props) => {
         };
 
         // setting the gene list
-        if (geneParam) {
-            // set gene list
-            setGeneList(geneParam?.split(','));
-        } else {
+        if (geneList.length === 0) {
             getGenes()
                 .then(genes => {
                     const geneArray = Object.values(genes.data.data).map(el => el.gene_name);
@@ -90,7 +82,6 @@ const Biomarker = (props) => {
                 })
                 .catch(error => console.log(error));
         };
-
     }, []);
 
     return (
@@ -99,22 +90,25 @@ const Biomarker = (props) => {
             <div className='wrapper'>
                 <div className='biomarker-wrapper'>
                     {
-                        geneList.length > 0 && drugList.length > 0 ?
-                            <BiomarkerSelect
-                                geneList={geneList}
-                                selectedGene={selectedGene}
-                                drugList={drugList}
-                                selectedDrug={selectedDrug}
-                                setBiomarkerData={setBiomarkerData}
-                                setDisplayMessage={setDisplayMessage}
-                            /> : ''
+                        geneList.length > 0 && drugList.length > 0
+                            ? (
+                                <>
+                                    <BiomarkerSelect
+                                        geneList={geneList}
+                                        selectedGene={selectedGene}
+                                        drugList={drugList}
+                                        selectedDrug={selectedDrug}
+                                        setBiomarkerData={setBiomarkerData}
+                                        setDisplayMessage={setDisplayMessage} />
+                                    {
+                                        biomarkerData.length > 0 && displayMessage === ''
+                                            ? <ForestPlot data={biomarkerData} />
+                                            : <h1>{displayMessage}</h1>
+                                    }
+                                </>
+                            )
+                            : <Spinner loading={true} />
                     }
-                    {
-                        biomarkerData.length > 0 && displayMessage === ''
-                            ? <ForestPlot data={biomarkerData} />
-                            : <h1>{displayMessage}</h1>
-                    }
-
                 </div>
             </div>
             <Footer />

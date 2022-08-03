@@ -1,8 +1,12 @@
 /* eslint-disable no-unused-expressions */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-import { HeaderStyle, LogoStyle } from './NavStyle';
+import {
+    MainConatiner,
+    TopNavContainer,
+    LogoNavLinksContainer,
+    ButtonStyle,
+} from './NavStyle';
 import logo from '../../images/new_logo.png';
 
 class TopNav extends React.Component {
@@ -34,34 +38,35 @@ class TopNav extends React.Component {
     render() {
         const { isLink, isLogged } = this.state;
         return (
-            <HeaderStyle>
-                <div className='logo'>
-                    <Link to="/">
-                        <LogoStyle src={logo} alt="logo" />
-                    </Link>
-                </div>
-                <div className='nav-links'>
-                    <Link to="/biomarker"> Biomarker </Link>
-                    <Link to="/datasets"> Datasets </Link>
-                    <Link to="/drugs"> Drugs </Link>
-                    <Link to="/patients"> Patients </Link>
-                    <Link to="/tissues"> Tissues </Link>
-                    <Link to="/doc"> Documentation </Link>
-                    <div className='login-button'>
+            <MainConatiner>
+                <TopNavContainer>
+                    <LogoNavLinksContainer>
+                        <div className='logo'>
+                            <Link to="/">
+                                {/* <img src={logo} alt="logo" /> */}
+                            </Link>
+                        </div>
+                        <div className='nav-links'>
+                            <Link to="/"> Home </Link>
+                            <Link to="/biomarker"> Biomarker </Link>
+                            <Link to="/datasets"> Datasets </Link>
+                            <Link to="/drugs"> Drugs </Link>
+                            <Link to="/patients"> Patients </Link>
+                            <Link to="/tissues"> Tissues </Link>
+                            <Link to="/doc"> Documentation </Link>
+                        </div>
+                    </LogoNavLinksContainer>
+                    <ButtonStyle>
                         <Link to={`${isLink}`}>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
+                            <button
                                 onClick={this.isLoggedIn}
                             >
                                 {isLogged}
-                            </Button>
+                            </button>
                         </Link>
-                    </div>
-                </div>
-            </HeaderStyle>
+                    </ButtonStyle>
+                </TopNavContainer>
+            </MainConatiner>
         );
     }
 }

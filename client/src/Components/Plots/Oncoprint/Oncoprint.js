@@ -137,7 +137,7 @@ const sortingCircles = (genes, svg, rect_height) => {
             .attr('cy', i)
             .attr('r', 6)
             .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '').replace('.', '')}`)
-            .style('fill', `${colors.circle_green}`)
+            .style('fill', `${colors['--link-color']}`)
             .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
             .style('visibility', 'hidden');
     });
@@ -160,7 +160,7 @@ const createGeneYAxis = (
             .style('font-size', '11px')
             .attr('dy', i * (rect_height) + rect_width)
             .attr('font-weight', '550')
-            .attr('fill', `${colors.blue_header}`)
+            .attr('fill', `${colors['--main-font-color']}`)
             .text(genes[i])
             .on('mouseover', () => {
                 // tooltip on mousever setting the div to visible.
@@ -214,9 +214,10 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
         .join('a')
         .attr('xlink:href', (d) => drugs ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}` : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`)
         .append('text')
-        .text('🧬')
+        .text('⭕️')
+        .attr('font-size', '0.8em')
         .attr('x', -40)
-        .attr('y', (d, i) => (i + 0.60) * rect_height)
+        .attr('y', (d, i) => (i + 0.55) * rect_height)
         .on('mouseover', function (d) {
             const tooltipDiv = tooltip
                 .style('visibility', 'visible')
@@ -719,7 +720,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('width', rect_width)
         .text((d) => d.value)
         .attr('font-size', '12px')
-        .attr('fill', `${colors.blue_header}`);
+        .attr('fill', `${colors['--main-font-color']}`);
 
     /** ******************************************** Tooltip for oncoprint ******************************************** */
 

@@ -204,7 +204,7 @@ class OncoprintData extends React.Component {
             // if the dataset id is 4 then there is no data available!
             if (datasetIdProp === '4' || datasetIdProp === 4) {
                 return (
-                    <ErrorComponent message="There is no data available for PDXE (Gastric Cancer)" />
+                    <ErrorComponent message="Data unavailable for PDXE (Gastric Cancer)" />
                 );
             };
 

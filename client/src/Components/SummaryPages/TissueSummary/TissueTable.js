@@ -6,13 +6,15 @@ import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 
 const TissueTable = ({ data }) => {
+    console.log(data);
+
     const columns = [
         {
             Header: 'Tissue',
             accessor: 'tissue',
             minWidth: 160,
             Cell: (row) => (
-                <Link to={`/tissue/${row.original.tissue_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                <Link to={`/tissue/${row.original.tissue_id}`}>
                     {row.original.tissue}
                 </Link>
             ),
@@ -41,13 +43,12 @@ const TissueTable = ({ data }) => {
 
     return (
         <TableWrapper>
-            <h1> List of Tissues </h1>
             <ReactTable
                 data={data}
                 columns={columns}
                 className="-highlight"
-                defaultPageSize={7}
-                filterable
+                showPagination={false}
+                defaultPageSize={data.length + 1}
             />
         </TableWrapper>
     );

@@ -133,7 +133,7 @@ const ResponseScatterPlot = ({ data }) => {
                 <div className='barplot-container'>
                     <BarPlot
                         data={transformedModelResponseData}
-                        label="Model Response"
+                        yLabel='Model Response'
                         yAxisTicks={mRECISTTypes}
                         shouldAppendBarText={false}
                         margin={margin}

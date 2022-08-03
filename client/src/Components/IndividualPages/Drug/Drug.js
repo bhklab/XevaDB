@@ -84,10 +84,10 @@ const Drug = (props) => {
                                 <ResponseStackedBarChart
                                     individualDrugResponseData={modelResponseDataPerDrug}
                                 />
-                                <ResponseScatterPlot
+                                {/* <ResponseScatterPlot
                                     data={modelResponseDataPerDrug[0]}
-                                />
-                                <h4 style={h4Style}> Patient </h4>
+                                /> */}
+                                {/* <h4 style={h4Style}> Patient </h4> */}
                             </div>
                         )
                 }

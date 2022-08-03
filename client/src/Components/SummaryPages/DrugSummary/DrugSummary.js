@@ -51,26 +51,32 @@ class DrugSummary extends React.Component {
         return (
             <>
                 <GlobalStyles />
-                <div className="wrapper">
-                    <div className="component-wrapper center-component">
-                        <h1> Number of Models per Drug Class </h1>
+                <div className='wrapper'>
+                    <div className='component-wrapper center-component'>
                         {
                             loading
                                 ? <Spinner loading={loading} />
                                 : (
-                                    <BarPlot
-                                        dimensions={dimensions}
-                                        margin={margin}
-                                        chartId="barplot_drug"
-                                        data={data}
-                                        label="Number of models"
-                                        shouldAppendBarText={true}
-                                    />
+                                    <div className='center-component'>
+                                        {/* <h1> Number of Models per Drug Class </h1> */}
+                                        <BarPlot
+                                            dimensions={dimensions}
+                                            margin={margin}
+                                            chartId='barplot_drug'
+                                            data={data}
+                                            yLabel='Number of models'
+                                            xLabel='Drug class'
+                                            shouldAppendBarText={true}
+                                        />
+                                    </div>
                                 )
                         }
                     </div>
-                    <div className="component-wrapper center-component">
-                        <DrugTable />
+                    <div className='component-wrapper'>
+                        <>
+                            <h1> List of Drugs </h1>
+                            <DrugTable />
+                        </>
                     </div>
                     <Footer />
                 </div>
