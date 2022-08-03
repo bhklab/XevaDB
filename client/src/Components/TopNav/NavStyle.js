@@ -33,6 +33,7 @@ const TopNavContainer = styled.div`
 `;
 
 const LogoNavLinksContainer = styled.div`
+    height: inherit;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -41,14 +42,29 @@ const LogoNavLinksContainer = styled.div`
         margin-right: 75px;
     }
 
-    div.nav-links > a {
+    div.nav-links-container {
+        height: 100%;
+        display: flex;
+    }
+
+    div.nav-links-container > div {
+        height: 100%;
+    }
+
+    div.nav-link > a {
+        height: 100%;
+        margin-right: 20px;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: ${colors.white};
         text-decoration: none;
         letter-spacing: 1px;
-        margin-right: 25px;
+
         &:hover {
-            color: ${colors['--table-bg-color']};
             cursor: pointer;
+            opacity: 0.75;
         }
     }
 
@@ -66,6 +82,13 @@ const LogoNavLinksContainer = styled.div`
         a {
             font-size: 1.1em;
         }
+    }
+
+    div.selected {
+        background: ${colors['--table-bg-color']}
+        color: ${colors['--bg-color']};
+        cursor: pointer;
+        font-weight: 500;
     }
 `;
 

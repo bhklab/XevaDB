@@ -46,14 +46,28 @@ class TopNav extends React.Component {
                                 {/* <img src={logo} alt="logo" /> */}
                             </Link>
                         </div>
-                        <div className='nav-links'>
-                            <Link to="/"> Home </Link>
-                            <Link to="/biomarker"> Biomarker </Link>
-                            <Link to="/datasets"> Datasets </Link>
-                            <Link to="/drugs"> Drugs </Link>
-                            <Link to="/patients"> Patients </Link>
-                            <Link to="/tissues"> Tissues </Link>
-                            <Link to="/doc"> Documentation </Link>
+                        <div className='nav-links-container'>
+                            <div className='nav-link'>
+                                <Link to="/"> Home </Link>
+                            </div>
+                            <div className='nav-link'>
+                                <Link to="/biomarker"> Biomarker </Link>
+                            </div>
+                            <div className='nav-link'>
+                                <Link to="/datasets"> Datasets </Link>
+                            </div>
+                            <div className='nav-link'>
+                                <Link to="/drugs"> Drugs </Link>
+                            </div>
+                            <div className='nav-link'>
+                                <Link to="/patients"> Patients </Link>
+                            </div>
+                            <div className='nav-link'>
+                                <Link to="/tissues"> Tissues </Link>
+                            </div>
+                            <div className='nav-link'>
+                                <Link to="/doc"> Documentation </Link>
+                            </div>
                         </div>
                     </LogoNavLinksContainer>
                     <ButtonStyle>
