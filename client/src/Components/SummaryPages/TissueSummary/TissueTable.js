@@ -6,8 +6,6 @@ import 'react-table/react-table.css';
 import colors from '../../../styles/colors';
 
 const TissueTable = ({ data }) => {
-    console.log(data);
-
     const columns = [
         {
             Header: 'Tissue',
