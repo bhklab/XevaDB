@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
     MainConatiner,
     TopNavContainer,
@@ -9,80 +9,96 @@ import {
 } from './NavStyle';
 import logo from '../../images/new_logo.png';
 
-class TopNav extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLogged: 'Login',
-            isLink: '/login',
-        };
-        this.isLoggedIn = this.isLoggedIn.bind(this);
-    }
+// all the top nav links
+const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc'];
 
-    static getDerivedStateFromProps() {
-        let localState = '';
+/**
+ * 
+ * @returns {component} - TopNav component
+ */
+const TopNav = function () {
+    const [isLoggedIn, updateLoggedInState] = useState('Login');
+    const [isLink, updateIsLink] = useState('/login');
+    const [selectedLink, updateSelectedLink] = useState('');
+
+    useEffect(() => {
         localStorage.getItem('user')
-            ? localState = ({ isLogged: 'Logout', isLink: '/login' })
-            : localState = ({ isLogged: 'Login' });
-        return localState;
-    }
+            ? updateLoggedInState('Logout')
+            : updateLoggedInState('Login');
+    }, [])
 
-    isLoggedIn() {
-        const { isLogged } = this.state;
-        if (isLogged === 'Logout') {
+    function update() {
+        const page = window.location.href.split('/').at(-1);
+        const doesPageMatchLinks = LINKS.includes(page);
+
+        if (!doesPageMatchLinks && selectedLink) selectedLink.className = '';
+    }
+    update();
+
+    function isUserLoggedIn() {
+        if (isLoggedIn === 'Logout') {
             localStorage.removeItem('user');
-            this.setState({ isLogged: 'Login', isLink: '/login' });
+            updateLoggedInState('Login');
+            updateIsLink('/login');
         }
     }
 
-    render() {
-        const { isLink, isLogged } = this.state;
-        return (
-            <MainConatiner>
-                <TopNavContainer>
-                    <LogoNavLinksContainer>
-                        <div className='logo'>
-                            <Link to="/">
-                                {/* <img src={logo} alt="logo" /> */}
-                            </Link>
-                        </div>
-                        <div className='nav-links-container'>
-                            <div className='nav-link'>
-                                <Link to="/"> Home </Link>
-                            </div>
-                            <div className='nav-link'>
-                                <Link to="/biomarker"> Biomarker </Link>
-                            </div>
-                            <div className='nav-link'>
-                                <Link to="/datasets"> Datasets </Link>
-                            </div>
-                            <div className='nav-link'>
-                                <Link to="/drugs"> Drugs </Link>
-                            </div>
-                            <div className='nav-link'>
-                                <Link to="/patients"> Patients </Link>
-                            </div>
-                            <div className='nav-link'>
-                                <Link to="/tissues"> Tissues </Link>
-                            </div>
-                            <div className='nav-link'>
-                                <Link to="/doc"> Documentation </Link>
-                            </div>
-                        </div>
-                    </LogoNavLinksContainer>
-                    <ButtonStyle>
-                        <Link to={`${isLink}`}>
-                            <button
-                                onClick={this.isLoggedIn}
-                            >
-                                {isLogged}
-                            </button>
-                        </Link>
-                    </ButtonStyle>
-                </TopNavContainer>
-            </MainConatiner>
-        );
+    function addSelectedClassToLink(event) {
+        // if there is already a selection, remove the selected class from it
+        if (selectedLink) {
+            selectedLink.className = '';
+        }
+
+        // add selected class to the new selection and update the state
+        event.target.className = 'selected';
+        updateSelectedLink(event.target);
     }
+
+    return (
+        <MainConatiner>
+            <TopNavContainer>
+                <LogoNavLinksContainer>
+                    <div className='logo'>
+                        <Link to="/">
+                            {/* <img src={logo} alt="logo" /> */}
+                        </Link>
+                    </div>
+                    <div className='nav-links-container'>
+                        <div className='nav-link' onClick={event => addSelectedClassToLink(event)}>
+                            <Link to="/"> Home </Link>
+                        </div>
+                        <div className='nav-link' onClick={event => addSelectedClassToLink(event)}>
+                            <Link to="/biomarker"> Biomarker </Link>
+                        </div>
+                        <div className='nav-link' onClick={event => addSelectedClassToLink(event)}>
+                            <Link to="/datasets"> Datasets </Link>
+                        </div>
+                        <div className='nav-link' onClick={event => addSelectedClassToLink(event)}>
+                            <Link to="/drugs"> Drugs </Link>
+                        </div>
+                        <div className='nav-link' onClick={event => addSelectedClassToLink(event)}>
+                            <Link to="/patients"> Patients </Link>
+                        </div>
+                        <div className='nav-link' onClick={event => addSelectedClassToLink(event)}>
+                            <Link to="/tissues"> Tissues </Link>
+                        </div>
+                        <div className='nav-link' onClick={event => addSelectedClassToLink(event)}>
+                            <Link to="/doc"> Documentation </Link>
+                        </div>
+                    </div>
+                </LogoNavLinksContainer>
+                <ButtonStyle>
+                    <Link to={`${isLink}`}>
+                        <button
+                            onClick={isUserLoggedIn}
+                        >
+                            {isLoggedIn}
+                        </button>
+                    </Link>
+                </ButtonStyle>
+            </TopNavContainer>
+        </MainConatiner>
+    );
 }
 
 export default TopNav;

@@ -84,9 +84,9 @@ const LogoNavLinksContainer = styled.div`
         }
     }
 
-    div.selected {
+    a.selected {
         background: ${colors['--table-bg-color']}
-        color: ${colors['--bg-color']};
+        color: ${colors['--bg-color']} !important;
         cursor: pointer;
         font-weight: 500;
     }
