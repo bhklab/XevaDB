@@ -7,8 +7,6 @@ import PatientTable from './PatientTable';
 import TreeDiagram from '../../Plots/TreeDiagram';
 import colors from '../../../styles/colors';
 
-// header constant.
-const HEADER = { headers: { Authorization: localStorage.getItem('user') } };
 
 // transforming the patient data.
 const transformData = (data) => {
@@ -85,7 +83,7 @@ const Patient = (props) => {
     // query to fetch the patient detail based on the patient parameter.
     const fetchData = async () => {
         // API call to fecth the data.
-        const patientDetail = await axios.get(`/api/v1/patients/detail/${patientParam}`, HEADER);
+        const patientDetail = await axios.get(`/api/v1/patients/detail/${patientParam}`, { headers: { Authorization: localStorage.getItem('user') } });
         // setting the states.
         setPatientDataState(transformData(patientDetail.data.data[0]));
         setLoader(false);
