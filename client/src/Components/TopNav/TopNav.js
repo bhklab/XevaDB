@@ -7,7 +7,7 @@ import {
     LogoNavLinksContainer,
     ButtonStyle,
 } from './NavStyle';
-import logo from '../../images/new_logo.png';
+import logo from '../../images/logo-latest.png';
 
 // all the top nav links
 const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc'];
@@ -60,7 +60,7 @@ const TopNav = function () {
                 <LogoNavLinksContainer>
                     <div className='logo'>
                         <Link to="/">
-                            {/* <img src={logo} alt="logo" /> */}
+                            <img src={logo} alt="logo" />
                         </Link>
                     </div>
                     <div className='nav-links-container' onClick={event => addSelectedClassToLink(event)}>

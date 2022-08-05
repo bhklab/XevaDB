@@ -9,7 +9,7 @@ import axios from 'axios';
 import {
     Form, SubmitStyle, LogoStyle, FormContainer, LogoBack, FormHeading
 } from './LoginStyle';
-import logo from '../../images/new_logo.png';
+import logo from '../../images/logo-latest.png';
 import colors from '../../styles/colors';
 
 
