@@ -8,6 +8,7 @@ import {
     ButtonStyle,
 } from './NavStyle';
 import logo from '../../images/logo-latest.png';
+import { useKeycloak } from "@react-keycloak/web";
 
 // all the top nav links
 const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc'];
@@ -17,23 +18,8 @@ const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc
  * @returns {component} - TopNav component
  */
 const TopNav = function () {
-    const [isLoggedIn, updateLoggedInState] = useState('Login');
-    const [isLink, updateIsLink] = useState('/login');
-    const [selectedLink, updateSelectedLink] = useState('');
+    const { keycloak } = useKeycloak();
 
-    useEffect(() => {
-        localStorage.getItem('user')
-            ? updateLoggedInState('Logout')
-            : updateLoggedInState('Login');
-    }, []);
-
-    function isUserLoggedIn() {
-        if (isLoggedIn === 'Logout') {
-            localStorage.removeItem('user');
-            updateLoggedInState('Login');
-            updateIsLink('/login');
-        }
-    }
 
     return (
         <MainConatiner>
@@ -69,13 +55,25 @@ const TopNav = function () {
                     </div>
                 </LogoNavLinksContainer>
                 <ButtonStyle>
-                    <Link to={`${isLink}`}>
-                        <button
-                            onClick={isUserLoggedIn}
-                        >
-                            {isLoggedIn}
-                        </button>
-                    </Link>
+                    {
+                        !keycloak.authenticated && (
+                            <button
+                                onClick={() => keycloak.login()}
+                            >
+                                Login
+                            </button>
+                        )
+                    }
+
+                    {
+                        !!keycloak.authenticated && (
+                            <button
+                                onClick={() => keycloak.logout()}
+                            >
+                                Logout ({keycloak.tokenParsed.preferred_username})
+                            </button>
+                        )
+                    }
                 </ButtonStyle>
             </TopNavContainer>
         </MainConatiner>
