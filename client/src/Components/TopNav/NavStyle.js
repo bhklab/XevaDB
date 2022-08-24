@@ -83,13 +83,6 @@ const LogoNavLinksContainer = styled.div`
             font-size: 1.1em;
         }
     }
-
-    a.selected {
-        background: ${colors['--table-bg-color']}
-        color: ${colors['--bg-color']} !important;
-        cursor: pointer;
-        font-weight: 500;
-    }
 `;
 
 const ButtonStyle = styled.div`

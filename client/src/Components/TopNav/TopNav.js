@@ -25,15 +25,7 @@ const TopNav = function () {
         localStorage.getItem('user')
             ? updateLoggedInState('Logout')
             : updateLoggedInState('Login');
-    }, [])
-
-    function update() {
-        const page = window.location.href.split('/').at(-1);
-        const doesPageMatchLinks = LINKS.includes(page);
-
-        if (!doesPageMatchLinks && selectedLink) selectedLink.className = '';
-    }
-    update();
+    }, []);
 
     function isUserLoggedIn() {
         if (isLoggedIn === 'Logout') {
@@ -41,17 +33,6 @@ const TopNav = function () {
             updateLoggedInState('Login');
             updateIsLink('/login');
         }
-    }
-
-    function addSelectedClassToLink(event) {
-        if (event.target.tagName !== 'A') return;
-
-        // if there is already a selection, remove the selected class from it
-        if (selectedLink) selectedLink.className = '';
-
-        // add selected class to the new selection and update the state
-        event.target.className = 'selected';
-        updateSelectedLink(event.target);
     }
 
     return (
@@ -63,7 +44,7 @@ const TopNav = function () {
                             <img src={logo} alt="logo" />
                         </Link>
                     </div>
-                    <div className='nav-links-container' onClick={event => addSelectedClassToLink(event)}>
+                    <div className='nav-links-container'>
                         <div className='nav-link'>
                             <Link to="/"> Home </Link>
                         </div>
