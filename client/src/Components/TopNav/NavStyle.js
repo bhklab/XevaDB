@@ -88,7 +88,7 @@ const LogoNavLinksContainer = styled.div`
 const ButtonStyle = styled.div`
     button {
         background-color: ${colors.white};
-        width: 70px;
+        width: 80px;
         height: 40px;
         border: 0;
         border-radius: 5px;
