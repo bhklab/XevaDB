@@ -89,7 +89,7 @@ const ButtonStyle = styled.div`
     button {
         background-color: ${colors.white};
         width: 70px;
-        height: 35px;
+        height: 40px;
         border: 0;
         border-radius: 5px;
         font-size: 0.9em;
@@ -98,6 +98,14 @@ const ButtonStyle = styled.div`
     button:hover {
         background-color: ${colors['--table-bg-color']} !important;
         cursor: pointer;
+    }
+
+    span {
+        font-weight: 500;
+    }
+
+    span.button-text-logout {
+        font-style: italic;
     }
 
     // when screen size is greater than 2000px

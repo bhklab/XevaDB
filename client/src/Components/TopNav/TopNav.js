@@ -60,7 +60,7 @@ const TopNav = function () {
                             <button
                                 onClick={() => keycloak.login()}
                             >
-                                Login
+                                <span className='button-text-login'> Login </span>
                             </button>
                         )
                     }
@@ -70,13 +70,13 @@ const TopNav = function () {
                             <button
                                 onClick={() => keycloak.logout()}
                             >
-                                Logout ({keycloak.tokenParsed.preferred_username})
+                                <span className='button-text-logout'> Logout ({keycloak.tokenParsed.preferred_username}) </span>
                             </button>
                         )
                     }
                 </ButtonStyle>
             </TopNavContainer>
-        </MainConatiner>
+        </MainConatiner >
     );
 }
 
