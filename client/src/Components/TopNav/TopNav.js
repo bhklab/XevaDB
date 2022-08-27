@@ -19,7 +19,9 @@ const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc
  */
 const TopNav = function () {
     const { keycloak } = useKeycloak();
-
+    const username = keycloak?.tokenParsed?.preferred_username;
+    const token = keycloak?.authenticated && keycloak?.token;
+    window.accessToken = token;
 
     return (
         <MainConatiner>
@@ -70,7 +72,7 @@ const TopNav = function () {
                             <button
                                 onClick={() => keycloak.logout()}
                             >
-                                <span className='button-text-logout'> Logout ({keycloak.tokenParsed.preferred_username}) </span>
+                                <span className='button-text-logout'> Logout ({username}) </span>
                             </button>
                         )
                     }
