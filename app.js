@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const express = require('express');
 
 const app = express();
@@ -14,6 +13,7 @@ const router = require('./routes/router.js');
 
 // Bodyparser Middleware
 app.use(bodyParser.json());
+
 // logging
 app.use(logger('dev'));
 app.use(knexLogger(db));
