@@ -2,16 +2,20 @@ const session = require('express-session');
 const Keycloak = require('keycloak-connect');
 const keycloakConfig = require('./keycloak.json');
 
-const memoryStore = new session.MemoryStore();
 
-// Configure session
-app.use(
-    session({
+function initKeycloak() {
+    const memoryStore = new session.MemoryStore();
+
+    return keycloak = new Keycloak({
+        store: memoryStore,
         secret: 'mySecret',
         resave: false,
         saveUninitialized: true,
         store: memoryStore,
-    })
-);
+    }, keycloakConfig);
+}
 
-const keycloak = new Keycloak({ store: memoryStore }, keycloakConfig);
+
+module.exports = {
+    initKeycloak,
+}
