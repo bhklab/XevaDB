@@ -6,7 +6,7 @@ const keycloakConfig = require('./keycloak.json');
 function initKeycloak() {
     const memoryStore = new session.MemoryStore();
 
-    return keycloak = new Keycloak({
+    return new Keycloak({
         store: memoryStore,
         secret: 'mySecret',
         resave: false,
