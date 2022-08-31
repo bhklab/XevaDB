@@ -1,12 +1,9 @@
 {
     "realm": "xevadb",
+    "bearer-only": true,
     "auth-server-url": "http://localhost:8080/",
     "ssl-required": "external",
-    "resource": "xevadb-api",
-    "verify-token-audience": true,
-    "credentials": {
-        "secret": "Exs2cXN0LHyShRLMFOd8grIJGMRpE7dr"
-    },
+    "resource": "test-api",
     "confidential-port": 0,
-    "policy-enforcer": {}
+    "realmPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1Sr3qAK7nPAPHGW4uygtEa6t3QdUHHskFCYL9VmtCbCVgKK8lEiPRwjW8sIqwQDExWTs51Fb7zTaeapIUZuP/a+aZu04zjqOUUjc60qjsfkv61GmgzLmGsdbOL7MxZKtzujDfiIaPU70xyD3w3NF0lO8mv+8msj1PpeOqJ4raMg5+BedGZvAXfdXcUxOUvEgnBQeXSi5H8lxn3ZR97rE5cLmfCaES2BeETe9i5HNm/8XVpiiHr1FrCH9imEAI9RhmphtVfuboESLY8mKV0XNq65LquWJvfAWqg66tqv0PTNo4kDnGhqur1BnX/19CLW/yyAVzH00E2DoVN4iHbLmLQIDAQAB"
 }
