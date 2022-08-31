@@ -3,7 +3,6 @@ import axios from 'axios';
 // Add a request interceptor
 axios.interceptors.request.use(
     config => {
-        console.log(window.accessToken);
         const token = window?.accessToken || 'hello';
 
         if (token) {
