@@ -2,7 +2,11 @@
     "realm": "xevadb",
     "auth-server-url": "http://localhost:8080/",
     "ssl-required": "external",
-    "resource": "xevadb-backend",
-    "public-client": true,
-    "confidential-port": 0
+    "resource": "xevadb-api",
+    "verify-token-audience": true,
+    "credentials": {
+        "secret": "Exs2cXN0LHyShRLMFOd8grIJGMRpE7dr"
+    },
+    "confidential-port": 0,
+    "policy-enforcer": {}
 }

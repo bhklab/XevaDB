@@ -8,6 +8,10 @@ const logger = require('morgan');
 const knexLogger = require('knex-logger');
 const db = require('./db/knex1');
 
+// keycloak
+const keycloak = require('./keycloak.js').initKeycloak();
+app.use(keycloak.middleware());
+
 // setting the path of the router file to variable so that we can use all the routes from it.
 const router = require('./routes/router.js');
 

@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 const app = express();
 
-// keycloak
-const keycloak = require('../keycloak.js').initKeycloak();
-app.use(keycloak.middleware());
-
+const keycloak = require('../keycloak').getKeycloak();
+console.log(keycloak);
 
 // setting the path of the drugscreening api to variable so that we can use it later.
 const awtauthentication = require('./api/auth');
@@ -58,7 +56,7 @@ router.post('/v1/drugspatients/dataset', verifytoken, datasets.postDrugsandPatie
 router.get('/v1/datasets/stats', verifytoken, datasets.getAllDatasetStatistics);
 
 // APIs related to drugs table.
-router.get('/v1/drugs', verifytoken, drugs.getAllDrugs);
+router.get('/v1/drugs', keycloak.protect(), drugs.getAllDrugs);
 router.get('/v1/drugs/:drug', utils.isValidDrugId, verifytoken, drugs.getSingleDrugInformation);
 
 // APIs related to drug table.
