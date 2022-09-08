@@ -1,9 +1,7 @@
 const express = require('express');
-const router = express.Router();
-const app = express();
-
 const keycloak = require('../keycloak').getKeycloak();
-console.log(keycloak);
+
+const router = express.Router();
 
 // setting the path of the drugscreening api to variable so that we can use it later.
 const awtauthentication = require('./api/auth');
