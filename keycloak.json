@@ -3,7 +3,7 @@
     "bearer-only": true,
     "auth-server-url": "http://localhost:8080/",
     "ssl-required": "external",
-    "resource": "test-api",
+    "resource": "xevadb-api",
     "confidential-port": 0,
-    "realmPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1Sr3qAK7nPAPHGW4uygtEa6t3QdUHHskFCYL9VmtCbCVgKK8lEiPRwjW8sIqwQDExWTs51Fb7zTaeapIUZuP/a+aZu04zjqOUUjc60qjsfkv61GmgzLmGsdbOL7MxZKtzujDfiIaPU70xyD3w3NF0lO8mv+8msj1PpeOqJ4raMg5+BedGZvAXfdXcUxOUvEgnBQeXSi5H8lxn3ZR97rE5cLmfCaES2BeETe9i5HNm/8XVpiiHr1FrCH9imEAI9RhmphtVfuboESLY8mKV0XNq65LquWJvfAWqg66tqv0PTNo4kDnGhqur1BnX/19CLW/yyAVzH00E2DoVN4iHbLmLQIDAQAB"
+    "realmPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuQBbovxdEpaAcDimHdUeAkLkfuAUQvdL2ys5mvFv1QP5P4lBjEB0FhARjz8ms7Xg1I3l5cPcDjm8hayzYS3XmI4/7lEsinn9St3Sm1X83IQQXqUzOwzSIxfUcZ+cq6IPMjpmlD/dEeQijIkA+4Ud89MJZngOZWnSMYlhJdijMaOXpPzfD3fLnuIJLrp4oheGkW5PUmLwNZr6ac6TBY+cH+rwUOVwWNq7rA6oFZwAxj331l5jJfIfEGehWGbXSRHGiRt3sl2yXfYWQ9vwJbbGyDrMN0ciVjV/WNKDQxqyhnMWzZIIoLyFmEu1RSui2zJI08qxw3nkW+gIWHVG1Wlb6QIDAQAB"
 }
