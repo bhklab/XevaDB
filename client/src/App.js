@@ -4,7 +4,7 @@ import ReactGA from 'react-ga';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import keycloak from './keycloak';
-import PrivateRoute from './helpers/PrivateRoute';
+// import PrivateRoute from './helpers/PrivateRoute';
 import {
     Biomarker,
     CounterNav,
