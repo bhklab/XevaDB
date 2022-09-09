@@ -4,12 +4,14 @@ import axios from 'axios';
 axios.interceptors.request.use(
     (config) => {
         const token = window?.accessToken || 'hello';
+        const configuration = config;
 
         if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+            configuration.headers.Authorization = `Bearer ${token}`;
+            console.log(token);
         }
 
-        return config;
+        return configuration;
     },
     (error) => {
         Promise.reject(error);
