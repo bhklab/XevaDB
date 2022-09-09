@@ -6,7 +6,6 @@ import DrugTable from './DrugTable';
 import GlobalStyles from '../../../GlobalStyles';
 import BarPlot from '../../Plots/BarPlot';
 
-
 class DrugSummary extends React.Component {
     constructor(props) {
         super(props);
@@ -14,7 +13,6 @@ class DrugSummary extends React.Component {
             data: [],
             dimensions: {},
             margin: {},
-            arc: {},
             loading: true,
         };
     }
@@ -45,34 +43,34 @@ class DrugSummary extends React.Component {
 
     render() {
         const {
-            data, arc, loading,
+            data, loading,
             dimensions, margin,
         } = this.state;
         return (
             <>
                 <GlobalStyles />
-                <div className='wrapper'>
-                    <div className='component-wrapper center-component'>
+                <div className="wrapper">
+                    <div className="component-wrapper center-component">
                         {
                             loading
                                 ? <Spinner loading={loading} />
                                 : (
-                                    <div className='center-component'>
+                                    <div className="center-component">
                                         {/* <h1> Number of Models per Drug Class </h1> */}
                                         <BarPlot
                                             dimensions={dimensions}
                                             margin={margin}
-                                            chartId='barplot_drug'
+                                            chartId="barplot_drug"
                                             data={data}
-                                            yLabel='Number of models'
-                                            xLabel='Drug class'
-                                            shouldAppendBarText={true}
+                                            yLabel="Number of models"
+                                            xLabel="Drug class"
+                                            shouldAppendBarText
                                         />
                                     </div>
                                 )
                         }
                     </div>
-                    <div className='component-wrapper'>
+                    <div className="component-wrapper">
                         <>
                             <h1> List of Drugs </h1>
                             <DrugTable />

@@ -5,10 +5,8 @@ import { Link } from 'react-router-dom';
 import TableWrapper from '../../Utils/TableStyle';
 import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
-import colors from '../../../styles/colors';
 import firstAlphabetUpperCase from '../../../utils/FirstAlphabetUpperCase';
 import pubchemURL from '../../../utils/PubChemURL';
-
 
 class DrugTable extends React.Component {
     constructor(props) {
@@ -115,7 +113,7 @@ class DrugTable extends React.Component {
             <TableWrapper>
                 {
                     loading ? (
-                        <div className='center-component'>
+                        <div className="center-component">
                             <Spinner loading={loading} />
                         </div>
                     ) : (

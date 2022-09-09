@@ -64,11 +64,12 @@ const App = () => {
                         <Route path="/login" exact component={Login} />
                         <Route path="/maps" exact component={Merge} />
                         <Route path="/patient/:id" exact component={Patient} />
-                        <Route path="/patients">
+                        {/* <Route path="/patients">
                             <PrivateRoute>
                                 <PatientSummary />
                             </PrivateRoute>
-                        </Route>
+                        </Route> */}
+                        <Route path="/patients" exact component={PatientSummary} />
                         <Route path="/search" exact component={SearchResult} />
                         <Route path="/tissues" exact component={TissueSummary} />
                         <Route path="/tissue/:id" exact component={Tissue} />

@@ -2,27 +2,24 @@ import axios from 'axios';
 
 // Add a request interceptor
 axios.interceptors.request.use(
-    config => {
+    (config) => {
         const token = window?.accessToken || 'hello';
 
         if (token) {
-            config.headers['Authorization'] = 'Bearer ' + token;
+            config.headers.Authorization = `Bearer ${token}`;
         }
 
         return config;
     },
-    error => {
-        Promise.reject(error)
-    }
+    (error) => {
+        Promise.reject(error);
+    },
 );
 
 // Add a response interceptor
 axios.interceptors.response.use(
-    response => {
-        return response;
+    (response) => response,
+    (error) => {
+        Promise.reject(error);
     },
-    error => {
-        Promise.reject(error)
-    }
 );
-
