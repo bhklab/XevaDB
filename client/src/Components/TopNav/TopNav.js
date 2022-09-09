@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
 import {
     MainConatiner,
     TopNavContainer,
@@ -8,16 +9,15 @@ import {
     ButtonStyle,
 } from './NavStyle';
 import logo from '../../images/logo-latest.png';
-import { useKeycloak } from "@react-keycloak/web";
 
 // all the top nav links
-const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc'];
+// const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc'];
 
 /**
- * 
+ *
  * @returns {component} - TopNav component
  */
-const TopNav = function () {
+function TopNav() {
     const { keycloak } = useKeycloak();
     const username = keycloak?.tokenParsed?.preferred_username;
     const token = keycloak?.authenticated && keycloak?.token;
@@ -27,31 +27,31 @@ const TopNav = function () {
         <MainConatiner>
             <TopNavContainer>
                 <LogoNavLinksContainer>
-                    <div className='logo'>
+                    <div className="logo">
                         <Link to="/">
                             <img src={logo} alt="logo" />
                         </Link>
                     </div>
-                    <div className='nav-links-container'>
-                        <div className='nav-link'>
+                    <div className="nav-links-container">
+                        <div className="nav-link">
                             <Link to="/"> Home </Link>
                         </div>
-                        <div className='nav-link'>
+                        <div className="nav-link">
                             <Link to="/biomarker"> Biomarker </Link>
                         </div>
-                        <div className='nav-link'>
+                        <div className="nav-link">
                             <Link to="/datasets"> Datasets </Link>
                         </div>
-                        <div className='nav-link'>
+                        <div className="nav-link">
                             <Link to="/drugs"> Drugs </Link>
                         </div>
-                        <div className='nav-link'>
+                        <div className="nav-link">
                             <Link to="/patients"> Patients </Link>
                         </div>
-                        <div className='nav-link'>
+                        <div className="nav-link">
                             <Link to="/tissues"> Tissues </Link>
                         </div>
-                        <div className='nav-link'>
+                        <div className="nav-link">
                             <Link to="/doc"> Documentation </Link>
                         </div>
                     </div>
@@ -60,9 +60,10 @@ const TopNav = function () {
                     {
                         !keycloak.authenticated && (
                             <button
+                                type="button"
                                 onClick={() => keycloak.login()}
                             >
-                                <span className='button-text-login'> Login </span>
+                                <span className="button-text-login"> Login </span>
                             </button>
                         )
                     }
@@ -70,15 +71,22 @@ const TopNav = function () {
                     {
                         !!keycloak.authenticated && (
                             <button
+                                type="button"
                                 onClick={() => keycloak.logout()}
                             >
-                                <span className='button-text-logout'> Logout ({username}) </span>
+                                <span className="button-text-logout">
+                                    {' '}
+                                    Logout (
+                                    {username}
+                                    )
+                                    {' '}
+                                </span>
                             </button>
                         )
                     }
                 </ButtonStyle>
             </TopNavContainer>
-        </MainConatiner >
+        </MainConatiner>
     );
 }
 
