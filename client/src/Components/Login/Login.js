@@ -4,14 +4,11 @@ import { Link, Redirect } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import {
-    Form, SubmitStyle, LogoStyle, FormContainer, LogoBack, FormHeading
+    Form, SubmitStyle, LogoStyle, FormContainer, LogoBack, FormHeading,
 } from './LoginStyle';
 import logo from '../../images/logo-latest.png';
-import colors from '../../styles/colors';
-
 
 // axios configuration
 const axiosConfig = {
@@ -30,12 +27,18 @@ const Login = () => {
     // update the username
     const handleUserChange = (event) => {
         setUsername(event.target.value);
-    }
+    };
 
     // update password state
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
-    }
+    };
+
+    // checks if the user is authenticated or not?
+    const isUserAuthenticated = () => {
+        const token = localStorage.getItem('user');
+        return token && token.length > 10;
+    };
 
     // function to handle submit
     const handleSubmit = (event) => {
@@ -53,15 +56,9 @@ const Login = () => {
             })
             .catch((error) => {
                 // console.log(error, 'authentication failed');
-                alert('Authentication Failed, Please Enter a valid Password and Username');
+                console.log('Authentication Failed, Please Enter a valid Password and Username', error);
             });
-    }
-
-    // checks if the user is authenticated or not?
-    const isUserAuthenticated = () => {
-        const token = localStorage.getItem('user');
-        return token && token.length > 10;
-    }
+    };
 
     return (
         <div>
@@ -126,7 +123,6 @@ const Login = () => {
             )}
         </div>
     );
-}
-
+};
 
 export default Login;
