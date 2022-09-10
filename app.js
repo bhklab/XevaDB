@@ -9,11 +9,12 @@ const knexLogger = require('knex-logger');
 const db = require('./db/knex1');
 
 // keycloak
-const keycloak = require('./keycloak.js').initKeycloak();
+const keycloak = require('./keycloak').initKeycloak();
+
 app.use(keycloak.middleware());
 
 // setting the path of the router file to variable so that we can use all the routes from it.
-const router = require('./routes/router.js');
+const router = require('./routes/router');
 
 // Bodyparser Middleware
 app.use(bodyParser.json());
@@ -27,10 +28,8 @@ app.use(knexLogger(db));
 // this will set/use our api to initial path of /api.
 app.use('/api', router);
 
-
 // use 5000 port no. for server.
 const port = process.env.PORT || 5000;
-
 
 // build to serve static files.
 app.use(express.static(path.join(__dirname, 'client/build')));
@@ -38,7 +37,6 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.get('/*', (req, res) => {
     res.sendFile('index.html', { root: './client/build' });
 });
-
 
 app.listen(port, () => {
     console.log('Server Started');
