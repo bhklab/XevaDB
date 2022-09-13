@@ -1,5 +1,4 @@
 const express = require('express');
-const keycloak = require('../keycloak').getKeycloak();
 
 const router = express.Router();
 
@@ -54,7 +53,7 @@ router.post('/v1/drugspatients/dataset', verifytoken, datasets.postDrugsandPatie
 router.get('/v1/datasets/stats', verifytoken, datasets.getAllDatasetStatistics);
 
 // APIs related to drugs table.
-router.get('/v1/drugs', verifytoken, drugs.getAllDrugs);
+router.get('/v1/drugs', drugs.getAllDrugs);
 router.get('/v1/drugs/:drug', utils.isValidDrugId, verifytoken, drugs.getSingleDrugInformation);
 
 // APIs related to drug table.
