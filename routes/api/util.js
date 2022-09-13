@@ -1,5 +1,3 @@
-const { request } = require("express");
-
 /**
  * @param {string} datasetId
  * @param {Object} response
@@ -10,7 +8,6 @@ const isVerified = (response, datasetId) => (
     || (response.locals.user.verified === 'verified' && datasetId > 0
         && ((response.locals.user.exp - response.locals.user.iat) === 7200))
 );
-
 
 /**
  * @param {Object} request - request object.
@@ -24,7 +21,6 @@ const isValidId = (request, response, next) => {
         ? next()
         : next(new Error('Invalid Id, Please enter a valid integer id.'));
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -40,7 +36,6 @@ const isValidDatasetId = (request, response, next) => {
         : next(new Error('Invalid dataset id, Please enter a valid integer dataset id.'));
 };
 
-
 /**
  * @param {Object} request - request object.
  * @param {Object} response - reponse object.
@@ -54,7 +49,6 @@ const isValidTissueId = (request, response, next) => {
         ? next()
         : next(new Error('Invalid tissue id, Please enter a valid integer tissue id.'));
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -70,7 +64,6 @@ const isValidDrugId = (request, response, next) => {
         : next(new Error('Invalid drug id, Please enter a valid integer drug id.'));
 };
 
-
 /**
  * @param {Object} request - request object.
  * @param {Object} response - reponse object.
@@ -84,7 +77,6 @@ const isValidPatientId = (request, response, next) => {
         ? next()
         : next(new Error('Invalid patient id, Please enter a valid integer patient id.'));
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -100,13 +92,11 @@ const isValidModelId = (request, response, next) => {
         : next(new Error('Invalid model id, Please enter a valid integer model id.'));
 };
 
-
 /**
  * @param {string} user
  * @returns {Array} returns an array of values based the user argument.
  */
-const getAllowedDatasetIds = (user) => (user === 'unknown' ? [1, 6] : [1, 8]);
-
+const getAllowedDatasetIds = (user) => (user && user === 'authorized user' ? [1, 8] : [1, 6]);
 
 module.exports = {
     isVerified,
