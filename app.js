@@ -8,6 +8,8 @@ const logger = require('morgan');
 const knexLogger = require('knex-logger');
 const db = require('./db/knex1');
 
+const tokenValidation = require('./tokenValidation');
+
 // keycloak
 const keycloak = require('./keycloak').initKeycloak();
 
@@ -24,6 +26,9 @@ app.use(logger('dev'));
 app.use(knexLogger(db));
 
 // app.use(cors({origin: 'http://localhost:3000'}));
+
+// use token validation on each incoming API request.
+app.use(tokenValidation);
 
 // this will set/use our api to initial path of /api.
 app.use('/api', router);

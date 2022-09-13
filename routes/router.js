@@ -54,7 +54,7 @@ router.post('/v1/drugspatients/dataset', verifytoken, datasets.postDrugsandPatie
 router.get('/v1/datasets/stats', verifytoken, datasets.getAllDatasetStatistics);
 
 // APIs related to drugs table.
-router.get('/v1/drugs', keycloak.protect(), drugs.getAllDrugs);
+router.get('/v1/drugs', verifytoken, drugs.getAllDrugs);
 router.get('/v1/drugs/:drug', utils.isValidDrugId, verifytoken, drugs.getSingleDrugInformation);
 
 // APIs related to drug table.
@@ -73,8 +73,10 @@ router.get('/v1/modelinformation/:model', utils.isValidModelId, verifytoken, mod
 // APIs for model response table.
 router.get('/v1/modelresponse', verifytoken, modelResponse.getModelResponse);
 router.get('/v1/modelresponse/stats', verifytoken, modelResponse.getModelResponseStatsBasedOnDrugAndPatient);
-// TODO: this API end point can be eliminated and also the 'getModelResponsePerDataset' function can be removed
-// TODO: instead we can use '/v1/modelresponse' endpoint and pass 'dataset' as the query parameter with either name or id
+// TODO: this API end point can be eliminated
+// TODO: and also the 'getModelResponsePerDataset' function can be removed
+// TODO: instead we can use '/v1/modelresponse' endpoint
+// TODO: and pass 'dataset' as the query parameter with either name or id
 router.get('/v1/modelresponse/:dataset', utils.isValidDatasetId, verifytoken, modelResponse.getModelResponsePerDataset);
 
 // APIs related to mutation table.
@@ -96,6 +98,5 @@ router.get('/v1/tissues/details/:tissue', utils.isValidTissueId, verifytoken, ti
 
 // APIs related to drug screening table.
 router.get('/v1/treatment', verifytoken, drugScreening.getDrugScreeningDataBasedOnDrugAndPatient);
-
 
 module.exports = router;
