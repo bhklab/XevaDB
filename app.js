@@ -8,10 +8,10 @@ const logger = require('morgan');
 const knexLogger = require('knex-logger');
 const db = require('./db/knex1');
 
-const tokenValidation = require('./keycloakTokenValidation');
+const tokenValidation = require('./keycloak/keycloakTokenValidation');
 
 // keycloak
-const keycloak = require('./keycloak').initKeycloak();
+const keycloak = require('./keycloak/keycloak').initKeycloak();
 
 app.use(keycloak.middleware());
 
