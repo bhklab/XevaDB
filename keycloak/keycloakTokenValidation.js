@@ -2,6 +2,8 @@
 const request = require('request');
 const keycloakConfig = require('./keycloak.json');
 
+const USER_INFO_URL = `${keycloakConfig['auth-server-url']}/realms/${keycloakConfig.realm}/protocol/openid-connect/userinfo`;
+
 // check each request for a valid bearer token
 module.exports = (req, res, next) => {
     // assumes bearer token is passed as an authorization header
@@ -9,7 +11,7 @@ module.exports = (req, res, next) => {
         // configure the request to your keycloak server
         const options = {
             method: 'GET',
-            url: `${keycloakConfig['auth-server-url']}/realms/${keycloakConfig.realm}/protocol/openid-connect/userinfo`,
+            url: `${USER_INFO_URL}`,
             headers: {
                 // add the token you received to the userinfo request, sent to keycloak
                 Authorization: req.headers.authorization,
