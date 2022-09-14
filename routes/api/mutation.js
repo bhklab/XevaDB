@@ -3,8 +3,7 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
-
-// ************************************** Mutation Queries ***************************************************
+// *************************** Mutation Queries ***********************************
 // mutation data.
 const mutationQuery = () => knex.select('genes.gene_name', 'patients.patient', 'mutation.value')
     .from('mutation')
@@ -37,8 +36,7 @@ const mutationQuery = () => knex.select('genes.gene_name', 'patients.patient', '
         'sequencing.sequencing_uid',
     );
 
-
-// ************************************** Transform Functions *************************************************
+// ******************************* Transform Functions *****************************************
 // transforming the input data.
 const transformData = (input) => {
     // array to store mutation data .
@@ -60,8 +58,7 @@ const transformData = (input) => {
     return data;
 };
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// *************************** API Endpoints Functions ******************************************
 /**
  * @param {Object} request - request object.
  * @param {number} request.params.dataset - dataset id.
@@ -104,7 +101,6 @@ const getMutationDataBasedOnDataset = async (request, response) => {
         });
     }
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -156,7 +152,6 @@ const getMutationDataBasedOnDatasetAndGenes = async (request, response) => {
         });
     }
 };
-
 
 module.exports = {
     getMutationDataBasedOnDataset,

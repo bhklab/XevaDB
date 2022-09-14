@@ -3,8 +3,7 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
-
-// ************************************** Copy Number Variation Queries ***************************************************
+// *************************** Copy Number Variation Queries ***********************************
 // copy number variation query.
 const copyNumberVariationQuery = () => knex
     .select('genes.gene_name', 'patients.patient', 'copy_number_variation.value')
@@ -38,8 +37,7 @@ const copyNumberVariationQuery = () => knex
         'sequencing.sequencing_uid',
     );
 
-
-// ************************************** Transform Functions *************************************************
+// ************************** Transform Functions *******************************************
 /**
  * @param {Array} input - an array of the input data.
  * @returns {Array} - an array of the transformed data.
@@ -64,8 +62,7 @@ const transformData = (input) => {
     return data;
 };
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// ************************ API Endpoints Functions **************************************
 /**
  * @param {Object} request - request object.
  * @param {number} request.params.dataset - dataset id.
@@ -104,7 +101,6 @@ const getCopyNumberVariationDataBasedOnDataset = async (request, response) => {
         });
     }
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -155,7 +151,6 @@ const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) =
         });
     }
 };
-
 
 module.exports = {
     getCopyNumberVariationDataBasedOnDataset,

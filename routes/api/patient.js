@@ -3,8 +3,7 @@ const knex = require('../../db/knex1');
 const { getAllowedDatasetIds } = require('./util');
 const { getModelInformationDataQuery } = require('./model_information');
 
-
-// ************************************** Patient Queries ***************************************************
+// *************************** Patient Queries ********************************
 /**
  * @returns - knex query to get all the patients
  */
@@ -14,9 +13,7 @@ const getAllPatientsQuery = () => (
         .orderBy('patient_id')
 );
 
-
-
-// ************************************** Transform Functions *************************************************
+// **************************** Transform Functions ****************************
 /**
  * @param {Object} data - model information input data.
  * @returns {Array} - returns an array of transformed data.
@@ -26,7 +23,6 @@ const transformData = (data) => {
     let finalData = [];
     // variable to store transformed data.
     const transformedData = [];
-
 
     // loop through and transform the data.
     data.forEach((element) => {
@@ -75,8 +71,7 @@ const transformData = (data) => {
     return finalData;
 };
 
-
-// ************************************** API Endpoint Functions ******************************************
+// ************************* API Endpoint Functions ***************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -99,7 +94,6 @@ const getAllPatients = (request, response) => {
             data: error,
         }));
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -125,7 +119,6 @@ const getAllPatientsDetailedInformation = (request, response) => {
             data: error,
         }));
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -156,7 +149,6 @@ const getSinglePatientInformationBasedOnPatientId = (request, response) => {
             data: error,
         }));
 };
-
 
 module.exports = {
     getAllPatients,

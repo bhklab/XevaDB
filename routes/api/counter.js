@@ -1,7 +1,6 @@
 const knex = require('../../db/knex1');
 const { getAllowedDatasetIds } = require('./util');
 
-
 // count distinct tissues, drugs, datasets, models and patients.
 const tissues = (datasetArray) => knex.queryBuilder().countDistinct('tissue_id as tissues')
     .from('model_information')
@@ -22,7 +21,6 @@ const models = (datasetArray) => knex.queryBuilder().countDistinct('model_id as 
 const datasets = (datasetArray) => knex('datasets')
     .countDistinct('dataset_id as datasets')
     .whereBetween('dataset_id', datasetArray);
-
 
 /**
  * @param {Object} request - request object.

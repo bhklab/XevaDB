@@ -3,13 +3,12 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { batchIdQuery } = require('./batch');
 
-
-// ************************************** Mutation Queries *********************************************************
+// ********************************* Mutation Queries *********************************************
 const drugScreeningQuery = () => knex
     .select(
         'drug_screening.time', 'drug_screening.volume', 'drug_screening.volume_normal',
         'drugs.drug_name as drug', 'patients.patient as patient_id',
-        'batch_information.type', 'batches.batch', 'models.model as model_id'
+        'batch_information.type', 'batches.batch', 'models.model as model_id',
     )
     .from('drug_screening')
     .rightJoin(
@@ -43,8 +42,7 @@ const drugScreeningQuery = () => knex
         'batch_information.batch_id',
     );
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// ************************* API Endpoints Functions **********************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -66,7 +64,6 @@ const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
         .where('drugs.drug_name', drug)
         .andWhere('patients.patient', patient);
     // .andWhere('batch_information.type', 'treatment')
-
 
     grabBatchId.then((batch) => {
         // grab the dataset id.
@@ -98,7 +95,6 @@ const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
         }
     });
 };
-
 
 module.exports = {
     getDrugScreeningDataBasedOnDrugAndPatient,

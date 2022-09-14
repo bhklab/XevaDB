@@ -1,16 +1,14 @@
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
 
-
-// ************************************** Gene Queries ***************************************************
+// *************************** Gene Queries *********************************
 /**
  * @returns {Object} - returns a Knex query to select all the genes
  */
 const getAllGenesQuery = () => knex.select()
     .from('genes');
 
-
-// ************************************** API Endpoint Functions ******************************************
+// **************************** API Endpoint Functions ***********************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -27,7 +25,6 @@ const getAllGenes = (request, response) => {
             data: error,
         }));
 };
-
 
 module.exports = {
     getAllGenes,

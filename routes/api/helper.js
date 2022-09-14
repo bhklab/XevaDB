@@ -1,6 +1,5 @@
 const knex = require('../../db/knex1');
 
-
 /**
  * @param {string} datasetId
  * @returns {string} - returns the control based on the dataset id.
@@ -17,7 +16,6 @@ const getControl = (datasetId) => {
     return control;
 };
 
-
 /**
  * @param {Array} genes - array of genes.
  * @returns {Array} - an array of gene ids based on the genes array param.
@@ -26,7 +24,6 @@ const getControl = (datasetId) => {
 const geneIdsBasedOnGeneNames = (genes) => knex.select('gene_id')
     .from('genes')
     .whereIn('gene_name', genes);
-
 
 /**
  * @param {number} dataset - dataset id.
@@ -38,7 +35,6 @@ const drugsBasedOnDatasetIdQuery = (dataset) => knex
     .join('drugs', 'drugs.drug_id', 'datasets_drugs.drug_id')
     .where({ dataset_id: dataset });
 
-
 /**
  * @param {number} dataset- dataset id to get the patient from particular dataset.
  * @returns {Object} - knex query to grab an array of distinct patients
@@ -48,7 +44,6 @@ const patientsBasedOnDatasetIdQuery = (dataset) => knex
     .distinct('patients.patient', 'patients.patient_id')
     .from('patients')
     .where({ dataset_id: dataset });
-
 
 module.exports = {
     getControl,

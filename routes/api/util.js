@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /**
  * @param {string} datasetId
  * @param {Object} response

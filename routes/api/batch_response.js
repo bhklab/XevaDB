@@ -2,8 +2,7 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { batchIdQuery } = require('./batch');
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// ************************ API Endpoints Functions ***************************************
 /**
  * @param {Object} request - request object.
  * @param {string} request.query.drug - query drug parameter.
@@ -47,8 +46,7 @@ const getBatchResponseStatsBasedOnDrugAndPatient = (request, response) => {
                 }));
         }
     });
-};
-
+}
 
 module.exports = {
     getBatchResponseStatsBasedOnDrugAndPatient,

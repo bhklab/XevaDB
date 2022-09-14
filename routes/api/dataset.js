@@ -3,14 +3,12 @@ const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
 const { drugsBasedOnDatasetIdQuery, patientsBasedOnDatasetIdQuery } = require('./helper');
 
-
-// ************************************** Dataset Queries ***************************************************
+// ***************************** Dataset Queries *****************************
 /**
  * @returns {Object} - knex query to get data for all datasets
  */
 const getAllDatasetsQuery = () => knex.select()
     .from('datasets');
-
 
 /**
  * @return {Object} - knex query to get detailed information for all datasets
@@ -25,9 +23,8 @@ const getAllDatasetsDetailQuery = () => knex
     .leftJoin('patients as p', 'p.dataset_id', 'd.dataset_id')
     .leftJoin('models as m', 'm.patient_id', 'p.patient_id');
 
-
 /**
- * 
+ *
  * @returns {Object} - dataset statistics
  */
 const datasetStatisticsQuery = () => knex
@@ -40,10 +37,9 @@ const datasetStatisticsQuery = () => knex
     .join('datasets as d', 'mi.dataset_id', 'd.dataset_id')
     .groupBy('mi.dataset_id');
 
-
-// ************************************** Transform Functions *************************************************
+// ****************************** Transform Functions *******************************************
 /**
- * 
+ *
  * @param {Array} data - an array of input data
  * @returns {Array} - returns an array of transformed data
  */
@@ -55,7 +51,6 @@ const transformAllDatasetsData = (data) => (
         }
     ))
 );
-
 
 /**
  * @param {Object} data - input data.
@@ -71,7 +66,7 @@ const transformDatasetDetail = (data) => {
                 tissue: value.tissue_name,
                 patients: [value.patient],
                 models: [value.model],
-                drugs: [value.drug_name]
+                drugs: [value.drug_name],
             };
         }
         if (!transformedData[value.dataset_name].models.includes(value.model)) {
@@ -87,8 +82,7 @@ const transformDatasetDetail = (data) => {
     return transformedData;
 };
 
-
-// ************************************** API Endpoint Functions *************************************************
+// ******************************** API Endpoint Functions ***************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -112,7 +106,6 @@ const getAllDatasets = (request, response) => {
             data: error,
         }));
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -138,7 +131,6 @@ const getAllDatasetsDetailedInformation = (request, response) => {
             data: error,
         }));
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -166,7 +158,6 @@ const getSingleDatasetDetailedInformationBasedOnDatasetId = (request, response) 
             }));
     }
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -200,12 +191,11 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
     }
 };
 
-
 /**
- * 
+ *
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
- * @returns {Object} - returns an array of object where 
+ * @returns {Object} - returns an array of object where
  *                      each object provide data type count for a particular dataset
  */
 const getAllDatasetStatistics = (request, response) => {
@@ -214,7 +204,7 @@ const getAllDatasetStatistics = (request, response) => {
 
     datasetStatisticsQuery()
         .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
-        .then(data => response.status(200).json({
+        .then((data) => response.status(200).json({
             status: 'success',
             data,
         }))
@@ -223,7 +213,6 @@ const getAllDatasetStatistics = (request, response) => {
             data: error,
         }));
 };
-
 
 module.exports = {
     getAllDatasets,
