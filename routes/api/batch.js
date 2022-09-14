@@ -1,8 +1,7 @@
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
 
-
-// ************************************** Batch Queries ***************************************************
+// ******************************** Batch Queries *****************************************
 /**
  * @returns {Object} - a query to get the batch id
  */
@@ -25,8 +24,7 @@ const batchIdQuery = () => knex
         'drugs.drug_id',
     );
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// ************************ API Endpoints Functions *****************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -44,7 +42,6 @@ const getAllBatches = (request, response) => {
             data: error,
         }));
 };
-
 
 module.exports = {
     batchIdQuery,
