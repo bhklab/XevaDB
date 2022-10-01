@@ -1,9 +1,9 @@
 {
-    "realm": "xevadb-realm",
+    "realm": "bhklab",
     "bearer-only": true,
-    "auth-server-url": "http://localhost:8080/",
+    "auth-server-url": "https://oa.pmgenomics.ca/auth",
     "ssl-required": "external",
     "resource": "xevadb-api",
     "confidential-port": 0,
-    "realmPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuQBbovxdEpaAcDimHdUeAkLkfuAUQvdL2ys5mvFv1QP5P4lBjEB0FhARjz8ms7Xg1I3l5cPcDjm8hayzYS3XmI4/7lEsinn9St3Sm1X83IQQXqUzOwzSIxfUcZ+cq6IPMjpmlD/dEeQijIkA+4Ud89MJZngOZWnSMYlhJdijMaOXpPzfD3fLnuIJLrp4oheGkW5PUmLwNZr6ac6TBY+cH+rwUOVwWNq7rA6oFZwAxj331l5jJfIfEGehWGbXSRHGiRt3sl2yXfYWQ9vwJbbGyDrMN0ciVjV/WNKDQxqyhnMWzZIIoLyFmEu1RSui2zJI08qxw3nkW+gIWHVG1Wlb6QIDAQAB"
-}
+    "realmPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+YEcYkGTU+GsOOZ2qI6pF8Ug1MkoBpVuX81Eer3kaR3zcoYmU6uVbiGx0lGDq96qIZLhFvuOOuf3hlxkLvxA5YoUJVgdAH3muXksANZ/cvpEt+d4hxxWZ4JFpIvUMtrPy5zTe30t8UiigOBxpjRVZPOjl2UuNZEJbWfK2fdLP1D2Mcd7kH3KhgHfOQnSsudxHB6M2LHdUa/jHmdV2FWA4hZ7WW+2zj//ttGF6fDqx8mIVRF1Gicm3EVWA89ImLubqCzVTYdd07rTQy5N9ugpIxjfGTaNivy3cqSyB9nPz61TY/lCbe5zNqFuncMOyyZGxtu7ODDQuBYvHQgwygbp4wIDAQAB"
+  }
