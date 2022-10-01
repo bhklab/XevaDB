@@ -1,0 +1,8 @@
+{
+    "realm": "bhklab",
+    "auth-server-url": "https://oa.pmgenomics.ca/auth",
+    "ssl-required": "external",
+    "resource": "xevadb-client",
+    "public-client": true,
+    "confidential-port": 0
+}

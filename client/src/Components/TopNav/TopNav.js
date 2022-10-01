@@ -19,7 +19,7 @@ import logo from '../../images/logo-latest.png';
  */
 function TopNav() {
     const { keycloak } = useKeycloak();
-    const username = keycloak?.tokenParsed?.preferred_username;
+    const username = keycloak?.idTokenParsed?.preferred_username;
     const token = keycloak?.authenticated && keycloak?.token;
     window.accessToken = token;
 
