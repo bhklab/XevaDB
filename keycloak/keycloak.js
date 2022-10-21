@@ -1,18 +1,18 @@
 /* eslint-disable no-underscore-dangle */
-const session = require('express-session');
+// const session = require('express-session');
 const Keycloak = require('keycloak-connect');
 const keycloakConfig = require('./keycloak.json');
 
 let _keycloak;
 
-function initKeycloak() {
+function initKeycloak(memoryStore) {
     if (_keycloak) {
         console.warn('Trying to init Keycloak again!');
         return _keycloak;
     }
 
     console.log('Initializing Keycloak...');
-    const memoryStore = new session.MemoryStore();
+    // const memoryStore = new session.MemoryStore();
     _keycloak = new Keycloak({ store: memoryStore }, keycloakConfig);
     return _keycloak;
 }
