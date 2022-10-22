@@ -36,6 +36,10 @@ const Merge = () => (
     </>
 );
 
+const eventLogger = (event, error) => {
+    console.log('onKeycloakEvent', event, error);
+};
+
 const App = () => {
     // Google analytics setup.
     useEffect(() => {
@@ -49,7 +53,11 @@ const App = () => {
 
     return (
         <div>
-            <ReactKeycloakProvider authClient={keycloak}>
+            <ReactKeycloakProvider
+                authClient={keycloak}
+                onEvent={eventLogger}
+                initOptions={{ checkLoginIframe: false }}
+            >
                 <Router>
                     <Switch>
                         <Route path="/" exact component={Home} />
