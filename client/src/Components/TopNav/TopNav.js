@@ -10,15 +10,14 @@ import {
 import logo from '../../images/logo-latest.png';
 
 // all the top nav links
-const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc'];
+// const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc'];
 
 /**
  * @returns {component} - TopNav component
  */
-const TopNav = function () {
+function TopNav() {
     const [isLoggedIn, updateLoggedInState] = useState('Login');
     const [isLink, updateIsLink] = useState('/login');
-    const [selectedLink, updateSelectedLink] = useState('');
 
     useEffect(() => {
         localStorage.getItem('user')
@@ -80,6 +79,6 @@ const TopNav = function () {
             </TopNavContainer>
         </MainConatiner>
     );
-};
+}
 
 export default TopNav;
