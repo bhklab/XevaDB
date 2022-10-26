@@ -107,10 +107,10 @@ const createAlterationData = (data_mut, data_rna, data_cnv) => {
     const remainingTypes = (Object.keys(data_cnv).length > 0 || Object.keys(data_mut).length > 0)
         ? [
             { value: 'Wild Type', color: 'lightgray' },
-            { value: 'Not Available', color: 'none' }
+            { value: 'Not Available', color: 'none' },
         ]
         : [
-            { value: 'Not Available', color: 'none' }
+            { value: 'Not Available', color: 'none' },
         ];
 
     const rect_alterations = [
@@ -207,24 +207,24 @@ const createGeneYAxis = (
 const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, tooltip) => {
     const biomarkerImage = skeleton
         .append('g')
-        .attr('id', 'biomarker-image')
+        .attr('id', 'biomarker-image');
 
     biomarkerImage.selectAll('div')
         .data(genes)
         .join('a')
-        .attr('xlink:href', (d) => drugs ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}` : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`)
+        .attr('xlink:href', (d) => (drugs ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}` : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`))
         .append('text')
         .text('⭕️')
         .attr('font-size', '0.8em')
         .attr('x', -40)
         .attr('y', (d, i) => (i + 0.55) * rect_height)
-        .on('mouseover', function (d) {
+        .on('mouseover', (d) => {
             const tooltipDiv = tooltip
                 .style('visibility', 'visible')
                 .style('left', `${d3.event.pageX - 100}px`)
                 .style('top', `${d3.event.pageY + 15}px`)
                 .style('color', `${colors.black}`)
-                .style('background-color', `${colors.white}`)
+                .style('background-color', `${colors.white}`);
 
             // add text to tooltip
             tooltipDiv
@@ -232,7 +232,7 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
                 .attr('id', 'tooltip-biomarker')
                 .text('Redirect to Biomarker Page');
         })
-        .on('mouseout', function () {
+        .on('mouseout', () => {
             // hide the tooltip
             tooltip
                 .style('visibility', 'hidden');
@@ -240,7 +240,7 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
             // remove the biomarker tooltip data
             d3.select('#tooltip-biomarker').remove();
         });
-}
+};
 
 /**
  * @param {Array} genes - array of genes.
@@ -279,7 +279,6 @@ const patientAlteration = (hmap_patients, genes_mut, genes_cnv) => {
 
     return patient_alterations;
 };
-
 
 /* ****************************************** Make Oncoprint ****************************************** */
 /**
@@ -422,8 +421,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
             // if the gene from genes located in genes_mut.
             // mutation later because they are 1/3 the box.
             if (
-                genes_mut.includes(genes[i]) && patient_mut.includes(hmap_patients[j]) &&
-                data_mut[genes[i]][hmap_patients[j]] !== '0' && data_mut[genes[i]][hmap_patients[j]] !== ''
+                genes_mut.includes(genes[i]) && patient_mut.includes(hmap_patients[j])
+                && data_mut[genes[i]][hmap_patients[j]] !== '0' && data_mut[genes[i]][hmap_patients[j]] !== ''
             ) {
                 isAlteration = !isAlteration ? true : isAlteration;
                 // based on the data gives different colors to the rectangle.
@@ -808,7 +807,6 @@ const makeOncoprint = (hmap_patients, props, context) => {
     }
 };
 
-
 /** ******************************** Rank Oncoprint ******************************** */
 /**
  * ranking oncoprint based on the gene clicked.
@@ -824,17 +822,17 @@ const rankOncoprint = (gene, data, props, context) => {
     const retunType = (i) => {
         let type = {};
         switch (i) {
-            case 0:
-                type = mutationTypeMap;
-                break;
-            case 1:
-                type = cnaMap;
-                break;
-            case 2:
-                type = rnaMap;
-                break;
-            default:
-                type = mutationTypeMap;
+        case 0:
+            type = mutationTypeMap;
+            break;
+        case 1:
+            type = cnaMap;
+            break;
+        case 2:
+            type = rnaMap;
+            break;
+        default:
+            type = mutationTypeMap;
         }
         return type;
     };
@@ -926,7 +924,6 @@ const rankOncoprint = (gene, data, props, context) => {
     d3.select(`#circle-${gene.replace(/\s/g, '').replace(/\+/g, '')}`)
         .style('visibility', 'visible');
 };
-
 
 /** ******************************** Oncoprint Main Component ******************************** */
 /**
