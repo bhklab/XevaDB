@@ -43,9 +43,7 @@ class OncoprintData extends React.Component {
 
         // setting the genomics prop and updating the list
         let genomicsListProp = this.props.genomicsList?.split(',') || this.defaultGenomics;
-        genomicsListProp = genomicsListProp.map(genomics => {
-            return genomics === 'Gene Expression' ? 'rnaseq' : genomics.toLowerCase();
-        });
+        genomicsListProp = genomicsListProp.map((genomics) => (genomics === 'Gene Expression' ? 'rnaseq' : genomics.toLowerCase()));
 
         // gene list prop
         const geneListProp = this.props.geneList || OncoprintGenes;
@@ -56,22 +54,21 @@ class OncoprintData extends React.Component {
                 loading: false,
             });
         } else if (Number(datasetIdProp) > 0) {
-            const queries = genomicsListProp.map((genomics) => {
+            const queries = genomicsListProp.map((genomics) =>
                 // return the API call
-                return axios.get(
+                axios.get(
                     `/api/v1/${genomics}?genes=${geneListProp}&dataset=${datasetIdProp}`,
-                    { headers: { Authorization: localStorage.getItem('user') } }
-                );
-            });
+                    { headers: { Authorization: localStorage.getItem('user') } },
+                ));
 
             if (!drugListProp) {
                 queries.push(
                     axios.get(
                         `/api/v1/datasets/detail/${datasetIdProp}`,
-                        { headers: { Authorization: localStorage.getItem('user') } }
-                    )
-                )
-            };
+                        { headers: { Authorization: localStorage.getItem('user') } },
+                    ),
+                );
+            }
 
             Promise.all([...queries])
                 .then((response) => {
@@ -102,7 +99,7 @@ class OncoprintData extends React.Component {
         const inputData = JSON.parse(JSON.stringify(onco));
 
         // grab drugs
-        const drugs = inputData.drugs;
+        const { drugs } = inputData;
 
         // delete the drug object from the inputData object
         delete inputData.drugs;
@@ -115,8 +112,7 @@ class OncoprintData extends React.Component {
             Object.values(inputData).forEach((value, i) => {
                 if (i === 0) {
                     hmap_patients = value.data.pop();
-                }
-                else {
+                } else {
                     value.data.pop();
                 }
             });
@@ -156,11 +152,11 @@ class OncoprintData extends React.Component {
 
             // data
             data[`data_${val}`] = {};
-            inputData[value].data.forEach(el => {
+            inputData[value].data.forEach((el) => {
                 data[`data_${val}`][el.gene_id] = el;
                 // deletes the gene id from the data
                 // delete el.gene_id;
-            })
+            });
         });
 
         this.setState({
@@ -177,7 +173,7 @@ class OncoprintData extends React.Component {
             drugs,
             dimensions: { height: 30, width: 14 },
             margin: {
-                top: 50, right: 250, bottom: 50, left: 250,
+                top: 50, right: 250, bottom: 200, left: 250,
             },
             loading: false,
         });
@@ -189,7 +185,7 @@ class OncoprintData extends React.Component {
             patient_mut, patient_rna, patient_cnv,
             data_mut, data_rna, data_cnv, drugs,
             dimensions, margin, threshold,
-            hmap_patients, loading, error
+            hmap_patients, loading, error,
         } = this.state;
 
         const { datasetId: datasetIdProp } = this.props;
@@ -199,19 +195,19 @@ class OncoprintData extends React.Component {
             // if error occures render the error component!
             if (error) {
                 return <ErrorComponent message="Page not found!!" />;
-            };
+            }
 
             // if the dataset id is 4 then there is no data available!
             if (datasetIdProp === '4' || datasetIdProp === 4) {
                 return (
                     <ErrorComponent message="Data unavailable for PDXE (Gastric Cancer)" />
                 );
-            };
+            }
 
             if (
-                Object.keys(data_mut).length > 0 ||
-                Object.keys(data_cnv).length > 0 ||
-                Object.keys(data_rna).length > 0
+                Object.keys(data_mut).length > 0
+                || Object.keys(data_cnv).length > 0
+                || Object.keys(data_rna).length > 0
             ) {
                 return (
                     <Oncoprint

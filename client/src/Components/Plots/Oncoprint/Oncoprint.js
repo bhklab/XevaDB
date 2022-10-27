@@ -314,6 +314,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
     const height = genes.length * rect_height;
     const width = hmap_patients.length * rect_width;
 
+    console.log(height, width, rect_height, rect_width);
+
     // making tooltips
     const tooltip = createToolTip('oncoprint');
 
