@@ -18,7 +18,7 @@ class HeatMap extends Component {
             modifiedPatients: [],
             responseValue: 'mRECIST',
         };
-        // adding tool tip function 
+        // adding tool tip function
         this.createToolTip = createToolTip.bind(this);
     }
 
@@ -83,7 +83,6 @@ class HeatMap extends Component {
         let drugIndex = 0;
         const patientUse = patient;
 
-
         /** *********************************** drug and patient evaluations ************************************** */
         let maxDrug = 0;
         let drugEvaluations = {};
@@ -137,7 +136,6 @@ class HeatMap extends Component {
         // reference to this
         const reference = this;
 
-
         /** *********************************** selection dropdown ************************************** */
         // create a selection dropdown.
         function createSelection() {
@@ -156,20 +154,19 @@ class HeatMap extends Component {
                     }
                 });
 
-
-            d3.select('.select').on('change', function () {
+            d3.select('.select').on('change', () => {
                 // recover the option that has been chosen
                 const selectedOption = d3.select('select').property('value');
                 let response = '';
                 switch (selectedOption) {
-                    case 'Slope':
-                        response = 'slope';
-                        break;
-                    case 'Best Average Response':
-                        response = 'best.average.response';
-                        break;
-                    default:
-                        response = selectedOption;
+                case 'Slope':
+                    response = 'slope';
+                    break;
+                case 'Best Average Response':
+                    response = 'best.average.response';
+                    break;
+                default:
+                    response = selectedOption;
                 }
 
                 reference.setState({
@@ -178,7 +175,7 @@ class HeatMap extends Component {
                     d3.select(`#heatmap-${plotId}`).remove();
                     d3.select('#heatmap-tooltip').remove();
 
-                    let margin = this.calcMargin(selectedOption);
+                    const margin = this.calcMargin(selectedOption);
 
                     this.makeHeatMap(data, patient, margin);
                 });
@@ -202,7 +199,6 @@ class HeatMap extends Component {
             });
             return [min, max];
         }
-
 
         /** *********************************** legends (Except for mRECIST) ************************************** */
         // creating legend for the response type except for mRECIST.
@@ -261,7 +257,6 @@ class HeatMap extends Component {
                 .style('text-anchor', 'start');
         }
 
-
         /** *********************************** scale for the main skeleton ************************************** */
         /** SCALE FOR MAIN SKELETON * */
 
@@ -285,7 +280,6 @@ class HeatMap extends Component {
             .scale(xScale)
             .tickSize(5);
 
-
         /** *********************************** SVG Canvas ************************************** */
         // make the SVG element.
         const svg = d3.select('#heatmap')
@@ -304,7 +298,6 @@ class HeatMap extends Component {
         // structure of the heatmap
         const skeleton = svg.append('g')
             .attr('id', 'skeleton');
-
 
         /** *********************************** Circles on y-axis (for sorting) ************************************** */
         /** Appending Circle to the  Y-Axis */
@@ -333,7 +326,6 @@ class HeatMap extends Component {
             .enter()
             .append('g')
             .attr('transform', (d, i) => `translate(0,${i * rectHeight})`);
-
 
         /** *********************************** drug evaluations ************************************** */
         // this will append rect equivalent to number of patient ids.
@@ -397,7 +389,6 @@ class HeatMap extends Component {
             };
         }
 
-
         /** *********************************** tooltip ************************************** */
         const createToolTip = (x, y, patient, response) => {
             // tooltip on mousever setting the div to visible.
@@ -441,7 +432,6 @@ class HeatMap extends Component {
 
         let pCount = 0;
         drugIndex = 0;
-
 
         /** *********************************** event listener to rectangles ************************************** */
         gskeleton.selectAll('rect.hmap-hlight')
@@ -546,29 +536,27 @@ class HeatMap extends Component {
             .attr('y', 0)
             .style('opacity', 0);
 
-
         /** *********************************** biomarker Image ************************************** */
         const biomarkerImage = skeleton
             .append('g')
-            .attr('id', 'biomarker-image')
-
+            .attr('id', 'biomarker-image');
 
         biomarkerImage.selectAll('div')
             .data(drug)
             .join('a')
-            .attr('xlink:href', (d) => geneList ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drug}&selectedDrug=${d}` : `/biomarker?selectedDrug=${d}`)
+            .attr('xlink:href', (d) => (geneList ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drug}&selectedDrug=${d}` : `/biomarker?selectedDrug=${d}`))
             .append('text')
             .text('⭕️')
             .attr('font-size', '0.8em')
             .attr('x', -40)
             .attr('y', (d, i) => (i + 1.70) * rectHeight)
-            .on('mouseover', function (d) {
+            .on('mouseover', (d) => {
                 const tooltipDiv = tooltip
                     .style('visibility', 'visible')
                     .style('left', `${d3.event.pageX - 100}px`)
                     .style('top', `${d3.event.pageY + 15}px`)
                     .style('color', `${colors.black}`)
-                    .style('background-color', `${colors.white}`)
+                    .style('background-color', `${colors.white}`);
 
                 // add text to tooltip
                 tooltipDiv
@@ -576,7 +564,7 @@ class HeatMap extends Component {
                     .attr('id', 'tooltip-biomarker')
                     .text('Redirect to Biomarker Page');
             })
-            .on('mouseout', function () {
+            .on('mouseout', () => {
                 // hide the tooltip
                 tooltip
                     .style('visibility', 'hidden');
@@ -584,7 +572,6 @@ class HeatMap extends Component {
                 // remove the biomarker tooltip data
                 d3.select('#tooltip-biomarker').remove();
             });
-
 
         /** *********************************** X-AXIS AND Y-AXIS FOR THE SKELETONs ************************************** */
         // calling the y-axis and removing the stroke.
@@ -650,7 +637,7 @@ class HeatMap extends Component {
                 // remove all the divs with id tooltiptext.
                 d3.select('#tooltiptextdrug').remove();
                 // margin
-                let margin = this.calcMargin(responseType);
+                const margin = this.calcMargin(responseType);
                 // highlight.
                 this.rankHeatMap(d, i, data, responseType, margin);
             });
@@ -670,7 +657,6 @@ class HeatMap extends Component {
             .attr('x', (dataset === '7' ? '-2.4em' : '0.6em'))
             .attr('y', '.15em');
 
-
         /** *********************************** SMALL RECTANGLES ON RIGHT SIDE OF HEATMAP ************************************** */
         // This will create four rectangles on right side for the Evaluation of target lesions.
         if (responseType === 'mRECIST') {
@@ -682,7 +668,7 @@ class HeatMap extends Component {
                 .enter()
                 .append('rect')
                 .attr('x', width + margin.right / 2)
-                .attr('y', (d, i) => height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75) : (height / 6 + i * rectHeight * 0.75))
+                .attr('y', (d, i) => (height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75) : (height / 6 + i * rectHeight * 0.75)))
                 .attr('height', rectWidth)
                 .attr('width', rectWidth)
                 .attr('fill', (d) => Object.values(d));
@@ -692,11 +678,10 @@ class HeatMap extends Component {
                 .enter()
                 .append('text')
                 .attr('x', width + margin.right / 2 + 20)
-                .attr('y', (d, i) => height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75 + 12) : (height / 6 + i * rectHeight * 0.75 + 12))
+                .attr('y', (d, i) => (height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75 + 12) : (height / 6 + i * rectHeight * 0.75 + 12)))
                 .text((d) => Object.keys(d))
                 .attr('fill', `${colors['--main-font-color']}`)
                 .attr('font-size', '14px');
-
 
             /** *********************************** VERTICAL GRAPH ON RIGHT SIDE OF HEATMAP ************************************** */
             const strokeWidth = 0.75;
@@ -758,7 +743,6 @@ class HeatMap extends Component {
             for (let i = 0; i < drug.length; i++) {
                 drugEvaluationRectangle(i);
             }
-
 
             /** *********************************** HORIZONTAL GRAPH AT THE TOP OF HEATMAP ************************************** */
             let maxPatientidTotal = 0;
@@ -851,7 +835,7 @@ class HeatMap extends Component {
 
     rankHeatMap = (
         drug, i, dataset, responseType, margin = this.props, { dimensions } = this.props,
-        { drugId } = this.props, { className } = this.props, { dataset: datasetId } = this.props
+        { drugId } = this.props, { className } = this.props, { dataset: datasetId } = this.props,
     ) => {
         // grabbing the clicked data value.
         const data = dataset[i];
