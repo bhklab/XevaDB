@@ -262,7 +262,6 @@ class Search extends React.Component {
     // clear the text from text area.
     clearText = () => {
         const { selectedGeneSearch } = this.state;
-        console.log(selectedGeneSearch);
         if (selectedGeneSearch[0] === 'Enter Gene Symbols (Each separated by a comma; Max 50 genes)') {
             this.setState({
                 selectedGeneSearch: '',
