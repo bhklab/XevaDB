@@ -22,7 +22,7 @@ class Search extends React.Component {
             drugs: [],
             datasets: [],
             genes: this.getGenesSelectOptions(GeneList),
-            selectedGeneSearch: ['Enter Gene Symbols (Max 50 genes)'],
+            selectedGeneSearch: ['Enter Gene Symbols (Each separated by a comma; Max 50 genes)'],
             selectedDrugs: [],
             selectedDataset: '',
             genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'].map((item, i) => ({
@@ -65,7 +65,7 @@ class Search extends React.Component {
         }));
 
         return (
-            [{ value: 'user defined list', label: 'User-Defined List (Max 50 genes)' }, ...genes]
+            [{ value: 'user defined list', label: 'User-Defined List (Max 50 genes each separated by a comma)' }, ...genes]
         );
     };
 
@@ -237,11 +237,11 @@ class Search extends React.Component {
 
     // checks if the gene list entered by the user is less than 50 in number
     ifGeneNumberLessThanFifty = () => {
-        const { selectedGeneSearch } = this.state;
+        const { selectedGeneSearch, geneLimit } = this.state;
         // gene length
         const geneLength = typeof (selectedGeneSearch) === 'string' && selectedGeneSearch.split(',').length;
         // return true/false based on the length
-        return geneLength < this.state.geneLimit;
+        return geneLength < geneLimit;
     }
 
     // redirects the user to search page.
@@ -262,7 +262,8 @@ class Search extends React.Component {
     // clear the text from text area.
     clearText = () => {
         const { selectedGeneSearch } = this.state;
-        if (selectedGeneSearch[0] === 'Enter Gene Symbol(s)') {
+        console.log(selectedGeneSearch);
+        if (selectedGeneSearch[0] === 'Enter Gene Symbols (Each separated by a comma; Max 50 genes)') {
             this.setState({
                 selectedGeneSearch: '',
             });
@@ -271,7 +272,8 @@ class Search extends React.Component {
 
     // text for the pop up
     popupText = () => {
-        if (this.state.selectedGeneSearch.length > 1) {
+        const { selectedGeneSearch } = this.state;
+        if (selectedGeneSearch.length > 1) {
             return this.ifGeneNumberLessThanFifty() ? 'Complete all the fields!' : 'Please keep gene list less than 50!';
         }
         return 'Complete all the fields!';
