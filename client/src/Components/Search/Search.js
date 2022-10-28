@@ -8,6 +8,15 @@ import { GeneList } from '../../utils/GeneList';
 import feelingLuckyRequest from '../../utils/FeelingLuckyRequest';
 import colors from '../../styles/colors';
 
+// object to keep track of the placeholders
+const placeholderLabels = {
+    selectedGeneTextAreaLabel: 'Enter Gene Symbols (Each separated by a comma; Max 50 genes)',
+    datasetLabel: 'Select the Dataset',
+    drugLabel: 'Search for the Drug (eg. CLR457)',
+    molecularAlterationLabel: 'Molecular Alteration',
+    geneLabel: 'User Defined or Pre-Defined Gene List',
+};
+
 class Search extends React.Component {
     static mapDataset(dataset) {
         if (dataset === 'McGill TNBC') {
@@ -22,7 +31,7 @@ class Search extends React.Component {
             drugs: [],
             datasets: [],
             genes: this.getGenesSelectOptions(GeneList),
-            selectedGeneSearch: ['Enter Gene Symbols (Each separated by a comma; Max 50 genes)'],
+            selectedGeneSearch: [placeholderLabels.selectedGeneTextAreaLabel],
             selectedDrugs: [],
             selectedDataset: '',
             genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'].map((item, i) => ({
@@ -65,7 +74,10 @@ class Search extends React.Component {
         }));
 
         return (
-            [{ value: 'user defined list', label: 'User-Defined List (Max 50 genes each separated by a comma)' }, ...genes]
+            [
+                { value: 'user defined list', label: 'User-Defined List (Max 50 genes each separated by a comma)' },
+                ...genes,
+            ]
         );
     };
 
@@ -262,7 +274,7 @@ class Search extends React.Component {
     // clear the text from text area.
     clearText = () => {
         const { selectedGeneSearch } = this.state;
-        if (selectedGeneSearch[0] === 'Enter Gene Symbols (Each separated by a comma; Max 50 genes)') {
+        if (selectedGeneSearch[0] === placeholderLabels.selectedGeneTextAreaLabel) {
             this.setState({
                 selectedGeneSearch: '',
             });
@@ -295,7 +307,7 @@ class Search extends React.Component {
                                 <Select
                                     options={datasets}
                                     styles={customStyles}
-                                    placeholder="Select the Dataset"
+                                    placeholder={placeholderLabels.datasetLabel}
                                     onChange={this.handleDatasetChange}
                                 />
                             </div>
@@ -303,7 +315,7 @@ class Search extends React.Component {
                                 <Select
                                     options={drugs}
                                     styles={customStyles}
-                                    placeholder="Search for the Drug (eg. CLR457)"
+                                    placeholder={placeholderLabels.drugLabel}
                                     onChange={this.handleDrugChange}
                                     isMulti
                                     isSearchable
@@ -317,7 +329,7 @@ class Search extends React.Component {
                             <Select
                                 options={genomicsValue}
                                 styles={customStyles}
-                                placeholder="Molecular Alteration"
+                                placeholder={placeholderLabels.molecularAlterationLabel}
                                 onChange={this.handleExpressionChange}
                                 isMulti
                                 isClearable
@@ -347,7 +359,7 @@ class Search extends React.Component {
                             <Select
                                 options={genes}
                                 styles={customStyles}
-                                placeholder="User Defined or Pre-Defined Gene List"
+                                placeholder={placeholderLabels.geneLabel}
                                 onChange={this.handleGeneListChange}
                             />
                         </div>
