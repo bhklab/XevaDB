@@ -57,7 +57,7 @@ const createRoot = (data) => {
 const createLineLinks = (svg, root) => (
     svg.append('g')
         .attr('fill', 'none')
-        .attr('stroke', `${colors.pink_header}`)
+        .attr('stroke', `${colors.silver}`)
         .selectAll('path')
         .data(root.links())
         .join('path')
@@ -82,7 +82,7 @@ const appendCircles = (node) => {
     node.append('circle')
         .attr('cx', (d) => d.depth * nodeSize)
         .attr('r', (d) => (d.children ? 3 : 2.5))
-        .attr('fill', (d) => (d.children ? null : `${colors.pink_header}`));
+        .attr('fill', (d) => (d.children ? null : `${colors['--main-font-color']}`));
 };
 
 // function used by the nodes to decide on the font size based on the depth in the tree
@@ -93,10 +93,10 @@ const getNodeFontSizeAndWeight = (node, isFontWeight = false) => {
             return isFontWeight ? '700' : '19px';
             break;
         case 1:
-            return isFontWeight ? '600' : '16px';
+            return isFontWeight ? '600' : '17px';
             break;
         case 2:
-            return isFontWeight ? '600' : '15px';
+            return isFontWeight ? '500' : '15px';
             break;
         case 3:
             return isFontWeight ? '500' : '13px';
@@ -112,11 +112,11 @@ const appendText = (node) => {
         .text((d) => d.data.name)
         .attr('font-size', (d) => getNodeFontSizeAndWeight(d))
         .attr('font-weight', (d) => getNodeFontSizeAndWeight(d, true))
-        .attr('fill', `${colors.blue_header}`);
+        .attr('fill', (d) => d.depth === 3 ? `${colors['--bg-color']}` : `${colors['--main-font-color']}`);
 
     node.append('title')
         .text((d) => d.ancestors().reverse().map((d) => d.data.name).join('/'))
-        .attr('fill', `${colors.blue_header}`);
+        .attr('fill', `${colors['--main-font-color']}`);
 };
 
 // appends the text which displays the count for the children at the lowest level of the tree
@@ -129,14 +129,14 @@ const appendDataCount = (svg, root, node) => {
             .attr('x', x)
             .attr('text-anchor', 'end')
             .attr('font-weight', 'bold')
-            .attr('fill', `${colors.blue_header}`)
+            .attr('fill', `${colors['--main-font-color']}`)
             .text(label);
 
         node.append('text')
             .attr('dy', '0.32em')
             .attr('x', x)
             .attr('text-anchor', 'end')
-            .attr('fill', (d) => (d.children ? null : `${colors.blue_header}`))
+            .attr('fill', (d) => (d.children ? null : `${colors['--main-font-color']}`))
             .attr('font-weight', 600)
             .data(root.copy().sum(value).descendants())
             .text((d) => format(d.value, d));

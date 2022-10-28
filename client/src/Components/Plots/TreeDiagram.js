@@ -103,7 +103,7 @@ const createTree = (data, { height, width }) => {
 const createLinks = (svg, root) => {
     svg.append('g')
         .attr('fill', 'none')
-        .attr('stroke', `${colors.pink_header}`)
+        .attr('stroke', `${colors.silver}`)
         .attr('stroke-opacity', 0.4)
         .attr('stroke-width', 1.5)
         .selectAll('path')
@@ -130,7 +130,7 @@ const createNodes = (svg, root) => {
 // create circles for the node
 const createCircles = (node) => {
     node.append('circle')
-        .attr('fill', (d) => (d.children ? `${colors.pink_header}` : `${colors.light_pink_header}`))
+        .attr('fill', (d) => (d.children ? `${colors['--bg-color']}` : `${colors.fade_blue}`))
         .attr('r', 4.0);
 };
 
@@ -159,7 +159,7 @@ const appendText = (node, history) => {
         .on('click', (d) => {
             clickEventHandler(d, history);
         })
-        .attr('fill', `${colors.blue_header}`)
+        .attr('fill', d => d.depth === 1 ? `${colors['--link-color']}` : `${colors['--main-font-color']}`)
         .clone(true)
         .lower();
 };
@@ -208,28 +208,12 @@ const TreeDiagram = (props) => {
     }, []);
 
     return (
-        <div className='component-wrapper center-component'>
-            <h1>
-                Dataset =
-                {' '}
-                <span style={{ color: `${colors.pink_header}` }}>
-                    {data.dataset}
-                </span>
-                {' '}
-                and
-                Patient =
-                {' '}
-                <span style={{ color: `${colors.pink_header}` }}>
-                    {data.name}
-                </span>
-            </h1>
-            <div id="treediagram" />
-        </div>
+        <div id="treediagram" />
     );
 };
 
 TreeDiagram.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    data: PropTypes.object.isRequired,
     margin: PropTypes.shape({
         top: PropTypes.number,
         right: PropTypes.number,

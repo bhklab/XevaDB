@@ -8,7 +8,7 @@ import Drug from './IndividualPages/Drug/Drug';
 import DrugSummary from './SummaryPages/DrugSummary/DrugSummary';
 import DrugTable from './SummaryPages/DrugSummary/DrugTable';
 import Footer from './Footer/Footer';
-import GrowthCurveData from './Plots/TumorGrowthCurve/GrowthCurveData';
+import CurveComponent from './Plots/TumorGrowthCurve/CurveComponent';
 import HeatMapData from './Plots/HeatMap/HeatMapData';
 import Home from './Home/Home';
 import Login from './Login/Login';
@@ -26,6 +26,7 @@ import TumorGrowthCurve from './Plots/TumorGrowthCurve/TumorGrowthCurve';
 export {
     Biomarker,
     CounterNav,
+    CurveComponent,
     Dataset,
     DatasetSummary,
     Documentation,
@@ -34,7 +35,6 @@ export {
     DrugSummary,
     DrugTable,
     Footer,
-    GrowthCurveData,
     HeatMapData,
     Home,
     Login,

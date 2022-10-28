@@ -8,12 +8,13 @@ const FormContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-family: 'Open Sans', sans-serif;
 `;
 
 const Form = styled.div`
-    background: ${colors.fade_blue};
-    height: 400px;
-    width: 550px;
+    background: ${colors['--table-bg-color']};
+    height: 375px;
+    width: 525px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -21,49 +22,44 @@ const Form = styled.div`
     justify-content: center;
 
     a {
-        color: ${colors.blue_header}
+        color: ${colors['--link-color']}
     }
 `;
 
 const FormHeading = styled.div`
-    color: ${colors.blue_header};
-    font-size: 1.75rem;
+    color: ${colors['--bg-color']};
+    font-size: 1.85em;
     font-weight: 700;
 `;
 
 const SubmitStyle = styled.div`
     margin-top: 20px;
     button {
-        background: ${colors.blue_header}
+        background: ${colors['--bg-color']};
+
         &:hover {
-            background: ${colors.pink_header}
+            background: ${colors['--table-bg-color']};
+            color: ${colors['--bg-color']};
         }
     }
 `;
 
 const LogoStyle = styled.img`
-    width: calc(5em + 2vw);
-    height: 60px;
-    margin-top: 10px;
-    z-index: 999;
-    position: relative;
+    width: calc(5em + 1vw);
+    height: 50px;
     margin-left: calc(100vw - (3vw + 5em));
-
-    @media only screen and (min-height: 900px) {
-        height: 70px;
-    }
 `;
 
 const LogoBack = styled.div`
-    height: 80px;
-    background-image: linear-gradient(
-        to right,
-        ${colors.fade_blue},
-        ${colors.white_smoke}
-    );
+    height: 60px;
+    background: ${colors['--bg-color']};
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    @media only screen and (min-height: 900px) {
-        height: 90px;
+    // when screen size is greater than 2000px
+    @media only screen and (min-width: 2000px) {
+        height: 70px;
     }
 `;
 

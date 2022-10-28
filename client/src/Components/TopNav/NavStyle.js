@@ -1,83 +1,124 @@
 import styled from 'styled-components';
 import colors from '../../styles/colors';
 
-const HeaderStyle = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 9vh;
-    max-height: 9vh;
-    background-color: ${colors.white};
+const MainConatiner = styled.div`
+    height: 60px;
+    width: 100%;
+    background-color: ${colors['--bg-color']};
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
 
-    button {
-        background-color: ${colors.blue_header};
-        &:hover {
-            background-color: ${colors.pink_header} !important;
-        }
-        width: 80px;
-        height: 40px;
-    }
-    
-    a {
-        color: ${colors.blue_header};
-        text-decoration: none;
-        letter-spacing: 1px;
-        font-weight: 700;
-        font-size: 1.3rem; // fallback
-        font-size: 1.35vw;
-        &:hover {
-            color: ${colors.pink_header};
-            cursor: pointer;
-        }
-    }
-
-    .logo {
-        width: 40%;
-    }
-
-    .nav-links {
-        width: 60%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        margin-right: 2%;
-    }
-
-    .login-button {
-        display: inline !important;
-    }
-
-    // when screen size is greater than 1800px
+    // when screen size is greater than 2000px
     @media only screen and (min-width: 2000px) {
-        a {
-            font-size: 1vw;
-        }
-    }
-
-    // when the height is greater than 1000px
-    @media only screen and (min-height: 1000px) {
-        min-height: 7vh;
-        max-height: 7vh;
+        height: 70px;
     }
 `;
 
-const LogoStyle = styled.img`
-    margin-left: 10%;
-    z-index: 999;
-    height: 6vh;
+const TopNavContainer = styled.div`
+    height: inherit;
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    // when the height is greater than 1000px
-    @media only screen and (min-height: 1000px) {
-        height: 5vh;
+    // when screen size is greater than 2000px
+    @media only screen and (min-width: 2000px) {
+        width: 60%;
+    }
+`;
+
+const LogoNavLinksContainer = styled.div`
+    height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    div.logo > a {
+        margin-right: 75px;
+    }
+
+    div.nav-links-container {
+        height: 100%;
+        display: flex;
+    }
+
+    div.nav-links-container > div {
+        height: 100%;
+    }
+
+    div.nav-link > a {
+        height: 100%;
+        margin-right: 20px;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: ${colors.white};
+        text-decoration: none;
+        letter-spacing: 1px;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.75;
+        }
+    }
+
+    img {
+        height: 45px;
+        z-index: 999;
+    }
+
+    // when screen size is greater than 2000px
+    @media only screen and (min-width: 2000px) {
+        img {
+            height: 55px;
+        }
+
+        a {
+            font-size: 1.1em;
+        }
+    }
+
+    a.selected {
+        background: ${colors['--table-bg-color']}
+        color: ${colors['--bg-color']} !important;
+        cursor: pointer;
+        font-weight: 500;
+    }
+`;
+
+const ButtonStyle = styled.div`
+    button {
+        background-color: ${colors.white};
+        width: 70px;
+        height: 35px;
+        border: 0;
+        border-radius: 5px;
+        font-size: 0.9em;
+    }
+
+    button:hover {
+        background-color: ${colors['--table-bg-color']} !important;
+        cursor: pointer;
+    }
+
+    // when screen size is greater than 2000px
+    @media only screen and (min-width: 2000px) {
+        button {
+            width: 80px;
+            height: 40px;
+        }
     }
 `;
 
 export {
-    HeaderStyle,
-    LogoStyle,
+    MainConatiner,
+    TopNavContainer,
+    LogoNavLinksContainer,
+    ButtonStyle,
 };

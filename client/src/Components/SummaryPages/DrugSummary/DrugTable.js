@@ -44,7 +44,7 @@ class DrugTable extends React.Component {
                 accessor: 'drug_name',
                 minWidth: 180,
                 Cell: (row) => (
-                    <Link to={`/drug/${row.original.drug_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                    <Link to={`/drug/${row.original.drug_id}`}>
                         {row.original.drug_name}
                     </Link>
                 ),
@@ -97,7 +97,6 @@ class DrugTable extends React.Component {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         href={`${pubchemURL}${row}`}
-                                        style={{ textDecoration: 'none', color: `${colors.blue_header}` }}
                                     >
                                         {pid}
                                     </a>
@@ -114,21 +113,20 @@ class DrugTable extends React.Component {
 
         return (
             <TableWrapper>
-                <h1> List of Drugs </h1>
                 {
                     loading ? (
                         <div className='center-component'>
                             <Spinner loading={loading} />
                         </div>
                     ) : (
-                            <ReactTable
-                                data={data}
-                                columns={columns}
-                                className="-highlight"
-                                defaultPageSize={10}
-                                filterable
-                            />
-                        )
+                        <ReactTable
+                            data={data}
+                            columns={columns}
+                            className="-highlight"
+                            defaultPageSize={10}
+                            filterable
+                        />
+                    )
                 }
             </TableWrapper>
         );

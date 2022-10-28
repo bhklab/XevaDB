@@ -5,13 +5,13 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import {
     Biomarker,
     CounterNav,
+    CurveComponent,
     Dataset,
     DatasetSummary,
     Documentation,
     Drug,
     DrugSummary,
     Footer,
-    GrowthCurveData,
     HeatMapData,
     Home,
     Login,
@@ -48,10 +48,14 @@ const App = () => {
     return (
         <div>
             <Router>
+                <Route
+                    path="/"
+                    render={(props) => props.location.pathname !== '/login' && (<TopNav />)}
+                />
                 <Switch>
                     <Route path="/" exact component={Home} />
                     <Route path="/biomarker" exact component={Biomarker} />
-                    <Route path="/curve" exact component={GrowthCurveData} />
+                    <Route path="/curve" exact component={CurveComponent} />
                     <Route path="/datasets" exact component={DatasetSummary} />
                     <Route path="/dataset/:id" exact component={Dataset} />
                     <Route path="/doc" exact component={Documentation} />
@@ -68,10 +72,6 @@ const App = () => {
                     <Route path="/stat" exact component={StatTable} />
                     <Route render={() => <h1> 404 Error </h1>} />
                 </Switch>
-                <Route
-                    path="/"
-                    render={(props) => props.location.pathname !== '/login' && (<TopNav />)}
-                />
             </Router>
         </div>
     );

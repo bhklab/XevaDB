@@ -110,7 +110,7 @@ const TissueSummary = () => {
         fetchData();
 
         // create tooltip.
-        createToolTip('tissue-summary');
+        createToolTip('tissue-summary-tooltip');
     }, []);
 
     return (
@@ -119,8 +119,12 @@ const TissueSummary = () => {
             <div className="wrapper">
                 <div className="component-wrapper">
                     <StyleComponent>
-                        <h1> PDXs Per Tissue Type </h1>
-                        <img src={HumanBody} alt="Human Body" style={{ paddingBottom: '20px' }} />
+                        <h1 className='center-component'> Tissue Information </h1>
+                        <img
+                            src={HumanBody}
+                            alt="Human Body"
+                            style={{ marginTop: '20px', paddingBottom: '20px' }}
+                        />
                         <div>
                             <div>
                                 <img
@@ -183,13 +187,23 @@ const TissueSummary = () => {
                                 />
                             </div>
                         </div>
+                        {/* <h4 className='center-component'> Figure A.) Detailed Tissue Information </h4> */}
                     </StyleComponent>
                 </div>
-                <div className="component-wrapper center-component">
-                    {loading ? <Spinner loading={loading} /> : <TissueTable data={tissueData} />}
+                <div className="component-wrapper">
+                    <h1> List of Tissues </h1>
+                    {
+                        loading
+                            ? (
+                                <div className='center-component'>
+                                    <Spinner loading={loading} />
+                                </div>
+                            )
+                            : <TissueTable data={tissueData} />
+                    }
                 </div>
             </div>
-            <div id="tissue-summary" />
+            <div id="tissue-summary-tooltip" />
             <Footer />
         </div>
     );

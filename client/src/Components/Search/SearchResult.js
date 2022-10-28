@@ -3,6 +3,7 @@ import HeatMapData from '../Plots/HeatMap/HeatMapData';
 import OncoprintData from '../Plots/Oncoprint/OncoprintData';
 import GlobalStyles from '../../GlobalStyles';
 import { PatientProvider } from '../Context/PatientContext';
+import Footer from '../Footer/Footer';
 
 class SearchResult extends React.Component {
     constructor(props) {
@@ -73,8 +74,8 @@ class SearchResult extends React.Component {
                             />
                         </PatientProvider>
                     </div>
-
                 </div>
+                <Footer />
             </>
         );
     }

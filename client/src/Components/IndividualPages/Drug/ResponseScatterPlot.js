@@ -11,7 +11,7 @@ import { customStyles } from '../../Search/SearchStyle';
 
 // styling Patient Response Chart
 const StyledChart = styled.div`
-    margin: 80px 0 0 0;
+    margin: 50px 0 0 0;
     width: 90%;
     position: relative;
 
@@ -133,7 +133,7 @@ const ResponseScatterPlot = ({ data }) => {
                 <div className='barplot-container'>
                     <BarPlot
                         data={transformedModelResponseData}
-                        label="Model Response"
+                        yLabel='Model Response'
                         yAxisTicks={mRECISTTypes}
                         shouldAppendBarText={false}
                         margin={margin}

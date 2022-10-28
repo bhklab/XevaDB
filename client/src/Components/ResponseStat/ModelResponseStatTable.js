@@ -1,6 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable class-methods-use-this */
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -11,6 +8,7 @@ import { StyleTable, StyledLink } from './ResponseStyle';
 import BatchStatTable from './BatchResponseStatTable';
 import downloadIcon from '../../images/download.svg';
 import colors from '../../styles/colors';
+import Spinner from '../Utils/Spinner';
 
 class StatTable extends React.Component {
     constructor(props) {
@@ -19,9 +17,12 @@ class StatTable extends React.Component {
         this.state = {
             data: [],
             batchData: [],
-            tableHeader: ['Type', 'Model', 'Drug',
+            tableHeader: [
+                'Type', 'Model', 'Drug',
                 'mRECIST', 'Best Average Response', 'Slope', 'AUC',
-                'Survival (Days)'],
+                'Survival (Days)'
+            ],
+            loading: true,
         };
         this.createTable = this.createTable.bind(this);
         this.createTableHeader = this.createTableHeader.bind(this);
@@ -54,15 +55,8 @@ class StatTable extends React.Component {
         this.setState({
             data: response[1].data,
             batchData: response[0].data,
+            loading: false,
         });
-        // if the dataset id is not 7 then table header won't include Link and Row Number.
-        // const { data } = this.state;
-        // if (data[0] && data[0].dataset_id !== 7) {
-        //     this.setState({
-        //         tableHeader: ['Type', 'Model', 'Drug',
-        //             'mRECIST', 'Best Average Response', 'Slope', 'AUC', 'Survival (Days)'],
-        //     });
-        // }
     }
 
     createTable() {
@@ -108,21 +102,9 @@ class StatTable extends React.Component {
                 AUC, survival, link,
             } = eachdata;
 
-            // will not return anything if there is no data.
-            // const checkData = (val) => {
-            //     let tableData = '';
-            //     if (val && val === link) {
-            //         tableData = <td style={{ minWidth: 150 }}><a href={val} target="_blank" rel="noopener noreferrer">Google-Sheet</a></td>;
-            //     } else if (val && val === row) {
-            //         tableData = <td>{val}</td>;
-            //     } else {
-            //         tableData = null;
-            //     }
-            //     return tableData;
-            // };
-
             const dataRow = (
-                <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`} style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}>
+                // style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}
+                <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
                     <td>{type}</td>
                     {
                         link
@@ -151,8 +133,6 @@ class StatTable extends React.Component {
                     <td>{slope}</td>
                     <td>{AUC}</td>
                     <td>{parseInt(survival, 10)}</td>
-                    {/* {checkData(link)}
-                    {checkData(row)} */}
                 </tr>
             );
 
@@ -175,33 +155,37 @@ class StatTable extends React.Component {
     }
 
     render() {
-        const { batchData, data } = this.state;
+        const { batchData, data, loading } = this.state;
         // const datasetId = data[0] && data[0].dataset_id;
         const csvHeader = this.getCSVHeader(data);
         const tableHeader = this.createTableHeader();
         const table = this.createTable();
 
         return (
-            <>
-                <BatchStatTable data={batchData} />
-                <div>
-                    <StyledLink>
-                        <h1 id="titlemodel" style={{ display: 'inline-block', padding: '0', margin: '0' }}>Model Response</h1>
-                        <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv" style={{ float: 'right', display: 'inline-block', marginBottom: '10px' }}>
-                            Export Data
-                            <img src={downloadIcon} alt="download icon!" />
-                        </CSVLink>
-                    </StyledLink>
-                    <StyleTable>
-                        <table id="stats-table">
-                            <tbody>
-                                <tr>{tableHeader}</tr>
-                                {table}
-                            </tbody>
-                        </table>
-                    </StyleTable>
-                </div>
-            </>
+            loading
+                ? <Spinner loading={loading} />
+                : (
+                    <>
+                        <BatchStatTable data={batchData} />
+                        <div>
+                            <StyledLink>
+                                <h1>Model Response</h1>
+                                <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv">
+                                    Export Data
+                                    <img src={downloadIcon} alt="download icon!" />
+                                </CSVLink>
+                            </StyledLink>
+                            <StyleTable>
+                                <table>
+                                    <tbody>
+                                        <tr>{tableHeader}</tr>
+                                        {table}
+                                    </tbody>
+                                </table>
+                            </StyleTable>
+                        </div>
+                    </>
+                )
         );
     }
 }

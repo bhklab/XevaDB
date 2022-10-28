@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
-import Select from 'react-select';
+import ReactSelect, { createFilter } from 'react-select';
 import { customStyles } from '../Search/SearchStyle';
 import { StyledSelect } from './BiomarkerStyle';
+import CustomMenuList from './CustomMenuList';
 
 // data types array
 const DATA_TYPES = ['CNV', 'RNASeq'];
@@ -66,6 +67,7 @@ const BiomarkerSelect = (props) => {
         gene: selectedGeneProp ? true : false,
         dataType: false,
         metric: true,
+        dataset: true,
     });
     const [isButtonClicked, updateButtonClickState] = useState(false);
 
@@ -130,9 +132,9 @@ const BiomarkerSelect = (props) => {
 
     return (
         <StyledSelect className='biomarker-select'>
-            <div className='drug-select'>
-                <span> Drug* </span>
-                <Select
+            {/* <div className='dataset-select'>
+                <span> Dataset </span>
+                <ReactSelect
                     styles={customStyles}
                     options={drugListProp}
                     value={selectedDrug}
@@ -140,6 +142,23 @@ const BiomarkerSelect = (props) => {
                         updateSelectedDrug(event);
                         updateIsSelected({ ...isSelected, drug: true })
                     }}
+                    filterOption={createFilter({ ignoreAccents: false })}
+                />
+                {
+                    displayRequiredFieldText('dataset', isButtonClicked)
+                }
+            </div> */}
+            <div className='drug-select'>
+                <span> Drug* </span>
+                <ReactSelect
+                    styles={customStyles}
+                    options={drugListProp}
+                    value={selectedDrug}
+                    onChange={(event) => {
+                        updateSelectedDrug(event);
+                        updateIsSelected({ ...isSelected, drug: true })
+                    }}
+                    filterOption={createFilter({ ignoreAccents: false })}
                 />
                 {
                     displayRequiredFieldText('drug', isButtonClicked)
@@ -147,7 +166,7 @@ const BiomarkerSelect = (props) => {
             </div>
             <div className='gene-select'>
                 <span> Gene* </span>
-                <Select
+                <ReactSelect
                     styles={customStyles}
                     options={geneListProp}
                     value={selectedGene}
@@ -155,6 +174,11 @@ const BiomarkerSelect = (props) => {
                         updateSelectedGene(event);
                         updateIsSelected({ ...isSelected, gene: true })
                     }}
+                    filterOption={createFilter({ ignoreAccents: false })}
+                    components={{
+                        MenuList: CustomMenuList,
+                    }}
+                    captureMenuScroll={false}
                 />
                 {
                     displayRequiredFieldText('gene', isButtonClicked)
@@ -162,7 +186,7 @@ const BiomarkerSelect = (props) => {
             </div>
             <div className='genomics-select'>
                 <span> Genomics* </span>
-                <Select
+                <ReactSelect
                     styles={customStyles}
                     options={dataTypes}
                     value={selectedDataType}
@@ -170,6 +194,7 @@ const BiomarkerSelect = (props) => {
                         updateSelectedDataType(event);
                         updateIsSelected({ ...isSelected, dataType: true })
                     }}
+                    filterOption={createFilter({ ignoreAccents: false })}
                 />
                 {
                     displayRequiredFieldText('dataType', isButtonClicked)
@@ -177,7 +202,7 @@ const BiomarkerSelect = (props) => {
             </div>
             <div className='metric-select'>
                 <span> Metric </span>
-                <Select
+                <ReactSelect
                     styles={customStyles}
                     options={metrics}
                     value={selectedMetric}
@@ -185,6 +210,7 @@ const BiomarkerSelect = (props) => {
                         updateSelectedMetric(event);
                         updateIsSelected({ ...isSelected, metric: true })
                     }}
+                    filterOption={createFilter({ ignoreAccents: false })}
                     isMulti
                 />
                 {

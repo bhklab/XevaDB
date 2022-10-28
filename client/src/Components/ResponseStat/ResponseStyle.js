@@ -3,64 +3,69 @@ import colors from '../../styles/colors';
 
 
 export const StyledLink = styled.div`
-    font-weight: 500;
-    margin-bottom: 5px;
-    width: ${(props) => props.width || '800px'}
+    width: ${(props) => props.width || '800px'};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 300;
+    margin-bottom: 8px;
      
     h1 {
-        font-size: 1.5em;
+        font-size: 1.2em !important;
+        font-weight: 700;
+        margin: 0;
+        padding: 0;
     }
+
     img {
-        height: 15px;
+        height: 13px;
         width: 25px;
         margin-left: 5px;
     }
+
     a:link {
-        background-color: ${colors.moderate_blue} !important;
+        background-color: ${colors['--bg-color']} !important;
         color: ${colors.white} !important;
         border-radius: 6px;
         text-decoration: none;
         font-size: 1em;
     }
+
     a:hover {
-        color: ${colors.moderate_blue} !important;
-        background-color: ${colors.lightgray} !important;
+       opacity: 0.75;
     }
 `;
 
 
 export const StyleTable = styled.div`
-
     margin-bottom: 40px;
-    max-width: 800px;
 
     table, th, td {
-        border: 1px solid ${colors.dark_gray};
+        border: 1px solid silver;
     }
 
-    #stats-table {
+    table {
         text-align: left;
         border-collapse: collapse;
         width: 800px;
     }
 
     th {
-        color: ${colors.moderate_blue};
+        color: ${colors['--main-font-color']};
         text-align: left;
         padding: 10px;
         height: 40px;
-        background-color: ${colors.lightgray};
+        background-color: ${colors['--table-bg-color']};
+        font-weight: 600;
+        font-size: 0.95em;
     }
 
     td {
-        color: ${colors.jet_black};
+        color: ${colors['--main-font-color']};
         padding: 10px;
         white-space: normal;
         max-width: 200px;
         overflow: scroll;
-    }
-
-    tr:hover {
-        background-color: ${colors.white_smoke};
+        font-size: 0.9em;
     }
 `;

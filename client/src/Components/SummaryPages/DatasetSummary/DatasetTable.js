@@ -17,7 +17,7 @@ const DatasetTable = (props) => {
             search: false,
             sortable: false,
             Cell: (row) => (
-                <Link to={`/dataset/${row.original.dataset_id}`} style={{ color: `${colors.blue_header}`, textDecoration: 'none' }}>
+                <Link to={`/dataset/${row.original.dataset_id}`}>
                     {row.original.dataset_name}
                 </Link>
             ),

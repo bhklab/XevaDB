@@ -33,8 +33,7 @@ const TOOLTIP_ID = 'forestplot-tooltip';
 
 // legend variable.
 const legend = [
-    // { text: 'FDR < 0.05 and r > 0.7', color: `${colors.pink_header}` },
-    { text: 'FDR < 0.05', color: `${colors.pink_header}` },
+    { text: 'FDR < 0.05', color: `${colors['--bg-color']}` },
     { text: 'FDR > 0.05', color: `${colors.silver}` },
 ];
 
@@ -164,9 +163,9 @@ const createXAxis = (svg, scale, height, width, margin) => {
         .attr('font-weight', 500)
         .attr('x', (width * CHART_WIDTH * 0.55))
         .attr('y', height + margin.bottom / 5 + 10)
-        .attr('fill', `${colors.blue_header}`)
+        .attr('fill', `${colors['--main-font-color']}`)
         .text('pearson correlation coefficient (r)')
-        .attr('font-size', '16px');
+        .attr('font-size', '14px');
 
 };
 
@@ -179,7 +178,7 @@ const createVerticalLine = (svg, scale, height) => {
     svg.append('g')
         .attr('id', 'vertical-line')
         .append('line')
-        .style('stroke', `${colors.fade_blue}`)
+        .style('stroke', `${colors.lightgray}`)
         .attr('x1', scale(0))
         .attr('y1', 0)
         .attr('x2', scale(0))
@@ -201,8 +200,8 @@ const createHorizontalLines = (svg, scale, data, height) => {
             horizontal
                 .append('line')
                 .attr('id', `horizontal-line-${element.dataset.name}`)
-                .style('stroke', `${colors.fade_blue}`)
-                .style('stroke-width', 1.25)
+                .style('stroke', `${colors.lightgray}`)
+                .style('stroke-width', 1)
                 .attr('x1', scale(element.ci_lower))
                 .attr('y1', ((i + 1) * height) / (data.length + ADDITIONAL))
                 .attr('x2', scale(element.ci_upper))
@@ -239,8 +238,7 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
             .attr('cx', xScale(element.estimate))
             .attr('cy', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('r', circleScale(element.n))
-            // .attr('fill', (fdr < 0.05 && pc > 0.70) ? `${colors.pink_header}` : `${colors.silver}`)
-            .attr('fill', fdr < 0.05 ? `${colors.pink_header}` : `${colors.silver}`)
+            .attr('fill', fdr < 0.05 ? `${colors['--bg-color']}` : `${colors.silver}`)
             .on('mouseover', function () {
                 mouseOverEvent(d3.event, element);
             })
@@ -260,12 +258,12 @@ const appendDatasetName = (svg, data, height) => {
     svg.append('g')
         .attr('id', 'dataset-header')
         .append('text')
-        .attr('font-weight', 700)
+        .attr('font-weight', 500)
         .attr('x', 0)
         .attr('y', -20)
-        .attr('fill', `${colors.blue_header}`)
+        .attr('fill', `${colors['--main-font-color']}`)
         .text('Dataset Name')
-        .attr('font-size', '18px');
+        .attr('font-size', '16px');
 
     const dataset = svg.append('g')
         .attr('id', 'dataset-names');
@@ -278,7 +276,7 @@ const appendDatasetName = (svg, data, height) => {
             .attr('font-weight', 200)
             .attr('x', 0)
             .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
-            .attr('fill', `${colors.blue_header}`)
+            .attr('fill', `${colors['--main-font-color']}`)
             .text(`${element.dataset.name}`)
             .attr('font-size', '14px');
     });
@@ -295,12 +293,12 @@ const appendMetricName = (svg, data, height) => {
     svg.append('g')
         .attr('id', 'dataset-header')
         .append('text')
-        .attr('font-weight', 700)
+        .attr('font-weight', 500)
         .attr('x', 150)
         .attr('y', -20)
-        .attr('fill', `${colors.blue_header}`)
+        .attr('fill', `${colors['--main-font-color']}`)
         .text('Metric')
-        .attr('font-size', '18px');
+        .attr('font-size', '16px');
 
     const dataset = svg.append('g')
         .attr('id', 'dataset-names');
@@ -314,7 +312,7 @@ const appendMetricName = (svg, data, height) => {
             .attr('font-weight', 200)
             .attr('x', 150)
             .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
-            .attr('fill', `${colors.blue_header}`)
+            .attr('fill', `${colors['--main-font-color']}`)
             .text(`${element.metric.replace(/\./g, ' ')}`)
             .attr('font-size', '14px');
     });
@@ -339,7 +337,7 @@ const appendEstimateText = (svg, data, height, width, scale) => {
                 .attr('font-weight', 200)
                 .attr('x', scale(element.ci_lower) - 15)
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL) - 10)
-                .attr('fill', `${colors.blue_header}`)
+                .attr('fill', `${colors['--main-font-color']}`)
                 .text(`${(element.ci_lower)}`)
                 .attr('visibility', 'hidden')
                 .attr('font-size', '14px');
@@ -352,7 +350,7 @@ const appendEstimateText = (svg, data, height, width, scale) => {
                 .attr('font-weight', 200)
                 .attr('x', scale(element.ci_upper) - 15)
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL) - 10)
-                .attr('fill', `${colors.blue_header}`)
+                .attr('fill', `${colors['--main-font-color']}`)
                 .text(`${(element.ci_upper)}`)
                 .attr('visibility', 'hidden')
                 .attr('font-size', '14px');
@@ -370,12 +368,12 @@ const appendFdrText = (svg, data, height, width) => {
     svg.append('g')
         .attr('id', 'estimate-header')
         .append('text')
-        .attr('font-weight', 700)
+        .attr('font-weight', 500)
         .attr('x', (width * CHART_WIDTH) + 10)
         .attr('y', -20)
-        .attr('fill', `${colors.blue_header}`)
+        .attr('fill', `${colors['--main-font-color']}`)
         .text('FDR')
-        .attr('font-size', '18px');
+        .attr('font-size', '16px');
 
     const estimate = svg.append('g')
         .attr('id', 'estimate');
@@ -389,7 +387,7 @@ const appendFdrText = (svg, data, height, width) => {
                 .attr('font-weight', 200)
                 .attr('x', (width * CHART_WIDTH) + 10)
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
-                .attr('fill', `${colors.blue_header}`)
+                .attr('fill', `${colors['--main-font-color']}`)
                 .text(`${element.fdr}`)
                 .attr('font-size', '14px');
         }
@@ -429,7 +427,7 @@ const createLegend = (svg, height, width) => {
             .attr('y', ((height * 0.2) + (((i + 1) * RECTANGLE_DIMENSIONS) + (0.75 * RECTANGLE_DIMENSIONS))))
             .text(`${el.text}`)
             .attr('font-size', '12px')
-            .attr('fill', `${colors.blue_header}`);
+            .attr('fill', `${colors['--main-font-color']}`);
     });
 };
 

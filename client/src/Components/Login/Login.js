@@ -9,7 +9,7 @@ import axios from 'axios';
 import {
     Form, SubmitStyle, LogoStyle, FormContainer, LogoBack, FormHeading
 } from './LoginStyle';
-import logo from '../../images/new_logo.png';
+import logo from '../../images/logo-latest.png';
 import colors from '../../styles/colors';
 
 
@@ -66,7 +66,7 @@ const Login = () => {
     return (
         <div>
             {isAuthenticated ? <Redirect to={{ pathname: '/' }} /> : (
-                <div>
+                <>
                     <Link to="/">
                         <LogoBack>
                             <LogoStyle src={logo} alt="logo" />
@@ -75,7 +75,7 @@ const Login = () => {
                     <FormContainer>
                         <Form>
                             <FormHeading>
-                                Sign in
+                                Login
                             </FormHeading>
                             <form onSubmit={handleSubmit}>
                                 <TextField
@@ -108,7 +108,7 @@ const Login = () => {
                                         variant="contained"
                                         color="primary"
                                     >
-                                        Sign In
+                                        login
                                     </Button>
                                 </SubmitStyle>
 
@@ -122,7 +122,7 @@ const Login = () => {
                             </form>
                         </Form>
                     </FormContainer>
-                </div>
+                </>
             )}
         </div>
     );

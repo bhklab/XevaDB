@@ -1,9 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-plusplus */
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
-/* eslint-disable react/no-deprecated */
-
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
@@ -13,6 +7,15 @@ import { StyleBar, customStyles, StyleButton } from './SearchStyle';
 import { GeneList } from '../../utils/GeneList';
 import feelingLuckyRequest from '../../utils/FeelingLuckyRequest';
 import colors from '../../styles/colors';
+
+// object to keep track of the placeholders
+const placeholderLabels = {
+    selectedGeneTextAreaLabel: 'Enter Gene Symbols (Each separated by a comma; Max 50 genes)',
+    datasetLabel: 'Select the Dataset',
+    drugLabel: 'Search for the Drug (eg. CLR457)',
+    molecularAlterationLabel: 'Molecular Alteration',
+    geneLabel: 'User Defined or Pre-Defined Gene List',
+};
 
 class Search extends React.Component {
     static mapDataset(dataset) {
@@ -27,46 +30,28 @@ class Search extends React.Component {
         this.state = {
             drugs: [],
             datasets: [],
-            genes: [],
-            selectedGeneSearch: ['Enter Gene Symbols (Max 50 genes)'],
+            genes: this.getGenesSelectOptions(GeneList),
+            selectedGeneSearch: [placeholderLabels.selectedGeneTextAreaLabel],
             selectedDrugs: [],
             selectedDataset: '',
-            genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'],
+            genomicsValue: ['All', 'Mutation', 'CNV', 'Gene Expression'].map((item, i) => ({
+                label: item,
+                value: i,
+            })),
             selectedGenomics: [],
             allDrugs: [],
             threshold: 2,
             toggleRNA: false,
             genomics: [],
             drugValue: [],
-            axiosConfig: {},
-            geneLimit: 50,
-        };
-    }
-
-    componentWillMount() {
-        const { genomicsValue } = this.state;
-        const genes = GeneList.map((item) => ({
-            value: item.split('=')[1].replace(/\s/g, ','),
-            label: `${item.split('=')[0]} (${item.split('=')[1].split(' ').length})`,
-        }));
-
-        this.setState({
-            genes: [{ value: 'user defined list', label: 'User-Defined List (Max 50 genes)' }, ...genes],
-        });
-
-        const genomic = genomicsValue.map((item, i) => ({
-            label: item,
-            value: i,
-        }));
-        this.setState({
-            genomicsValue: [...genomic],
             axiosConfig: {
                 headers: {
                     'Content-Type': 'application/json;charset=UTF-8',
                     Accept: 'application/json',
                 },
             },
-        });
+            geneLimit: 50,
+        };
     }
 
     componentDidMount() {
@@ -81,6 +66,20 @@ class Search extends React.Component {
                 });
             });
     }
+
+    getGenesSelectOptions = (geneList) => {
+        const genes = geneList.map((item) => ({
+            value: item.split('=')[1].replace(/\s/g, ','),
+            label: `${item.split('=')[0]} (${item.split('=')[1].split(' ').length})`,
+        }));
+
+        return (
+            [
+                { value: 'user defined list', label: 'User-Defined List (Max 50 genes each separated by a comma)' },
+                ...genes,
+            ]
+        );
+    };
 
     handleDrugChange = (selectedOption) => {
         if (selectedOption !== null && selectedOption.length > 0) {
@@ -241,27 +240,27 @@ class Search extends React.Component {
         } = this.state;
 
         return (
-            (selectedDataset !== '') &&
-            (selectedDrugs.length > 0) &&
-            (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '') &&
-            (genomics.length > 0)
+            (selectedDataset !== '')
+            && (selectedDrugs.length > 0)
+            && (selectedGeneSearch[0] !== 'Enter Gene Symbol(s)' && selectedGeneSearch !== '')
+            && (genomics.length > 0)
         );
     }
 
     // checks if the gene list entered by the user is less than 50 in number
-    ifGeneNumberLessThanFifty = (data) => {
-        const { selectedGeneSearch } = this.state;
+    ifGeneNumberLessThanFifty = () => {
+        const { selectedGeneSearch, geneLimit } = this.state;
         // gene length
         const geneLength = typeof (selectedGeneSearch) === 'string' && selectedGeneSearch.split(',').length;
         // return true/false based on the length
-        return geneLength < this.state.geneLimit;
+        return geneLength < geneLimit;
     }
 
     // redirects the user to search page.
     redirectUser = () => {
         const {
             selectedDataset, selectedDrugs, selectedGeneSearch,
-            selectedGenomics, threshold, genomics,
+            selectedGenomics, threshold,
         } = this.state;
         // this removes spaces from gene list.
         const formatedGeneList = selectedGeneSearch.replace(/\s/g, '');
@@ -275,7 +274,7 @@ class Search extends React.Component {
     // clear the text from text area.
     clearText = () => {
         const { selectedGeneSearch } = this.state;
-        if (selectedGeneSearch[0] === 'Enter Gene Symbol(s)') {
+        if (selectedGeneSearch[0] === placeholderLabels.selectedGeneTextAreaLabel) {
             this.setState({
                 selectedGeneSearch: '',
             });
@@ -284,12 +283,12 @@ class Search extends React.Component {
 
     // text for the pop up
     popupText = () => {
-        if (this.state.selectedGeneSearch.length > 1) {
-            return this.ifGeneNumberLessThanFifty() ? 'Complete all the fields!!' : 'Please keep gene list less than 50!';
+        const { selectedGeneSearch } = this.state;
+        if (selectedGeneSearch.length > 1) {
+            return this.ifGeneNumberLessThanFifty() ? 'Complete all the fields!' : 'Please keep gene list less than 50!';
         }
-        return 'Complete all the fields!!';
+        return 'Complete all the fields!';
     }
-
 
     render() {
         const {
@@ -297,23 +296,18 @@ class Search extends React.Component {
             threshold, toggleRNA, genes, selectedGeneSearch,
         } = this.state;
         return (
-
             <StyleBar className="wrapper">
-                <div className="search-container">
+                <div className="search-container center-component">
+                    <h1>
+                        XevaDB: A Database For PDX Pharmacogenomic Data
+                    </h1>
                     <div className="select-component" onKeyPress={this.handleKeyPress}>
-                        <h1>
-                            {' '}
-                            <span style={{ color: `${colors.pink_header}` }}>XevaDB:</span>
-                            {' '}
-                            A Database For PDX Pharmacogenomic Data
-                            {' '}
-                        </h1>
-                        <div className="two-col">
+                        <div className="dataset-drug-container">
                             <div className="div-dataset">
                                 <Select
                                     options={datasets}
                                     styles={customStyles}
-                                    placeholder="Select the Dataset"
+                                    placeholder={placeholderLabels.datasetLabel}
                                     onChange={this.handleDatasetChange}
                                 />
                             </div>
@@ -321,7 +315,7 @@ class Search extends React.Component {
                                 <Select
                                     options={drugs}
                                     styles={customStyles}
-                                    placeholder="Search for the Drug (eg. CLR457)"
+                                    placeholder={placeholderLabels.drugLabel}
                                     onChange={this.handleDrugChange}
                                     isMulti
                                     isSearchable
@@ -335,7 +329,7 @@ class Search extends React.Component {
                             <Select
                                 options={genomicsValue}
                                 styles={customStyles}
-                                placeholder="Genomics"
+                                placeholder={placeholderLabels.molecularAlterationLabel}
                                 onChange={this.handleExpressionChange}
                                 isMulti
                                 isClearable
@@ -365,7 +359,7 @@ class Search extends React.Component {
                             <Select
                                 options={genes}
                                 styles={customStyles}
-                                placeholder="User Defined or Pre-Defined Gene List"
+                                placeholder={placeholderLabels.geneLabel}
                                 onChange={this.handleGeneListChange}
                             />
                         </div>
@@ -385,7 +379,7 @@ class Search extends React.Component {
                             <a href={`${feelingLuckyRequest}`}> Feeling Lucky? </a>
                         </div>
 
-                        <div>
+                        <div className="search-button">
                             {
                                 this.ifAllDataAvailable() && this.ifGeneNumberLessThanFifty()
                                     ? (
@@ -407,7 +401,7 @@ class Search extends React.Component {
                                             position="right center"
                                         >
                                             <div style={{
-                                                color: `${colors.blue_header}`, fontFamily: 'Open Sans', fontSize: '17px', fontWeight: '500',
+                                                color: `${colors['--bg-color']}`, fontSize: '0.9em', fontWeight: '300',
                                             }}
                                             >
                                                 {this.popupText()}

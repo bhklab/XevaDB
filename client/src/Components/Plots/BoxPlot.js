@@ -41,7 +41,6 @@ const parseData = (data, response, drugs) => {
     };
 };
 
-
 // initialize the dimensions and margins.
 const initialize = () => {
     const margin = {
@@ -61,7 +60,6 @@ const initialize = () => {
     };
 };
 
-
 // create an svg for the top boxplot.
 const createTopSvg = (width, height, id, svgId) => {
     const svg = d3.select(`#${id}`)
@@ -74,7 +72,6 @@ const createTopSvg = (width, height, id, svgId) => {
     return svg;
 };
 
-
 // create a g element for the right boxplot.
 const appendGElementRight = (id, svgId, patientSvgWidth, drugHeight) => {
     const svg = d3.select(`#${id}`).append('g')
@@ -83,7 +80,6 @@ const appendGElementRight = (id, svgId, patientSvgWidth, drugHeight) => {
 
     return svg;
 };
-
 
 // create a rectangle outside the box plots.
 const createRectangle = (svg, width, height) => {
@@ -100,7 +96,6 @@ const createRectangle = (svg, width, height) => {
     return rect;
 };
 
-
 // append svg to the div element.
 const appendGElementPatient = (svg, margin, width, i) => svg
     .append('g')
@@ -109,12 +104,10 @@ const appendGElementPatient = (svg, margin, width, i) => svg
     .style('background-color', 'grey')
     .attr('id', 'boxplotbody');
 
-
 // append svg for the drugs box plot.
 const appendGElementDrug = (svg, margin, height, i) => svg
     .append('g')
     .attr('transform', `translate(0, ${(height + margin.top + margin.bottom) * i})`);
-
 
 // remove the elements before creating new ones.
 const removeElements = () => {
@@ -122,12 +115,10 @@ const removeElements = () => {
     d3.selectAll('#svg-y-axis').remove();
 };
 
-
 // scaling min and max values to 0 and 1 correspondingly.
 const maxMinScale = (min, max) => d3.scaleLinear()
     .domain([min, max])
     .range([0, 1]);
-
 
 // scale for y axis. 0,1 mapped to height, 0.
 const mapYScale = (height, min, max) => {
@@ -138,7 +129,6 @@ const mapYScale = (height, min, max) => {
         .range([height - 2, 3]);
 };
 
-
 // scale for x axis.
 const mapXScale = (width, min, max) => {
     const dataScale = maxMinScale(min, max);
@@ -147,7 +137,6 @@ const mapXScale = (width, min, max) => {
         .domain([dataScale(min), dataScale(max)])
         .range([2, width - 2]);
 };
-
 
 // create y axis.
 const yAxis = (linearscale, width, height, margin, id) => {
@@ -168,7 +157,6 @@ const yAxis = (linearscale, width, height, margin, id) => {
         .call(axis);
 };
 
-
 // create x axis.
 const xAxis = (xscale, patientSvgWidth, boxHeight) => {
     const axis = d3.axisTop()
@@ -181,7 +169,6 @@ const xAxis = (xscale, patientSvgWidth, boxHeight) => {
         .attr('transform', `translate(${patientSvgWidth + 20}, ${boxHeight})`)
         .call(axis);
 };
-
 
 // Compute summary statistics used for the box:
 const computeStats = (data) => {
@@ -205,7 +192,6 @@ const computeStats = (data) => {
         max,
     };
 };
-
 
 // create main vertical line patient box plot.
 const verticalLine = (width, min, max, svg, y, scale) => {
@@ -231,7 +217,6 @@ const horizontalLine = (height, min, max, svg, x, scale) => {
         .attr('stroke-width', 0.50);
 };
 
-
 // create box for patients.
 const createPatientBox = (svg, margin, width, q3, q1, y, element, scale) => {
     svg
@@ -242,10 +227,9 @@ const createPatientBox = (svg, margin, width, q3, q1, y, element, scale) => {
         .attr('width', width)
         .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50)
-        .style('fill', `${colors.green_gradient}`)
+        .style('fill', '#8CC0DE')
         .attr('id', `box${element}`);
 };
-
 
 // create box for drugs.
 const createDrugBox = (svg, margin, height, q3, q1, x, element, scale) => {
@@ -257,10 +241,9 @@ const createDrugBox = (svg, margin, height, q3, q1, x, element, scale) => {
         .attr('width', (x(scale(q3)) - x(scale(q1))))
         .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50)
-        .style('fill', `${colors.green_gradient}`)
+        .style('fill', '#8CC0DE')
         .attr('id', `box${element}`);
 };
-
 
 // create median, min and max horizontal lines for patient box plot.
 const createPatientRest = (svg, min, median, max, width, y, scale) => {
@@ -277,7 +260,6 @@ const createPatientRest = (svg, min, median, max, width, y, scale) => {
         .attr('stroke-width', 0.50);
 };
 
-
 // create median, min and max vertical lines for drug box plot.
 const createDrugRest = (svg, min, median, max, height, x, scale) => {
     svg
@@ -292,7 +274,6 @@ const createDrugRest = (svg, min, median, max, height, x, scale) => {
         .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50);
 };
-
 
 const BoxPlot = (props) => {
     // destructuring the props.
@@ -318,7 +299,6 @@ const BoxPlot = (props) => {
     const patientSvgHeight = patientHeight + margin.bottom + margin.top;
     const drugSvgWidth = drugWidth + margin.left + margin.right;
     const drugSvgHeight = (drugHeight + margin.bottom + margin.top) * drugs.length;
-
 
     // use effect function once the component is mounted/updated.
     useEffect(() => {
@@ -395,13 +375,11 @@ const BoxPlot = (props) => {
     );
 };
 
-
 BoxPlot.propTypes = {
     response: PropTypes.string.isRequired,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     patients: PropTypes.arrayOf(PropTypes.string).isRequired,
     drugs: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
-
 
 export default BoxPlot;

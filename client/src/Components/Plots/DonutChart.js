@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import addOpacityToColor from '../../utils/AddOpacityToColor';
 import createToolTip from '../../utils/ToolTip';
 import donutColors from '../../utils/ChartColors';
+import colors from '../../styles/colors';
 
 class DonutChart extends React.Component {
     constructor(props) {
@@ -33,11 +34,12 @@ class DonutChart extends React.Component {
         const { chartId } = this.props;
         const shouldDisplayLegend = this.props.shouldDisplayLegend ?? true;
         const shouldDisplayTextLabels = this.props.shouldDisplayTextLabels ?? false;
+        const centerLegend = this.props.centerLegend ?? '';
 
         this.makeDonutChart(
             data, height, width, left, top, bottom, right, arcRadius,
             tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
-            shouldDisplayTextLabels
+            shouldDisplayTextLabels, centerLegend
         );
     }
 
@@ -45,7 +47,7 @@ class DonutChart extends React.Component {
     makeDonutChart = (
         data, height, width, left, top, bottom, right, arcRadius,
         tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
-        shouldDisplayTextLabels
+        shouldDisplayTextLabels, centerLegend
     ) => {
         // make the SVG element.
         const svg = d3.select(`#donut-${chartId}`)
@@ -158,7 +160,8 @@ class DonutChart extends React.Component {
                 .style('left', `${d3.event.layerX + 10}px`)
                 .style('top', `${d3.event.layerY + 10}px`)
                 .style('color', 'white')
-                .style('background-color', colorMapper?.[d.data.id] ?? color(d.data.id));
+                .style('background-color', colorMapper?.[d.data.id] ?? color(d.data.id))
+                .style('font-size', '0.85em');
         };
 
         const mouseout = function (d) {
@@ -199,7 +202,7 @@ class DonutChart extends React.Component {
                 })
                 // .attr('font-weight', 'bold')
                 .style('text-anchor', 'middle')
-                .style('font-size', 12.5)
+                .style('font-size', 12)
                 .attr('fill', 'black')
                 .style('opacity', 0.75)
                 .style('font-weight', 700)
@@ -245,7 +248,20 @@ class DonutChart extends React.Component {
                 .attr('x', (width) - 250)
                 .attr('y', (d, i) => ((30 * i) - (data.length * 15)) + 15)
                 .attr('fill', (d) => colorMapper?.[d.id] ?? color(d.id))
-                .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`);
+                .text((d) => `${d.id.charAt(0).toUpperCase() + d.id.slice(1)}`)
+                .style('font-size', '0.9em');
+        }
+
+
+        // append center legend it it's available
+        if (centerLegend) {
+            d3.select('#skeleton').append('text')
+                .attr('x', -37.5)
+                .attr('y', 5)
+                .text(`${centerLegend}`)
+                .style('font-weight', 700)
+                .style('font-size', '1.1em')
+                .style('fill', `${colors['--main-font-color']}`);
         }
     }
 
@@ -287,6 +303,7 @@ DonutChart.propTypes = {
     colorMapper: PropTypes.object,
     shouldDisplayLegend: PropTypes.bool,
     shouldDisplayTextLabels: PropTypes.bool,
+    centerLegend: PropTypes.string,
     opacity: PropTypes.number,
 };
 
