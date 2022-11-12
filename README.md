@@ -44,7 +44,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 - If knex is globally available use `knex` with the specific command else use `./node_modules/.bin/knex`.
 - `knex migrate:make (migration_name)` - To create a new migration file.
-- `knex migrate:latest` - To run the lastest migrations and create corresponding tables.
+- `knex migrate:latest` - To run the latest migrations and create corresponding tables.
 
 ## Seeds (Seeding Files)
 
