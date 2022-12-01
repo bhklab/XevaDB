@@ -4,7 +4,6 @@ const path = require('path');
 const fs = require('fs');
 const dataPath = require('../path');
 
-
 const csvFilePath = path.join(dataPath, 'rna_sequencing.csv');
 const parserParams = {
     delimiter: ',', // optional
@@ -12,12 +11,10 @@ const parserParams = {
     ignoreEmpty: true,
 };
 
-
 exports.seed = async (knex) => {
     let seedingData = []; // variable to store the streaming data.
     const chunkSize = 100000;
     const readStream = fs.createReadStream(csvFilePath); // read stream.
-
 
     // truncating the copy number variation data.
     await knex('rna_sequencing').truncate()
@@ -30,7 +27,6 @@ exports.seed = async (knex) => {
         .on('query-error', (error) => {
             console.log(error, 'an error occured while creating rna_sequencing table!');
         });
-
 
     // function to insert data into the copy number variation table.
     const insertData = async (i) => {
@@ -49,7 +45,6 @@ exports.seed = async (knex) => {
         // re-initialize the seeding data array.
         seedingData = [];
     };
-
 
     // this will streamline the data and seeds the table on every 100k rows
     // and remaining rows will be seeded on the end of the stream line process.
