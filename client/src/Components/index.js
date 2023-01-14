@@ -7,6 +7,7 @@ import DonutChart from './Plots/DonutChart';
 import Drug from './IndividualPages/Drug/Drug';
 import DrugSummary from './SummaryPages/DrugSummary/DrugSummary';
 import DrugTable from './SummaryPages/DrugSummary/DrugTable';
+import DrugResponse from './DrugResponse/DrugResponse';
 import Footer from './Footer/Footer';
 import CurveComponent from './Plots/TumorGrowthCurve/CurveComponent';
 import HeatMapData from './Plots/HeatMap/HeatMapData';
@@ -34,6 +35,7 @@ export {
     Drug,
     DrugSummary,
     DrugTable,
+    DrugResponse,
     Footer,
     HeatMapData,
     Home,

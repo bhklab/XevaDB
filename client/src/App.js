@@ -11,6 +11,7 @@ import {
     Documentation,
     Drug,
     DrugSummary,
+    DrugResponse,
     Footer,
     HeatMapData,
     Home,
@@ -61,6 +62,7 @@ const App = () => {
                     <Route path="/doc" exact component={Documentation} />
                     <Route path="/drugs" exact component={DrugSummary} />
                     <Route path="/drug/:id" exact component={Drug} />
+                    <Route path="/response" exact component={DrugResponse} />
                     <Route path="/home" exact component={CounterNav} />
                     <Route path="/login" exact component={Login} />
                     <Route path="/maps" exact component={Merge} />
