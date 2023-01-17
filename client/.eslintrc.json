@@ -51,7 +51,9 @@
             4
         ],
         "no-console": "off",
-        "no-plusplus": "off"
+        "no-plusplus": "off",
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "jsx-quotes": ["error", "prefer-single"]
     },
     "parser": "babel-eslint"
 }
