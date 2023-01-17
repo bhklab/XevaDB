@@ -6,12 +6,11 @@ import GlobalStyles from '../../../GlobalStyles';
 import DatasetTable from './DatasetTable';
 import Spinner from '../../Utils/Spinner';
 
-
 // tooltip mapper to be passed as a Prop to the donut chart
 const mapper = {
-    'Dataset': 'id',
-    'Patients': 'value',
-    'Models': 'models',
+    Dataset: 'id',
+    Patients: 'value',
+    Models: 'models',
 };
 
 class DatasetSummary extends React.Component {
