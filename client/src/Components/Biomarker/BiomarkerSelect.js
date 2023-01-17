@@ -21,27 +21,27 @@ const METRICS = [
     'AUC',
     'best average response',
     'abc',
-    'angle'
+    'angle',
 ];
 
 // function to get the drug data
-const createSelectionArray = function (data) {
-    return data.map(el => ({
+function createSelectionArray(data) {
+    return data.map((el) => ({
         value: el,
         label: el,
     }));
-};
-
+}
 
 /**
- * 
- * @param {Object} props 
+ *
+ * @param {Object} props
  * @returns - Biomarker Select Component
  */
 const BiomarkerSelect = (props) => {
+    const { geneList, drugList } = props;
     // props
-    const geneListProp = createSelectionArray(props.geneList);
-    const drugListProp = createSelectionArray(props.drugList);
+    const geneListProp = createSelectionArray(geneList);
+    const drugListProp = createSelectionArray(drugList);
     const { selectedGene: selectedGeneProp } = props;
     const { selectedDrug: selectedDrugProp } = props;
     const { setBiomarkerData } = props;
@@ -55,16 +55,16 @@ const BiomarkerSelect = (props) => {
 
     // component states
     const [selectedDrug, updateSelectedDrug] = useState(
-        selectedDrugProp ? { value: selectedDrugProp, label: selectedDrugProp } : ''
+        selectedDrugProp ? { value: selectedDrugProp, label: selectedDrugProp } : '',
     );
     const [selectedGene, updateSelectedGene] = useState(
-        selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : ''
+        selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : '',
     );
     const [selectedDataType, updateSelectedDataType] = useState('');
     const [selectedMetric, updateSelectedMetric] = useState('');
     const [isSelected, updateIsSelected] = useState({
-        drug: selectedDrugProp ? true : false,
-        gene: selectedGeneProp ? true : false,
+        drug: !!selectedDrugProp,
+        gene: !!selectedGeneProp,
         dataType: false,
         metric: true,
         dataset: true,
@@ -75,7 +75,7 @@ const BiomarkerSelect = (props) => {
     const getBiomarkerData = async function (drug, gene, dataType) {
         const { data } = await axios.get(
             `/api/v1/biomarkers?drug=${drug}&gene=${gene}&dataType=${dataType}`,
-            { headers: { Authorization: localStorage.getItem('user') } }
+            { headers: { Authorization: localStorage.getItem('user') } },
         );
         return data;
     };
@@ -83,9 +83,9 @@ const BiomarkerSelect = (props) => {
     // function to filter data based on the metric type
     const getBiomarkerDataBasedOnMetric = function (data, metricArray) {
         // metrics array
-        const metrics = metricArray.map(metric => metric.label);
+        const metricsArray = metricArray.map((metric) => metric.label);
 
-        return data.filter(el => metrics.includes(el['metric'].replace(/\./g, ' ')));
+        return data.filter((el) => metricsArray.includes(el.metric.replace(/\./g, ' ')));
     };
 
     // event handler on button
@@ -97,11 +97,11 @@ const BiomarkerSelect = (props) => {
         const gene = selectedGene.label;
         const dataType = selectedDataType.label;
 
-        // get biomarker data 
+        // get biomarker data
         // and set the data types state
         if (drug && gene && dataType) {
             getBiomarkerData(drug, gene, dataType)
-                .then(biomarkers => {
+                .then((biomarkers) => {
                     // update biomarker data state
                     if (biomarkers.data?.length > 0) {
                         const data = selectedMetric?.length > 0
@@ -112,10 +112,10 @@ const BiomarkerSelect = (props) => {
                         setDisplayMessage('');
                     } else {
                         setDisplayMessage('Data is not available!');
-                    };
+                    }
                 })
-                .catch(err => console.log('An error occurred', err));
-        };
+                .catch((err) => console.log('An error occurred', err));
+        }
     };
 
     // display that field is required
@@ -126,9 +126,8 @@ const BiomarkerSelect = (props) => {
             >
                 Field is required!
             </span>
-        )
+        );
     };
-
 
     return (
         <StyledSelect className='biomarker-select'>
@@ -156,7 +155,7 @@ const BiomarkerSelect = (props) => {
                     value={selectedDrug}
                     onChange={(event) => {
                         updateSelectedDrug(event);
-                        updateIsSelected({ ...isSelected, drug: true })
+                        updateIsSelected({ ...isSelected, drug: true });
                     }}
                     filterOption={createFilter({ ignoreAccents: false })}
                 />
@@ -172,7 +171,7 @@ const BiomarkerSelect = (props) => {
                     value={selectedGene}
                     onChange={(event) => {
                         updateSelectedGene(event);
-                        updateIsSelected({ ...isSelected, gene: true })
+                        updateIsSelected({ ...isSelected, gene: true });
                     }}
                     filterOption={createFilter({ ignoreAccents: false })}
                     components={{
@@ -192,7 +191,7 @@ const BiomarkerSelect = (props) => {
                     value={selectedDataType}
                     onChange={(event) => {
                         updateSelectedDataType(event);
-                        updateIsSelected({ ...isSelected, dataType: true })
+                        updateIsSelected({ ...isSelected, dataType: true });
                     }}
                     filterOption={createFilter({ ignoreAccents: false })}
                 />
@@ -208,7 +207,7 @@ const BiomarkerSelect = (props) => {
                     value={selectedMetric}
                     onChange={(event) => {
                         updateSelectedMetric(event);
-                        updateIsSelected({ ...isSelected, metric: true })
+                        updateIsSelected({ ...isSelected, metric: true });
                     }}
                     filterOption={createFilter({ ignoreAccents: false })}
                     isMulti
@@ -218,14 +217,13 @@ const BiomarkerSelect = (props) => {
                 }
             </div>
             <div className='display-button'>
-                <button onClick={clickEventHandler}> Display Plot </button>
+                <button type='button' onClick={clickEventHandler}> Display Plot </button>
             </div>
-        </StyledSelect >
-    )
+        </StyledSelect>
+    );
 };
 
 export default BiomarkerSelect;
-
 
 BiomarkerSelect.propTypes = {
     geneList: PropTypes.arrayOf(string).isRequired,
