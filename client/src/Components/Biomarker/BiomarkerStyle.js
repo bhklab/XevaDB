@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import colors from '../../styles/colors';
 
-
 // Biomarker Component Styles
 const StyledBiomarker = styled.div`
     h1 {
@@ -55,7 +54,7 @@ const StyledSelect = styled.div`
     span {
         margin-bottom: 5px;
         color: ${colors['--main-font-color']};
-        font-size: 1.05em;
+        font-size: 1em;
         font-weight: 500;
         display: inline-block;
     }
