@@ -8,7 +8,7 @@ const StyledBiomarker = styled.div`
     }
 
     @media screen and (min-height: 1200px) {
-        margin-top: 250px;
+        margin-top: 150px;
 
         .biomarker-wrapper {
             min-width: 1500px;
@@ -37,12 +37,12 @@ const StyledSelect = styled.div`
 
     .display-button {
         button {
-            padding: 12px;
+            padding: 10px;
             margin: 0 0 0 15px;
             background-color: ${colors['--bg-color']};
             border: 0;
             border-radius: 5px;
-            font-size: 1.08rem;
+            font-size: 1rem;
             color: ${colors.white};
         }
 

@@ -217,7 +217,7 @@ const BiomarkerSelect = (props) => {
                 }
             </div>
             <div className='display-button'>
-                <button type='button' onClick={clickEventHandler}> Display Plot </button>
+                <button type='button' onClick={clickEventHandler}> Display plot </button>
             </div>
         </StyledSelect>
     );
