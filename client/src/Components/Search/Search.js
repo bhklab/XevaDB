@@ -135,9 +135,9 @@ class Search extends React.Component {
         this.setState({
             selectedDataset: selectedOption.value,
         });
-        const label = selectedOption.value;
+        const datasetId = selectedOption.value;
         let initial = 1;
-        axios.post('/api/v1/drugspatients/dataset', { label }, { headers: { Authorization: localStorage.getItem('user') } }, axiosConfig.headers)
+        axios.post('/api/v1/drugspatients/dataset', { datasetId }, { headers: { Authorization: localStorage.getItem('user') } }, axiosConfig.headers)
             .then((response) => {
                 const data = response.data.data[0].map((item) => ({
                     value: initial++,
