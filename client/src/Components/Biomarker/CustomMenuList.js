@@ -1,9 +1,11 @@
 import React from 'react';
-import { FixedSizeList as List } from "react-window";
+import { FixedSizeList as List } from 'react-window';
 
-const CustomMenuList = props => {
+const CustomMenuList = (props) => {
     const itemHeight = 30;
-    const { options, children, maxHeight, getValue } = props;
+    const {
+        options, children, maxHeight, getValue,
+    } = props;
     const [value] = getValue();
     const initialOffset = options.indexOf(value) * itemHeight;
 
