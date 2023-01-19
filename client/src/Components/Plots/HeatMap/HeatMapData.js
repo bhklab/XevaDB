@@ -18,7 +18,9 @@ class HeatMapData extends React.Component {
             drugListProp: '',
             geneListProp: '',
             dimensions: { height: 30, width: 14 },
-            margin: { top: 200, right: 250, bottom: 50, left: 250 },
+            margin: {
+                top: 200, right: 250, bottom: 50, left: 250,
+            },
             loading: true,
         };
     }
@@ -42,15 +44,16 @@ class HeatMapData extends React.Component {
     fetchData = async () => {
         // get model response data and list of patients based on the dataset id
         let modelResponse = '';
+        const { drugListProp, datasetIdProp } = this.state;
 
-        if (this.state.drugListProp) {
-            modelResponse = axios.get(`/api/v1/modelresponse?drug=${this.state.drugListProp}&dataset=${this.state.datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
+        if (drugListProp) {
+            modelResponse = axios.get(`/api/v1/modelresponse?drug=${drugListProp}&dataset=${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
         } else {
-            modelResponse = axios.get(`/api/v1/modelresponse/${this.state.datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
-        };
+            modelResponse = axios.get(`/api/v1/modelresponse/${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
+        }
 
         // patient API call
-        const patients = axios.get(`/api/v1/datasets/detail/${this.state.datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
+        const patients = axios.get(`/api/v1/datasets/detail/${datasetIdProp}`, { headers: { Authorization: localStorage.getItem('user') } });
 
         // running both API calls in parallel
         const data = await Promise.all([modelResponse, patients]);
@@ -92,7 +95,7 @@ class HeatMapData extends React.Component {
         const maxOccuringmRECISTValue = (mRECIST) => {
             // this object will store the occurences of mRECIST values
             const mRECISTObject = {};
-            mRECIST.forEach(el => {
+            mRECIST.forEach((el) => {
                 if (mRECISTObject.hasOwnProperty(el)) {
                     mRECISTObject[el] += 1;
                 } else {
@@ -113,16 +116,16 @@ class HeatMapData extends React.Component {
             return maxOccuringKey;
         };
 
-        // transforms the 'dataset' 
-        const transformedData = dataset.map(row => {
+        // transforms the 'dataset'
+        const transformedData = dataset.map((row) => {
             const transformedRow = {};
             Object.entries(row).forEach(([key, value]) => {
                 transformedRow[key] = {
                     'best.average.response': value['best.average.response']?.[0] || 'NA',
-                    'survival': value['survival']?.[0] || 'NA',
-                    'slope': value['slope']?.[0] || 'NA',
-                    'AUC': value['AUC']?.[0] || 'NA',
-                    'mRECIST': value['mRECIST'] ? maxOccuringmRECISTValue(value['mRECIST']) : 'NA',
+                    survival: value.survival?.[0] || 'NA',
+                    slope: value.slope?.[0] || 'NA',
+                    AUC: value.AUC?.[0] || 'NA',
+                    mRECIST: value.mRECIST ? maxOccuringmRECISTValue(value.mRECIST) : 'NA',
                 };
             });
             return transformedRow;

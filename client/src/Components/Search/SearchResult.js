@@ -57,7 +57,7 @@ class SearchResult extends React.Component {
         return (
             <>
                 <GlobalStyles />
-                <div className="wrapper">
+                <div className='wrapper'>
                     <div className='heatmap-oncoprint-wrapper center-component'>
                         <PatientProvider value={providerData}>
                             <HeatMapData
@@ -80,6 +80,5 @@ class SearchResult extends React.Component {
         );
     }
 }
-
 
 export default SearchResult;
