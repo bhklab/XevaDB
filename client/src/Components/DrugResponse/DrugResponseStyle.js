@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import colors from '../../styles/colors';
 
 const SelectWrapper = styled.div`
-    margin-top: 40px;
+    margin: 40px 0;
     padding: 20px;
     width: 45vw;
     display: flex;
@@ -44,6 +44,10 @@ const SelectWrapper = styled.div`
 
     @media only screen and (max-width: 1400px) {
         width: 70vw;
+    }
+
+    @media only screen and (max-height: 1000px) {
+        margin: 0;
     }
 `;
 

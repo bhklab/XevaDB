@@ -5,6 +5,7 @@ import GlobalStyles from '../../GlobalStyles';
 import SelectWrapper from './DrugResponseStyle';
 import { customStyles } from '../Search/SearchStyle';
 import Footer from '../Footer/Footer';
+import HeatMapData from '../Plots/HeatMap/HeatMapData';
 
 /**
  * transforms the input data for the selection
@@ -31,35 +32,28 @@ const transformDrugsForSelection = (data) => (
 );
 
 /**
- * @param {Object} selectedDataset - selected data object
- * @param {Object} updateDrugListState - to update the drug list state
+ * @param {Object} datasetId - id of the dataset
  */
-const getDrugListOnDatasetChange = (selectedDataset, updateDrugListState) => {
-    const { value: datasetId } = selectedDataset;
-
-    axios
-        .post(
-            '/api/v1/drugspatients/dataset',
-            { datasetId },
-            { headers: { Authorization: localStorage.getItem('user') } },
-            {
-                'Content-Type': 'application/json;charset=UTF-8',
-                Accept: 'application/json',
-            },
-        )
-        .then((data) => {
-            const [drugs] = data.data.data;
-            console.log(drugs);
-            updateDrugListState(transformDrugsForSelection(drugs));
-        });
-};
+const getDrugListOnDatasetId = (datasetId) => axios
+    .post(
+        '/api/v1/drugspatients/dataset',
+        { datasetId },
+        { headers: { Authorization: localStorage.getItem('user') } },
+        {
+            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json',
+        },
+    );
 
 /**
  * Main response component
  */
 const DrugResponse = () => {
     const [datasetList, updateDatasetList] = useState([]);
+    const [selectedDatasetId, setSelectedDataset] = useState();
     const [drugList, updateDrugList] = useState([]);
+    const [selectedDrugs, setSelectedDrugs] = useState();
+    const [displayPlot, updateDisplayPlot] = useState(false);
 
     useEffect(() => {
         axios
@@ -68,6 +62,32 @@ const DrugResponse = () => {
             .then((datasets) => transformDataForSelection(datasets))
             .then((transformedDatasets) => updateDatasetList(transformedDatasets));
     }, []);
+
+    // function handling the dataset selection
+    function handleDatasetChange(d) {
+        // set the selected dataset
+        setSelectedDataset(d.value);
+
+        // set the drug list based on the selected dataset
+        getDrugListOnDatasetId(d.value)
+            .then((data) => {
+                const [drugs] = data.data.data;
+                updateDrugList(transformDrugsForSelection(drugs));
+            });
+    }
+
+    // function handling the drug selection(s)
+    function handleDrugChange(d) {
+        const drugs = d.reduce((drugString, currentDrug) => {
+            if (drugString) {
+                return `${drugString},${currentDrug.label.replaceAll(' ', '').replaceAll('+', '_')}`;
+            }
+            return `${currentDrug.label.replaceAll(' ', '').replaceAll('+', '_')}`;
+        }, '');
+        console.log(drugs, selectedDatasetId);
+        // set the drug selection state
+        setSelectedDrugs(drugs);
+    }
 
     return (
         <div>
@@ -79,21 +99,35 @@ const DrugResponse = () => {
                         <Select
                             styles={customStyles}
                             options={datasetList}
-                            onChange={(d) => getDrugListOnDatasetChange(d, updateDrugList)}
+                            onChange={(d) => handleDatasetChange(d)}
                         />
                     </div>
                     <div className='drug-select'>
                         <span> Drug* </span>
                         <Select
+                            isMulti
                             styles={customStyles}
                             options={drugList}
+                            onChange={(d) => handleDrugChange(d)}
                         />
                     </div>
                     <div className='display-button'>
                         &nbsp;
-                        <button type='button'> Display plot </button>
+                        <button type='button' onClick={() => updateDisplayPlot(true)}> Display plot </button>
                     </div>
                 </SelectWrapper>
+                <div className='heatmap-plot'>
+                    {
+                        displayPlot
+                            ? (
+                                <HeatMapData
+                                    datasetId={selectedDatasetId}
+                                    drugList={selectedDrugs}
+                                />
+                            )
+                            : ''
+                    }
+                </div>
             </div>
             <Footer />
         </div>
