@@ -171,7 +171,10 @@ class HeatMapData extends React.Component {
 }
 
 HeatMapData.propTypes = {
-    datasetId: PropTypes.string.isRequired,
+    datasetId: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]).isRequired,
     drugList: PropTypes.string,
     geneList: PropTypes.string,
 };
