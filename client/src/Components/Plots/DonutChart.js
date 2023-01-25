@@ -25,7 +25,9 @@ class DonutChart extends React.Component {
         const dimensions = this.props.dimensions || this.dimensions;
         const margin = this.props.margin || this.margin;
         const { height, width } = dimensions;
-        const { left, top, bottom, right } = margin;
+        const {
+            left, top, bottom, right,
+        } = margin;
         const { data } = this.props;
         const arcRadius = this.props.arcRadius || this.arc;
         const { tooltipMapper } = this.props;
@@ -39,7 +41,7 @@ class DonutChart extends React.Component {
         this.makeDonutChart(
             data, height, width, left, top, bottom, right, arcRadius,
             tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
-            shouldDisplayTextLabels, centerLegend
+            shouldDisplayTextLabels, centerLegend,
         );
     }
 
@@ -47,7 +49,7 @@ class DonutChart extends React.Component {
     makeDonutChart = (
         data, height, width, left, top, bottom, right, arcRadius,
         tooltipMapper, colorMapper, shouldDisplayLegend, opacity, chartId,
-        shouldDisplayTextLabels, centerLegend
+        shouldDisplayTextLabels, centerLegend,
     ) => {
         // make the SVG element.
         const svg = d3.select(`#donut-${chartId}`)
@@ -90,7 +92,6 @@ class DonutChart extends React.Component {
             .sort(null)
             .value((d) => d.value);
 
-
         // this will send the data to the pie generator and appending the class arc.
         const arcs = skeleton.selectAll('.arc')
             .data(() => pie(data))
@@ -107,11 +108,9 @@ class DonutChart extends React.Component {
         // here we are appending path and use of d element to create the path.
         const piearc = arcs.append('path')
             .attr('d', arc)
-            .attr('fill', (d) =>
-                colorMapper && opacity
-                    ? addOpacityToColor(colorMapper?.[d.data.id], opacity)
-                    : color(d.data.id)
-            )
+            .attr('fill', (d) => (colorMapper && opacity
+                ? addOpacityToColor(colorMapper?.[d.data.id], opacity)
+                : color(d.data.id)));
         // .attr('stroke', 'black')
         // .style('stroke-width', '0.75px');
 
@@ -149,9 +148,7 @@ class DonutChart extends React.Component {
                 .style('opacity', opacity ? 1.0 : 0.5)
                 .style('cursor', 'pointer');
 
-            const value = Object.keys(mapper).map(key =>
-                `${key}: ${d.data[mapper[key]]}`
-            ).join('<br/>');
+            const value = Object.keys(mapper).map((key) => `${key}: ${d.data[mapper[key]]}`).join('<br/>');
 
             // tooltip grabbing event.pageX and event.pageY
             // and set color according to the ordinal scale.
@@ -217,7 +214,6 @@ class DonutChart extends React.Component {
                 });
         }
 
-
         /**   Legends for the Donut Chart * */
 
         // small side rectangles or legends for the donut chart.
@@ -252,7 +248,6 @@ class DonutChart extends React.Component {
                 .style('font-size', '0.9em');
         }
 
-
         // append center legend it it's available
         if (centerLegend) {
             d3.select('#skeleton').append('text')
@@ -260,7 +255,7 @@ class DonutChart extends React.Component {
                 .attr('y', 5)
                 .text(`${centerLegend}`)
                 .style('font-weight', 700)
-                .style('font-size', '1.1em')
+                .style('font-size', '1em')
                 .style('fill', `${colors['--main-font-color']}`);
         }
     }
@@ -271,7 +266,7 @@ class DonutChart extends React.Component {
                 <div id='tooltip' />
                 <div
                     id={`donut-${this.props.chartId}`}
-                    className="donut-chart"
+                    className='donut-chart'
                 />
             </>
         );

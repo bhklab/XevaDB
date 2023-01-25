@@ -6,9 +6,9 @@ import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
 const PADDING = 0.01;
 
 /**
- * 
- * @param {Array} totalResponseData 
- * @param {number} sumOfValues 
+ *
+ * @param {Array} totalResponseData
+ * @param {number} sumOfValues
  * @returns {Object} - object of the transformed response data
  */
 const updateTotalResponseData = (totalResponseData, sumOfValues) => {
@@ -16,13 +16,13 @@ const updateTotalResponseData = (totalResponseData, sumOfValues) => {
     let currentStartAngle = PADDING;
 
     // update data
-    let updatedTotalResponseData = {};
-    totalResponseData.forEach(response => {
+    const updatedTotalResponseData = {};
+    totalResponseData.forEach((response) => {
         const endAngle = currentStartAngle + (response.value / sumOfValues) * 2 * Math.PI;
         updatedTotalResponseData[response.id] = {
             ...response,
             startAngle: currentStartAngle,
-            endAngle: endAngle,
+            endAngle,
         };
         currentStartAngle = endAngle;
     });
@@ -31,20 +31,20 @@ const updateTotalResponseData = (totalResponseData, sumOfValues) => {
 };
 
 /**
- * 
- * @param {Array} individualDrugResponseData 
- * @param {Object} updatedTotalResponseData 
- * @param {number} sumOfValues 
+ *
+ * @param {Array} individualDrugResponseData
+ * @param {Object} updatedTotalResponseData
+ * @param {number} sumOfValues
  * @returns {Array} - an array of the transformed data
  */
 const updateIndividualDrugResponseData = (
-    individualDrugResponseData, updatedTotalResponseData, sumOfValues
+    individualDrugResponseData, updatedTotalResponseData, sumOfValues,
 ) => {
     const updatedIndividualDrugResponseData = [];
 
-    individualDrugResponseData.forEach(response => {
+    individualDrugResponseData.forEach((response) => {
         if (response.value > 0) {
-            const startAngle = updatedTotalResponseData[response.id]['startAngle'];
+            const { startAngle } = updatedTotalResponseData[response.id];
             const endAngle = startAngle + (response.value / sumOfValues) * 2 * Math.PI;
             updatedIndividualDrugResponseData.push({
                 ...response,
@@ -55,7 +55,7 @@ const updateIndividualDrugResponseData = (
     });
 
     return updatedIndividualDrugResponseData;
-}
+};
 
 /**
  * function to create overlay arcs
@@ -69,11 +69,13 @@ const createOverlayArcs = ({
     margin,
 }) => {
     // create svg canvas
-    const svg = createSvgCanvas({ id: 'overlay-arcs-container', height, width, margin });
+    const svg = createSvgCanvas({
+        id: 'overlay-arcs-container', height, width, margin,
+    });
 
     // get the total of the values in totalResponse data
     const sumOfValues = totalResponseData.reduce(
-        (previous, current) => previous + current.value, 0
+        (previous, current) => previous + current.value, 0,
     );
 
     // updated total response data
@@ -81,11 +83,11 @@ const createOverlayArcs = ({
 
     // get the updated response data for individual drug
     const updatedIndividualDrugResponseData = updateIndividualDrugResponseData(
-        individualDrugResponseData, updatedTotalResponseData, sumOfValues
+        individualDrugResponseData, updatedTotalResponseData, sumOfValues,
     );
 
     // creates the arcs
-    updatedIndividualDrugResponseData.forEach(response => {
+    updatedIndividualDrugResponseData.forEach((response) => {
         const arc = d3.arc()
             .innerRadius(arcRadius.innerRadius)
             .outerRadius(arcRadius.outerRadius)
@@ -98,7 +100,6 @@ const createOverlayArcs = ({
             .attr('fill', `${mRECISTColorMapper[response.id]}`);
     });
 };
-
 
 /**
  * OverlayArcs component creates arcs based on the input data
@@ -126,10 +127,9 @@ const OverlayArcs = ({
         });
     }, []);
 
-
     return (
-        <div id='overlay-arcs-container'></div>
-    )
+        <div id='overlay-arcs-container' />
+    );
 };
 
 export default OverlayArcs;

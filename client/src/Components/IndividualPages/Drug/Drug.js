@@ -4,21 +4,21 @@ import GlobalStyles from '../../../GlobalStyles';
 import Spinner from '../../Utils/Spinner';
 import Footer from '../../Footer/Footer';
 import Annotation from './Annotation';
-import ResponseScatterPlot from './ResponseScatterPlot';
+// import ResponseScatterPlot from './ResponseScatterPlot';
 import ResponsePieSunburstChart from './ResponsePieSunburstChart';
 import ResponseStackedBarChart from './ResponseStackedBarChart';
 
 // h4 style
-const h4Style = {
-    margin: '10px 0px 125px 0px',
-    color: 'black',
-    fontWeight: 200,
-    fontSize: '15px',
-};
+// const h4Style = {
+//     margin: '10px 0px 125px 0px',
+//     color: 'black',
+//     fontWeight: 200,
+//     fontSize: '15px',
+// };
 
 // Individual drug page component
 const Drug = (props) => {
-    // get the drug id from the props object 
+    // get the drug id from the props object
     // and assign it to drugId variable
     const { match: { params: { id: drugId } } } = props;
 
@@ -33,15 +33,15 @@ const Drug = (props) => {
         // get the drug information based on the drugId
         const drugInformation = await axios.get(
             `/api/v1/drugs/${drugId}`,
-            { headers: { Authorization: localStorage.getItem('user') } }
+            { headers: { Authorization: localStorage.getItem('user') } },
         );
         const modelResponseBasedOnDrug = await axios.get(
             `/api/v1/modelresponse?drug=${drugInformation.data[0].drug_name.replace(/\s/g, '').replace(/\+/g, '_')}`,
-            { headers: { Authorization: localStorage.getItem('user') } }
+            { headers: { Authorization: localStorage.getItem('user') } },
         );
         const modelResponse = await axios.get(
             `/api/v1/modelresponse`,
-            { headers: { Authorization: localStorage.getItem('user') } }
+            { headers: { Authorization: localStorage.getItem('user') } },
         );
 
         const { data: drugData } = drugInformation;
@@ -72,7 +72,11 @@ const Drug = (props) => {
                         ? <Spinner loading={isLoading} />
                         : (
                             <div className='component-wrapper center-component'>
-                                <h1> {drugData.drug_name} </h1>
+                                <h1>
+                                    {' '}
+                                    {drugData.drug_name}
+                                    {' '}
+                                </h1>
                                 <Annotation
                                     data={drugData}
                                 />
@@ -94,7 +98,7 @@ const Drug = (props) => {
             </div>
             <Footer />
         </>
-    )
+    );
 };
 
 export default Drug;
