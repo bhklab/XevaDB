@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import createSvgCanvas from '../../utils/CreateSvgCanvas';
 import colors from '../../styles/colors';
 import createToolTip from '../../utils/ToolTip';
-import styled from 'styled-components';
 
 // style for forest plot.
 const StyledForestPlot = styled.div`
@@ -64,11 +64,11 @@ const calculateMinMax = (data) => {
     return {
         min,
         max,
-    }
+    };
 };
 
 /**
- * @param {Array} data 
+ * @param {Array} data
  */
 const calculateMinMaxN = (data) => {
     const minN = Math.min(...data.map((val) => val.n));
@@ -79,8 +79,8 @@ const calculateMinMaxN = (data) => {
 
 /**
  * mouseover event for horizontal line as well as the circle.
- * @param {Object} event 
- * @param {Object} element 
+ * @param {Object} event
+ * @param {Object} element
  * @param {boolean} isAnalytic
  */
 const mouseOverEvent = (event, element) => {
@@ -97,8 +97,8 @@ const mouseOverEvent = (event, element) => {
     // const pc = element.estimate;
     const text = element.fdr < 0.05 ? 'Strong Biomarker' : 'Weak Biomarker';
 
-    toolTip.
-        append('text')
+    toolTip
+        .append('text')
         .attr('id', 'tooltiptext')
         .text(text);
 
@@ -109,8 +109,8 @@ const mouseOverEvent = (event, element) => {
 
 /**
  * mouseout event handler for horizontal line as well as the circle.
- * @param {Object} event 
- * @param {Object} element 
+ * @param {Object} event
+ * @param {Object} element
  */
 const mouseOutEvent = (event, element) => {
     // make visibility hidden.
@@ -130,7 +130,7 @@ const mouseOutEvent = (event, element) => {
 const circleScaling = (min, max) => d3.scaleLinear().domain([min, max]).range([5, 15]);
 
 /**
- * 
+ *
  * @param {number} min - min value to be passed to the domain.
  * @param {number} max - max value to be passed to the domain.
  * @returns - d3 linear scale for x-axis.
@@ -144,7 +144,6 @@ const createXScale = (min, max, width) => {
         .range([300, (width * CHART_WIDTH)])
         .nice();
 };
-
 
 /**
  * Appends x-axis to the main svg element.
@@ -166,7 +165,6 @@ const createXAxis = (svg, scale, height, width, margin) => {
         .attr('fill', `${colors['--main-font-color']}`)
         .text('pearson correlation coefficient (r)')
         .attr('font-size', '14px');
-
 };
 
 /**
@@ -193,7 +191,7 @@ const createVerticalLine = (svg, scale, height) => {
  */
 const createHorizontalLines = (svg, scale, data, height) => {
     const horizontal = svg.append('g')
-        .attr('id', `horizontal-lines`)
+        .attr('id', `horizontal-lines`);
 
     data.forEach((element, i) => {
         if (element.ci_lower && element.ci_upper) {
@@ -213,8 +211,7 @@ const createHorizontalLines = (svg, scale, data, height) => {
                     mouseOutEvent(d3.event, element);
                 });
         }
-    })
-
+    });
 };
 
 /**
@@ -230,7 +227,7 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
 
     data.forEach((element, i) => {
         // fdr and pearson cofficient.
-        const fdr = element.fdr;
+        const { fdr } = element;
 
         circles
             .append('circle')
@@ -239,7 +236,7 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
             .attr('cy', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('r', circleScale(element.n))
             .attr('fill', fdr < 0.05 ? `${colors['--bg-color']}` : `${colors.silver}`)
-            .on('mouseover', function () {
+            .on('mouseover', () => {
                 mouseOverEvent(d3.event, element);
             })
             .on('mouseout', (event) => {
@@ -281,7 +278,6 @@ const appendDatasetName = (svg, data, height) => {
             .attr('font-size', '14px');
     });
 };
-
 
 /**
  * Appends dataset name to the left of the forest plot.
@@ -329,7 +325,6 @@ const appendEstimateText = (svg, data, height, width, scale) => {
 
     // append dataset name.
     data.forEach((element, i) => {
-
         if (element.ci_lower) {
             estimate
                 .append('text')
@@ -445,7 +440,9 @@ const createForestPlot = (margin, heightInput, width, data) => {
         : heightInput;
 
     // creating the svg canvas.
-    const svg = createSvgCanvas({ id: 'forestplot', width, height, margin, canvasId: CANVAS_ID });
+    const svg = createSvgCanvas({
+        id: 'forestplot', width, height, margin, canvasId: CANVAS_ID,
+    });
 
     // min and max.
     const { min, max } = calculateMinMax(data);
@@ -493,8 +490,9 @@ const createForestPlot = (margin, heightInput, width, data) => {
 /**
  * @returns {component} - returns the forest plot component.
  */
-const ForestPlot = ({ height, width, margin, data }) => {
-
+const ForestPlot = ({
+    height, width, margin, data,
+}) => {
     useEffect(() => {
         // remove the svg canvas.
         d3.select('#forestplot-canvas').remove();
