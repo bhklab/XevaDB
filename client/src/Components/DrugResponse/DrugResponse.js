@@ -84,7 +84,7 @@ const DrugResponse = () => {
             }
             return `${currentDrug.label.replaceAll(' ', '').replaceAll('+', '_')}`;
         }, '');
-        console.log(drugs, selectedDatasetId);
+
         // set the drug selection state
         setSelectedDrugs(drugs);
     }
