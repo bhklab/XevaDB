@@ -1,11 +1,9 @@
-
 /**
  * Author: https://github.com/dominicegginton/hex-color-opacity/blob/main/lib/index.js
- * @param {string} hex 
- * @param {number} opacity 
+ * @param {string} hex
+ * @param {number} opacity
  * @returns {string} - returns a color string with opacity
  */
-
 
 const addOpacityToColor = (hex, opacity) => {
     if (typeof hex !== 'string' || !/^#([A-Fa-f0-9]{3}$|[A-Fa-f0-9]{6}$|[A-Fa-f0-9]{8}$)/.test(hex)) {
@@ -16,7 +14,7 @@ const addOpacityToColor = (hex, opacity) => {
         throw new Error('Opacity should be float between 0 - 1');
     }
 
-    let color = hex.substring(1)
+    let color = hex.substring(1);
     if (color.length === 8) {
         color = color.substring(0, color.length - 2);
     }
@@ -28,6 +26,6 @@ const addOpacityToColor = (hex, opacity) => {
     color += Math.round(opacity * 255).toString(16).padStart(2, '0');
 
     return `#${color}`.toUpperCase();
-}
+};
 
 export default addOpacityToColor;
