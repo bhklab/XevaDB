@@ -1,4 +1,5 @@
 import { select } from 'd3';
+import colors from '../styles/colors';
 
 /**
  * creates a tooltip that can be used in different react components
@@ -15,6 +16,8 @@ function createToolTip(id) {
         .style('border-width', '1px')
         .style('border-radius', '5px')
         .style('padding', '5px')
+        .style('color', `${colors.black}`)
+        .style('background-color', `${colors.white}`)
         .attr('top', 0)
         .attr('left', 0);
 }
