@@ -37,8 +37,8 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 ## Servers
 
-- Testing Server: [http://beta.xevadb.ca](http://beta.xevadb.ca)
 - Production Server: [http://xevadb.ca](http://xevadb.ca)
+- Testing Server: [http://beta.xevadb.ca](http://beta.xevadb.ca)
 
 ## Migrations
 
