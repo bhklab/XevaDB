@@ -370,7 +370,7 @@ const BoxPlot = (props) => {
     // return statement.
     return (
         <div>
-            <div id="boxplot" />
+            <div id='boxplot' />
         </div>
     );
 };
