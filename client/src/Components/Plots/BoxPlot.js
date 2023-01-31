@@ -74,7 +74,8 @@ const createTopSvg = (width, height, id, svgId) => {
 
 // create a g element for the right boxplot.
 const appendGElementRight = (id, svgId, patientSvgWidth, drugHeight) => {
-    const svg = d3.select(`#${id}`).append('g')
+    const svg = d3.select(`#${id}`)
+        .append('g')
         .attr('transform', `translate(${patientSvgWidth + 20}, ${drugHeight})`)
         .attr('id', `boxplotsvg${svgId}-g`);
 
@@ -222,8 +223,8 @@ const createPatientBox = (svg, margin, width, q3, q1, y, element, scale) => {
     svg
         .append('rect')
         .attr('x', margin.left)
-        .attr('y', y(scale(q3)))
-        .attr('height', (y(scale(q1)) - y(scale(q3))))
+        .attr('y', y(scale(q3)) || 0)
+        .attr('height', (y(scale(q1)) - y(scale(q3))) || 0)
         .attr('width', width)
         .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50)
@@ -235,10 +236,10 @@ const createPatientBox = (svg, margin, width, q3, q1, y, element, scale) => {
 const createDrugBox = (svg, margin, height, q3, q1, x, element, scale) => {
     svg
         .append('rect')
-        .attr('x', x(scale(q1)))
+        .attr('x', x(scale(q1)) || 0)
         .attr('y', margin.top)
         .attr('height', height)
-        .attr('width', (x(scale(q3)) - x(scale(q1))))
+        .attr('width', (x(scale(q3)) - x(scale(q1))) || 0)
         .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 0.50)
         .style('fill', '#8CC0DE')
