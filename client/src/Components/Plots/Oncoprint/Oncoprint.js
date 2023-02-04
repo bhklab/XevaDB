@@ -5,7 +5,7 @@ import React, { useEffect, useContext } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import { mutationTypeMap, cnaMap, rnaMap } from '../../../utils/MutationViewsUtil';
-import PatientContext, { PatientConsumer } from '../../Context/PatientContext';
+import PatientContext from '../../Context/PatientContext';
 import colors from '../../../styles/colors';
 import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import createToolTip from '../../../utils/ToolTip';
@@ -313,8 +313,6 @@ const makeOncoprint = (hmap_patients, props, context) => {
     // this height and width is used for setting the body.
     const height = genes.length * rect_height;
     const width = hmap_patients.length * rect_width;
-
-    console.log(height, width, rect_height, rect_width);
 
     // making tooltips
     const tooltip = createToolTip('oncoprint');
@@ -927,10 +925,10 @@ const rankOncoprint = (gene, data, props, context) => {
         .style('visibility', 'visible');
 };
 
-/** ******************************** Oncoprint Main Component ******************************** */
 /**
- * main component
- * @param {Object} props - props object
+ * **************************************************************************************
+ * ****************************** Main Component (Oncoprint) ****************************
+ * **************************************************************************************
  */
 const Oncoprint = (props) => {
     // patient context.
@@ -956,10 +954,10 @@ const Oncoprint = (props) => {
     return (
         // eslint-disable-next-line no-return-assign
         <>
-            <div id="oncoprint" />
-            <PatientConsumer>
+            <div id='oncoprint' />
+            <PatientContext.Consumer>
                 {(value) => { rankOncoprintBasedOnHeatMapChanges(value); }}
-            </PatientConsumer>
+            </PatientContext.Consumer>
         </>
     );
 };
