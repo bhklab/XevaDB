@@ -60,60 +60,9 @@ const initialize = () => {
     };
 };
 
-// create an svg for the top boxplot.
-const createTopSvg = (width, height, id, svgId) => {
-    const svg = d3.select(`#${id}`)
-        .append('svg')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('transform', 'translate(220, 50)')
-        .attr('id', `boxplotsvg${svgId}`);
-
-    return svg;
-};
-
-// create a g element for the right boxplot.
-const appendGElementRight = (id, svgId, patientSvgWidth, drugHeight) => {
-    const svg = d3.select(`#${id}`)
-        .append('g')
-        .attr('transform', `translate(${patientSvgWidth + 20}, ${drugHeight})`)
-        .attr('id', `boxplotsvg${svgId}-g`);
-
-    return svg;
-};
-
-// create a rectangle outside the box plots.
-const createRectangle = (svg, width, height) => {
-    const rect = svg
-        .append('rect')
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', width)
-        .attr('height', height)
-        .attr('stroke', `${colors.black}`)
-        .attr('stroke-width', 1.0)
-        .style('fill', `${colors.white}`);
-
-    return rect;
-};
-
-// append svg to the div element.
-const appendGElementPatient = (svg, margin, width, i) => svg
-    .append('g')
-    .attr('transform',
-        `translate(${(width + margin.left + margin.right) * i},${margin.top})`)
-    .style('background-color', 'grey')
-    .attr('id', 'boxplotbody');
-
-// append svg for the drugs box plot.
-const appendGElementDrug = (svg, margin, height, i) => svg
-    .append('g')
-    .attr('transform', `translate(0, ${(height + margin.top + margin.bottom) * i})`);
-
 // remove the elements before creating new ones.
-const removeElements = () => {
-    d3.selectAll('#boxplotsvgtop').remove();
-    d3.selectAll('#svg-y-axis').remove();
+const removeElements = (plotId) => {
+    d3.select(`${plotId}`).remove();
 };
 
 // scaling min and max values to 0 and 1 correspondingly.
@@ -140,36 +89,61 @@ const mapXScale = (width, min, max) => {
 };
 
 // create y axis.
-const yAxis = (linearscale, width, height, margin, id) => {
-    const svg = d3.select('#boxplot')
-        .append('svg')
-        .attr('width', width + margin.left + margin.right + 15)
-        .attr('height', height + margin.top + margin.bottom)
-        .attr('transform', 'translate(220, 50)')
-        .attr('id', `svg-${id}`);
-
+const yAxis = (groupElement, linearscale) => {
     const axis = d3.axisLeft()
         .scale(linearscale)
         .ticks(7)
         .tickSize(0);
 
-    svg.append('g')
-        .attr('transform', 'translate(30, 0)')
+    groupElement
+        .append('g')
+        .attr('transform', 'translate(0, -160)')
+        .attr('id', 'y-axis-group')
         .call(axis);
 };
 
 // create x axis.
-const xAxis = (xscale, patientSvgWidth, boxHeight) => {
+const xAxis = (groupElement, xscale, patientSvgWidth) => {
     const axis = d3.axisTop()
         .scale(xscale)
         .ticks(3)
         .tickSize(0);
 
-    d3.select('#skeleton')
+    groupElement
         .append('g')
-        .attr('transform', `translate(${patientSvgWidth + 20}, ${boxHeight})`)
+        .attr('transform', `translate(${patientSvgWidth + 20}, 0)`)
+        .attr('id', 'x-axis-group')
         .call(axis);
 };
+
+// create a rectangle outside the box plots.
+const createRectangle = (groupElement, width, height) => {
+    const rect = groupElement
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', width)
+        .attr('height', height)
+        .attr('stroke', `${colors.black}`)
+        .attr('stroke-width', 1.0)
+        .style('fill', `${colors.white}`);
+
+    return rect;
+};
+
+// append svg to the div element.
+const appendGElementPatient = (svg, margin, width, i, patient) => svg
+    .append('g')
+    .attr('transform',
+        `translate(${(width + margin.left + margin.right) * i},${margin.top})`)
+    .style('background-color', 'grey')
+    .attr('id', `boxplotbody-${patient}`);
+
+// append svg for the drugs box plot.
+const appendGElementDrug = (svg, margin, height, i, drug) => svg
+    .append('g')
+    .attr('transform', `translate(0, ${(height + margin.top + margin.bottom) * i})`)
+    .attr('id', `boxplotbody-${drug}`);
 
 // Compute summary statistics used for the box:
 const computeStats = (data) => {
@@ -277,9 +251,11 @@ const createDrugRest = (svg, min, median, max, height, x, scale) => {
 };
 
 const BoxPlot = (props) => {
+    const PLOT_ID = 'boxplot';
+
     // destructuring the props.
     const {
-        data, response, patients, drugs,
+        data, response, patients, drugs, heatmapSvgGroupRef,
     } = props;
 
     // parsing the data.
@@ -304,7 +280,12 @@ const BoxPlot = (props) => {
     // use effect function once the component is mounted/updated.
     useEffect(() => {
         // to remove the elements.
-        removeElements();
+        removeElements(PLOT_ID);
+
+        // group element
+        const groupElement = d3.select(heatmapSvgGroupRef.current)
+            .append('g')
+            .attr('id', `${PLOT_ID}`);
 
         // scale.
         const dataScale = maxMinScale(minTotal, maxTotal);
@@ -312,25 +293,26 @@ const BoxPlot = (props) => {
         const xScale = mapXScale(drugWidth, minTotal, maxTotal);
 
         // x and y axis.
-        yAxis(yScale, patientWidth, patientHeight, margin, 'y-axis');
-        xAxis(xScale, patientSvgWidth, drugHeight);
-
-        // create an svg element.
-        const svgCanvas = createTopSvg(patientSvgWidth, patientSvgHeight, 'boxplot', 'top');
-        const svgCanvasRight = appendGElementRight('skeleton', 'right', patientSvgWidth, drugHeight);
+        yAxis(groupElement, yScale);
+        xAxis(groupElement, xScale, patientSvgWidth);
 
         // creating reactangle around the svgs.
-        createRectangle(svgCanvas, patientSvgWidth, patientSvgHeight);
-        createRectangle(svgCanvasRight, drugSvgWidth, drugSvgHeight);
+        createRectangle(groupElement, patientSvgWidth, patientSvgHeight).attr('transform', 'translate(0, -160)');
+        createRectangle(groupElement, drugSvgWidth, drugSvgHeight).attr('transform', `translate(${patientSvgWidth + 20}, 0)`);
 
         // create a box plot for each of the patient.
-        const keys = patients.length === 0 ? Object.keys(parsedPatientData) : patients;
+        const patientKeys = patients.length === 0 ? Object.keys(parsedPatientData) : patients;
 
-        keys.forEach((element, i) => {
+        const patientPlotGroup = groupElement
+            .append('g')
+            .attr('id', 'patient-plot-group')
+            .attr('transform', 'translate(0, -160)');
+
+        patientKeys.forEach((patient, i) => {
             // append g element to svg for each patients.
-            const svg = appendGElementPatient(svgCanvas, margin, patientWidth, i);
+            const svg = appendGElementPatient(patientPlotGroup, margin, patientWidth, i, patient);
 
-            const plotData = parsedPatientData[element];
+            const plotData = parsedPatientData[patient];
 
             // compute stats.
             const {
@@ -341,17 +323,22 @@ const BoxPlot = (props) => {
             // create vertical line.
             verticalLine(patientWidth, min, max, svg, yScale, dataScale);
             // create box.
-            createPatientBox(svg, margin, patientWidth, q3, q1, yScale, element, dataScale);
+            createPatientBox(svg, margin, patientWidth, q3, q1, yScale, patient, dataScale);
             // create rest of the elements.
             createPatientRest(svg, min, median, max, patientWidth, yScale, dataScale);
         });
 
-        // create a box plot for each of the drugs.
-        drugs.forEach((element, i) => {
-            // append g element to svg for each patient.
-            const svg = appendGElementDrug(svgCanvasRight, margin, drugHeight, i);
+        const drugPlotGroup = groupElement
+            .append('g')
+            .attr('id', 'patient-plot-group')
+            .attr('transform', `translate(${patientSvgWidth + 20}, 0)`);
 
-            const plotData = parsedDrugData[element];
+        // create a box plot for each of the drugs.
+        drugs.forEach((drug, i) => {
+            // append g element to svg for each patient.
+            const svg = appendGElementDrug(drugPlotGroup, margin, drugHeight, i, drug);
+
+            const plotData = parsedDrugData[drug];
 
             // compute stats.
             const {
@@ -362,7 +349,7 @@ const BoxPlot = (props) => {
             // create vertical line.
             horizontalLine(drugHeight, min, max, svg, xScale, dataScale);
             // create box.
-            createDrugBox(svg, margin, drugHeight, q3, q1, xScale, element, dataScale);
+            createDrugBox(svg, margin, drugHeight, q3, q1, xScale, drug, dataScale);
             // create rest of the elements.
             createDrugRest(svg, min, median, max, drugHeight, xScale, dataScale);
         });
@@ -370,9 +357,7 @@ const BoxPlot = (props) => {
 
     // return statement.
     return (
-        <div>
-            <div id='boxplot' />
-        </div>
+        <div />
     );
 };
 
