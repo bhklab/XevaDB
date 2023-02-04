@@ -62,7 +62,7 @@ const initialize = () => {
 
 // remove the elements before creating new ones.
 const removeElements = (plotId) => {
-    d3.select(`${plotId}`).remove();
+    d3.select(`#${plotId}`).remove();
 };
 
 // scaling min and max values to 0 and 1 correspondingly.

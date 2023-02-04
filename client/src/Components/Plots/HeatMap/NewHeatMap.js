@@ -13,9 +13,8 @@ import { customStyles } from '../../Search/SearchStyle';
 import isObject from '../../../utils/CheckIfAnObject';
 
 // TODO: add boxplot ------------------------ Done ------------------------
-// TODO: use context object in the code
+// TODO: use context object in the code and add sorting functionality
 // TODO: redirects from patient and drug labels
-// TODO: add sorting functionality
 // TODO: add drug and patient evaluations (top and right barplots); add the rectangle around the plots and axes!  ------------------------ Done ------------------------
 // TODO: add grey shadow when use hovers over a drug/patient or rectangle
 // TODO: dotted lines connecting to the oncoprint
@@ -681,7 +680,7 @@ const createHeatMap = (props, responseType) => {
     }
 
     if (responseType === 'mRECIST') {
-    // create data for the barplot on the top and right of the heatmap.
+        // create data for the barplot on the top and right of the heatmap.
         // barplots depict the total number of responses (mRECIST) for a drug/patient.
         const drugBarChartData = createDrugBarChartData(responseData);
         const patientBarChartData = createPatientBarChartData(responseData);
@@ -709,6 +708,11 @@ const NewHeatMap = (props) => {
     const { drugId: drugIdList, data, patientId: patientIdList } = props;
     const patientContext = useContext(PatientContext);
     const heatmapSvgGroupRef = useRef(null);
+
+    // also removes boxplot if it's present
+    if (!d3.select(`#boxplot`).empty()) {
+        d3.select(`#boxplot`).remove();
+    }
 
     useEffect(() => {
         createHeatMap(props, responseType);
