@@ -13,9 +13,9 @@ import { customStyles } from '../../Search/SearchStyle';
 import isObject from '../../../utils/CheckIfAnObject';
 
 // TODO: add boxplot ------------------------ Done ------------------------
+// TODO: add drug and patient evaluations (top and right barplots); add the rectangle around the plots and axes!  ------------------------ Done ------------------------
 // TODO: use context object in the code and add sorting functionality
 // TODO: redirects from patient and drug labels
-// TODO: add drug and patient evaluations (top and right barplots); add the rectangle around the plots and axes!  ------------------------ Done ------------------------
 // TODO: add grey shadow when use hovers over a drug/patient or rectangle
 // TODO: dotted lines connecting to the oncoprint
 
