@@ -623,12 +623,10 @@ const createHeatMap = (props, responseType) => {
 
     d3.select(`#heatmap-svg`)
         .attr('width', plotWidth + margin.left + margin.right)
-        .attr('height', plotHeight + margin.top + margin.bottom)
-        .attr('style', 'outline: thin solid green');
+        .attr('height', plotHeight + margin.top + margin.bottom);
 
     const svgGroupElement = d3.select('#heatmap-svg-group')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`)
-        .attr('style', 'outline: thin solid red');
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     const heatmapGroupingElement = svgGroupElement
         .append('g')
@@ -725,7 +723,7 @@ const NewHeatMap = (props) => {
                 className='selection-div'
                 defaultValue={{ value: 'mRECIST', label: 'mRECIST' }}
             />
-            <div id={WRAPPER_ID} style={{ border: '1px solid black' }}>
+            <div id={WRAPPER_ID}>
                 <svg id='heatmap-svg'>
                     <g id='heatmap-svg-group' ref={heatmapSvgGroupRef}> </g>
                 </svg>
