@@ -2,7 +2,7 @@ import React from 'react';
 import HeatMapData from '../Plots/HeatMap/HeatMapData';
 import OncoprintData from '../Plots/Oncoprint/OncoprintData';
 import GlobalStyles from '../../GlobalStyles';
-import { PatientProvider } from '../Context/PatientContext';
+import PatientContext from '../Context/PatientContext';
 import Footer from '../Footer/Footer';
 
 class SearchResult extends React.Component {
@@ -59,7 +59,7 @@ class SearchResult extends React.Component {
                 <GlobalStyles />
                 <div className='wrapper'>
                     <div className='heatmap-oncoprint-wrapper center-component'>
-                        <PatientProvider value={providerData}>
+                        <PatientContext.Provider value={providerData}>
                             <HeatMapData
                                 drugList={drugParam}
                                 datasetId={datasetParam}
@@ -72,7 +72,7 @@ class SearchResult extends React.Component {
                                 threshold={threshold}
                                 drugList={drugParam}
                             />
-                        </PatientProvider>
+                        </PatientContext.Provider>
                     </div>
                 </div>
                 <Footer />
