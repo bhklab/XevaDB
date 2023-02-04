@@ -3,6 +3,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Spinner from '../../Utils/Spinner';
 import HeatMap from './HeatMap';
+import NewHeatMap from './NewHeatMap';
 import { OncoprintGenes } from '../../../utils/OncoprintGenes';
 
 // dimension and margin variables
@@ -46,30 +47,30 @@ const fetchData = async (drugList, datasetId) => {
 
 // this function takes the parsed result and set the states.
 const parseData = (modelResponse, patients) => {
-    const dataset = [];
+    const dataset = {};
     let patientArray = patients;
     const drug = [];
 
     // this function will loop through the elements and
     // assign empty values in case model information is not available for the patient.
     modelResponse.forEach((element) => {
-        const dataObject = {};
         drug.push(element.Drug);
+        dataset[element.Drug] = {};
         patientArray.forEach((patient) => {
             if (!element[patient]) {
-                dataObject[patient] = '';
+                dataset[element.Drug][patient] = '';
             } else {
-                dataObject[patient] = element[patient];
+                dataset[element.Drug][patient] = element[patient];
             }
         });
-        dataset.push(dataObject);
     });
 
     // patient from one of the object elements to keep it in sync.
-    patientArray = Object.keys(dataset[0]).sort();
+    patientArray = Object.keys(Object.values(dataset)[0]).sort();
 
     // TODO: Update the 'data' for now; change later when we have average data
-    // TODO: 'mRECIST' will be the max occuring value and the other parameters are just taking the first element
+    // TODO: 'mRECIST' will be the max occuring value and the other
+    // TODO: parameters are just taking the first element
     // finds the maximum occurences of a 'mRECIST' type
     const maxOccuringmRECISTValue = (mRECIST) => {
         // this object will store the occurences of mRECIST values
@@ -96,18 +97,18 @@ const parseData = (modelResponse, patients) => {
     };
 
     // transforms the 'dataset'
-    const transformedData = dataset.map((row) => {
-        const transformedRow = {};
-        Object.entries(row).forEach(([key, value]) => {
-            transformedRow[key] = {
-                'best.average.response': value['best.average.response']?.[0] || 'NA',
-                survival: value.survival?.[0] || 'NA',
-                slope: value.slope?.[0] || 'NA',
+    const transformedData = {};
+    Object.entries(dataset).forEach(([drugName, patientObject]) => {
+        transformedData[drugName] = {};
+        Object.entries(patientObject).forEach(([key, value]) => {
+            transformedData[drugName][key] = {
+                'Best Average Response': value['best.average.response']?.[0] || 'NA',
+                Survival: value.survival?.[0] || 'NA',
+                Slope: value.slope?.[0] || 'NA',
                 AUC: value.AUC?.[0] || 'NA',
                 mRECIST: value.mRECIST ? maxOccuringmRECISTValue(value.mRECIST) : 'NA',
             };
         });
-        return transformedRow;
     });
 
     return {
@@ -121,7 +122,9 @@ const parseData = (modelResponse, patients) => {
  * main component
  */
 const HeatMapData = (props) => {
-    const { datasetId, drugList: drugProp, geneList: geneProp } = props;
+    const {
+        datasetId, drugList: drugProp, geneList: geneProp, isOld,
+    } = props;
     const geneList = geneProp ? geneProp.split(',') : OncoprintGenes;
     const [responseData, setResponseData] = useState([]);
     const [patientList, setPatientList] = useState([]);
@@ -129,7 +132,6 @@ const HeatMapData = (props) => {
     const [isLoading, setLoadingState] = useState(true);
 
     useEffect(() => {
-        console.log('helllla');
         if (datasetId > 0) {
             fetchData(drugProp, datasetId)
                 .then((data) => {
@@ -137,7 +139,6 @@ const HeatMapData = (props) => {
                     return parseData(responseArray, patientArray);
                 })
                 .then((data) => {
-                    console.log(data);
                     setResponseData(data.responseData);
                     setPatientList(data.patientList);
                     setDrugList(data.drugList);
@@ -152,16 +153,30 @@ const HeatMapData = (props) => {
                 isLoading
                     ? <Spinner loading={isLoading} />
                     : (
-                        <HeatMap
-                            data={responseData}
-                            drugId={drugList}
-                            patientId={patientList}
-                            dimensions={dimensions}
-                            geneList={geneList}
-                            margin={margin}
-                            dataset={datasetId}
-                            className='heatmap'
-                        />
+                        isOld // TODO: FIX THIS! REMOVE old heatmap code
+                            ? (
+                                <HeatMap
+                                    data={responseData}
+                                    drugId={drugList}
+                                    patientId={patientList}
+                                    dimensions={dimensions}
+                                    geneList={geneList}
+                                    margin={margin}
+                                    dataset={datasetId}
+                                    className='heatmap'
+                                />
+                            ) : (
+                                <NewHeatMap
+                                    data={responseData}
+                                    drugId={drugList}
+                                    patientId={patientList}
+                                    dimensions={dimensions}
+                                    geneList={geneList}
+                                    margin={margin}
+                                    dataset={datasetId}
+                                    className='heatmap'
+                                />
+                            )
                     )
             }
         </div>

@@ -1,12 +1,8 @@
-/* eslint-disable max-len */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable no-shadow */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-plusplus */
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-import PatientContext, { PatientConsumer } from '../../Context/PatientContext';
+import PatientContext from '../../Context/PatientContext';
 import BoxPlot from '../BoxPlot';
 import colors from '../../../styles/colors';
 import createToolTip from '../../../utils/ToolTip';
@@ -28,21 +24,21 @@ class HeatMap extends Component {
 
     // calculates the new margin for the heatmap.
     calcMargin = (selectedOption) => {
-        let margin = '';
         if (selectedOption === 'mRECIST') {
-            margin = {
+            return {
                 top: 200, right: 250, bottom: 50, left: 250,
             };
-        } else {
-            margin = {
-                top: 100, right: 250, bottom: 50, left: 250,
-            };
         }
-        return margin;
+
+        return {
+            top: 100, right: 250, bottom: 50, left: 250,
+        };
     };
 
     // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatMap = (data = this.props.data, patient = this.props.patientId, margin = this.props.margin) => {
+    makeHeatMap = (dataInput = this.props.data, patient = this.props.patientId, margin = this.props.margin) => {
+        console.log(this.props);
+        const data = Object.values(dataInput);
         // props data
         const { drugId: drug } = this.props;
         const { dimensions } = this.props;
@@ -103,6 +99,8 @@ class HeatMap extends Component {
             }
         }
 
+        console.log(drugEvaluations, patientEvaluations);
+
         /* this code will add to the drugEvaluations  and
         patientEvaluations  object the values for PD,SD,PR,CR
         and also sets the value of the letiable maxDrug. */
@@ -157,17 +155,7 @@ class HeatMap extends Component {
             d3.select('.select').on('change', () => {
                 // recover the option that has been chosen
                 const selectedOption = d3.select('select').property('value');
-                let response = '';
-                switch (selectedOption) {
-                case 'Slope':
-                    response = 'slope';
-                    break;
-                case 'Best Average Response':
-                    response = 'best.average.response';
-                    break;
-                default:
-                    response = selectedOption;
-                }
+                const response = selectedOption;
 
                 reference.setState({
                     responseValue: response,
@@ -197,6 +185,7 @@ class HeatMap extends Component {
                     }
                 });
             });
+            console.log(data, min, max);
             return [min, max];
         }
 
@@ -363,6 +352,7 @@ class HeatMap extends Component {
         const linearColorScale = d3.scaleLinear()
             .domain([min, 0, max])
             .range([`${colors.green_gradient}`, `${colors.white_gradient}`, `${colors.amber_gradient}`]);
+
         // this will fill the rectangles with different color based on the data.
         drawrectangle.attr('fill', (d) => {
             if (responseType === 'mRECIST') {
@@ -943,8 +933,8 @@ class HeatMap extends Component {
             <div>
                 <div style={{ position: 'relative' }}>
                     <select
-                        className="select"
-                        id="selectButton"
+                        className='select'
+                        id='selectButton'
                         style={{
                             display: 'block',
                             align: 'right',
@@ -956,12 +946,14 @@ class HeatMap extends Component {
                         }}
                     />
                 </div>
-                <div id="heatmap">
-                    {
+                <div id='heatmap'>
+                    {/* {
                         responseValue !== 'mRECIST' ? <BoxPlot response={responseValue} data={data} patients={modifiedPatients} drugs={drugs} /> : <div />
-                    }
+                    } */}
                 </div>
-                <PatientConsumer>{(value) => { value.globalPatients.length > 0 && this.rankHeatMapBasedOnOncoprintChanges(value); }}</PatientConsumer>
+                <PatientContext.Consumer>
+                    {(value) => { value.globalPatients.length > 0 && this.rankHeatMapBasedOnOncoprintChanges(value); }}
+                </PatientContext.Consumer>
             </div>
         );
     }
