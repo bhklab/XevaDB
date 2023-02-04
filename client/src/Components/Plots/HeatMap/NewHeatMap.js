@@ -12,12 +12,17 @@ import createToolTip from '../../../utils/ToolTip';
 import { customStyles } from '../../Search/SearchStyle';
 import isObject from '../../../utils/CheckIfAnObject';
 
-// TODO: add boxplot ------------------------ Done ------------------------
-// TODO: add drug and patient evaluations (top and right barplots); add the rectangle around the plots and axes!  ------------------------ Done ------------------------
+// ------------------------ Done ------------------------
+// TODO: add boxplot
+// TODO: add drug and patient evaluations (top and right barplots);
+// TODO: add the rectangle around the plots and axes!
+
+// ------------------------ TODO ------------------------
 // TODO: use context object in the code and add sorting functionality
 // TODO: redirects from patient and drug labels
 // TODO: add grey shadow when use hovers over a drug/patient or rectangle
 // TODO: dotted lines connecting to the oncoprint
+// TODO: update 'Oncoprint' component to hide the sort and biomarker redirect
 
 // heatmap wrapper div
 const HeatMapWrapper = styled.div`
@@ -123,13 +128,13 @@ const fillRectangleColor = (response, responseType, scale) => {
 
 // function creates the basic skeleton of the heatmap
 const createHeatMapSkeleton = (
-    skeleton, drugIdList, patientIdList, datasetId, responseType, responseData,
+    skeleton, drugNameList, patientNameList, datasetId, responseType, responseData,
     rectHeight, rectWidth, colorScale, tooltip, targetColorObject,
 ) => {
-    for (let i = 0; i < drugIdList.length; i++) {
-        for (let j = 0; j < patientIdList.length; j++) {
-            const patient = patientIdList[j];
-            const drug = drugIdList[i];
+    for (let i = 0; i < drugNameList.length; i++) {
+        for (let j = 0; j < patientNameList.length; j++) {
+            const patient = patientNameList[j];
+            const drug = drugNameList[i];
             const response = responseData[drug][patient][responseType];
 
             skeleton
@@ -188,9 +193,9 @@ const createPatientXAxis = (svg, patientScale, datasetId) => {
 };
 
 // scales for patient label/axis on the top of the heatmap
-const createDrugLabelScale = (drugIdList, canvasHeight) => (
+const createDrugLabelScale = (drugNameList, canvasHeight) => (
     d3.scaleBand()
-        .domain(drugIdList)
+        .domain(drugNameList)
         .range([0, canvasHeight])
 );
 
@@ -243,15 +248,15 @@ const createDrugYAxis = (svg, drugScale) => {
 };
 
 // biomarker label to redirect to the biomarker page.
-const createBiomarkerLabel = (svg, drugIdList, geneList, rectHeight, tooltip) => {
+const createBiomarkerLabel = (svg, drugNameList, geneList, rectHeight, tooltip) => {
     svg.append('g')
         .attr('id', 'biomarker-label-group')
         .selectAll('a')
-        .data(drugIdList)
+        .data(drugNameList)
         .join('a')
         .attr('xlink:href', (d) => (
             geneList.length > 0
-                ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drugIdList}&selectedDrug=${d}`
+                ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drugNameList}&selectedDrug=${d}`
                 : `/biomarker?selectedDrug=${d}`
         ))
         .append('text')
@@ -274,11 +279,11 @@ const createBiomarkerLabel = (svg, drugIdList, geneList, rectHeight, tooltip) =>
 };
 
 // creates the label/triangle to sort the row based on the recist value
-const createSortingLabel = (svg, drugIdList, rectHeight, tooltip) => {
+const createSortingLabel = (svg, drugNameList, rectHeight, tooltip) => {
     svg.append('g')
         .attr('id', 'sorting-label-group')
         .selectAll('text')
-        .data(drugIdList)
+        .data(drugNameList)
         .join('text')
         .text('🔺')
         .attr('font-size', '1em')
@@ -598,9 +603,9 @@ const createHeatMap = (props, responseType) => {
         dimensions,
         data: responseData,
         dataset: datasetId,
-        drugId: drugIdList,
+        drugId: drugNameList,
         geneList,
-        patientId: patientIdList,
+        patientId: patientNameList,
         className: plotId,
     } = props;
 
@@ -611,8 +616,8 @@ const createHeatMap = (props, responseType) => {
     const rectWidth = dimensions.width;
 
     // plot height and width
-    const plotHeight = rectHeight * drugIdList.length;
-    const plotWidth = rectWidth * patientIdList.length;
+    const plotHeight = rectHeight * drugNameList.length;
+    const plotWidth = rectWidth * patientNameList.length;
 
     // create SVG element for the heatmap
     // remove if the svg is element is already there
@@ -647,24 +652,24 @@ const createHeatMap = (props, responseType) => {
 
     // creates the rectangles for the heatmap
     createHeatMapSkeleton(
-        skeleton, drugIdList, patientIdList, datasetId, responseType,
+        skeleton, drugNameList, patientNameList, datasetId, responseType,
         responseData, rectHeight, rectWidth, linearColorScale,
         tooltip, targetColor,
     );
 
     // patient scale and axis
-    const patientLabelScale = createPatientLabelScale(patientIdList, plotWidth);
+    const patientLabelScale = createPatientLabelScale(patientNameList, plotWidth);
     createPatientXAxis(heatmapGroupingElement, patientLabelScale, datasetId);
 
     // drug scale and axis
-    const drugLabelScale = createDrugLabelScale(drugIdList, plotHeight);
+    const drugLabelScale = createDrugLabelScale(drugNameList, plotHeight);
     createDrugYAxis(heatmapGroupingElement, drugLabelScale);
 
     // create biomarker label/circle to redirect to the biomarker page.
-    createBiomarkerLabel(heatmapGroupingElement, drugIdList, geneList, rectHeight, tooltip);
+    createBiomarkerLabel(heatmapGroupingElement, drugNameList, geneList, rectHeight, tooltip);
 
     // create sorting label/triangle to sort the respective row for the drug.
-    createSortingLabel(heatmapGroupingElement, drugIdList, rectHeight, tooltip);
+    createSortingLabel(heatmapGroupingElement, drugNameList, rectHeight, tooltip);
 
     // creates the legend
     if (responseType === 'mRECIST') {
@@ -675,7 +680,7 @@ const createHeatMap = (props, responseType) => {
     } else {
         createLegend(
             heatmapGroupingElement, plotHeight, plotWidth,
-            rectHeight, rectWidth, min, max, drugIdList,
+            rectHeight, rectWidth, min, max, drugNameList,
         );
     }
 
@@ -705,7 +710,7 @@ const createHeatMap = (props, responseType) => {
  */
 const NewHeatMap = (props) => {
     const [responseType, setResponseType] = useState('mRECIST');
-    const { drugId: drugIdList, data, patientId: patientIdList } = props;
+    const { drugId: drugNameList, data, patientId: patientNameList } = props;
     const patientContext = useContext(PatientContext);
     const heatmapSvgGroupRef = useRef(null);
 
@@ -738,8 +743,8 @@ const NewHeatMap = (props) => {
                         <BoxPlot
                             response={responseType}
                             data={Object.values(data)}
-                            patients={patientIdList}
-                            drugs={drugIdList}
+                            patients={patientNameList}
+                            drugs={drugNameList}
                             heatmapSvgGroupRef={heatmapSvgGroupRef}
                         />
                     )
