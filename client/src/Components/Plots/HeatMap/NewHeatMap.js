@@ -11,6 +11,7 @@ import colors from '../../../styles/colors';
 import createToolTip from '../../../utils/ToolTip';
 import { customStyles } from '../../Search/SearchStyle';
 import isObject from '../../../utils/CheckIfAnObject';
+import removePlusCharacterAndSpace from '../../../utils/RemovePlusCharacterAndSpace';
 
 // ------------------------ Done ------------------------
 // TODO: add boxplot
@@ -237,11 +238,11 @@ const createDrugYAxis = (svg, drugScale) => {
 
             // change the visibility for the corresponding
             // biomarker and sorting label to visible.
-            d3.select(`#biomarker-label-for-${d}`)
+            d3.select(`#biomarker-label-for-${removePlusCharacterAndSpace(d)}`)
                 .style('visibility', 'visible')
                 .classed('selected', true);
 
-            d3.select(`#sorting-label-for-${d}`)
+            d3.select(`#sorting-label-for-${removePlusCharacterAndSpace(d)}`)
                 .style('visibility', 'visible')
                 .classed('selected', true);
         });
@@ -264,7 +265,7 @@ const createBiomarkerLabel = (svg, drugNameList, geneList, rectHeight, tooltip) 
         .attr('font-size', '0.8em')
         .attr('x', -20)
         .attr('y', (_, i) => (i + 0.70) * rectHeight)
-        .attr('id', (d) => `biomarker-label-for-${d}`)
+        .attr('id', (d) => `biomarker-label-for-${removePlusCharacterAndSpace(d)}`)
         .style('visibility', 'hidden')
         .on('mouseover', () => {
             // add a tooltip on mouseover
@@ -289,7 +290,7 @@ const createSortingLabel = (svg, drugNameList, rectHeight, tooltip) => {
         .attr('font-size', '1em')
         .attr('x', -45)
         .attr('y', (_, i) => (i + 0.70) * rectHeight)
-        .attr('id', (d) => `sorting-label-for-${d}`)
+        .attr('id', (d) => `sorting-label-for-${removePlusCharacterAndSpace(d)}`)
         .style('visibility', 'hidden')
         .on('mouseover', () => {
             // add a tooltip on mouseover
