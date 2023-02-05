@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 /**
- * @param {String} string - Takes string as an input (eg. adrenal gland).
- * @param {String} splitBy - second agrument is to split the string by. (eg '_', adernal_gland)
- * @returns {String} - returns a transformed string with the first letter capitalized for each word in the string(Title Case, eg. Adrenal Gland).
+ * @param {string} string - Takes string as an input (eg. adrenal gland).
+ * @param {string} splitBy - second agrument is to split the string by. (eg '_', adernal_gland)
+ * @returns {string} - returns a transformed string with the first letter capitalized for each word in the string(Title Case, eg. Adrenal Gland).
  */
 const convertToTitleCase = (string = '', splitBy = ' ') => {
     if (typeof (string) !== 'string') {
