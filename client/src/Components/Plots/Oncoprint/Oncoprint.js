@@ -224,7 +224,8 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
                 .style('left', `${d3.event.pageX - 100}px`)
                 .style('top', `${d3.event.pageY + 15}px`)
                 .style('color', `${colors.black}`)
-                .style('background-color', `${colors.white}`);
+                .style('background-color', `${colors.white}`)
+                .style('font-size', '12px');
 
             // add text to tooltip
             tooltipDiv
@@ -754,7 +755,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
                 return `<b>${data[0]}</b>: ${data[1]}`;
             })
             .attr('x', `${x + 10}px`)
-            .attr('y', (d, i) => (`${y + 10 + i * 10}px`));
+            .attr('y', (d, i) => (`${y + 10 + i * 10}px`))
+            .style('font-size', '12px');
     };
 
     // hiding tooltip.

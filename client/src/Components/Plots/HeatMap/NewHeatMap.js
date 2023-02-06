@@ -132,10 +132,10 @@ const createHeatMapSkeleton = (
     skeleton, drugNameList, patientNameList, datasetId, responseType, responseData,
     rectHeight, rectWidth, colorScale, tooltip, targetColorObject,
 ) => {
-    for (let i = 0; i < drugNameList.length; i++) {
-        for (let j = 0; j < patientNameList.length; j++) {
-            const patient = patientNameList[j];
-            const drug = drugNameList[i];
+    for (let drugIndex = 0; drugIndex < drugNameList.length; drugIndex++) {
+        for (let patientIndex = 0; patientIndex < patientNameList.length; patientIndex++) {
+            const patient = patientNameList[patientIndex];
+            const drug = drugNameList[drugIndex];
             const response = responseData[drug][patient][responseType];
 
             skeleton
@@ -144,8 +144,8 @@ const createHeatMapSkeleton = (
                     response, Object.keys(targetColorObject), patient, drug, datasetId,
                 ))
                 .append('rect')
-                .attr('x', j * rectWidth)
-                .attr('y', i * rectHeight)
+                .attr('x', patientIndex * rectWidth)
+                .attr('y', drugIndex * rectHeight)
                 .attr('width', rectWidth - 2)
                 .attr('height', rectHeight - 2)
                 .attr('fill', fillRectangleColor(response, responseType, colorScale))
