@@ -46,14 +46,16 @@ const getDrugListOnDatasetId = (datasetId) => axios
     );
 
 /**
- * Main response component
+ * **************************************************************************************
+ * ****************************** Main Component (Heatmap) ******************************
+ * **************************************************************************************
  */
 const DrugResponse = () => {
     const [datasetList, updateDatasetList] = useState([]);
     const [selectedDatasetId, setSelectedDataset] = useState();
     const [drugList, updateDrugList] = useState([]);
     const [selectedDrugs, setSelectedDrugs] = useState();
-    const [displayPlot, updateDisplayPlot] = useState(false);
+    const [shouldDisplayPlot, updateShouldDisplayPlot] = useState(false);
 
     useEffect(() => {
         axios
@@ -113,12 +115,17 @@ const DrugResponse = () => {
                     </div>
                     <div className='display-button'>
                         &nbsp;
-                        <button type='button' onClick={() => updateDisplayPlot(true)}> Display plot </button>
+                        <button
+                            type='button'
+                            onClick={() => updateShouldDisplayPlot(true)}
+                        >
+                            Display plot
+                        </button>
                     </div>
                 </SelectWrapper>
                 <div className='heatmap-plot'>
                     {
-                        displayPlot
+                        shouldDisplayPlot
                             ? (
                                 <HeatMapData
                                     datasetId={selectedDatasetId}
