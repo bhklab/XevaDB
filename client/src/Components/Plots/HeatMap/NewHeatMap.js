@@ -11,19 +11,19 @@ import colors from '../../../styles/colors';
 import createToolTip from '../../../utils/ToolTip';
 import { customStyles } from '../../Search/SearchStyle';
 import isObject from '../../../utils/CheckIfAnObject';
-import removePlusCharacterAndSpace from '../../../utils/RemovePlusCharacterAndSpace';
+import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharacters';
 
 // ------------------------ Done ------------------------
 // TODO: add boxplot
 // TODO: add drug and patient evaluations (top and right barplots);
 // TODO: add the rectangle around the plots and axes!
-
-// ------------------------ TODO ------------------------
-// TODO: use context object in the code and add sorting functionality
-// TODO: redirects from patient and drug labels
-// TODO: add grey shadow when use hovers over a drug/patient or rectangle
 // TODO: dotted lines connecting to the oncoprint
 // TODO: update 'Oncoprint' component to hide the sort and biomarker redirect
+
+// ------------------------ TODO ------------------------
+// TODO: add grey shadow when use hovers over a drug/patient or rectangle
+// TODO: use context object in the code and add sorting functionality
+// TODO: redirects from patient and drug labels
 
 // heatmap wrapper div
 const HeatMapWrapper = styled.div`
@@ -179,7 +179,7 @@ const createPatientLabelScale = (patientList, canvasWidth) => (
 const createPatientXAxis = (svg, patientScale, datasetId) => {
     const axis = d3.axisTop(patientScale);
 
-    svg.append('g') // TODO: Add a redirect to the individual patient page
+    svg.append('g')
         .attr('id', 'patient-axis-group')
         .attr('stroke-width', '0')
         .style('text-anchor', (Number(datasetId) === 7 ? 'start' : 'middle'))
@@ -189,7 +189,7 @@ const createPatientXAxis = (svg, patientScale, datasetId) => {
         .attr('transform', 'rotate(-90)')
         .attr('font-weight', '550')
         .attr('fill', `${colors['--main-font-color']}`)
-        .attr('x', (Number(datasetId) === 7 ? '-2.4em' : '2.6em')) // TODO: CHECK THIS IF IT WORKS!
+        .attr('x', (Number(datasetId) === 7 ? '10px' : '40px'))
         .attr('y', '.15em');
 };
 
@@ -238,11 +238,11 @@ const createDrugYAxis = (svg, drugScale) => {
 
             // change the visibility for the corresponding
             // biomarker and sorting label to visible.
-            d3.select(`#biomarker-label-for-${removePlusCharacterAndSpace(d)}`)
+            d3.select(`#biomarker-label-for-${removeSomeSpecialCharacters(d)}`)
                 .style('visibility', 'visible')
                 .classed('selected', true);
 
-            d3.select(`#sorting-label-for-${removePlusCharacterAndSpace(d)}`)
+            d3.select(`#sorting-label-for-${removeSomeSpecialCharacters(d)}`)
                 .style('visibility', 'visible')
                 .classed('selected', true);
         });
@@ -265,7 +265,7 @@ const createBiomarkerLabel = (svg, drugNameList, geneList, rectHeight, tooltip) 
         .attr('font-size', '0.8em')
         .attr('x', -20)
         .attr('y', (_, i) => (i + 0.70) * rectHeight)
-        .attr('id', (d) => `biomarker-label-for-${removePlusCharacterAndSpace(d)}`)
+        .attr('id', (d) => `biomarker-label-for-${removeSomeSpecialCharacters(d)}`)
         .style('visibility', 'hidden')
         .on('mouseover', () => {
             // add a tooltip on mouseover
@@ -281,7 +281,8 @@ const createBiomarkerLabel = (svg, drugNameList, geneList, rectHeight, tooltip) 
 
 // creates the label/triangle to sort the row based on the recist value
 const createSortingLabel = (svg, drugNameList, rectHeight, tooltip) => {
-    svg.append('g')
+    svg
+        .append('g')
         .attr('id', 'sorting-label-group')
         .selectAll('text')
         .data(drugNameList)
@@ -290,7 +291,7 @@ const createSortingLabel = (svg, drugNameList, rectHeight, tooltip) => {
         .attr('font-size', '1em')
         .attr('x', -45)
         .attr('y', (_, i) => (i + 0.70) * rectHeight)
-        .attr('id', (d) => `sorting-label-for-${removePlusCharacterAndSpace(d)}`)
+        .attr('id', (d) => `sorting-label-for-${removeSomeSpecialCharacters(d)}`)
         .style('visibility', 'hidden')
         .on('mouseover', () => {
             // add a tooltip on mouseover
@@ -460,7 +461,7 @@ const createDrugBarPlotAxes = (heatmapGroupingElement, mainPlotWidth, scale) => 
 
     const axis = d3
         .axisTop(scale)
-        .ticks(5);
+        .ticks(4);
 
     canvas.call(axis);
 };
@@ -528,7 +529,7 @@ const createPatientBarPlotAxes = (
 
     const canvas = heatmapGroupingElement
         .append('g')
-        .attr('transform', `translate(-2, -130)`);
+        .attr('transform', `translate(-2, -160)`);
 
     const axis = d3
         .axisLeft(scale)
@@ -544,7 +545,7 @@ const patientStackedBarplots = (
         Object.values(patientBarChartData),
     );
 
-    const barplotHeight = 70;
+    const barplotHeight = 80;
 
     const scale = d3.scaleLinear()
         .domain([0, maxTotalValueInDataObject])
@@ -565,7 +566,7 @@ const patientStackedBarplots = (
         .style('fill', 'none')
         .style('stroke', 'black')
         .style('stroke-width', 1)
-        .attr('transform', 'translate(-2, -130)');
+        .attr('transform', 'translate(-2, -160)');
 
     // creates the individual stacked bar plot for each patient
     Object
@@ -583,7 +584,7 @@ const patientStackedBarplots = (
                     .attr('width', rectWidth - 2)
                     .attr('height', scale(responseValue))
                     .attr('fill', targetColor[response])
-                    .attr('transform', 'translate(0, -60)');
+                    .attr('transform', 'translate(0, -80)');
 
                 currentY -= scale(responseValue);
             });
@@ -591,6 +592,28 @@ const patientStackedBarplots = (
 
     // creates an axes for the plot
     createPatientBarPlotAxes(heatmapGroupingElement, maxTotalValueInDataObject, barplotHeight);
+};
+
+// creates dotted lines
+const createDottedLinesPerPatient = (
+    heatmapGroupingElement, patientNameList, plotHeight, rectWidth,
+) => {
+    const dottedLinesGroup = heatmapGroupingElement
+        .append('g')
+        .attr('id', 'dotted-lines-group');
+
+    for (let patientIndex = 0; patientIndex <= patientNameList.length; patientIndex++) {
+        dottedLinesGroup
+            .append('line')
+            .style('stroke', `${colors.lightgray}`)
+            .style('stroke-dasharray', '3 2')
+            .style('stroke-width', 1)
+            .attr('x1', patientIndex * rectWidth - 1)
+            .attr('y1', plotHeight - 1)
+            .attr('x2', patientIndex * rectWidth - 1)
+            .attr('y2', plotHeight + 50 - 1)
+            .attr('id', `dotted-line-${patientNameList[patientIndex]}`);
+    }
 };
 
 /**
@@ -702,6 +725,10 @@ const createHeatMap = (props, responseType) => {
             plotWidth, plotHeight, rectHeight,
         );
     }
+
+    // create dotted lines at the end of the heatmap
+    // that connects dotted lines present at the start of oncoprint lines.
+    createDottedLinesPerPatient(heatmapGroupingElement, patientNameList, plotHeight, rectWidth);
 };
 
 /**
