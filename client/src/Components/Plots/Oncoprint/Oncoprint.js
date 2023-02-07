@@ -10,6 +10,7 @@ import colors from '../../../styles/colors';
 import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import createToolTip from '../../../utils/ToolTip';
 import convertToTitleCase from '../../../utils/ConvertToTitleCase';
+import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharacters';
 
 // aberration data
 const aberration = [
@@ -129,17 +130,39 @@ const createAlterationData = (data_mut, data_rna, data_cnv) => {
  * @param {Object} svg - svg object.
  * @param {number} rect_height - height.
  */
-const sortingCircles = (genes, svg, rect_height) => {
-    genes.forEach((val, i) => {
-        svg
-            .append('circle')
-            .attr('cx', -12)
-            .attr('cy', i)
-            .attr('r', 6)
-            .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '').replace('.', '')}`)
-            .style('fill', `${colors['--link-color']}`)
-            .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
-            .style('visibility', 'hidden');
+const createSortingLabel = (genes, svg, rect_height, tooltip) => {
+    const sortingGroup = svg.append('g')
+        .attr('id', 'sorting-label-group');
+
+    genes.forEach((gene, i) => {
+        sortingGroup
+            .append('text')
+            .text('🔺')
+            .attr('x', -45)
+            .attr('y', (i + 0.6) * rect_height)
+            .attr('font-size', '1em')
+            .attr('id', `sorting-label-for-gene-${removeSomeSpecialCharacters(gene)}`)
+            .style('visibility', 'hidden')
+            .on('mouseover', () => {
+                const tooltipDiv = tooltip
+                    .style('visibility', 'visible')
+                    .style('left', `${d3.event.pageX - 100}px`)
+                    .style('top', `${d3.event.pageY + 15}px`);
+
+                // add text to tooltip
+                tooltipDiv
+                    .append('text')
+                    .attr('id', 'tooltip-biomarker')
+                    .text('Click to sort');
+            })
+            .on('mouseout', () => {
+                // hide the tooltip
+                tooltip
+                    .style('visibility', 'hidden');
+
+                // remove the biomarker tooltip data
+                d3.select('#tooltip-biomarker').remove();
+            });
     });
 };
 
@@ -149,57 +172,55 @@ const createGeneYAxis = (
 ) => {
     // geneNames
     const geneNames = skeleton.append('g')
-        .attr('id', 'gene_names');
+        .attr('id', 'gene-axis-group');
 
     // gene names on the y axis
     for (let i = 0; i < genes.length; i++) {
         geneNames.append('text')
             .attr('class', genes[i])
-            .attr('dx', -45)
+            .attr('x', -20)
             .style('text-anchor', 'end')
             .style('font-size', '11px')
-            .attr('dy', i * (rect_height) + rect_width)
+            .attr('y', i * (rect_height) + rect_width)
             .attr('font-weight', '550')
             .attr('fill', `${colors['--main-font-color']}`)
             .text(genes[i])
             .on('mouseover', () => {
-                // tooltip on mousever setting the div to visible.
-                d3.select('#oncoprint')
-                    .append('div')
-                    .style('position', 'absolute')
-                    .style('border', 'solid')
-                    .style('visibility', 'visible')
-                    .style('border-width', '1px')
-                    .style('border-radius', '5px')
-                    .style('padding', '5px')
-                    .style('left', `${d3.event.pageX - 100}px`)
-                    .style('top', `${d3.event.pageY + 15}px`)
-                    .attr('id', 'tooltiptextgene')
-                    .style('color', `${colors.black}`)
-                    .style('background-color', `${colors.white}`)
-                    .text('Click to Sort');
-
                 d3.selectAll(`.oprint-hlight-${genes[i]}`)
                     .style('opacity', 0.2);
+
+                // remove the biomarker and sorting labels
+                // that are already selected (selected class!)
+                d3.selectAll('text[id*="sorting-label"][class="selected"]')
+                    .style('visibility', 'hidden')
+                    .classed('selected', false);
+
+                d3.selectAll('[id*="biomarker-label"][class="selected"]')
+                    .style('visibility', 'hidden')
+                    .classed('selected', false);
+
+                // transforms the drug label group
+                d3.select('#gene-axis-group')
+                    .attr('transform', 'translate(-40, 0)');
+
+                // change the visibility for the corresponding
+                // biomarker and sorting label to visible.
+                d3.select(`#biomarker-label-for-gene-${removeSomeSpecialCharacters(genes[i])}`)
+                    .style('visibility', 'visible')
+                    .classed('selected', true);
+
+                d3.select(`#sorting-label-for-gene-${removeSomeSpecialCharacters(genes[i])}`)
+                    .style('visibility', 'visible')
+                    .classed('selected', true);
             })
             .on('mouseout', () => {
-                // tooltip on mousever setting the div to hidden.
-                tooltip
-                    .style('visibility', 'hidden');
-                // remove all the divs with id tooltiptext.
-                d3.select('#tooltiptextgene').remove();
                 // for highlight.
                 d3.selectAll(`.oprint-hlight-${genes[i]}`)
                     .style('opacity', 0);
             })
             .on('click', () => {
-                // tooltip on mousever setting the div to hidden.
-                tooltip
-                    .style('visibility', 'hidden');
-                // remove all the divs with id tooltiptext.
-                d3.select('#tooltiptextgene').remove();
                 // ranking oncoprint.
-                rankOncoprint(genes[i], [data_mut, data_cnv, data_rna], props, context);
+                rankOncoprint(genes[i], [data_mut, data_cnv, data_rna], props, context); // TODO: Move it to the sorting label.
             });
     }
 };
@@ -212,20 +233,23 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
     biomarkerImage.selectAll('div')
         .data(genes)
         .join('a')
-        .attr('xlink:href', (d) => (drugs ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}` : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`))
+        .attr('xlink:href', (d) => (
+            drugs
+                ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}`
+                : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`
+        ))
         .append('text')
         .text('⭕️')
         .attr('font-size', '0.8em')
-        .attr('x', -40)
-        .attr('y', (d, i) => (i + 0.55) * rect_height)
-        .on('mouseover', (d) => {
+        .attr('x', -20)
+        .attr('y', (_, i) => (i + 0.55) * rect_height)
+        .style('visibility', 'hidden')
+        .attr('id', (d) => `biomarker-label-for-gene-${d}`)
+        .on('mouseover', () => {
             const tooltipDiv = tooltip
                 .style('visibility', 'visible')
                 .style('left', `${d3.event.pageX - 100}px`)
-                .style('top', `${d3.event.pageY + 15}px`)
-                .style('color', `${colors.black}`)
-                .style('background-color', `${colors.white}`)
-                .style('font-size', '12px');
+                .style('top', `${d3.event.pageY + 15}px`);
 
             // add text to tooltip
             tooltipDiv
@@ -234,7 +258,7 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
                 .text('Redirect to Biomarker Page');
         })
         .on('mouseout', () => {
-            // hide the tooltip
+        // hide the tooltip
             tooltip
                 .style('visibility', 'hidden');
 
@@ -329,7 +353,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('id', 'skeleton');
 
     /** Appending Circle to the  Y-Axis */
-    sortingCircles(genes, svg, rect_height);
+    createSortingLabel(genes, svg, rect_height, tooltip);
 
     /* *  Gene Names on Y-Axis and Biomarker Image* */
     createGeneYAxis(skeleton, genes, rect_height, rect_width, tooltip, data_mut, data_cnv, data_rna, props, context);
