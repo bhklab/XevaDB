@@ -122,13 +122,16 @@ const parseData = (modelResponse, patients) => {
  * main component
  */
 const HeatMapData = (props) => {
+    console.log(props);
     const {
         datasetId, drugList: drugProp, geneList: geneProp, isOld,
     } = props;
     const geneList = geneProp ? geneProp.split(',') : OncoprintGenes;
-    const [responseData, setResponseData] = useState([]);
-    const [patientList, setPatientList] = useState([]);
-    const [drugList, setDrugList] = useState([]);
+    const [dataObject, setDataObject] = useState({
+        responseData: [],
+        patientList: [],
+        drugList: [],
+    });
     const [isLoading, setLoadingState] = useState(true);
 
     useEffect(() => {
@@ -139,9 +142,11 @@ const HeatMapData = (props) => {
                     return parseData(responseArray, patientArray);
                 })
                 .then((data) => {
-                    setResponseData(data.responseData);
-                    setPatientList(data.patientList);
-                    setDrugList(data.drugList);
+                    setDataObject({
+                        responseData: data.responseData,
+                        patientList: data.patientList,
+                        drugList: data.drugList,
+                    });
                     setLoadingState(false);
                 });
         }
@@ -156,9 +161,9 @@ const HeatMapData = (props) => {
                         isOld // TODO: FIX THIS! REMOVE old heatmap code
                             ? (
                                 <HeatMap
-                                    data={responseData}
-                                    drugId={drugList}
-                                    patientId={patientList}
+                                    data={dataObject.responseData}
+                                    drugId={dataObject.drugList}
+                                    patientId={dataObject.patientList}
                                     dimensions={dimensions}
                                     geneList={geneList}
                                     margin={margin}
@@ -167,9 +172,9 @@ const HeatMapData = (props) => {
                                 />
                             ) : (
                                 <NewHeatMap
-                                    data={responseData}
-                                    drugId={drugList}
-                                    patientId={patientList}
+                                    data={dataObject.responseData}
+                                    drugId={dataObject.drugList}
+                                    patientId={dataObject.patientList}
                                     dimensions={dimensions}
                                     geneList={geneList}
                                     margin={margin}
