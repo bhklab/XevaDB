@@ -1,12 +1,12 @@
 import React from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import TumorGrowthCurve from './TumorGrowthCurve';
 import Spinner from '../../Utils/Spinner';
 import GlobalStyles from '../../../GlobalStyles';
 import { StyledCurve } from './CurveStyle';
 import colors from '../../../styles/colors';
 import StatTable from '../../ResponseStat/ModelResponseStatTable';
-import { Link } from 'react-router-dom';
 
 class CurveComponent extends React.Component {
     constructor(props) {
@@ -105,24 +105,29 @@ class CurveComponent extends React.Component {
         const {
             patientParam, drugParam,
             dataFormatted, datasetParam,
-            loading
+            loading,
         } = this.state;
         return (
             <>
                 <GlobalStyles />
                 {
                     loading
-                        ? <div className='wrapper center-component'>
-                            <Spinner loading={loading} />
-                        </div>
+                        ? (
+                            <div className='wrapper center-component'>
+                                <Spinner loading={loading} />
+                            </div>
+                        )
                         : (
-                            <div className="wrapper">
+                            <div className='wrapper'>
                                 <StyledCurve>
-                                    <div className="growth-curve-wrapper center-component">
+                                    <div className='growth-curve-wrapper center-component'>
                                         <h1>
                                             Drug:
                                             {' '}
-                                            <span> {drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}</span>
+                                            <span>
+                                                {' '}
+                                                {drugParam.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ')}
+                                            </span>
                                             {' '}
                                             Patient:
                                             {' '}
@@ -136,8 +141,8 @@ class CurveComponent extends React.Component {
                                         />
                                         <StatTable patientParam={patientParam} drugParam={drugParam} />
                                     </div>
-                                    <div className="growth-curve-wrapper center-component" style={{ marginTop: '20px' }}>
-                                        <Link to="/datasets"> ←&nbsp;&nbsp;Back to Datasets </Link>
+                                    <div className='growth-curve-wrapper center-component' style={{ marginTop: '20px' }}>
+                                        <Link to='/datasets'> ←&nbsp;&nbsp;Back to Datasets </Link>
                                     </div>
                                 </StyledCurve>
                             </div>
@@ -147,6 +152,5 @@ class CurveComponent extends React.Component {
         );
     }
 }
-
 
 export default CurveComponent;
