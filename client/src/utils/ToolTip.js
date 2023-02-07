@@ -19,7 +19,8 @@ function createToolTip(id) {
         .style('color', `${colors.black}`)
         .style('background-color', `${colors.white}`)
         .attr('top', 0)
-        .attr('left', 0);
+        .attr('left', 0)
+        .style('font-size', '12px');
 }
 
 export default createToolTip;
