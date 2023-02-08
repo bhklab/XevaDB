@@ -79,7 +79,6 @@ class Dataset extends React.Component {
                                         <PatientContext.Provider value={providerData}>
                                             <HeatMapData
                                                 datasetId={datasetId}
-                                                isOld
                                             />
                                             <OncoprintData
                                                 datasetId={datasetId}

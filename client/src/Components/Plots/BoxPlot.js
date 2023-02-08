@@ -97,7 +97,7 @@ const yAxis = (groupElement, linearscale) => {
 
     groupElement
         .append('g')
-        .attr('transform', 'translate(0, -160)')
+        .attr('transform', 'translate(0, -180)')
         .attr('id', 'y-axis-group')
         .call(axis);
 };
@@ -297,7 +297,7 @@ const BoxPlot = (props) => {
         xAxis(groupElement, xScale, patientSvgWidth);
 
         // creating reactangle around the svgs.
-        createRectangle(groupElement, patientSvgWidth, patientSvgHeight).attr('transform', 'translate(0, -160)');
+        createRectangle(groupElement, patientSvgWidth, patientSvgHeight).attr('transform', 'translate(0, -180)');
         createRectangle(groupElement, drugSvgWidth, drugSvgHeight).attr('transform', `translate(${patientSvgWidth + 20}, 0)`);
 
         // create a box plot for each of the patient.
@@ -306,7 +306,7 @@ const BoxPlot = (props) => {
         const patientPlotGroup = groupElement
             .append('g')
             .attr('id', 'patient-plot-group')
-            .attr('transform', 'translate(0, -160)');
+            .attr('transform', 'translate(0, -180)');
 
         patientKeys.forEach((patient, i) => {
             // append g element to svg for each patients.
