@@ -1,982 +1,804 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { Component } from 'react';
+import React, {
+    useState, useEffect, useContext, useRef,
+} from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
+import Select from 'react-select';
+import styled from 'styled-components';
 import PatientContext from '../../Context/PatientContext';
 import BoxPlot from '../BoxPlot';
 import colors from '../../../styles/colors';
 import createToolTip from '../../../utils/ToolTip';
+import { customStyles } from '../../Search/SearchStyle';
+import isObject from '../../../utils/CheckIfAnObject';
+import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharacters';
 
-class HeatMap extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            modifiedPatients: [],
-            responseValue: 'mRECIST',
-        };
-        // adding tool tip function
-        this.createToolTip = createToolTip.bind(this);
+// ------------------------ Done ------------------------
+// TODO: add boxplot
+// TODO: add drug and patient evaluations (top and right barplots);
+// TODO: add the rectangle around the plots and axes!
+// TODO: dotted lines connecting to the oncoprint
+// TODO: update 'Oncoprint' component to hide the sort and biomarker redirect
+
+// ------------------------ TODO ------------------------
+// TODO: add grey shadow when use hovers over a drug/patient or rectangle
+// TODO: use context object in the code and add sorting functionality
+// TODO: redirects from patient and drug labels
+
+// heatmap wrapper div
+const HeatMapWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+
+    .selection-div {
+        width: 150px;
+        align-self: flex-end;
     }
+`;
 
-    componentDidMount() {
-        this.makeHeatMap();
+// wrapper id for the div that contains the heatmap
+const WRAPPER_ID = 'heatmap-wrapper-div';
+
+// control data array
+const controlDrugs = ['untreated', 'water', 'control', 'h20'];
+
+// selection options
+const options = [
+    { value: 'mRECIST', label: 'mRECIST' },
+    { value: 'Slope', label: 'Slope' },
+    { value: 'Best Average Response', label: 'Best Average Response' },
+    { value: 'AUC', label: 'AUC' },
+];
+
+const targetColor = {
+    CR: `${colors.blue}`,
+    PR: `${colors.green}`,
+    SD: `${colors.yellow}`,
+    PD: `${colors.red}`,
+    NA: `${colors.lightgray}`,
+};
+
+// create link to growth curve component/page
+const createGrowthCurveRedirection = (response, responseList, patient, drug, dataset) => {
+    if ((responseList.includes(response) && response !== 'NA') || Number(response)) {
+        return `/curve?patient=${patient}&drug=${drug}&dataset=${dataset}`;
     }
+    return '/';
+};
 
-    // calculates the new margin for the heatmap.
-    calcMargin = (selectedOption) => {
-        if (selectedOption === 'mRECIST') {
-            return {
-                top: 200, right: 250, bottom: 50, left: 250,
-            };
-        }
-
-        return {
-            top: 100, right: 250, bottom: 50, left: 250,
-        };
-    };
-
-    // main heatmap function taking parameters as data, all the patient ids and drugs.
-    makeHeatMap = (dataInput = this.props.data, patient = this.props.patientId, margin = this.props.margin) => {
-        console.log(this.props);
-        const data = Object.values(dataInput);
-        // props data
-        const { drugId: drug } = this.props;
-        const { dimensions } = this.props;
-        const { className: plotId } = this.props;
-        const { dataset } = this.props;
-        const { responseValue: responseType } = this.state;
-        const { geneList } = this.props;
-
-        // height and width for the SVG based on the number of drugs and patient/sample ids.
-        // height and width of the rectangles in the main skeleton.
-        const rectHeight = dimensions.height;
-        const rectWidth = dimensions.width;
-
-        // this height and width is used for setting the body.
-        const height = drug.length * rectHeight;
-        const width = patient.length * rectWidth;
-
-        const targetEval = [
-            { CR: `${colors.blue}` },
-            { PR: `${colors.green}` },
-            { SD: `${colors.yellow}` },
-            { PD: `${colors.red}` },
-        ];
-
-        const targetColor = {
-            CR: `${colors.blue}`,
-            PR: `${colors.green}`,
-            SD: `${colors.yellow}`,
-            PD: `${colors.red}`,
-            NA: `${colors.lightgray}`,
-        };
-
-        // initializing the tooltip
-        const tooltip = this.createToolTip('heatmap');
-
-        // setting the query strings
-        let drugUse = '';
-        let drugIndex = 0;
-        const patientUse = patient;
-
-        /** *********************************** drug and patient evaluations ************************************** */
-        let maxDrug = 0;
-        let drugEvaluations = {};
-        if (responseType === 'mRECIST') {
-            for (let i = 0; i < drug.length; i++) {
-                drugEvaluations[drug[i]] = {
-                    CR: 0, PR: 0, SD: 0, PD: 0, NA: 0,
-                };
+// calculates the min and max value of the response type.
+const calculateMinMax = (data, responseType) => {
+    let min = 0;
+    let max = 0;
+    data.forEach((row) => {
+        const keys = Object.keys(row);
+        keys.forEach((val) => {
+            if (Number(row[val][responseType]) > max) {
+                max = Number(row[val][responseType]);
             }
-        }
+            if (Number(row[val][responseType]) < min) {
+                min = Number(row[val][responseType]);
+            }
+        });
+    });
+    return [min, max];
+};
 
-        let patientEvaluations = {};
-        if (responseType === 'mRECIST') {
-            for (let j = 0; j < patient.length; j++) {
-                patientEvaluations[patient[j]] = {
+// updates/make the tooltip visible
+const makeToolTipVisible = (tooltip) => tooltip
+    .style('left', `${d3.event.pageX + 10}px`)
+    .style('top', `${d3.event.pageY + 10}px`)
+    .style('visibility', 'visible');
+
+const addDataToTooltip = (tooltip, data) => {
+    let tooltipData = [];
+    let tooltipHTML = '';
+
+    if (isObject(data)) {
+        tooltipData = Object.keys(data);
+        tooltipHTML = (d) => `<b>${d}</b> : ${data[d]}`;
+    } else if (Array.isArray(data)) {
+        tooltipData = data;
+        tooltipHTML = (d) => d;
+    }
+
+    tooltip
+        .selectAll('div')
+        .data(tooltipData)
+        .join('div')
+        .html(tooltipHTML)
+        .style('font-size', '12px');
+};
+
+// scale for heatmap rectangle or legends
+const createLinearColorScale = (min, max) => d3.scaleLinear()
+    .domain([min, 0, max])
+    .range([`${colors.green_gradient}`, `${colors.white_gradient}`, `${colors.amber_gradient}`]);
+
+// function to color the rectangles based on the
+const fillRectangleColor = (response, responseType, scale) => {
+    // this is when the response type is mRECIST
+    // and response is 'CR', 'PR', 'SD', 'PD'
+    if (responseType === 'mRECIST' || response === 'NA') {
+        return targetColor[response];
+    }
+
+    // if the response type is slope, BAR or AUC
+    return scale(response);
+};
+
+// function creates the basic skeleton of the heatmap
+const createHeatMapSkeleton = (
+    skeleton, drugNameList, patientNameList, datasetId, responseType, responseData,
+    rectHeight, rectWidth, colorScale, tooltip, targetColorObject,
+) => {
+    for (let drugIndex = 0; drugIndex < drugNameList.length; drugIndex++) {
+        for (let patientIndex = 0; patientIndex < patientNameList.length; patientIndex++) {
+            const patient = patientNameList[patientIndex];
+            const drug = drugNameList[drugIndex];
+            const response = responseData[drug][patient][responseType];
+
+            skeleton
+                .append('a')
+                .attr('xlink:href', () => createGrowthCurveRedirection(
+                    response, Object.keys(targetColorObject), patient, drug, datasetId,
+                ))
+                .append('rect')
+                .attr('x', patientIndex * rectWidth)
+                .attr('y', drugIndex * rectHeight)
+                .attr('width', rectWidth - 2)
+                .attr('height', rectHeight - 2)
+                .attr('fill', fillRectangleColor(response, responseType, colorScale))
+                .on('mouseover', () => {
+                    // text for the tooltip
+                    const tooltipText = {
+                        Patient: patient,
+                        Drug: drug,
+                        Response: response,
+                    };
+                    // updates the tooltip to set the position and make it visible
+                    const updatedTooltip = makeToolTipVisible(tooltip);
+                    // add the tooltip data
+                    addDataToTooltip(updatedTooltip, tooltipText);
+                })
+                .on('mouseout', () => {
+                    tooltip
+                        .style('visibility', 'hidden');
+                });
+        }
+    }
+};
+
+// scales for patient label/axis on the top of the heatmap
+const createPatientLabelScale = (patientList, canvasWidth) => (
+    d3.scaleBand()
+        .domain(patientList)
+        .range([0, canvasWidth])
+);
+
+const createPatientXAxis = (svg, patientScale, datasetId) => {
+    const axis = d3.axisTop(patientScale);
+
+    svg.append('g')
+        .attr('id', 'patient-axis-group')
+        .attr('stroke-width', '0')
+        .style('text-anchor', (Number(datasetId) === 7 ? 'start' : 'middle'))
+        .call(axis)
+        .selectAll('text')
+        .style('font-size', '11px')
+        .attr('transform', 'rotate(-90)')
+        .attr('font-weight', '550')
+        .attr('fill', `${colors['--main-font-color']}`)
+        .attr('x', (Number(datasetId) === 7 ? '10px' : '40px'))
+        .attr('y', '.15em');
+};
+
+// scales for patient label/axis on the top of the heatmap
+const createDrugLabelScale = (drugNameList, canvasHeight) => (
+    d3.scaleBand()
+        .domain(drugNameList)
+        .range([0, canvasHeight])
+);
+
+const createDrugYAxis = (svg, drugScale) => {
+    const axis = d3.axisLeft(drugScale);
+
+    svg.append('g')
+        .attr('id', 'drug-axis-group')
+        .attr('stroke-width', '0')
+        .call(axis)
+        .selectAll('text')
+        .style('font-size', '11px')
+        .attr('font-weight', (d) => {
+            if (controlDrugs.includes(d.toLowerCase())) {
+                return '700';
+            }
+            return '500';
+        })
+        .attr('fill', (d) => {
+            if (controlDrugs.includes(d.toLowerCase())) {
+                return `${colors.pink_header}`;
+            }
+            return `${colors['--main-font-color']}`;
+        })
+        .on('mouseover', (d) => {
+            // remove the biomarker and sorting labels
+            // that are already selected (selected class!)
+            d3.selectAll('text[id*="sorting-label"][class="selected"]')
+                .style('visibility', 'hidden')
+                .classed('selected', false);
+
+            d3.selectAll('[id*="biomarker-label"][class="selected"]')
+                .style('visibility', 'hidden')
+                .classed('selected', false);
+
+            // transforms the drug label group
+            d3.select('#drug-axis-group')
+                .attr('transform', 'translate(-40, 0)');
+
+            // change the visibility for the corresponding
+            // biomarker and sorting label to visible.
+            d3.select(`#biomarker-label-for-${removeSomeSpecialCharacters(d)}`)
+                .style('visibility', 'visible')
+                .classed('selected', true);
+
+            d3.select(`#sorting-label-for-${removeSomeSpecialCharacters(d)}`)
+                .style('visibility', 'visible')
+                .classed('selected', true);
+        });
+};
+
+// biomarker label to redirect to the biomarker page.
+const createBiomarkerLabel = (svg, drugNameList, geneList, rectHeight, tooltip) => {
+    svg.append('g')
+        .attr('id', 'biomarker-label-group')
+        .selectAll('a')
+        .data(drugNameList)
+        .join('a')
+        .attr('xlink:href', (d) => (
+            geneList.length > 0
+                ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drugNameList}&selectedDrug=${d}`
+                : `/biomarker?selectedDrug=${d}`
+        ))
+        .append('text')
+        .text('⭕️')
+        .attr('font-size', '0.8em')
+        .attr('x', -20)
+        .attr('y', (_, i) => (i + 0.70) * rectHeight)
+        .attr('id', (d) => `biomarker-label-for-${removeSomeSpecialCharacters(d)}`)
+        .style('visibility', 'hidden')
+        .on('mouseover', () => {
+            // add a tooltip on mouseover
+            const tooltipData = ['Redirect to biomarker page'];
+            const biomarkerToolTip = makeToolTipVisible(tooltip);
+            addDataToTooltip(biomarkerToolTip, tooltipData);
+        })
+        .on('mouseout', () => {
+            tooltip
+                .style('visibility', 'hidden');
+        });
+};
+
+// creates the label/triangle to sort the row based on the recist value
+const createSortingLabel = (svg, drugNameList, rectHeight, tooltip) => {
+    svg
+        .append('g')
+        .attr('id', 'sorting-label-group')
+        .selectAll('text')
+        .data(drugNameList)
+        .join('text')
+        .text('🔺')
+        .attr('font-size', '1em')
+        .attr('x', -45)
+        .attr('y', (_, i) => (i + 0.70) * rectHeight)
+        .attr('id', (d) => `sorting-label-for-${removeSomeSpecialCharacters(d)}`)
+        .style('visibility', 'hidden')
+        .on('mouseover', () => {
+            // add a tooltip on mouseover
+            const tooltipData = ['Click to sort'];
+            const sortingToolTip = makeToolTipVisible(tooltip);
+            addDataToTooltip(sortingToolTip, tooltipData);
+        })
+        .on('mouseout', () => {
+            tooltip
+                .style('visibility', 'hidden');
+        }); // TODO: add event listener to sort
+};
+
+// creating legend for the response type except for mRECIST.
+function createLegend(svg, height, width, rectHeight, rectWidth, min, max, drug) {
+    const defs = svg.append('defs');
+
+    const linearGradient = defs.append('linearGradient')
+        .attr('id', 'linear-gradient');
+
+    // Vertical gradient
+    linearGradient
+        .attr('x1', '0%')
+        .attr('y1', '0%')
+        .attr('x2', '0%')
+        .attr('y2', '100%');
+
+    // Set the color for the start (0%)
+    linearGradient.append('stop')
+        .attr('offset', '0%')
+        .attr('stop-color', `${colors.amber_gradient}`);
+
+    // Set the color for the start (50%)
+    linearGradient.append('stop')
+        .attr('offset', min < 0 ? '50%' : '100%')
+        .attr('stop-color', `${colors.white_gradient}`);
+
+    // Set the color for the end (100%)
+    if (min < 0) {
+        linearGradient.append('stop')
+            .attr('offset', '100%')
+            .attr('stop-color', `${colors.green_gradient}`);
+    }
+
+    // Draw the rectangle and fill with gradient
+    const heightConstant = drug.length > 4 ? 3 : 2.5;
+    svg.append('rect')
+        .attr('x', width + (rectWidth * 8))
+        .attr('y', height / 3)
+        .attr('width', rectHeight)
+        .attr('height', rectHeight * heightConstant)
+        .style('fill', 'url(#linear-gradient)');
+
+    // legend value.
+    const targetRect = svg.append('g')
+        .attr('id', 'linear-gradient-label-group');
+
+    const legendValue = [max, min];
+    targetRect.selectAll('text')
+        .data(legendValue)
+        .enter()
+        .append('text')
+        .attr('x', width + (rectWidth * 8))
+        .attr('y', (d, i) => [height / 3 - 5, height / 3 + (rectHeight * heightConstant) + 12][i])
+        .text((d) => d)
+        .attr('font-size', '12px')
+        .style('text-anchor', 'start');
+}
+
+// create mRECIST legend
+const createmRECISTLegened = (
+    svg, targetColorObject, rectHeight, rectWidth,
+    canvasHeight, canvasWidth, margin,
+) => {
+    const mRECISTArray = Object.keys(targetColorObject);
+    const targetRect = svg.append('g')
+        .attr('id', 'mrecist-legend-group');
+
+    targetRect
+        .selectAll('rect')
+        .data(mRECISTArray)
+        .join('rect')
+        .attr('x', canvasWidth + margin.right / 2)
+        .attr('y', (d, i) => (
+            canvasHeight > rectHeight * 3
+                ? (canvasHeight / 3 + i * rectHeight * 0.75)
+                : (canvasHeight / 6 + i * rectHeight * 0.75)
+        ))
+        .attr('height', rectWidth)
+        .attr('width', rectWidth)
+        .attr('fill', (d) => targetColorObject[d]);
+
+    targetRect
+        .selectAll('text')
+        .data(mRECISTArray)
+        .join('text')
+        .attr('x', canvasWidth + margin.right / 2 + 20)
+        .attr('y', (d, i) => (
+            canvasHeight > rectHeight * 3
+                ? (canvasHeight / 3 + i * rectHeight * 0.75 + 12)
+                : (canvasHeight / 6 + i * rectHeight * 0.75 + 12)
+        ))
+        .text((d) => d)
+        .attr('fill', `${colors['--main-font-color']}`)
+        .attr('font-size', '12px');
+};
+
+// creates the data to plot bar charts on the right of the heatmap
+const createDrugBarChartData = (data) => {
+    const chartData = {};
+
+    Object.entries(data).forEach(([drug, patientInformationObject]) => {
+        // creates a drug object for each drug
+        chartData[drug] = {
+            CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, total: 0,
+        };
+        // grab the response values and update the corresponding drug object
+        Object.values(patientInformationObject).forEach((patientResponse) => {
+            const mRECISTResponse = patientResponse.mRECIST;
+            chartData[drug][mRECISTResponse] += 1;
+
+            if (mRECISTResponse !== 'NA') {
+                chartData[drug].total += 1;
+            }
+        });
+    });
+
+    return chartData;
+};
+
+// creates the data to plot bar charts on the top of the heatmap
+const createPatientBarChartData = (data) => {
+    const chartData = {};
+
+    Object.values(data).forEach((patientInformation) => {
+        Object.entries(patientInformation).forEach(([patient, responseObject]) => {
+            const mRECISTResponse = responseObject.mRECIST;
+
+            if (!(patient in chartData)) {
+                chartData[patient] = {
                     CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, total: 0,
                 };
             }
-        }
+            chartData[patient][mRECISTResponse] += 1;
 
-        console.log(drugEvaluations, patientEvaluations);
-
-        /* this code will add to the drugEvaluations  and
-        patientEvaluations  object the values for PD,SD,PR,CR
-        and also sets the value of the letiable maxDrug. */
-        function calculateEvaluations(d, i) {
-            const drugAlt = drug[i];
-            const keys = Object.entries(d);
-            let currentMaxDrug = 0;
-            keys.forEach((key) => {
-                drugEvaluations[drugAlt][key[1][responseType]]++;
-                patientEvaluations[key[0]][key[1][responseType]]++;
-                if (key[1] !== 'NA') {
-                    currentMaxDrug++;
-                    patientEvaluations[key[0]].total++;
-                }
-            });
-            if (currentMaxDrug > maxDrug) { maxDrug = currentMaxDrug; }
-        }
-
-        /* This code is used to produce the query strings */
-        // eslint-disable-next-line consistent-return
-        function querystringValue(d, i) {
-            if (i === 0) {
-                drugUse = drug[drugIndex];
-                drugIndex++;
+            if (mRECISTResponse !== 'NA') {
+                chartData[patient].total += 1;
             }
-            if ((d.length === 2 && d !== 'NA') || Number(d)) {
-                return `/curve?patient=${patientUse[i]}&drug=${drugUse}&dataset=${dataset}`;
-            }
-        }
+        });
+    });
 
-        // reference to this
-        const reference = this;
+    return chartData;
+};
 
-        /** *********************************** selection dropdown ************************************** */
-        // create a selection dropdown.
-        function createSelection() {
-            const options = ['mRECIST', 'Slope', 'Best Average Response', 'AUC'];
+// finds the maximum total count of the response for a particular type either drug or patient
+const calculateMaximumTotalValue = (data) => data.reduce((max, current) => (
+    current.total > max
+        ? current.total
+        : max
+), 0);
 
-            d3.select('.select')
-                .selectAll('option')
-                .data(options)
-                .enter()
-                .append('option')
-                .text((d) => d)
-                .attr('value', (d) => d)
-                .attr('selected', (d) => {
-                    if (d === 'mRECIST') {
-                        return 'selected';
-                    }
-                });
+// creates the axes for the drug bar plot
+const createDrugBarPlotAxes = (heatmapGroupingElement, mainPlotWidth, scale) => {
+    const canvas = heatmapGroupingElement
+        .append('g')
+        .attr('transform', `translate(${mainPlotWidth + 10}, 0)`);
 
-            d3.select('.select').on('change', () => {
-                // recover the option that has been chosen
-                const selectedOption = d3.select('select').property('value');
-                const response = selectedOption;
+    const axis = d3
+        .axisTop(scale)
+        .ticks(4);
 
-                reference.setState({
-                    responseValue: response,
-                }, function () {
-                    d3.select(`#heatmap-${plotId}`).remove();
-                    d3.select('#heatmap-tooltip').remove();
+    canvas.call(axis);
+};
 
-                    const margin = this.calcMargin(selectedOption);
+// functions to create side bar plots for drug and patient evaluations
+const drugStackedBarplots = (
+    heatmapGroupingElement, drugBarChartData, responseEnteries,
+    mainPlotWidth, mainPlotHeight, rectHeight,
+) => {
+    const maxTotalValueInDataObject = calculateMaximumTotalValue(
+        Object.values(drugBarChartData),
+    );
 
-                    this.makeHeatMap(data, patient, margin);
-                });
+    const barplotWidth = 60;
+
+    const scale = d3.scaleLinear()
+        .domain([0, maxTotalValueInDataObject])
+        .range([0, barplotWidth]);
+
+    const plotGroupElement = heatmapGroupingElement.append('g')
+        .attr('id', 'drug-barplot-group');
+
+    // creates the outer box for the plot
+    heatmapGroupingElement
+        .append('g')
+        .attr('id', 'drug-barplots-outliner')
+        .append('rect')
+        .attr('x', mainPlotWidth + 10)
+        .attr('y', 0)
+        .attr('width', barplotWidth + 1)
+        .attr('height', mainPlotHeight)
+        .style('stroke', 'black')
+        .style('stroke-width', 1)
+        .style('fill', 'none');
+
+    // creates the individual stacked bar plot for each drug
+    Object
+        .values(drugBarChartData)
+        .forEach((drugResponseObject, drugObjectIndex) => {
+            let currentX = mainPlotWidth + 10;
+            responseEnteries.forEach((response) => {
+                plotGroupElement
+                    .append('rect')
+                    .attr('x', currentX)
+                    .attr('y', rectHeight * drugObjectIndex)
+                    .attr('width', scale(drugResponseObject[response]))
+                    .attr('height', rectHeight - 4)
+                    .attr('fill', targetColor[response]);
+
+                currentX += scale(drugResponseObject[response]);
             });
-        }
-
-        // calculates the min and max value of the response type.
-        function calculateMinMax() {
-            let min = 0;
-            let max = 0;
-            data.forEach((row) => {
-                const keys = Object.keys(row);
-                keys.forEach((val) => {
-                    if (Number(row[val][responseType]) > max) {
-                        max = Number(row[val][responseType]);
-                    }
-                    if (Number(row[val][responseType]) < min) {
-                        min = Number(row[val][responseType]);
-                    }
-                });
-            });
-            console.log(data, min, max);
-            return [min, max];
-        }
-
-        /** *********************************** legends (Except for mRECIST) ************************************** */
-        // creating legend for the response type except for mRECIST.
-        function createLegend(svg, height, width, min, max, drug) {
-            const defs = svg.append('defs');
-
-            const linearGradient = defs.append('linearGradient')
-                .attr('id', 'linear-gradient');
-
-            // Vertical gradient
-            linearGradient
-                .attr('x1', '0%')
-                .attr('y1', '0%')
-                .attr('x2', '0%')
-                .attr('y2', '100%');
-
-            // Set the color for the start (0%)
-            linearGradient.append('stop')
-                .attr('offset', '0%')
-                .attr('stop-color', `${colors.amber_gradient}`);
-
-            // Set the color for the start (50%)
-            linearGradient.append('stop')
-                .attr('offset', min < 0 ? '50%' : '100%')
-                .attr('stop-color', `${colors.white_gradient}`);
-
-            // Set the color for the end (100%)
-            if (min < 0) {
-                linearGradient.append('stop')
-                    .attr('offset', '100%')
-                    .attr('stop-color', `${colors.green_gradient}`);
-            }
-
-            // Draw the rectangle and fill with gradient
-            const heightConstant = drug.length > 4 ? 4 : 2.5;
-            svg.append('rect')
-                .attr('x', width + (rectWidth * 8))
-                .attr('y', height / 3)
-                .attr('width', rectHeight)
-                .attr('height', rectHeight * heightConstant)
-                .style('fill', 'url(#linear-gradient)');
-
-            // legend value.
-            const targetRect = svg.append('g')
-                .attr('id', 'small_rect');
-
-            const legendValue = [max, min];
-            targetRect.selectAll('text')
-                .data(legendValue)
-                .enter()
-                .append('text')
-                .attr('x', width + (rectWidth * 8))
-                .attr('y', (d, i) => [height / 3 - 5, height / 3 + (rectHeight * heightConstant) + 12][i])
-                .text((d) => d)
-                .attr('font-size', '14px')
-                .style('text-anchor', 'start');
-        }
-
-        /** *********************************** scale for the main skeleton ************************************** */
-        /** SCALE FOR MAIN SKELETON * */
-
-        // defining the scale that we will use for our x-axis and y-axis for the skeleton.
-        const yScale = d3.scaleBand()
-            .domain(drug)
-            .rangeRound([rectHeight, drug.length * rectHeight + rectHeight]);
-
-        const xScale = d3.scaleBand()
-            .domain(patient)
-            .rangeRound([0, patient.length * rectWidth]);
-
-        // defining the x-axis for the main skeleton and
-        // setting tick size to zero will remove the ticks.
-        const yAxis = d3.axisLeft()
-            .scale(yScale)
-            .tickSize(0)
-            .tickPadding(25);
-
-        const xAxis = d3.axisTop()
-            .scale(xScale)
-            .tickSize(5);
-
-        /** *********************************** SVG Canvas ************************************** */
-        // make the SVG element.
-        const svg = d3.select('#heatmap')
-            .append('svg')
-            .attr('id', `heatmap-${plotId}`)
-            .attr('xmlns', 'http://wwww.w3.org/2000/svg')
-            .attr('xmlns:xlink', 'http://wwww.w3.org/1999/xlink')
-            .attr('height', height + margin.bottom + margin.top)
-            .attr('width', width + margin.left + margin.right)
-            .append('g')
-            .attr('transform', `translate(${margin.left},${margin.top})`)
-            .attr('id', `heatmap-${plotId}-g`);
-
-        /** HEATMAP SKELETON * */
-
-        // structure of the heatmap
-        const skeleton = svg.append('g')
-            .attr('id', 'skeleton');
-
-        /** *********************************** Circles on y-axis (for sorting) ************************************** */
-        /** Appending Circle to the  Y-Axis */
-        const circles = skeleton
-            .append('g')
-            .attr('id', 'circle-group');
-
-        drug.forEach((val, i) => {
-            circles
-                .append('circle')
-                .attr('cx', -10)
-                .attr('cy', i)
-                .attr('r', 6)
-                .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '')}`)
-                .style('fill', `${colors['--link-color']}`)
-                .attr('transform', `translate(0,${yScale(val) + rectWidth - i})`)
-                .style('visibility', 'hidden');
         });
 
-        // this will create g element for each of data row (equivalent to total number of row)
-        const drugResponse = skeleton.append('g')
-            .attr('id', 'targ_rect');
+    // creates an axis for the plot
+    createDrugBarPlotAxes(heatmapGroupingElement, mainPlotWidth, scale);
+};
 
-        const gskeleton = drugResponse.selectAll('g')
-            .data(data)
-            .enter()
-            .append('g')
-            .attr('transform', (d, i) => `translate(0,${i * rectHeight})`);
+// creates the axes for the drug bar plot
+const createPatientBarPlotAxes = (
+    heatmapGroupingElement, maxTotalValueInDataObject, barplotHeight,
+) => {
+    const scale = d3.scaleLinear()
+        .domain([0, maxTotalValueInDataObject])
+        .range([barplotHeight, 0]);
 
-        /** *********************************** drug evaluations ************************************** */
-        // this will append rect equivalent to number of patient ids.
-        const drawrectangle = gskeleton.selectAll('rect.hmap-rect')
-            .data((d, i) => {
-                // calling the function and passing the data d as parameter.
-                if (responseType === 'mRECIST') {
-                    calculateEvaluations(d, i);
-                }
-                // this returns the object values to next chaining method.
-                const rectValue = patient.map((value) => {
-                    let val = '';
-                    if (d[value].length === 0) {
-                        val = 'NA';
-                    } else if (typeof (d[value]) === 'object' && d[value] !== null) {
-                        val = d[value][responseType];
-                    }
-                    return val;
-                });
-                return rectValue;
-            })
-            .enter()
-            .append('a')
-            .attr('xlink:href', (d, i) => querystringValue(d, i))
-            .append('rect')
-            .attr('class', (d, i) => `hmap-rect heatmap-${patient[i]}`)
-            .attr('width', rectWidth - 2)
-            .attr('height', rectHeight - 2)
-            .attr('x', (d, i) => i * rectWidth)
-            .attr('y', rectHeight);
+    const canvas = heatmapGroupingElement
+        .append('g')
+        .attr('transform', `translate(-2, -160)`);
 
-        // grabbing the min and max value for the response type.
-        const [min, max] = calculateMinMax();
-        // scale for coloring.
-        const linearColorScale = d3.scaleLinear()
-            .domain([min, 0, max])
-            .range([`${colors.green_gradient}`, `${colors.white_gradient}`, `${colors.amber_gradient}`]);
+    const axis = d3
+        .axisLeft(scale)
+        .ticks(3);
 
-        // this will fill the rectangles with different color based on the data.
-        drawrectangle.attr('fill', (d) => {
-            if (responseType === 'mRECIST') {
-                return targetColor[d];
-            } if (responseType !== 'mRECIST' && d === 'NA') {
-                return 'lightgray';
-            }
-            return linearColorScale(d);
+    canvas.call(axis);
+};
+
+const patientStackedBarplots = (
+    heatmapGroupingElement, patientBarChartData, responseEnteries, rectWidth, mainPlotWidth,
+) => {
+    const maxTotalValueInDataObject = calculateMaximumTotalValue(
+        Object.values(patientBarChartData),
+    );
+
+    const barplotHeight = 80;
+
+    const scale = d3.scaleLinear()
+        .domain([0, maxTotalValueInDataObject])
+        .range([0, barplotHeight]);
+
+    const plotGroupElement = heatmapGroupingElement.append('g')
+        .attr('id', 'patient-barplot-group');
+
+    // creates the outer box for the plot
+    heatmapGroupingElement
+        .append('g')
+        .attr('id', 'drug-barplots-outliner')
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', mainPlotWidth)
+        .attr('height', barplotHeight)
+        .style('fill', 'none')
+        .style('stroke', 'black')
+        .style('stroke-width', 1)
+        .attr('transform', 'translate(-2, -160)');
+
+    // creates the individual stacked bar plot for each patient
+    Object
+        .values(patientBarChartData)
+        .forEach((patientResponseObject, patientObjectIndex) => {
+            let currentY = 0;
+
+            responseEnteries.forEach((response) => {
+                const responseValue = patientResponseObject[response];
+
+                plotGroupElement
+                    .append('rect')
+                    .attr('x', (patientObjectIndex * rectWidth) - 2)
+                    .attr('y', currentY - scale(responseValue))
+                    .attr('width', rectWidth - 2)
+                    .attr('height', scale(responseValue))
+                    .attr('fill', targetColor[response])
+                    .attr('transform', 'translate(0, -80)');
+
+                currentY -= scale(responseValue);
+            });
         });
 
-        // reset
-        drugEvaluations = {};
-        for (let i = 0; i < drug.length; i++) {
-            drugEvaluations[drug[i]] = {
-                CR: 0, PR: 0, SD: 0, PD: 0, NA: 0,
-            };
-        }
+    // creates an axes for the plot
+    createPatientBarPlotAxes(heatmapGroupingElement, maxTotalValueInDataObject, barplotHeight);
+};
 
-        // patient evaluations
-        patientEvaluations = {};
-        for (let j = 0; j < patient.length; j++) {
-            patientEvaluations[patient[j]] = {
-                CR: 0, PR: 0, SD: 0, PD: 0, NA: 0, total: 0,
-            };
-        }
+// creates dotted lines
+const createDottedLinesPerPatient = (
+    heatmapGroupingElement, patientNameList, plotHeight, rectWidth,
+) => {
+    const dottedLinesGroup = heatmapGroupingElement
+        .append('g')
+        .attr('id', 'dotted-lines-group');
 
-        /** *********************************** tooltip ************************************** */
-        const createToolTip = (x, y, patient, response) => {
-            // tooltip on mousever setting the div to visible.
-            tooltip
-                .style('visibility', 'visible');
-
-            // tooltip grabbing event.pageX and event.pageY
-            // and set color according to the ordinal scale.
-            const tooltipDiv = tooltip
-                .style('left', `${x + 10}px`)
-                .style('top', `${y + 10}px`)
-                .style('color', `${colors.black}`)
-                .style('background-color', `${colors.white}`);
-
-            // tooltip data.
-            const tooltipData = [
-                `Patient: ${patient}`, `Response Evaluation: ${response}`,
-            ];
-
-            tooltipDiv.selectAll('textDiv')
-                .data(tooltipData)
-                .enter()
-                .append('div')
-                .attr('id', 'tooltiptextonco')
-                .html((d) => {
-                    const data = d.split(':');
-                    return `<b>${data[0]}</b>: ${data[1]}`;
-                })
-                .attr('x', `${x + 10}px`)
-                .attr('y', (d, i) => (`${y + 10 + i * 10}px`));
-        };
-
-        // hiding tooltip.
-        const hideToolTip = () => {
-            // tooltip on mousever setting the div to hidden.
-            tooltip
-                .style('visibility', 'hidden');
-            // remove all the divs with id tooltiptext.
-            d3.selectAll('#tooltiptextonco').remove();
-        };
-
-        let pCount = 0;
-        drugIndex = 0;
-
-        /** *********************************** event listener to rectangles ************************************** */
-        gskeleton.selectAll('rect.hmap-hlight')
-            .data((d, i) => {
-                // calling the function and passing the data d as parameter.
-                if (responseType === 'mRECIST') {
-                    calculateEvaluations(d, i);
-                }
-                // this returns the object values to next chaining method.
-                const rectValue = patient.map((value) => {
-                    let val = '';
-                    if (d[value].length === 0) {
-                        val = 'NA';
-                    } else if (typeof (d[value]) === 'object' && d[value] !== null) {
-                        val = d[value][responseType];
-                    }
-                    return val;
-                });
-                return rectValue;
-            })
-            .enter()
-            .append('a')
-            .attr('xlink:href', (d, i) => querystringValue(d, i))
-            .append('rect')
-            .attr('class', (d, i) => {
-                const drugClass = drug[pCount].replace(/\s/g, '').replace(/[.]/g, '')
-                    .replace(/[+]/g, '-');
-                if (i === (patient.length - 1)) {
-                    pCount++;
-                }
-                return `hmap-hlight-${patient[i]} hmap-hlight-${drugClass}`;
-            })
-            .attr('width', rectWidth - 2)
-            .attr('height', rectHeight - 2)
-            .attr('x', (d, i) => i * rectWidth)
-            .attr('fill', `${colors.black}`)
-            .attr('y', rectHeight)
-            .style('opacity', 0)
-            // eslint-disable-next-line func-names
-            .on('mouseover', function (d, i) {
-                // creating tooltip by calling createtooltip function.
-                const patientToolTip = patient[i];
-                createToolTip(d3.event.pageX, d3.event.pageY, patientToolTip, d);
-                // highlight
-                const drugClass = d3.select(this).attr('class').split(' ')[1];
-                d3.selectAll(`.hmap-hlight-${patient[i].replace('.', '')}`)
-                    .style('opacity', 0.2);
-                d3.selectAll(`.oprint-hlight-${patient[i].replace('.', '')}`)
-                    .style('opacity', 0.2);
-                d3.selectAll(`.hlight-space-${patient[i].replace('.', '')}`)
-                    .style('opacity', 0.2);
-
-                return drugClass;
-            })
-            // eslint-disable-next-line func-names
-            .on('mouseout', function (d, i) {
-                // hide tooltip
-                hideToolTip();
-                // highlight
-                const drugClass = d3.select(this).attr('class').split(' ')[1];
-                d3.selectAll(`.hmap-hlight-${patient[i].replace('.', '')}`)
-                    .style('opacity', 0);
-                d3.selectAll(`.oprint-hlight-${patient[i].replace('.', '')}`)
-                    .style('opacity', 0);
-                d3.selectAll(`.hlight-space-${patient[i].replace('.', '')}`)
-                    .style('opacity', 0);
-
-                return drugClass;
-            });
-
-        // Creating lines.
-        const lines = skeleton.append('g')
-            .attr('id', 'lines')
-            .attr('transform', () => `translate(2,${height + rectHeight})`);
-
-        const temp = patient.slice(0);
-        temp.push('');
-
-        lines.selectAll('line.dashed-line')
-            .data(temp)
-            .enter()
+    for (let patientIndex = 0; patientIndex <= patientNameList.length; patientIndex++) {
+        dottedLinesGroup
             .append('line')
-            .attr('class', 'dashed-line')
-            .attr('x1', (d, i) => i * (rectWidth) - 3)
-            .attr('x2', (d, i) => i * (rectWidth) - 3)
-            .attr('y1', 2)
-            .attr('y2', rectHeight * 3)
-            .attr('stroke', `${colors.black}`)
-            .attr('stroke-width', 1)
+            .style('stroke', `${colors.lightgray}`)
             .style('stroke-dasharray', '3 2')
-            .style('opacity', 0.2);
+            .style('stroke-width', 1)
+            .attr('x1', patientIndex * rectWidth - 1)
+            .attr('y1', plotHeight - 1)
+            .attr('x2', patientIndex * rectWidth - 1)
+            .attr('y2', plotHeight + 50 - 1)
+            .attr('id', `dotted-line-${patientNameList[patientIndex]}`);
+    }
+};
 
-        lines.selectAll('rect.hlight-space')
-            .data(patient)
-            .enter()
-            .append('rect')
-            .attr('class', (d) => `hlight-space-${d}`)
-            .attr('width', rectWidth - 2)
-            .attr('height', rectHeight)
-            .attr('x', (d, i) => i * rectWidth - 2)
-            .attr('fill', `${colors.black}`)
-            .attr('y', 0)
-            .style('opacity', 0);
+/**
+ * the function creates the heatmap structure, labels, axes etc.
+ * @param {Object} props - props object
+ * @param {String} responseType - response type string
+ */
+const createHeatMap = (props, responseType) => {
+    const {
+        margin,
+        dimensions,
+        data: responseData,
+        dataset: datasetId,
+        drugId: drugNameList,
+        geneList,
+        patientId: patientNameList,
+        className: plotId,
+    } = props;
 
-        /** *********************************** biomarker Image ************************************** */
-        const biomarkerImage = skeleton
-            .append('g')
-            .attr('id', 'biomarker-image');
+    const responseDataValues = Object.values(responseData);
 
-        biomarkerImage.selectAll('div')
-            .data(drug)
-            .join('a')
-            .attr('xlink:href', (d) => (geneList ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drug}&selectedDrug=${d}` : `/biomarker?selectedDrug=${d}`))
-            .append('text')
-            .text('⭕️')
-            .attr('font-size', '0.8em')
-            .attr('x', -40)
-            .attr('y', (d, i) => (i + 1.70) * rectHeight)
-            .on('mouseover', (d) => {
-                const tooltipDiv = tooltip
-                    .style('visibility', 'visible')
-                    .style('left', `${d3.event.pageX - 100}px`)
-                    .style('top', `${d3.event.pageY + 15}px`)
-                    .style('color', `${colors.black}`)
-                    .style('background-color', `${colors.white}`);
+    // rectangle height and width
+    const rectHeight = dimensions.height;
+    const rectWidth = dimensions.width;
 
-                // add text to tooltip
-                tooltipDiv
-                    .append('text')
-                    .attr('id', 'tooltip-biomarker')
-                    .text('Redirect to Biomarker Page');
-            })
-            .on('mouseout', () => {
-                // hide the tooltip
-                tooltip
-                    .style('visibility', 'hidden');
+    // plot height and width
+    const plotHeight = rectHeight * drugNameList.length;
+    const plotWidth = rectWidth * patientNameList.length;
 
-                // remove the biomarker tooltip data
-                d3.select('#tooltip-biomarker').remove();
-            });
-
-        /** *********************************** X-AXIS AND Y-AXIS FOR THE SKELETONs ************************************** */
-        // calling the y-axis and removing the stroke.
-        const drugName = skeleton.append('g')
-            .attr('id', 'drugName')
-            .attr('transform', 'translate(-20, 0)');
-
-        drugName.attr('stroke-width', '0')
-            .style('font-size', '11px')
-            .call(yAxis)
-            .selectAll('text')
-            .attr('fill', (d) => {
-                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) {
-                    return `${colors.pink_header}`;
-                }
-                return `${colors['--main-font-color']}`;
-            })
-            .attr('font-weight', (d) => {
-                if (d.match(/(^untreated$|^water$|^control$|^h2o$)/i)) { return '700'; }
-                return '550';
-            })
-            .attr('id', (d) => `tick-${d.replace(/\s/g, '').replace(/\+/g, '')}`)
-            // eslint-disable-next-line func-names
-            .on('mouseover', function () {
-                // tooltip on mousever setting the div to visible.
-                d3.select('#heatmap')
-                    .append('div')
-                    .style('position', 'absolute')
-                    .style('border', 'solid')
-                    .style('visibility', 'visible')
-                    .style('border-width', '1px')
-                    .style('border-radius', '5px')
-                    .style('padding', '5px')
-                    .style('left', `${d3.event.pageX - 100}px`)
-                    .style('top', `${d3.event.pageY + 15}px`)
-                    .attr('id', 'tooltiptextdrug')
-                    .style('color', `${colors.black}`)
-                    .style('background-color', `${colors.white}`)
-                    .text('Click to Sort');
-
-                const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[.]/g, '')
-                    .replace(/[+]/g, '-');
-                d3.selectAll(`.hmap-hlight-${drugClass}`)
-                    .style('opacity', 0.2);
-            })
-            // eslint-disable-next-line func-names
-            .on('mouseout', function () {
-                // tooltip on mousever setting the div to hidden.
-                tooltip
-                    .style('visibility', 'hidden');
-                // remove all the divs with id tooltiptext.
-                d3.select('#tooltiptextdrug').remove();
-                // highlight.
-                const drugClass = d3.select(this).text().replace(/\s/g, '').replace(/[.]/g, '')
-                    .replace(/[+]/g, '-');
-                d3.selectAll(`.hmap-hlight-${drugClass}`)
-                    .style('opacity', 0);
-            })
-            .on('click', (d, i) => {
-                // tooltip on mousever setting the div to hidden.
-                tooltip
-                    .style('visibility', 'hidden');
-                // remove all the divs with id tooltiptext.
-                d3.select('#tooltiptextdrug').remove();
-                // margin
-                const margin = this.calcMargin(responseType);
-                // highlight.
-                this.rankHeatMap(d, i, data, responseType, margin);
-            });
-
-        // calling the x-axis to set the axis and we have also transformed the text.
-        const patientId = skeleton.append('g')
-            .attr('id', 'patient_id');
-
-        patientId.attr('stroke-width', '0')
-            .style('font-size', '11px')
-            .style('text-anchor', (dataset === '7' ? 'start' : 'middle'))
-            .call(xAxis)
-            .selectAll('text')
-            .attr('transform', 'rotate(-90)')
-            .attr('font-weight', '550')
-            .attr('fill', `${colors['--main-font-color']}`)
-            .attr('x', (dataset === '7' ? '-2.4em' : '0.6em'))
-            .attr('y', '.15em');
-
-        /** *********************************** SMALL RECTANGLES ON RIGHT SIDE OF HEATMAP ************************************** */
-        // This will create four rectangles on right side for the Evaluation of target lesions.
-        if (responseType === 'mRECIST') {
-            const targetRect = skeleton.append('g')
-                .attr('id', 'small_rect');
-
-            targetRect.selectAll('rect')
-                .data(targetEval)
-                .enter()
-                .append('rect')
-                .attr('x', width + margin.right / 2)
-                .attr('y', (d, i) => (height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75) : (height / 6 + i * rectHeight * 0.75)))
-                .attr('height', rectWidth)
-                .attr('width', rectWidth)
-                .attr('fill', (d) => Object.values(d));
-
-            targetRect.selectAll('text')
-                .data(targetEval)
-                .enter()
-                .append('text')
-                .attr('x', width + margin.right / 2 + 20)
-                .attr('y', (d, i) => (height > rectHeight * 3 ? (height / 3 + i * rectHeight * 0.75 + 12) : (height / 6 + i * rectHeight * 0.75 + 12)))
-                .text((d) => Object.keys(d))
-                .attr('fill', `${colors['--main-font-color']}`)
-                .attr('font-size', '14px');
-
-            /** *********************************** VERTICAL GRAPH ON RIGHT SIDE OF HEATMAP ************************************** */
-            const strokeWidth = 0.75;
-
-            // This will make a right side vertical graph.
-            const drugEval = skeleton.append('g')
-                .attr('id', 'drug_eval');
-
-            const drugScale = d3.scaleLinear()
-                .domain([0, maxDrug])
-                .range([0, rectWidth * 5]);
-
-            // This will set an x-axis for the vertical graph.
-            const xAxisVertical = d3.axisTop()
-                .scale(drugScale)
-                .ticks(4)
-                .tickSize(3)
-                .tickFormat(d3.format('.0f'));
-
-            skeleton.append('g')
-                .attr('transform', `translate(${patient.length * rectWidth + rectWidth},${rectHeight})`)
-                .call(xAxisVertical)
-                .selectAll('text')
-                .attr('fill', `${colors.black}`)
-                .style('font-size', 8)
-                .attr('stroke', 'none');
-
-            drugEval.append('rect')
-                .attr('class', 'drug_eval_rect')
-                .attr('x', patient.length * rectWidth + rectWidth)
-                .attr('y', `${rectHeight}`)
-                .attr('height', rectHeight * drug.length)
-                .attr('width', drugScale(maxDrug))
-                .attr('fill', `${colors.white}`)
-                .style('stroke', `${colors.black}`)
-                .style('stroke-width', 1);
-
-            // rectangle for vertical graph.
-            const drugEvaluationRectangle = (iterator) => {
-                const responseEvalTypes = ['CR', 'PR', 'SD', 'PD'];
-                let xRange = patient.length * rectWidth + rectWidth;
-                let width = 0;
-                responseEvalTypes.forEach((type) => {
-                    // x range for the rectangles.
-                    xRange += width;
-                    width = drugScale(drugEvaluations[drug[iterator]][type]);
-                    drugEval.append('rect')
-                        .attr('class', `drug_eval_${type}`)
-                        .attr('height', rectHeight - 4)
-                        .attr('width', width)
-                        .attr('x', xRange)
-                        .attr('y', rectHeight * (iterator + 1))
-                        .attr('fill', targetColor[type])
-                        .style('stroke', `${colors.black}`)
-                        .style('stroke-width', strokeWidth);
-                });
-            };
-
-            for (let i = 0; i < drug.length; i++) {
-                drugEvaluationRectangle(i);
-            }
-
-            /** *********************************** HORIZONTAL GRAPH AT THE TOP OF HEATMAP ************************************** */
-            let maxPatientidTotal = 0;
-            const boxHeight = 80;
-
-            // This will set the maximum number of total letiants.
-            const keys = Object.entries(patientEvaluations);
-            keys.forEach((key) => {
-                const curentMax = key[1].total;
-                if (curentMax > maxPatientidTotal) {
-                    maxPatientidTotal = curentMax;
-                }
-            });
-
-            // This will only run if the length of the drug
-            // array is greater than 1 (it has more than one drug)
-            if (drug.length > 1) {
-                // appending 'g' element to the SVG.
-                const patientEval = skeleton.append('g')
-                    .attr('id', 'patient_eval');
-
-                // setting the outer rectangle.
-                patientEval.append('rect')
-                    .attr('class', 'patient_eval_rect')
-                    .attr('x', 0)
-                    .attr('y', -130)
-                    .attr('height', boxHeight)
-                    .attr('width', patient.length * `${rectWidth}`)
-                    .attr('fill', `${colors.white}`)
-                    .style('stroke', `${colors.black}`)
-                    .style('stroke-width', 1);
-
-                // setting scale to map max patient_id value to range (height of the box.)
-                const patientScale = d3.scaleLinear()
-                    .domain([0, maxPatientidTotal])
-                    .range([0, boxHeight]);
-
-                // This code will set y-axis of the graph at top
-                if (maxPatientidTotal !== 0) {
-                    const patientScales = d3.scaleLinear()
-                        .domain([0, maxPatientidTotal])
-                        .range([boxHeight, 0]);
-
-                    const yAxis = d3.axisLeft()
-                        .scale(patientScales)
-                        .ticks(2)
-                        .tickSize(0)
-                        .tickFormat(d3.format('.0f'));
-
-                    skeleton.append('g')
-                        .attr('transform', 'translate(0,-130.5)')
-                        .call(yAxis);
-                }
-
-                // function to calculate patient evaluations.
-                const patientEvaluationRectangle = (iterator) => {
-                    const responseEvalTypes = ['CR', 'PR', 'SD', 'PD'];
-                    let height = 0;
-                    let yRange = -130 + boxHeight;
-
-                    responseEvalTypes.forEach((type) => {
-                        height = patientScale(patientEvaluations[patient[iterator]][type]);
-                        yRange -= height;
-                        patientEval.append('rect')
-                            .attr('class', 'patient_eval_cr')
-                            .attr('height', height)
-                            .attr('width', `${rectWidth - 4}`)
-                            .attr('x', iterator * `${rectWidth}`)
-                            .attr('y', yRange)
-                            .attr('fill', targetColor[type])
-                            .style('stroke', `${colors.black}`)
-                            .style('stroke-width', strokeWidth);
-                    });
-                };
-
-                for (let i = 0; i < patient.length; i++) {
-                    patientEvaluationRectangle(i);
-                }
-            }
-        }
-
-        // calling selection function to create a dropdown selection.
-        createSelection();
-
-        // create legend if response type is not mRECIST.
-        if (responseType !== 'mRECIST') {
-            createLegend(svg, height, width, min, max, drug);
-        }
+    // create SVG element for the heatmap
+    // remove if the svg is element is already there
+    if (!d3.select(`#${plotId}`).empty()) {
+        d3.select(`#${plotId}`).remove();
     }
 
-    rankHeatMap = (
-        drug, i, dataset, responseType, margin = this.props, { dimensions } = this.props,
-        { drugId } = this.props, { className } = this.props, { dataset: datasetId } = this.props,
-    ) => {
-        // grabbing the clicked data value.
-        const data = dataset[i];
+    d3.select(`#heatmap-svg`)
+        .attr('width', plotWidth + margin.left + margin.right)
+        .attr('height', plotHeight + margin.top + margin.bottom);
 
-        // responses.
-        const responses = ['CR', 'PR', 'SD', 'PD', '', 'NA'];
-        const newSortedPatients = [];
+    const svgGroupElement = d3.select('#heatmap-svg-group')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-        // this produces the newSortedData.
-        if (responseType === 'mRECIST') {
-            responses.forEach((val) => {
-                Object.keys(data).forEach((res) => {
-                    if (data[res][responseType] === val || data[res] === val) {
-                        newSortedPatients.push(res);
-                    }
-                });
-            });
-        } else {
-            // grab the sortable data.
-            const sortable = [];
-            Object.keys(data).forEach((res) => {
-                sortable.push([res, data[res][responseType]]);
-            });
+    const heatmapGroupingElement = svgGroupElement
+        .append('g')
+        .attr('id', `${plotId}`);
 
-            sortable.sort((a, b) => a[1] - b[1]);
-            // push the data to new sorted patients array.
-            sortable.forEach((val) => {
-                if (val[1] === undefined) {
-                    newSortedPatients.push(val[0]);
-                } else {
-                    newSortedPatients.unshift(val[0]);
-                }
-            });
-        }
+    // creates the skeleton and add a grouping element
+    const skeleton = heatmapGroupingElement
+        .append('g')
+        .attr('id', 'skeleton');
 
-        // setting the variables with new data.
-        const newDataset = [];
+    // initialize the tooltip
+    const tooltip = createToolTip(WRAPPER_ID);
 
-        // sort the dataset or complete data according to the new sorted patient ids.
-        dataset.forEach((val, i) => {
-            newDataset.push({});
-            newSortedPatients.forEach((patient) => {
-                newDataset[i][patient] = val[patient];
-            });
-        });
+    // grabs the min and max value for a response type in the response data
+    const [min, max] = calculateMinMax(responseDataValues, responseType);
 
-        this.setState({
-            modifiedPatients: newSortedPatients,
-        }, () => {
-            const { setPatients } = this.context;
-            const { modifiedPatients } = this.state;
-            // calling the context setPatients method.
-            setPatients(modifiedPatients);
-        });
+    // color scale
+    const linearColorScale = createLinearColorScale(min, max);
 
-        // removing the heatmap wrapper and tooltip from the DOM when clicked on drug.
-        d3.select(`#heatmap-${className}`).remove();
-        d3.select('#heatmap-tooltip').remove();
+    // creates the rectangles for the heatmap
+    createHeatMapSkeleton(
+        skeleton, drugNameList, patientNameList, datasetId, responseType,
+        responseData, rectHeight, rectWidth, linearColorScale,
+        tooltip, targetColor,
+    );
 
-        // finally calling the makeHeatMap function in order passing
-        // new dataset in order to make new heatmap based on ranking.
-        this.makeHeatMap(newDataset, newSortedPatients, margin);
+    // patient scale and axis
+    const patientLabelScale = createPatientLabelScale(patientNameList, plotWidth);
+    createPatientXAxis(heatmapGroupingElement, patientLabelScale, datasetId);
 
-        // making the circle visible on click of the drug.
-        d3.select(`#circle-${drug.replace(/\s/g, '').replace(/\+/g, '')}`)
-            .style('visibility', 'visible');
-    }
+    // drug scale and axis
+    const drugLabelScale = createDrugLabelScale(drugNameList, plotHeight);
+    createDrugYAxis(heatmapGroupingElement, drugLabelScale);
 
-    rankHeatMapBasedOnOncoprintChanges = (value) => {
-        const { data } = this.props;
-        const { globalPatients } = value;
-        const { className } = this.props;
+    // create biomarker label/circle to redirect to the biomarker page.
+    createBiomarkerLabel(heatmapGroupingElement, drugNameList, geneList, rectHeight, tooltip);
 
-        // recover the option that has been chosen
-        const selectedOption = d3.select('select').property('value');
+    // create sorting label/triangle to sort the respective row for the drug.
+    createSortingLabel(heatmapGroupingElement, drugNameList, rectHeight, tooltip);
 
-        // margin
-        const margin = this.calcMargin(selectedOption);
-
-        const newDataset = [];
-
-        // sort the complete data according to the globalPatients.
-        data.forEach((val, i) => {
-            newDataset.push({});
-            globalPatients.forEach((patient) => {
-                newDataset[i][patient] = val[patient];
-            });
-        });
-
-        // removing the heatmap wrapper and tooltip from the DOM when clicked on drug.
-        if (globalPatients.length > 0) {
-            d3.select(`#heatmap-${className}`).remove();
-            d3.select('#heatmap-tooltip').remove();
-            this.makeHeatMap(newDataset, globalPatients, margin);
-        }
-    }
-
-    render() {
-        const { responseValue } = this.state;
-        const { data } = this.props;
-        const { modifiedPatients } = this.state;
-        const { drugId: drugs } = this.props;
-
-        return (
-            <div>
-                <div style={{ position: 'relative' }}>
-                    <select
-                        className='select'
-                        id='selectButton'
-                        style={{
-                            display: 'block',
-                            align: 'right',
-                            height: '30px',
-                            marginTop: '90px',
-                            position: 'absolute',
-                            right: '20px',
-                            width: '140px',
-                        }}
-                    />
-                </div>
-                <div id='heatmap'>
-                    {/* {
-                        responseValue !== 'mRECIST' ? <BoxPlot response={responseValue} data={data} patients={modifiedPatients} drugs={drugs} /> : <div />
-                    } */}
-                </div>
-                <PatientContext.Consumer>
-                    {(value) => { value.globalPatients.length > 0 && this.rankHeatMapBasedOnOncoprintChanges(value); }}
-                </PatientContext.Consumer>
-            </div>
+    // creates the legend
+    if (responseType === 'mRECIST') {
+        createmRECISTLegened(
+            heatmapGroupingElement, targetColor, rectHeight,
+            rectWidth, plotHeight, plotWidth, margin,
+        );
+    } else {
+        createLegend(
+            heatmapGroupingElement, plotHeight, plotWidth,
+            rectHeight, rectWidth, min, max, drugNameList,
         );
     }
-}
 
-HeatMap.contextType = PatientContext;
+    if (responseType === 'mRECIST') {
+        // create data for the barplot on the top and right of the heatmap.
+        // barplots depict the total number of responses (mRECIST) for a drug/patient.
+        const drugBarChartData = createDrugBarChartData(responseData);
+        const patientBarChartData = createPatientBarChartData(responseData);
+        const responseEnteries = Object.keys(targetColor).filter((el) => el !== 'NA');
+
+        // plots the patient and drug bar plots
+        patientStackedBarplots(
+            heatmapGroupingElement, patientBarChartData,
+            responseEnteries, rectWidth, plotWidth,
+        );
+        drugStackedBarplots(
+            heatmapGroupingElement, drugBarChartData, responseEnteries,
+            plotWidth, plotHeight, rectHeight,
+        );
+    }
+
+    // create dotted lines at the end of the heatmap
+    // that connects dotted lines present at the start of oncoprint lines.
+    createDottedLinesPerPatient(heatmapGroupingElement, patientNameList, plotHeight, rectWidth);
+};
+
+/**
+ * **************************************************************************************
+ * ****************************** Main Component (Heatmap) ******************************
+ * **************************************************************************************
+ */
+const HeatMap = (props) => {
+    const [responseType, setResponseType] = useState('mRECIST');
+    const { drugId: drugNameList, data, patientId: patientNameList } = props;
+    const patientContext = useContext(PatientContext);
+    const heatmapSvgGroupRef = useRef(null);
+
+    // also removes boxplot if it's present
+    if (!d3.select(`#boxplot`).empty()) {
+        d3.select(`#boxplot`).remove();
+    }
+
+    useEffect(() => {
+        createHeatMap(props, responseType);
+    }, [props, responseType]);
+
+    return (
+        <HeatMapWrapper>
+            <Select
+                options={options}
+                styles={customStyles}
+                onChange={(d) => setResponseType(d.value)}
+                className='selection-div'
+                defaultValue={{ value: 'mRECIST', label: 'mRECIST' }}
+            />
+            <div id={WRAPPER_ID}>
+                <svg id='heatmap-svg'>
+                    <g id='heatmap-svg-group' ref={heatmapSvgGroupRef}> </g>
+                </svg>
+            </div>
+            {
+                responseType !== 'mRECIST'
+                    ? (
+                        <BoxPlot
+                            response={responseType}
+                            data={Object.values(data)}
+                            patients={patientNameList}
+                            drugs={drugNameList}
+                            heatmapSvgGroupRef={heatmapSvgGroupRef}
+                        />
+                    )
+                    : <div />
+            }
+        </HeatMapWrapper>
+    );
+};
 
 HeatMap.propTypes = {
+    className: PropTypes.string.isRequired,
+    data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.object)).isRequired,
+    dataset: PropTypes.number.isRequired,
     dimensions: PropTypes.shape({
         height: PropTypes.number,
         width: PropTypes.number,
     }).isRequired,
+    drugId: PropTypes.arrayOf(PropTypes.string).isRequired,
+    geneList: PropTypes.arrayOf(PropTypes.string).isRequired,
     margin: PropTypes.shape({
         top: PropTypes.number,
         right: PropTypes.number,
         bottom: PropTypes.number,
         left: PropTypes.number,
     }).isRequired,
-    drugId: PropTypes.arrayOf(PropTypes.string).isRequired,
     patientId: PropTypes.arrayOf(PropTypes.string).isRequired,
-    data: PropTypes.arrayOf(PropTypes.object).isRequired,
-    className: PropTypes.string.isRequired,
-    geneList: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default HeatMap;

@@ -3,7 +3,6 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import Spinner from '../../Utils/Spinner';
 import HeatMap from './HeatMap';
-import NewHeatMap from './NewHeatMap';
 import { OncoprintGenes } from '../../../utils/OncoprintGenes';
 
 // dimension and margin variables
@@ -122,9 +121,8 @@ const parseData = (modelResponse, patients) => {
  * main component
  */
 const HeatMapData = (props) => {
-    console.log(props);
     const {
-        datasetId, drugList: drugProp, geneList: geneProp, isOld,
+        datasetId, drugList: drugProp, geneList: geneProp,
     } = props;
     const geneList = geneProp ? geneProp.split(',') : OncoprintGenes;
     const [dataObject, setDataObject] = useState({
@@ -158,30 +156,16 @@ const HeatMapData = (props) => {
                 isLoading
                     ? <Spinner loading={isLoading} />
                     : (
-                        isOld // TODO: FIX THIS! REMOVE old heatmap code
-                            ? (
-                                <HeatMap
-                                    data={dataObject.responseData}
-                                    drugId={dataObject.drugList}
-                                    patientId={dataObject.patientList}
-                                    dimensions={dimensions}
-                                    geneList={geneList}
-                                    margin={margin}
-                                    dataset={datasetId}
-                                    className='heatmap'
-                                />
-                            ) : (
-                                <NewHeatMap
-                                    data={dataObject.responseData}
-                                    drugId={dataObject.drugList}
-                                    patientId={dataObject.patientList}
-                                    dimensions={dimensions}
-                                    geneList={geneList}
-                                    margin={margin}
-                                    dataset={datasetId}
-                                    className='heatmap'
-                                />
-                            )
+                        <HeatMap
+                            data={dataObject.responseData}
+                            drugId={dataObject.drugList}
+                            patientId={dataObject.patientList}
+                            dimensions={dimensions}
+                            geneList={geneList}
+                            margin={margin}
+                            dataset={datasetId}
+                            className='heatmap'
+                        />
                     )
             }
         </div>
