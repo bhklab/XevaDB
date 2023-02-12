@@ -133,12 +133,23 @@ const createHeatMapSkeleton = (
     rectHeight, rectWidth, colorScale, tooltip, targetColorObject,
 ) => {
     for (let drugIndex = 0; drugIndex < drugNameList.length; drugIndex++) {
+        const drug = drugNameList[drugIndex];
+
+        const drugGroup = skeleton
+            .append('g')
+            .attr('id', `rectangle-drug-group-${removeSomeSpecialCharacters(drug)}`);
+
+        const shadowDrugGroup = skeleton
+            .append('g')
+            .attr('id', `rectangle-drug-shadow-group-${removeSomeSpecialCharacters(drug)}`)
+            .attr('visibility', 'hidden');
+
         for (let patientIndex = 0; patientIndex < patientNameList.length; patientIndex++) {
             const patient = patientNameList[patientIndex];
-            const drug = drugNameList[drugIndex];
             const response = responseData[drug][patient][responseType];
 
-            skeleton
+            // creates the main rectangles for the plot
+            drugGroup
                 .append('a')
                 .attr('xlink:href', () => createGrowthCurveRedirection(
                     response, Object.keys(targetColorObject), patient, drug, datasetId,
@@ -149,6 +160,7 @@ const createHeatMapSkeleton = (
                 .attr('width', rectWidth - 2)
                 .attr('height', rectHeight - 2)
                 .attr('fill', fillRectangleColor(response, responseType, colorScale))
+                .attr('id', `rectangle-${removeSomeSpecialCharacters(drug)}-${patient}`)
                 .on('mouseover', () => {
                     // text for the tooltip
                     const tooltipText = {
@@ -165,6 +177,18 @@ const createHeatMapSkeleton = (
                     tooltip
                         .style('visibility', 'hidden');
                 });
+
+            // creates the shadow to be displayed when the user
+            // hovers over the drug (make the selection visible)
+            shadowDrugGroup
+                .append('rect')
+                .attr('x', patientIndex * rectWidth)
+                .attr('y', drugIndex * rectHeight)
+                .attr('width', rectWidth - 2)
+                .attr('height', rectHeight - 2)
+                .attr('fill', 'grey')
+                .attr('opacity', '0.4')
+                .attr('id', `rectangle-shadow-${removeSomeSpecialCharacters(drug)}-${patient}`);
         }
     }
 };
@@ -209,19 +233,19 @@ const createDrugYAxis = (svg, drugScale) => {
         .call(axis)
         .selectAll('text')
         .style('font-size', '11px')
-        .attr('font-weight', (d) => {
-            if (controlDrugs.includes(d.toLowerCase())) {
+        .attr('font-weight', (drug) => {
+            if (controlDrugs.includes(drug.toLowerCase())) {
                 return '700';
             }
             return '500';
         })
-        .attr('fill', (d) => {
-            if (controlDrugs.includes(d.toLowerCase())) {
+        .attr('fill', (drug) => {
+            if (controlDrugs.includes(drug.toLowerCase())) {
                 return `${colors.pink_header}`;
             }
             return `${colors['--main-font-color']}`;
         })
-        .on('mouseover', (d) => {
+        .on('mouseover', (drug) => {
             // remove the biomarker and sorting labels
             // that are already selected (selected class!)
             d3.selectAll('text[id*="sorting-label"][class="selected"]')
@@ -238,13 +262,25 @@ const createDrugYAxis = (svg, drugScale) => {
 
             // change the visibility for the corresponding
             // biomarker and sorting label to visible.
-            d3.select(`#biomarker-label-for-${removeSomeSpecialCharacters(d)}`)
+            d3.select(`#biomarker-label-for-${removeSomeSpecialCharacters(drug)}`)
                 .style('visibility', 'visible')
                 .classed('selected', true);
 
-            d3.select(`#sorting-label-for-${removeSomeSpecialCharacters(d)}`)
+            d3.select(`#sorting-label-for-${removeSomeSpecialCharacters(drug)}`)
                 .style('visibility', 'visible')
                 .classed('selected', true);
+
+            // select the rectangles with shadow as hidden for the
+            // corresponding drug shadow group
+            d3
+                .select(`#rectangle-drug-shadow-group-${removeSomeSpecialCharacters(drug)}`)
+                .attr('visibility', 'visible');
+        })
+        .on('mouseout', (drug) => {
+            // hides the group again
+            d3
+                .select(`#rectangle-drug-shadow-group-${removeSomeSpecialCharacters(drug)}`)
+                .attr('visibility', 'hidden');
         });
 };
 

@@ -5,8 +5,7 @@
  */
 const removeSomeSpecialCharacters = (input) => {
     const re = new RegExp(/\.|\+|\s/, 'g');
-    const result = input.replaceAll(re, '');
-    return result;
+    return input.replaceAll(re, '');
 };
 
 export default removeSomeSpecialCharacters;
