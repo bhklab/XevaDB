@@ -19,9 +19,9 @@ import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharact
 // TODO: add the rectangle around the plots and axes!
 // TODO: dotted lines connecting to the oncoprint
 // TODO: update 'Oncoprint' component to hide the sort and biomarker redirect
+// TODO: add grey highlight when use hovers over a drug/patient or rectangle
 
 // ------------------------ TODO ------------------------
-// TODO: add grey shadow when use hovers over a drug/patient or rectangle
 // TODO: use context object in the code and add sorting functionality
 // TODO: redirects from patient and drug labels
 
@@ -139,10 +139,9 @@ const createHeatMapSkeleton = (
             .append('g')
             .attr('id', `rectangle-drug-group-${removeSomeSpecialCharacters(drug)}`);
 
-        const shadowDrugGroup = skeleton
+        const drugHighlightGroup = skeleton
             .append('g')
-            .attr('id', `rectangle-drug-shadow-group-${removeSomeSpecialCharacters(drug)}`)
-            .attr('visibility', 'hidden');
+            .attr('id', `drug-highlight-group-${removeSomeSpecialCharacters(drug)}`);
 
         for (let patientIndex = 0; patientIndex < patientNameList.length; patientIndex++) {
             const patient = patientNameList[patientIndex];
@@ -161,7 +160,8 @@ const createHeatMapSkeleton = (
                 .attr('height', rectHeight - 2)
                 .attr('fill', fillRectangleColor(response, responseType, colorScale))
                 .attr('id', `rectangle-${removeSomeSpecialCharacters(drug)}-${patient}`)
-                .on('mouseover', () => {
+                .on('mouseenter', () => {
+                    console.log('mouseover');
                     // text for the tooltip
                     const tooltipText = {
                         Patient: patient,
@@ -172,15 +172,28 @@ const createHeatMapSkeleton = (
                     const updatedTooltip = makeToolTipVisible(tooltip);
                     // add the tooltip data
                     addDataToTooltip(updatedTooltip, tooltipText);
+
+                    // select the highlight patient group and
+                    // set the visibility to visible.
+                    d3
+                        .selectAll(`rect[id^='rectangle-highlight'][id$='${patient}']`)
+                        .style('visibility', 'visible');
                 })
-                .on('mouseout', () => {
+                .on('mouseleave', () => {
+                    console.log('mouseout');
                     tooltip
+                        .style('visibility', 'hidden');
+
+                    // select the highlight patient group and
+                    // set the visibility to visible.
+                    d3
+                        .selectAll(`rect[id^='rectangle-highlight'][id$='${patient}']`)
                         .style('visibility', 'hidden');
                 });
 
-            // creates the shadow to be displayed when the user
+            // creates the highlight to be displayed when the user
             // hovers over the drug (make the selection visible)
-            shadowDrugGroup
+            drugHighlightGroup
                 .append('rect')
                 .attr('x', patientIndex * rectWidth)
                 .attr('y', drugIndex * rectHeight)
@@ -188,7 +201,8 @@ const createHeatMapSkeleton = (
                 .attr('height', rectHeight - 2)
                 .attr('fill', 'grey')
                 .attr('opacity', '0.4')
-                .attr('id', `rectangle-shadow-${removeSomeSpecialCharacters(drug)}-${patient}`);
+                .style('visibility', 'hidden')
+                .attr('id', `rectangle-highlight-${removeSomeSpecialCharacters(drug)}-${patient}`);
         }
     }
 };
@@ -270,17 +284,17 @@ const createDrugYAxis = (svg, drugScale) => {
                 .style('visibility', 'visible')
                 .classed('selected', true);
 
-            // select the rectangles with shadow as hidden for the
-            // corresponding drug shadow group
+            // select the rectangles with highlight as hidden for the
+            // corresponding drug highlight group
             d3
-                .select(`#rectangle-drug-shadow-group-${removeSomeSpecialCharacters(drug)}`)
-                .attr('visibility', 'visible');
+                .selectAll(`rect[id*='rectangle-highlight-${removeSomeSpecialCharacters(drug)}-']`)
+                .style('visibility', 'visible');
         })
         .on('mouseout', (drug) => {
             // hides the group again
             d3
-                .select(`#rectangle-drug-shadow-group-${removeSomeSpecialCharacters(drug)}`)
-                .attr('visibility', 'hidden');
+                .selectAll(`rect[id*='rectangle-highlight-${removeSomeSpecialCharacters(drug)}-']`)
+                .style('visibility', 'hidden');
         });
 };
 
