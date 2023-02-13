@@ -1000,7 +1000,10 @@ Oncoprint.propTypes = {
         bottom: PropTypes.number,
         left: PropTypes.number,
     }).isRequired,
-    threshold: PropTypes.number.isRequired,
+    threshold: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]).isRequired,
     hmap_patients: PropTypes.arrayOf(PropTypes.string).isRequired,
     genes_mut: PropTypes.arrayOf(PropTypes.string).isRequired,
     genes_rna: PropTypes.arrayOf(PropTypes.string).isRequired,

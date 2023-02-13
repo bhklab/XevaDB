@@ -770,6 +770,7 @@ const createHeatMap = (props, responseType) => {
  * **************************************************************************************
  */
 const HeatMap = (props) => {
+    console.log(props);
     const [responseType, setResponseType] = useState('mRECIST');
     const { drugId: drugNameList, data, patientId: patientNameList } = props;
     const patientContext = useContext(PatientContext);
@@ -817,8 +818,11 @@ const HeatMap = (props) => {
 
 HeatMap.propTypes = {
     className: PropTypes.string.isRequired,
-    data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.object)).isRequired,
-    dataset: PropTypes.number.isRequired,
+    data: PropTypes.object.isRequired,
+    dataset: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]).isRequired,
     dimensions: PropTypes.shape({
         height: PropTypes.number,
         width: PropTypes.number,
