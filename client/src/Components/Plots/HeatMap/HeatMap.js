@@ -13,18 +13,6 @@ import { customStyles } from '../../Search/SearchStyle';
 import isObject from '../../../utils/CheckIfAnObject';
 import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharacters';
 
-// ------------------------ Done ------------------------
-// TODO: add boxplot
-// TODO: add drug and patient evaluations (top and right barplots);
-// TODO: add the rectangle around the plots and axes!
-// TODO: dotted lines connecting to the oncoprint
-// TODO: update 'Oncoprint' component to hide the sort and biomarker redirect
-// TODO: add grey highlight when use hovers over a drug/patient or rectangle
-
-// ------------------------ TODO ------------------------
-// TODO: use context object in the code and add sorting functionality
-// TODO: redirects from patient and drug labels
-
 // heatmap wrapper div
 const HeatMapWrapper = styled.div`
     display: flex;
@@ -673,6 +661,7 @@ const createHeatMap = (props, responseType) => {
         geneList,
         patientId: patientNameList,
         className: plotId,
+        isResponseComponent,
     } = props;
 
     const responseDataValues = Object.values(responseData);
@@ -770,7 +759,9 @@ const createHeatMap = (props, responseType) => {
 
     // create dotted lines at the end of the heatmap
     // that connects dotted lines present at the start of oncoprint lines.
-    createDottedLinesPerPatient(heatmapGroupingElement, patientNameList, plotHeight, rectWidth);
+    if (!isResponseComponent) {
+        createDottedLinesPerPatient(heatmapGroupingElement, patientNameList, plotHeight, rectWidth);
+    }
 };
 
 /**
@@ -841,6 +832,7 @@ HeatMap.propTypes = {
         left: PropTypes.number,
     }).isRequired,
     patientId: PropTypes.arrayOf(PropTypes.string).isRequired,
+    isResponseComponent: PropTypes.bool,
 };
 
 export default HeatMap;

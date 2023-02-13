@@ -130,6 +130,7 @@ const DrugResponse = () => {
                                 <HeatMapData
                                     datasetId={selectedDatasetId}
                                     drugList={selectedDrugs}
+                                    isResponseComponent
                                 />
                             )
                             : ''

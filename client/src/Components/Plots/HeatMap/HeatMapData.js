@@ -68,11 +68,11 @@ const parseData = (modelResponse, patients) => {
     patientArray = Object.keys(Object.values(dataset)[0]).sort();
 
     // TODO: Update the 'data' for now; change later when we have average data
-    // TODO: 'mRECIST' will be the max occuring value and the other
+    // TODO: 'mRECIST' will be the max occurring value and the other
     // TODO: parameters are just taking the first element
-    // finds the maximum occurences of a 'mRECIST' type
-    const maxOccuringmRECISTValue = (mRECIST) => {
-        // this object will store the occurences of mRECIST values
+    // finds the maximum occurrences of a 'mRECIST' type
+    const maxOccurringmRECISTValue = (mRECIST) => {
+        // this object will store the occurrences of mRECIST values
         const mRECISTObject = {};
         mRECIST.forEach((el) => {
             if (mRECISTObject.hasOwnProperty(el)) {
@@ -82,17 +82,17 @@ const parseData = (modelResponse, patients) => {
             }
         });
 
-        // gets the maximum occuring mRECIST value
-        let maxOccuringKey = '';
+        // gets the maximum occurring mRECIST value
+        let maxOccurringKey = '';
         let maxValue = 0;
         Object.entries(mRECISTObject).forEach(([key, value]) => {
             if (value > maxValue) {
                 maxValue = value;
-                maxOccuringKey = key;
+                maxOccurringKey = key;
             }
         });
 
-        return maxOccuringKey;
+        return maxOccurringKey;
     };
 
     // transforms the 'dataset'
@@ -105,7 +105,7 @@ const parseData = (modelResponse, patients) => {
                 Survival: value.survival?.[0] || 'NA',
                 Slope: value.slope?.[0] || 'NA',
                 AUC: value.AUC?.[0] || 'NA',
-                mRECIST: value.mRECIST ? maxOccuringmRECISTValue(value.mRECIST) : 'NA',
+                mRECIST: value.mRECIST ? maxOccurringmRECISTValue(value.mRECIST) : 'NA',
             };
         });
     });
@@ -122,7 +122,10 @@ const parseData = (modelResponse, patients) => {
  */
 const HeatMapData = (props) => {
     const {
-        datasetId, drugList: drugProp, geneList: geneProp,
+        datasetId,
+        drugList: drugProp,
+        geneList: geneProp,
+        isResponseComponent,
     } = props;
     const geneList = geneProp ? geneProp.split(',') : OncoprintGenes;
     const [dataObject, setDataObject] = useState({
@@ -164,6 +167,7 @@ const HeatMapData = (props) => {
                             geneList={geneList}
                             margin={margin}
                             dataset={datasetId}
+                            isResponseComponent={isResponseComponent}
                             className='heatmap'
                         />
                     )
@@ -179,6 +183,7 @@ HeatMapData.propTypes = {
     ]).isRequired,
     drugList: PropTypes.string,
     geneList: PropTypes.string,
+    isResponseComponent: PropTypes.bool,
 };
 
 export default HeatMapData;
