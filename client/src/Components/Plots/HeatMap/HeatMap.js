@@ -159,9 +159,20 @@ const createHeatMapSkeleton = (
                 .attr('width', rectWidth - 2)
                 .attr('height', rectHeight - 2)
                 .attr('fill', fillRectangleColor(response, responseType, colorScale))
-                .attr('id', `rectangle-${removeSomeSpecialCharacters(drug)}-${patient}`)
-                .on('mouseenter', () => {
-                    console.log('mouseover');
+                .attr('id', `rectangle-${removeSomeSpecialCharacters(drug)}-${patient}`);
+
+            // creates the highlight to be displayed when the user
+            // hovers over the drug (make the selection visible)
+            drugHighlightGroup
+                .append('rect')
+                .attr('x', patientIndex * rectWidth)
+                .attr('y', drugIndex * rectHeight)
+                .attr('width', rectWidth - 2)
+                .attr('height', rectHeight - 2)
+                .attr('fill', 'grey')
+                .attr('opacity', '0.0')
+                .attr('id', `rectangle-highlight-${removeSomeSpecialCharacters(drug)}-${patient}`)
+                .on('mouseover', () => {
                     // text for the tooltip
                     const tooltipText = {
                         Patient: patient,
@@ -173,36 +184,17 @@ const createHeatMapSkeleton = (
                     // add the tooltip data
                     addDataToTooltip(updatedTooltip, tooltipText);
 
-                    // select the highlight patient group and
-                    // set the visibility to visible.
-                    d3
-                        .selectAll(`rect[id^='rectangle-highlight'][id$='${patient}']`)
-                        .style('visibility', 'visible');
+                    d3.selectAll(`rect[id^='rectangle-highlight'][id$='${patient}']`)
+                        .attr('opacity', '0.5');
                 })
-                .on('mouseleave', () => {
-                    console.log('mouseout');
+                .on('mouseout', () => {
                     tooltip
                         .style('visibility', 'hidden');
 
-                    // select the highlight patient group and
                     // set the visibility to visible.
-                    d3
-                        .selectAll(`rect[id^='rectangle-highlight'][id$='${patient}']`)
-                        .style('visibility', 'hidden');
+                    d3.selectAll(`rect[id^='rectangle-highlight'][id$='${patient}']`)
+                        .attr('opacity', '0.0');
                 });
-
-            // creates the highlight to be displayed when the user
-            // hovers over the drug (make the selection visible)
-            drugHighlightGroup
-                .append('rect')
-                .attr('x', patientIndex * rectWidth)
-                .attr('y', drugIndex * rectHeight)
-                .attr('width', rectWidth - 2)
-                .attr('height', rectHeight - 2)
-                .attr('fill', 'grey')
-                .attr('opacity', '0.4')
-                .style('visibility', 'hidden')
-                .attr('id', `rectangle-highlight-${removeSomeSpecialCharacters(drug)}-${patient}`);
         }
     }
 };
@@ -288,13 +280,13 @@ const createDrugYAxis = (svg, drugScale) => {
             // corresponding drug highlight group
             d3
                 .selectAll(`rect[id*='rectangle-highlight-${removeSomeSpecialCharacters(drug)}-']`)
-                .style('visibility', 'visible');
+                .attr('opacity', '0.5');
         })
         .on('mouseout', (drug) => {
             // hides the group again
             d3
                 .selectAll(`rect[id*='rectangle-highlight-${removeSomeSpecialCharacters(drug)}-']`)
-                .style('visibility', 'hidden');
+                .attr('opacity', '0.0');
         });
 };
 
