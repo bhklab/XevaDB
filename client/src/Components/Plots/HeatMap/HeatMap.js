@@ -770,7 +770,6 @@ const createHeatMap = (props, responseType) => {
  * **************************************************************************************
  */
 const HeatMap = (props) => {
-    console.log(props);
     const [responseType, setResponseType] = useState('mRECIST');
     const { drugId: drugNameList, data, patientId: patientNameList } = props;
     const patientContext = useContext(PatientContext);
