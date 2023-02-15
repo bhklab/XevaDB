@@ -392,7 +392,7 @@ function createLegend(svg, height, width, rectHeight, rectWidth, min, max, drug)
 }
 
 // create mRECIST legend
-const createmRECISTLegened = (
+const createmRECISTLegend = (
     svg, targetColorObject, rectHeight, rectWidth,
     canvasHeight, canvasWidth, margin,
 ) => {
@@ -496,7 +496,7 @@ const createDrugBarPlotAxes = (heatmapGroupingElement, mainPlotWidth, scale) => 
     canvas.call(axis);
 };
 
-// functions to create side bar plots for drug and patient evaluations
+// functions to create sidebar plots for drug and patient evaluations
 const drugStackedBarplots = (
     heatmapGroupingElement, drugBarChartData, responseEnteries,
     mainPlotWidth, mainPlotHeight, rectHeight,
@@ -728,7 +728,7 @@ const createHeatMap = (props, responseType) => {
 
     // creates the legend
     if (responseType === 'mRECIST') {
-        createmRECISTLegened(
+        createmRECISTLegend(
             heatmapGroupingElement, targetColor, rectHeight,
             rectWidth, plotHeight, plotWidth, margin,
         );

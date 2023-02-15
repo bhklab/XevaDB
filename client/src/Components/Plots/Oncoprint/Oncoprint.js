@@ -522,8 +522,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
             .style('stroke', `${colors.black}`)
             .style('stroke-width', stroke_width);
 
-        // function to caculate alterations.
-        const geneAlterationReactangle = (iterator) => {
+        // function to calculate alterations.
+        const geneAlterationRectangle = (iterator) => {
             // variables.
             const i = iterator;
             let x_range = stroke_width / 2;
@@ -549,7 +549,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
 
         // calculate alterations for each row.
         for (let i = 0; i < genes.length; i++) {
-            geneAlterationReactangle(i);
+            geneAlterationRectangle(i);
         }
 
         // This will set the axis and scale.
@@ -579,6 +579,16 @@ const makeOncoprint = (hmap_patients, props, context) => {
             .select('text')
             .attr('fill', `${colors.black}`)
             .attr('stroke', 'none');
+
+        // append text to the top of the axis
+        svg.append('g')
+            .attr('id', 'gene-stacked-barplot-label-group')
+            .append('text')
+            .text('# of alterations')
+            .attr('x', width + 10)
+            .attr('y', -20)
+            .attr('font-size', '10.5px')
+            .style('fill', `${colors.red}`);
     }
 
     /** ******************************************* Horizontal Graph ******************************************* * */
@@ -602,7 +612,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
         const patient_alter = svg.append('g')
             .attr('id', 'patient-alter');
 
-        const yrange_patient = d3.scaleLinear() // #TODO: scale.linear
+        const yrange_patient = d3.scaleLinear()
             .domain([0, max_height])
             .range([`${dimensions.height}`, 0]);
 
