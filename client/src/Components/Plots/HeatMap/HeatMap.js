@@ -406,9 +406,9 @@ const createmRECISTLegend = (
         .join('rect')
         .attr('x', canvasWidth + margin.right / 2)
         .attr('y', (d, i) => (
-            canvasHeight > rectHeight * 3
+            canvasHeight > rectHeight * 5
                 ? (canvasHeight / 3 + i * rectHeight * 0.75)
-                : (canvasHeight / 6 + i * rectHeight * 0.75)
+                : (i * rectHeight * 0.75)
         ))
         .attr('height', rectWidth)
         .attr('width', rectWidth)
@@ -420,9 +420,9 @@ const createmRECISTLegend = (
         .join('text')
         .attr('x', canvasWidth + margin.right / 2 + 20)
         .attr('y', (d, i) => (
-            canvasHeight > rectHeight * 3
+            canvasHeight > rectHeight * 5
                 ? (canvasHeight / 3 + i * rectHeight * 0.75 + 12)
-                : (canvasHeight / 6 + i * rectHeight * 0.75 + 12)
+                : (i * rectHeight * 0.75 + 12)
         ))
         .text((d) => d)
         .attr('fill', `${colors['--main-font-color']}`)
