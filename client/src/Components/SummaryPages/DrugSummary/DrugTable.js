@@ -5,10 +5,9 @@ import { Link } from 'react-router-dom';
 import TableWrapper from '../../Utils/TableStyle';
 import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
-import colors from '../../../styles/colors';
 import firstAlphabetUpperCase from '../../../utils/FirstAlphabetUpperCase';
 import pubchemURL from '../../../utils/PubChemURL';
-
+import TableFiltering from '../../Utils/TableFiltering';
 
 class DrugTable extends React.Component {
     constructor(props) {
@@ -27,7 +26,7 @@ class DrugTable extends React.Component {
                     data: response.data,
                     loading: false,
                 });
-            }, []);
+            });
     }
 
     render() {
@@ -93,9 +92,9 @@ class DrugTable extends React.Component {
                             link.push(
                                 <span key={row}>
                                     <a
-                                        className="hover"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                        className='hover'
+                                        target='_blank'
+                                        rel='noopener noreferrer'
                                         href={`${pubchemURL}${row}`}
                                     >
                                         {pid}
@@ -122,9 +121,10 @@ class DrugTable extends React.Component {
                         <ReactTable
                             data={data}
                             columns={columns}
-                            className="-highlight"
+                            className='-highlight'
                             defaultPageSize={10}
                             filterable
+                            defaultFilterMethod={TableFiltering}
                         />
                     )
                 }
