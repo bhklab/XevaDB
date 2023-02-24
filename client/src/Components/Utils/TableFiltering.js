@@ -1,16 +1,25 @@
+import checkIfAnObject from '../../utils/CheckIfAnObject';
+
+/**
+ *
+ * @param filter {Object} - filter object
+ * @param row {Object} - current row
+ * @returns {boolean|string} - returns if the filter value is present in row id data
+ */
 const tableFilter = (filter, row) => {
     // if there is no id then return an empty string
     if (!filter.id) return '';
 
-    const id = filter.pivotId || filter.id;
-    const searchValue = filter.value;
-
     // regex to match the search value in the string
     // and return true if it matches
-    const regex = new RegExp(`.*${searchValue}.*`, 'gi');
-    if (row[id]?.match(regex)) return true;
+    const id = filter.pivotId || filter.id;
+    const regex = new RegExp(filter.value, 'gi');
 
-    return false;
+    const match = checkIfAnObject(row[id])
+        ? row[id]?.name.match(regex)
+        : row[id]?.match(regex);
+
+    return !!match;
 };
 
 export default tableFilter;
