@@ -6,7 +6,6 @@ import DrugTable from './DrugTable';
 import GlobalStyles from '../../../GlobalStyles';
 import BarPlot from '../../Plots/BarPlot';
 
-
 class DrugSummary extends React.Component {
     constructor(props) {
         super(props);
@@ -14,7 +13,6 @@ class DrugSummary extends React.Component {
             data: [],
             dimensions: {},
             margin: {},
-            arc: {},
             loading: true,
         };
     }
@@ -22,7 +20,10 @@ class DrugSummary extends React.Component {
     componentDidMount() {
         const newValues = [];
         // passing on token as the header to the api call.
-        axios.get('/api/v1/models/count/groupbydrugclass', { headers: { Authorization: localStorage.getItem('user') } })
+        axios.get(
+            '/api/v1/models/count/groupbydrugclass',
+            { headers: { Authorization: localStorage.getItem('user') } },
+        )
             .then((response) => {
                 response.data.data.forEach((data) => {
                     const value = {};
@@ -45,7 +46,7 @@ class DrugSummary extends React.Component {
 
     render() {
         const {
-            data, arc, loading,
+            data, loading,
             dimensions, margin,
         } = this.state;
         return (
@@ -66,7 +67,7 @@ class DrugSummary extends React.Component {
                                             data={data}
                                             yLabel='Number of models'
                                             xLabel='Drug class'
-                                            shouldAppendBarText={true}
+                                            shouldAppendBarText
                                         />
                                     </div>
                                 )

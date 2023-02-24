@@ -7,7 +7,7 @@ import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
 import firstAlphabetUpperCase from '../../../utils/FirstAlphabetUpperCase';
 import pubchemURL from '../../../utils/PubChemURL';
-import TableFiltering from '../../Utils/TableFiltering';
+import tableFilter from '../../Utils/TableFiltering';
 
 class DrugTable extends React.Component {
     constructor(props) {
@@ -31,11 +31,6 @@ class DrugTable extends React.Component {
 
     render() {
         const { data, loading } = this.state;
-
-        // adding image to each of the object in array.
-        // data.forEach((val) => {
-        //     val.img = pubchem;
-        // });
 
         const columns = [
             {
@@ -72,6 +67,7 @@ class DrugTable extends React.Component {
             },
             {
                 Header: 'PubChem CID',
+                accessor: 'pubchemid',
                 Cell: (val) => {
                     const pubchemLink = String(val.original.pubchemid).split(',');
                     const { length } = pubchemLink;
@@ -124,7 +120,7 @@ class DrugTable extends React.Component {
                             className='-highlight'
                             defaultPageSize={10}
                             filterable
-                            defaultFilterMethod={TableFiltering}
+                            defaultFilterMethod={tableFilter}
                         />
                     )
                 }
