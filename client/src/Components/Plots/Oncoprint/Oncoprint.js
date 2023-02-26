@@ -408,12 +408,12 @@ const makeOncoprint = (hmap_patients, props, context) => {
         // setting the border high-rna and low-rna.
         if (value === 'Expression High') {
             rect.attr('stroke', 'red')
-                .attr('stroke-width', '2px')
-                .style('opacity', 1);
+                .attr('stroke-width', '2.5px')
+                .style('opacity', 0.75);
         } else if (value === 'Expression Low') {
             rect.attr('stroke', 'blue')
-                .attr('stroke-width', '2px')
-                .style('opacity', 1);
+                .attr('stroke-width', '2.5px')
+                .style('opacity', 0.75);
         }
     };
 
