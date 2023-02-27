@@ -997,7 +997,7 @@ const Oncoprint = (props) => {
         makeOncoprint(hmap_patients, props, context);
     }, []);
 
-    // ranking the oncopring based on the globalPatients passed from heatmap.
+    // ranking the oncoprint based on the globalPatients passed from heatmap.
     const rankOncoprintBasedOnHeatMapChanges = (value) => {
         const { globalPatients } = value;
         const { className } = props;
