@@ -37,24 +37,22 @@ const Biomarker = (props) => {
     const [displayMessage, setDisplayMessage] = useState('');
 
     // function to get the drug data
-    const getDrugs = async function () {
+    function getDrugs() {
         // API call to get the list of drugs
-        const drugs = await axios.get(
+        return axios.get(
             '/api/v1/drugs',
             { headers: { Authorization: localStorage.getItem('user') } },
         );
-        return drugs;
-    };
+    }
 
     // function to get the gene data
-    const getGenes = async function () {
+    function getGenes() {
         // API call to get the list of genes
-        const genes = await axios.get(
+        return axios.get(
             '/api/v1/genes',
             { headers: { Authorization: localStorage.getItem('user') } },
         );
-        return genes;
-    };
+    }
 
     // use effect; setting gene and drug list
     useEffect(() => {
