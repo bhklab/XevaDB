@@ -8,11 +8,12 @@ import createToolTip from '../../utils/ToolTip';
 
 // style for forest plot.
 const StyledForestPlot = styled.div`
-    width: 80%;
+    border: 1px solid black;
+    width: 85%;
     margin: auto;
 
     @media screen and (min-width: 1600px) {
-        width: 65%;
+        width: 75%;
     }
 `;
 
@@ -42,7 +43,7 @@ const margin = {
     top: 40,
     right: 20,
     bottom: 150,
-    left: 20,
+    left: 100,
 };
 
 // width and height of the SVG canvas.
@@ -81,7 +82,6 @@ const calculateMinMaxN = (data) => {
  * mouseover event for horizontal line as well as the circle.
  * @param {Object} event
  * @param {Object} element
- * @param {boolean} isAnalytic
  */
 const mouseOverEvent = (event, element) => {
     // make the visibility of the tool tip to visible.
@@ -102,7 +102,7 @@ const mouseOverEvent = (event, element) => {
         .attr('id', 'tooltiptext')
         .text(text);
 
-    // show pearson correlation cofficient on mouse over.
+    // show pearson correlation coefficient on mouse over.
     d3.select(`#estimate-${element.id}-x1`).attr('visibility', 'visible');
     d3.select(`#estimate-${element.id}-x2`).attr('visibility', 'visible');
 };
@@ -116,9 +116,9 @@ const mouseOutEvent = (event, element) => {
     // make visibility hidden.
     d3.select('#tooltip')
         .style('visibility', 'hidden');
-    // remove all the divs with id tooltiptext.
+    // remove all the divs with id tooltip-text.
     d3.selectAll('#tooltiptext').remove();
-    // hide pearson correlation cofficient on mouse over.
+    // hide pearson correlation coefficient on mouse over.
     d3.select(`#estimate-${element.id}-x1`).attr('visibility', 'hidden');
     d3.select(`#estimate-${element.id}-x2`).attr('visibility', 'hidden');
 };
@@ -127,7 +127,9 @@ const mouseOutEvent = (event, element) => {
  * @returns - d3 linear scale for circles.
  * mapped the min and max values to a range.
  */
-const circleScaling = (min, max) => d3.scaleLinear().domain([min, max]).range([5, 15]);
+const circleScaling = (min, max) => d3.scaleLinear()
+    .domain([min, max])
+    .range([5, 15]);
 
 /**
  *
@@ -170,7 +172,7 @@ const createXAxis = (svg, scale, height, width, margin) => {
 /**
  * Creates a vertical main line for the forest plot.
  * @param {Object} svg - svg selection for the global canvas.
- * @param {Object} scale - x axis scale.
+ * @param {Object} scale - x-axis scale.
  */
 const createVerticalLine = (svg, scale, height) => {
     svg.append('g')
@@ -186,8 +188,7 @@ const createVerticalLine = (svg, scale, height) => {
 /**
  * Creates horizontal lines for the forest plot.
  * @param {Object} svg - svg selection for the global canvas.
- * @param {Object} scale - x axis scale.
- * @param {boolean} isAnalytic
+ * @param {Object} scale - x-axis scale.
  */
 const createHorizontalLines = (svg, scale, data, height) => {
     const horizontal = svg.append('g')
@@ -204,10 +205,10 @@ const createHorizontalLines = (svg, scale, data, height) => {
                 .attr('y1', ((i + 1) * height) / (data.length + ADDITIONAL))
                 .attr('x2', scale(element.ci_upper))
                 .attr('y2', ((i + 1) * height) / (data.length + ADDITIONAL))
-                .on('mouseover', (event) => {
+                .on('mouseover', () => {
                     mouseOverEvent(d3.event, element);
                 })
-                .on('mouseout', (event) => {
+                .on('mouseout', () => {
                     mouseOutEvent(d3.event, element);
                 });
         }
@@ -217,7 +218,7 @@ const createHorizontalLines = (svg, scale, data, height) => {
 /**
  * Creates circles for the horizontal lines.
  * @param {Object} svg - svg selection for the global canvas.
- * @param {Object} xScale - x axis scale.
+ * @param {Object} xScale - x-axis scale.
  * @param {Object} circleScale - scale to set the radius of the circle.
  * @param {Array} data - data array.
  */
@@ -226,12 +227,12 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
         .attr('id', 'cirlces');
 
     data.forEach((element, i) => {
-        // fdr and pearson cofficient.
+        // fdr and pearson coefficient.
         const { fdr } = element;
 
         circles
             .append('circle')
-            .attr('id', `cirlce-${element.dataset.name}`)
+            .attr('id', `circle-${element.dataset.name}`)
             .attr('cx', xScale(element.estimate))
             .attr('cy', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('r', circleScale(element.n))
@@ -239,7 +240,7 @@ const createCircles = (svg, xScale, circleScale, data, height) => {
             .on('mouseover', () => {
                 mouseOverEvent(d3.event, element);
             })
-            .on('mouseout', (event) => {
+            .on('mouseout', () => {
                 mouseOutEvent(d3.event, element);
             });
     });
@@ -256,11 +257,11 @@ const appendDatasetName = (svg, data, height) => {
         .attr('id', 'dataset-header')
         .append('text')
         .attr('font-weight', 500)
-        .attr('x', 0)
+        .attr('x', -80)
         .attr('y', -20)
         .attr('fill', `${colors['--main-font-color']}`)
         .text('Dataset Name')
-        .attr('font-size', '16px');
+        .attr('font-size', '14px');
 
     const dataset = svg.append('g')
         .attr('id', 'dataset-names');
@@ -271,11 +272,11 @@ const appendDatasetName = (svg, data, height) => {
             .append('text')
             .attr('id', `dataset-${element.dataset.name}`)
             .attr('font-weight', 200)
-            .attr('x', 0)
+            .attr('x', -80)
             .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('fill', `${colors['--main-font-color']}`)
             .text(`${element.dataset.name}`)
-            .attr('font-size', '14px');
+            .attr('font-size', '12px');
     });
 };
 
@@ -294,7 +295,7 @@ const appendMetricName = (svg, data, height) => {
         .attr('y', -20)
         .attr('fill', `${colors['--main-font-color']}`)
         .text('Metric')
-        .attr('font-size', '16px');
+        .attr('font-size', '14px');
 
     const dataset = svg.append('g')
         .attr('id', 'dataset-names');
@@ -310,7 +311,7 @@ const appendMetricName = (svg, data, height) => {
             .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('fill', `${colors['--main-font-color']}`)
             .text(`${element.metric.replace(/\./g, ' ')}`)
-            .attr('font-size', '14px');
+            .attr('font-size', '12px');
     });
 };
 
@@ -335,7 +336,7 @@ const appendEstimateText = (svg, data, height, width, scale) => {
                 .attr('fill', `${colors['--main-font-color']}`)
                 .text(`${(element.ci_lower)}`)
                 .attr('visibility', 'hidden')
-                .attr('font-size', '14px');
+                .attr('font-size', '12px');
         }
 
         if (element.ci_upper) {
@@ -348,7 +349,7 @@ const appendEstimateText = (svg, data, height, width, scale) => {
                 .attr('fill', `${colors['--main-font-color']}`)
                 .text(`${(element.ci_upper)}`)
                 .attr('visibility', 'hidden')
-                .attr('font-size', '14px');
+                .attr('font-size', '12px');
         }
     });
 };
@@ -368,7 +369,7 @@ const appendFdrText = (svg, data, height, width) => {
         .attr('y', -20)
         .attr('fill', `${colors['--main-font-color']}`)
         .text('FDR')
-        .attr('font-size', '16px');
+        .attr('font-size', '14px');
 
     const estimate = svg.append('g')
         .attr('id', 'estimate');
@@ -384,7 +385,7 @@ const appendFdrText = (svg, data, height, width) => {
                 .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
                 .attr('fill', `${colors['--main-font-color']}`)
                 .text(`${element.fdr}`)
-                .attr('font-size', '14px');
+                .attr('font-size', '12px');
         }
     });
 };
@@ -428,7 +429,7 @@ const createLegend = (svg, height, width) => {
 
 /**
  * Main function to create the forest plot.
- * @param {Object} margin - margin for the svg canavas.
+ * @param {Object} margin - margin for the svg canvas.
  * @param {number} height - height of the svg canvas.
  * @param {number} width - width of the svg canvas.
  * @param {Array} data - array of data.
@@ -456,7 +457,7 @@ const createForestPlot = (margin, heightInput, width, data) => {
     // scale for circles.
     const circleScale = circleScaling(minN, maxN);
 
-    // creating x axis.
+    // creating x-axis.
     createXAxis(svg, xScale, height, width, margin);
 
     // create vertical line at 0 on x-axis.
