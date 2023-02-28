@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -8,7 +8,6 @@ import createToolTip from '../../utils/ToolTip';
 
 // style for forest plot.
 const StyledForestPlot = styled.div`
-    border: 1px solid black;
     width: 85%;
     margin: auto;
 
