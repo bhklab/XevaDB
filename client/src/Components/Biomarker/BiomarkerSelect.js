@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import React, { useState } from 'react';
 import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
@@ -61,7 +62,7 @@ const BiomarkerSelect = (props) => {
         selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : '',
     );
     const [selectedDataType, updateSelectedDataType] = useState('');
-    const [selectedMetric, updateSelectedMetric] = useState('');
+    const [selectedMetric, updateSelectedMetric] = useState({ value: 'AUC', label: 'AUC' });
     const [isSelected, updateIsSelected] = useState({
         drug: !!selectedDrugProp,
         gene: !!selectedGeneProp,
@@ -81,11 +82,10 @@ const BiomarkerSelect = (props) => {
     };
 
     // function to filter data based on the metric type
-    const getBiomarkerDataBasedOnMetric = function (data, metricArray) {
-        // metrics array
-        const metricsArray = metricArray.map((metric) => metric.label);
-
-        return data.filter((el) => metricsArray.includes(el.metric.replace(/\./g, ' ')));
+    const getBiomarkerDataBasedOnMetric = function (data, metric) {
+        return data.filter(
+            (el) => metric.toLowerCase() === el.metric.replace(/\./g, ' ').toLowerCase(),
+        );
     };
 
     // event handler on button
@@ -96,6 +96,7 @@ const BiomarkerSelect = (props) => {
         const drug = selectedDrug.label;
         const gene = selectedGene.label;
         const dataType = selectedDataType.label;
+        const metric = selectedMetric.label;
 
         // get biomarker data
         // and set the data types state
@@ -104,8 +105,8 @@ const BiomarkerSelect = (props) => {
                 .then((biomarkers) => {
                     // update biomarker data state
                     if (biomarkers.data?.length > 0) {
-                        const data = selectedMetric?.length > 0
-                            ? getBiomarkerDataBasedOnMetric(biomarkers.data, selectedMetric)
+                        const data = metric
+                            ? getBiomarkerDataBasedOnMetric(biomarkers.data, metric)
                             : biomarkers.data;
 
                         setBiomarkerData(data);
@@ -210,7 +211,6 @@ const BiomarkerSelect = (props) => {
                         updateIsSelected({ ...isSelected, metric: true });
                     }}
                     filterOption={createFilter({ ignoreAccents: false })}
-                    isMulti
                 />
                 {
                     displayRequiredFieldText('metric', isButtonClicked)

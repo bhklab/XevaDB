@@ -301,7 +301,6 @@ const appendMetricName = (svg, data, height) => {
 
     // append dataset name.
     data.forEach((element, i) => {
-        console.log(element);
         dataset
             .append('text')
             .attr('id', `dataset-${element.dataset.name}`)
