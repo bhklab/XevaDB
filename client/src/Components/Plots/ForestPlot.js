@@ -308,7 +308,7 @@ const appendMetricName = (svg, data, height) => {
             .attr('x', 150)
             .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('fill', `${colors['--main-font-color']}`)
-            .text(`${element.metric.replace(/\./g, ' ')}`)
+            .text(`${element.metric.replace(/\./g, ' ').toUpperCase()}`)
             .attr('font-size', '12px');
     });
 };
@@ -487,7 +487,7 @@ const createForestPlot = (margin, heightInput, width, data) => {
 };
 
 /**
- * @returns {component} - returns the forest plot component.
+ * @returns {JSX.Element} - returns the forest plot component.
  */
 const ForestPlot = ({
     height, width, margin, data,
