@@ -110,7 +110,6 @@ const BiomarkerSelect = (props) => {
 
         if (drug && gene && dataType && isButtonClicked) {
             setBiomarkerDataLoadingState(true);
-
             getBiomarkerData(drug, gene, dataType)
                 .then((biomarkers) => {
                     if (biomarkers.data?.length > 0) {
@@ -121,10 +120,10 @@ const BiomarkerSelect = (props) => {
                         setBiomarkerData(biomarkers.data);
                         setBiomarkerDataForForestPlot(data);
                         setDisplayMessage('');
-                        setBiomarkerDataLoadingState(false);
                     } else {
                         setDisplayMessage('Data is not available!');
                     }
+                    setBiomarkerDataLoadingState(false);
                     updateButtonClickState(false);
                 })
                 .catch((err) => console.log('An error occurred', err));
