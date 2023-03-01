@@ -35,6 +35,7 @@ const Biomarker = (props) => {
     const [drugList, setDrugList] = useState(drugParam?.split(',') || []);
     const [biomarkerData, setBiomarkerData] = useState([]);
     const [displayMessage, setDisplayMessage] = useState('');
+    const [isBiomarkerDataLoading, setBiomarkerDataLoadingState] = useState(false);
 
     // function to get the drug data
     function getDrugs() {
@@ -79,6 +80,45 @@ const Biomarker = (props) => {
         }
     }, []);
 
+    // function to render forest plot
+    function renderForestPlot() {
+        let returnElement;
+
+        if (displayMessage) {
+            returnElement = <h1>{displayMessage}</h1>;
+        }
+
+        if (biomarkerData.length > 0 && displayMessage === '') {
+            returnElement = <ForestPlot data={biomarkerData} />;
+        }
+
+        if (isBiomarkerDataLoading) {
+            returnElement = <Spinner loading />;
+        }
+
+        return returnElement;
+    }
+
+    // function to render the component
+    function renderComponent() {
+        return (
+            <>
+                <BiomarkerSelect
+                    geneList={geneList}
+                    selectedGene={selectedGene}
+                    drugList={drugList}
+                    selectedDrug={selectedDrug}
+                    setBiomarkerData={setBiomarkerData}
+                    setDisplayMessage={setDisplayMessage}
+                    setBiomarkerDataLoadingState={setBiomarkerDataLoadingState}
+                />
+                {
+                    renderForestPlot()
+                }
+            </>
+        );
+    }
+
     return (
         <StyledBiomarker>
             <GlobalStyles />
@@ -86,23 +126,7 @@ const Biomarker = (props) => {
                 <div className='biomarker-wrapper'>
                     {
                         geneList.length > 0 && drugList.length > 0
-                            ? (
-                                <>
-                                    <BiomarkerSelect
-                                        geneList={geneList}
-                                        selectedGene={selectedGene}
-                                        drugList={drugList}
-                                        selectedDrug={selectedDrug}
-                                        setBiomarkerData={setBiomarkerData}
-                                        setDisplayMessage={setDisplayMessage}
-                                    />
-                                    {
-                                        biomarkerData.length > 0 && displayMessage === ''
-                                            ? <ForestPlot data={biomarkerData} />
-                                            : <h1>{displayMessage}</h1>
-                                    }
-                                </>
-                            )
+                            ? renderComponent()
                             : <Spinner loading />
                     }
                 </div>

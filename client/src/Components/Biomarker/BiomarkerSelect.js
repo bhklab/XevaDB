@@ -68,6 +68,7 @@ const BiomarkerSelect = (props) => {
     const { selectedDrug: drugProp } = props;
     const { setBiomarkerData: setBiomarkerDataForForestPlot } = props;
     const { setDisplayMessage } = props;
+    const { setBiomarkerDataLoadingState } = props;
 
     // data type and metric data for the selections
     const dataTypes = createSelectionArray(DATA_TYPES);
@@ -108,6 +109,8 @@ const BiomarkerSelect = (props) => {
         const metric = selectedMetric.label;
 
         if (drug && gene && dataType && isButtonClicked) {
+            setBiomarkerDataLoadingState(true);
+
             getBiomarkerData(drug, gene, dataType)
                 .then((biomarkers) => {
                     if (biomarkers.data?.length > 0) {
@@ -118,6 +121,7 @@ const BiomarkerSelect = (props) => {
                         setBiomarkerData(biomarkers.data);
                         setBiomarkerDataForForestPlot(data);
                         setDisplayMessage('');
+                        setBiomarkerDataLoadingState(false);
                     } else {
                         setDisplayMessage('Data is not available!');
                     }
