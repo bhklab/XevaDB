@@ -1,5 +1,5 @@
 /* eslint-disable func-names */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes, { string } from 'prop-types';
 import axios from 'axios';
 import ReactSelect, { createFilter } from 'react-select';
@@ -25,6 +25,8 @@ const METRICS = [
     'angle',
 ];
 
+const DEFAULT_METRIC = 'AUC';
+
 // function to get the drug data
 function createSelectionArray(data) {
     return data.map((el) => ({
@@ -33,83 +35,88 @@ function createSelectionArray(data) {
     }));
 }
 
+// function call the biomarker API end point to get the biomarker data
+async function getBiomarkerData(drug, gene, dataType) {
+    const { data } = await axios.get(
+        `/api/v1/biomarkers?drug=${drug}&gene=${gene}&dataType=${dataType}`,
+        { headers: { Authorization: localStorage.getItem('user') } },
+    );
+    return data;
+}
+
+// function to filter data based on the metric type
+function getBiomarkerDataBasedOnMetric(data, metric) {
+    return data.filter(
+        (el) => metric.toLowerCase() === el.metric.replace(/\./g, ' ').toLowerCase(),
+    );
+}
+
 /**
  *
  * @param {Object} props
  * @returns - Biomarker Select Component
  */
 const BiomarkerSelect = (props) => {
-    const { geneList, drugList } = props;
     // props
+    const {
+        geneList,
+        drugList,
+    } = props;
     const geneListProp = createSelectionArray(geneList);
     const drugListProp = createSelectionArray(drugList);
-    const { selectedGene: selectedGeneProp } = props;
-    const { selectedDrug: selectedDrugProp } = props;
-    const { setBiomarkerData } = props;
+    const { selectedGene: geneProp } = props;
+    const { selectedDrug: drugProp } = props;
+    const { setBiomarkerData: setBiomarkerDataForForestPlot } = props;
     const { setDisplayMessage } = props;
 
-    // data type array for the selection
+    // data type and metric data for the selections
     const dataTypes = createSelectionArray(DATA_TYPES);
-
-    // get the list of metric types in the data
     const metrics = createSelectionArray(METRICS);
 
     // component states
+    const [biomarkerData, setBiomarkerData] = useState([]);
     const [selectedDrug, updateSelectedDrug] = useState(
-        selectedDrugProp ? { value: selectedDrugProp, label: selectedDrugProp } : '',
+        drugProp ? {
+            value: drugProp,
+            label: drugProp,
+        } : '',
     );
     const [selectedGene, updateSelectedGene] = useState(
-        selectedGeneProp ? { value: selectedGeneProp, label: selectedGeneProp } : '',
+        geneProp ? {
+            value: geneProp,
+            label: geneProp,
+        } : '',
     );
     const [selectedDataType, updateSelectedDataType] = useState('');
-    const [selectedMetric, updateSelectedMetric] = useState({ value: 'AUC', label: 'AUC' });
+    const [selectedMetric, updateSelectedMetric] = useState({
+        value: DEFAULT_METRIC,
+        label: DEFAULT_METRIC,
+    });
     const [isSelected, updateIsSelected] = useState({
-        drug: !!selectedDrugProp,
-        gene: !!selectedGeneProp,
+        drug: !!drugProp,
+        gene: !!geneProp,
         dataType: false,
         metric: true,
         dataset: true,
     });
     const [isButtonClicked, updateButtonClickState] = useState(false);
 
-    // function call the biomarker API end point to get the biomarker data
-    const getBiomarkerData = async function (drug, gene, dataType) {
-        const { data } = await axios.get(
-            `/api/v1/biomarkers?drug=${drug}&gene=${gene}&dataType=${dataType}`,
-            { headers: { Authorization: localStorage.getItem('user') } },
-        );
-        return data;
-    };
-
-    // function to filter data based on the metric type
-    const getBiomarkerDataBasedOnMetric = function (data, metric) {
-        return data.filter(
-            (el) => metric.toLowerCase() === el.metric.replace(/\./g, ' ').toLowerCase(),
-        );
-    };
-
-    // event handler on button
-    const clickEventHandler = function () {
-        // update button click state
-        updateButtonClickState(true);
-
+    useEffect(() => {
         const drug = selectedDrug.label;
         const gene = selectedGene.label;
         const dataType = selectedDataType.label;
         const metric = selectedMetric.label;
 
-        // get biomarker data
-        // and set the data types state
-        if (drug && gene && dataType) {
+        if (drug && gene && dataType && isButtonClicked) {
             getBiomarkerData(drug, gene, dataType)
                 .then((biomarkers) => {
-                    // update biomarker data state
                     if (biomarkers.data?.length > 0) {
                         const data = metric
                             ? getBiomarkerDataBasedOnMetric(biomarkers.data, metric)
                             : biomarkers.data;
 
-                        setBiomarkerData(data);
+                        setBiomarkerData(biomarkers.data);
+                        setBiomarkerDataForForestPlot(data);
                         setDisplayMessage('');
                     } else {
                         setDisplayMessage('Data is not available!');
@@ -117,6 +124,20 @@ const BiomarkerSelect = (props) => {
                 })
                 .catch((err) => console.log('An error occurred', err));
         }
+    }, [selectedDrug, selectedGene, selectedDataType, isButtonClicked]);
+
+    useEffect(() => {
+        const metric = selectedMetric.label;
+        if (metric) {
+            const dataBasedOnMetric = getBiomarkerDataBasedOnMetric(biomarkerData, metric);
+            setBiomarkerDataForForestPlot(dataBasedOnMetric);
+        }
+    }, [selectedMetric]);
+
+    // event handler on button
+    const buttonClickEventHandler = function () {
+        // update button click state
+        updateButtonClickState(true);
     };
 
     // display that field is required
@@ -132,22 +153,6 @@ const BiomarkerSelect = (props) => {
 
     return (
         <StyledSelect className='biomarker-select'>
-            {/* <div className='dataset-select'>
-                <span> Dataset </span>
-                <ReactSelect
-                    styles={customStyles}
-                    options={drugListProp}
-                    value={selectedDrug}
-                    onChange={(event) => {
-                        updateSelectedDrug(event);
-                        updateIsSelected({ ...isSelected, drug: true })
-                    }}
-                    filterOption={createFilter({ ignoreAccents: false })}
-                />
-                {
-                    displayRequiredFieldText('dataset', isButtonClicked)
-                }
-            </div> */}
             <div className='drug-select'>
                 <span> Drug* </span>
                 <ReactSelect
@@ -156,7 +161,10 @@ const BiomarkerSelect = (props) => {
                     value={selectedDrug}
                     onChange={(event) => {
                         updateSelectedDrug(event);
-                        updateIsSelected({ ...isSelected, drug: true });
+                        updateIsSelected({
+                            ...isSelected,
+                            drug: true,
+                        });
                     }}
                     filterOption={createFilter({ ignoreAccents: false })}
                 />
@@ -172,7 +180,10 @@ const BiomarkerSelect = (props) => {
                     value={selectedGene}
                     onChange={(event) => {
                         updateSelectedGene(event);
-                        updateIsSelected({ ...isSelected, gene: true });
+                        updateIsSelected({
+                            ...isSelected,
+                            gene: true,
+                        });
                     }}
                     filterOption={createFilter({ ignoreAccents: false })}
                     components={{
@@ -192,7 +203,10 @@ const BiomarkerSelect = (props) => {
                     value={selectedDataType}
                     onChange={(event) => {
                         updateSelectedDataType(event);
-                        updateIsSelected({ ...isSelected, dataType: true });
+                        updateIsSelected({
+                            ...isSelected,
+                            dataType: true,
+                        });
                     }}
                     filterOption={createFilter({ ignoreAccents: false })}
                 />
@@ -208,7 +222,10 @@ const BiomarkerSelect = (props) => {
                     value={selectedMetric}
                     onChange={(event) => {
                         updateSelectedMetric(event);
-                        updateIsSelected({ ...isSelected, metric: true });
+                        updateIsSelected({
+                            ...isSelected,
+                            metric: true,
+                        });
                     }}
                     filterOption={createFilter({ ignoreAccents: false })}
                 />
@@ -217,7 +234,7 @@ const BiomarkerSelect = (props) => {
                 }
             </div>
             <div className='display-button'>
-                <button type='button' onClick={clickEventHandler}> Display plot </button>
+                <button type='button' onClick={buttonClickEventHandler}> Display plot</button>
             </div>
         </StyledSelect>
     );
@@ -230,4 +247,11 @@ BiomarkerSelect.propTypes = {
     drugList: PropTypes.arrayOf(string).isRequired,
     selectedDrug: PropTypes.string,
     selectedGene: PropTypes.string,
+    // setBiomarkerData:,
+    // setDisplayMessage:,
+};
+
+BiomarkerSelect.defaultProps = {
+    selectedDrug: '',
+    selectedGene: '',
 };
