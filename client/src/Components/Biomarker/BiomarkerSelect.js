@@ -121,6 +121,7 @@ const BiomarkerSelect = (props) => {
                     } else {
                         setDisplayMessage('Data is not available!');
                     }
+                    updateButtonClickState(false);
                 })
                 .catch((err) => console.log('An error occurred', err));
         }
