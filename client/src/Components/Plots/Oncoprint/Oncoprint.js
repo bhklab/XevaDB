@@ -143,7 +143,7 @@ const createSortingLabel = (genes, svg, rect_height, tooltip) => {
             .attr('font-size', '1em')
             .attr('id', `sorting-label-for-gene-${removeSomeSpecialCharacters(gene)}`)
             .style('visibility', 'hidden')
-            .on('mouseover', () => {
+            .on('mouseover', () => { // TODO: ADD SORTING LOGIC
                 const tooltipDiv = tooltip
                     .style('visibility', 'visible')
                     .style('left', `${d3.event.pageX - 100}px`)
@@ -219,8 +219,8 @@ const createGeneYAxis = (
                     .style('opacity', 0);
             })
             .on('click', () => {
-                // ranking oncoprint.
-                rankOncoprint(genes[i], [data_mut, data_cnv, data_rna], props, context); // TODO: Move it to the sorting label.
+                // TODO: Move it to the sorting label.
+                // rankOncoprint(genes[i], [data_mut, data_cnv, data_rna], props, context);
             });
     }
 };
@@ -305,14 +305,18 @@ const patientAlteration = (hmap_patients, genes_mut, genes_cnv) => {
     return patient_alterations;
 };
 
-// divide the expression data into 'highrna' or 'lowrna'
+// divide the expression data into 'High' or 'Low' expression
 const lowOrHighExpression = (value, threshold) => {
+    let expressionValue;
+
     if (value > threshold) {
-        return 'Expression High';
+        expressionValue = 'Expression High';
     }
     if (value < -threshold) {
-        return 'Expression Low';
+        expressionValue = 'Expression Low';
     }
+
+    return expressionValue;
 };
 
 /* ****************************************** Make Oncoprint ****************************************** */
