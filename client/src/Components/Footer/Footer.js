@@ -4,7 +4,7 @@ import FooterStyle from './FooterStyle';
 const Footer = () => (
     <FooterStyle>
         <footer>
-            ©BHKLab 2021
+            ©BHKLab 2023
         </footer>
     </FooterStyle>
 );

@@ -31,6 +31,7 @@ const createSvgCanvas = ({
         .attr('id', canvasId)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
+        .attr('id', 'canvas-group')
 );
 
 export default createSvgCanvas;

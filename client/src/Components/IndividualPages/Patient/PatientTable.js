@@ -4,7 +4,7 @@ import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import TableWrapper from '../../Utils/TableStyle';
 import 'react-table/react-table.css';
-import colors from '../../../styles/colors';
+import tableFilter from '../../Utils/TableFiltering';
 
 // this size is used to set the props
 const DEFAULT_DATA_SIZE = 10;
@@ -60,7 +60,7 @@ const PatientTable = (props) => {
             <ReactTable
                 data={patientData}
                 columns={columns}
-                className="-highlight"
+                className='-highlight'
                 defaultPageSize={
                     patientData.length > DEFAULT_DATA_SIZE
                         ? DEFAULT_DATA_SIZE
@@ -72,6 +72,7 @@ const PatientTable = (props) => {
                 filterable={
                     patientData.length > DEFAULT_DATA_SIZE
                 }
+                defaultFilterMethod={tableFilter}
             />
         </TableWrapper>
     );

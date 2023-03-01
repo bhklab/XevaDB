@@ -41,7 +41,7 @@ const createToolTip = (d, type, tooltip) => {
         ];
     } else if (type === 'dot') {
         tooltipData = [
-            `Time: ${d.time} days`, `Volume: ${d.volume} mm³`, `Model: ${d.model}`, `Type: ${d.exp_type}`
+            `Time: ${d.time} days`, `Volume: ${d.volume} mm³`, `Model: ${d.model}`, `Type: ${d.exp_type}`,
         ];
     }
     // append the data.
@@ -361,7 +361,7 @@ const tumorCurve = (data, plotId, minmax) => {
     svg.selectAll('.tick').select('text')
         .attr('stroke', 'none')
         .attr('font-size', '14px')
-        .style('color', `${colors['--main-font-color']}`);;
+        .style('color', `${colors['--main-font-color']}`);
 
     const graph = svg.append('g')
         .attr('id', 'curves');
@@ -458,10 +458,10 @@ const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) 
                     return `${colors['--bg-color']}`;
                 })
                 .attr('stroke-width', 2.5)
-                .on('mouseover', function (d) {
+                .on('mouseover', (d) => {
                     createToolTip(d, 'line', tooltip);
                 })
-                .on('mouseout', function () {
+                .on('mouseout', () => {
                     // remove all the divs with id tooltiptext.
                     d3.selectAll('#tooltiptext').remove();
                     // tooltip on mousever setting the div to hidden.
@@ -642,34 +642,34 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
     function createReactangle(additionalHeight, color, id, val, text, extraWidth, extraHeight) {
         let rect = '';
         switch (val) {
-            case 'volRaw':
-            case 'volNorm':
-            case 'errorBar':
-            case 'allCurves':
-                rect = svg.append('rect')
-                    .attr('x', width + 25)
-                    .attr('y', height / 2 + additionalHeight)
-                    .attr('width', 70)
-                    .attr('height', 20)
-                    .attr('fill', color)
-                    .style('opacity', 0.8)
-                    .attr('id', id);
-                break;
-            case 'volRawText':
-            case 'volNormText':
-            case 'errorBarText':
-            case 'allCurvesText':
-                rect = svg.append('text')
-                    .style('color', `${colors['--main-font-color']}`)
-                    .style('font-size', '12px')
-                    .attr('text-anchor', val === 'volRawText' ? 'middle' : 'null')
-                    .attr('id', id)
-                    .attr('x', width + extraWidth)
-                    .attr('y', height / 2 + extraHeight)
-                    .text(text);
-                break;
-            default:
-                console.log('It\'s not available');
+        case 'volRaw':
+        case 'volNorm':
+        case 'errorBar':
+        case 'allCurves':
+            rect = svg.append('rect')
+                .attr('x', width + 25)
+                .attr('y', height / 2 + additionalHeight)
+                .attr('width', 70)
+                .attr('height', 20)
+                .attr('fill', color)
+                .style('opacity', 0.8)
+                .attr('id', id);
+            break;
+        case 'volRawText':
+        case 'volNormText':
+        case 'errorBarText':
+        case 'allCurvesText':
+            rect = svg.append('text')
+                .style('color', `${colors['--main-font-color']}`)
+                .style('font-size', '12px')
+                .attr('text-anchor', val === 'volRawText' ? 'middle' : 'null')
+                .attr('id', id)
+                .attr('x', width + extraWidth)
+                .attr('y', height / 2 + extraHeight)
+                .text(text);
+            break;
+        default:
+            console.log('It\'s not available');
         }
         return rect;
     }
@@ -728,64 +728,64 @@ const volumeToggle = (data, svg, xrange, width, height, maxVolume, maxVolNorm, m
 
         // switching based on the toggle value.
         switch (val) {
-            case 'errorBar':
-            case 'errorBarText':
-                additionalHeight = 70;
-                color = 'lightgray';
-                id = val === 'errorBar' ? 'errorBar' : 'errorBarText';
-                text = val === 'errorBarText' ? 'ErrorBars' : '';
-                extraWidth = 34;
-                allToggle = 'lightgray';
-                errorToggle = `${colors.pink_header}`;
-                break;
+        case 'errorBar':
+        case 'errorBarText':
+            additionalHeight = 70;
+            color = 'lightgray';
+            id = val === 'errorBar' ? 'errorBar' : 'errorBarText';
+            text = val === 'errorBarText' ? 'ErrorBars' : '';
+            extraWidth = 34;
+            allToggle = 'lightgray';
+            errorToggle = `${colors.pink_header}`;
+            break;
 
-            case 'allCurves':
-                id = 'allCurves';
-                break;
+        case 'allCurves':
+            id = 'allCurves';
+            break;
 
-            case 'allCurvesText':
-                id = 'allCurvesText';
-                text = 'All Curves';
-                extraWidth = 32;
-                extraHeight = 64;
-                break;
+        case 'allCurvesText':
+            id = 'allCurvesText';
+            text = 'All Curves';
+            extraWidth = 32;
+            extraHeight = 64;
+            break;
 
-            case 'volRaw':
-                additionalHeight = 120;
-                id = 'volRawToggle';
-                color = `${colors['--bg-color']}`;
-                break;
+        case 'volRaw':
+            additionalHeight = 120;
+            id = 'volRawToggle';
+            color = `${colors['--bg-color']}`;
+            break;
 
-            case 'volRawText':
-                id = 'volRawText';
-                text = 'Raw';
-                extraWidth = 60;
-                extraHeight = 134;
-                break;
+        case 'volRawText':
+            id = 'volRawText';
+            text = 'Raw';
+            extraWidth = 60;
+            extraHeight = 134;
+            break;
 
-            case 'volNorm':
-                additionalHeight = 141;
-                id = 'volNormToggle';
-                color = 'lightgray';
-                minimum = minVolNorm - 1;
-                maximum = maxVolNorm + 1;
-                rawToggle = 'lightgray';
-                normToggle = `${colors['--bg-color']}`;
-                break;
+        case 'volNorm':
+            additionalHeight = 141;
+            id = 'volNormToggle';
+            color = 'lightgray';
+            minimum = minVolNorm - 1;
+            maximum = maxVolNorm + 1;
+            rawToggle = 'lightgray';
+            normToggle = `${colors['--bg-color']}`;
+            break;
 
-            case 'volNormText':
-                id = 'volNormText';
-                text = 'Normalized';
-                extraWidth = 28;
-                extraHeight = 155;
-                minimum = minVolNorm - 1;
-                maximum = maxVolNorm + 1;
-                rawToggle = 'lightgray';
-                normToggle = `${colors['--bg-color']}`;
-                break;
+        case 'volNormText':
+            id = 'volNormText';
+            text = 'Normalized';
+            extraWidth = 28;
+            extraHeight = 155;
+            minimum = minVolNorm - 1;
+            maximum = maxVolNorm + 1;
+            rawToggle = 'lightgray';
+            normToggle = `${colors['--bg-color']}`;
+            break;
 
-            default:
-                id = 'Looking for what??';
+        default:
+            id = 'Looking for what??';
         }
 
         // create rectangles/toggle bars.
@@ -890,7 +890,7 @@ const TumorGrowthCurve = (props) => {
     return (
         <>
             <ExportPng componentRef={componentRef} fileName={`DrugId = ${updateDrug(drugParam)}, PatientId = ${patientParam}`} />
-            <div id="svg-curve" ref={componentRef} />
+            <div id='svg-curve' ref={componentRef} />
             {
                 Number(datasetParam) === 7
                     ? <DoseCurve data={data} maxTime={minmax.maxTime} />

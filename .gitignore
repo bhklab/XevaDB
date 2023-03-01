@@ -18,3 +18,7 @@ data_conversion/InitialCsvFiles/rna_sequencing/
 data_conversion/FinalCsvFiles/copy_number_variation_final.csv
 data_conversion/FinalCsvFiles/mutation_final.csv
 data_conversion/FinalCsvFiles/rnasequencing_final.csv
+
+# ignore the vscode and webstorm files
+.vscode
+.idea

@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
+import styled from 'styled-components';
 import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import mRECISTObject from '../../../utils/mRECISTObject';
 import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
-import styled from 'styled-components';
 
 // default width of the single bar
 const BAR_WIDTH = 17;
@@ -26,7 +26,7 @@ const ChartStyle = styled.div`
 `;
 
 /**
- * 
+ *
  * @param {Object} data - input data object
  * @param {string} response - response type
  * @returns {Object} - transformed data object
@@ -41,29 +41,29 @@ const transformData = (data, response = 'mRECIST') => {
             const mRECISTObjectCopy = { ...mRECISTObject };
             let totalResponseCount = 0;
 
-            drug[response].forEach(responseValue => {
+            drug[response].forEach((responseValue) => {
                 if (response === 'mRECIST' && responseValue) {
                     mRECISTObjectCopy[responseValue] = mRECISTObjectCopy[responseValue] + 1;
                     totalResponseCount++;
                 }
-            })
+            });
 
-            mRECISTObjectCopy['count'] = totalResponseCount;
+            mRECISTObjectCopy.count = totalResponseCount;
             transformedData[patient] = mRECISTObjectCopy;
         }
-    })
+    });
 
     return transformedData;
 };
 
 /**
- * 
+ *
  * @param {Object} data - input data
  * @param {string} name - type corresponding to which the trace object is created
  */
 const createPlotTrace = (data, name) => {
     const xAxis = Object.keys(data);
-    const yAxis = Object.values(data).map(row => row[name]);
+    const yAxis = Object.values(data).map((row) => row[name]);
 
     return {
         x: xAxis,
@@ -71,8 +71,8 @@ const createPlotTrace = (data, name) => {
         name,
         type: 'bar',
         marker: {
-            color: mRECISTColorMapper[name]
-        }
+            color: mRECISTColorMapper[name],
+        },
     };
 };
 
@@ -83,7 +83,7 @@ const createPlotTrace = (data, name) => {
  */
 const createPlot = (data, mRECISTObject, elementWidth) => {
     // creates a trace array
-    const traceArray = Object.keys(mRECISTObject).map(key => createPlotTrace(data, key));
+    const traceArray = Object.keys(mRECISTObject).map((key) => createPlotTrace(data, key));
 
     const dataLength = Object.keys(data).length;
     const width = elementWidth > BAR_WIDTH * dataLength
@@ -94,32 +94,33 @@ const createPlot = (data, mRECISTObject, elementWidth) => {
         <Plot
             data={traceArray}
             layout={{
-                margin: { l: 50, r: 0, b: 100, t: 40 },
+                margin: {
+                    l: 50, r: 0, b: 100, t: 40,
+                },
                 autosize: true,
                 barmode: 'stack',
                 showlegend: true,
-                width: width,
+                width,
                 height: 400,
                 xaxis: {
                     type: 'category',
                     title: { text: 'Patient', standoff: 10 },
-                    tickfont: { size: 10 }
-                }
+                    tickfont: { size: 10 },
+                },
             }}
             config={{
                 responsive: true,
                 displayModeBar: false,
             }}
         />
-    )
+    );
 };
-
 
 /**
  * Component function creates the histogram chart for the individual drug page
  */
 const ResponseStackedBarChart = function ({
-    individualDrugResponseData
+    individualDrugResponseData,
 }) {
     // reference for the div wrapper.
     const ref = useRef(null);

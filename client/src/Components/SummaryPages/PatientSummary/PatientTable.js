@@ -3,7 +3,7 @@ import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import TableWrapper from '../../Utils/TableStyle';
 import 'react-table/react-table.css';
-import colors from '../../../styles/colors';
+import tableFilter from '../../Utils/TableFiltering';
 
 const PatientTable = (props) => {
     const { patientData } = props;
@@ -46,10 +46,11 @@ const PatientTable = (props) => {
             <ReactTable
                 data={patientData}
                 columns={columns}
-                className="-highlight"
+                className='-highlight'
                 defaultPageSize={10}
                 defaultSorted={[{ id: 'dataset' }]}
                 filterable
+                defaultFilterMethod={tableFilter}
             />
         </TableWrapper>
     );

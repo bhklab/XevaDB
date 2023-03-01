@@ -28,7 +28,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * Singleton utility class for Mutation View related tasks.
  *
@@ -175,7 +174,6 @@ const mutationStyleMap = {
     },
 };
 
-
 export const mutationTypeMap = {
     missense_mutation: mutationStyleMap.missense,
     mutation: mutationStyleMap.missense,
@@ -225,7 +223,6 @@ export const mutationTypeMap = {
     any: mutationStyleMap.default,
     other: mutationStyleMap.default,
 };
-
 
 /*
 Mapping btw the copy number (data) values and view values.
@@ -283,7 +280,6 @@ export const rnaMap = {
         priority: 16,
     },
 };
-
 
 export default {
     mutationTypeMap,

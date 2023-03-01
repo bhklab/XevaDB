@@ -5,10 +5,9 @@ import { Link } from 'react-router-dom';
 import TableWrapper from '../../Utils/TableStyle';
 import Spinner from '../../Utils/Spinner';
 import 'react-table/react-table.css';
-import colors from '../../../styles/colors';
 import firstAlphabetUpperCase from '../../../utils/FirstAlphabetUpperCase';
 import pubchemURL from '../../../utils/PubChemURL';
-
+import tableFilter from '../../Utils/TableFiltering';
 
 class DrugTable extends React.Component {
     constructor(props) {
@@ -27,16 +26,11 @@ class DrugTable extends React.Component {
                     data: response.data,
                     loading: false,
                 });
-            }, []);
+            });
     }
 
     render() {
         const { data, loading } = this.state;
-
-        // adding image to each of the object in array.
-        // data.forEach((val) => {
-        //     val.img = pubchem;
-        // });
 
         const columns = [
             {
@@ -73,6 +67,7 @@ class DrugTable extends React.Component {
             },
             {
                 Header: 'PubChem CID',
+                accessor: 'pubchemid',
                 Cell: (val) => {
                     const pubchemLink = String(val.original.pubchemid).split(',');
                     const { length } = pubchemLink;
@@ -93,9 +88,9 @@ class DrugTable extends React.Component {
                             link.push(
                                 <span key={row}>
                                     <a
-                                        className="hover"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                        className='hover'
+                                        target='_blank'
+                                        rel='noopener noreferrer'
                                         href={`${pubchemURL}${row}`}
                                     >
                                         {pid}
@@ -122,9 +117,10 @@ class DrugTable extends React.Component {
                         <ReactTable
                             data={data}
                             columns={columns}
-                            className="-highlight"
+                            className='-highlight'
                             defaultPageSize={10}
                             filterable
+                            defaultFilterMethod={tableFilter}
                         />
                     )
                 }

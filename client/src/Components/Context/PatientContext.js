@@ -5,8 +5,4 @@ const PatientContext = React.createContext({
     setPatients: () => { },
 });
 
-const PatientProvider = PatientContext.Provider;
-const PatientConsumer = PatientContext.Consumer;
-
-export { PatientProvider, PatientConsumer };
 export default PatientContext;

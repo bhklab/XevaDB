@@ -1,10 +1,10 @@
 import React from 'react';
+import axios from 'axios';
 import HeatMapData from '../Plots/HeatMap/HeatMapData';
 import OncoprintData from '../Plots/Oncoprint/OncoprintData';
 import Footer from '../Footer/Footer';
-import { PatientProvider } from '../Context/PatientContext';
+import PatientContext from '../Context/PatientContext';
 import GlobalStyles from '../../GlobalStyles';
-import axios from 'axios';
 import SpinnerUtil from '../Utils/Spinner';
 
 class Dataset extends React.Component {
@@ -35,30 +35,31 @@ class Dataset extends React.Component {
         };
     }
 
+    // lifecycle method to make an API request
+    componentDidMount() {
+        const datasets = axios.get('/api/v1/datasets', { headers: { Authorization: localStorage.getItem('user') } })
+            .then((datasetList) => {
+                this.setState({
+                    datasetName: this.findDatasetName(datasetList.data.datasets),
+                    loading: false,
+                });
+            });
+    }
+
     /**
-     * 
+     *
      * @param {Array} datasets - an array of the datasets
      * @returns {string} - dataset name corresponding to the dataset id
      */
     findDatasetName = (datasets) => {
         const datasetId = Number(this.state.datasetId);
-
-        return datasets.filter(dataset => dataset.id === datasetId)[0]['name'];
-    }
-
-    // lifecycle method to make an API request
-    componentDidMount() {
-        const datasets = axios.get('/api/v1/datasets', { headers: { Authorization: localStorage.getItem('user') } })
-            .then(datasets => {
-                this.setState({
-                    datasetName: this.findDatasetName(datasets.data.datasets),
-                    loading: false,
-                });
-            })
+        return datasets.filter((dataset) => dataset.id === datasetId)[0].name;
     }
 
     render() {
-        const { datasetId, globalPatients, setPatients, loading, datasetName } = this.state;
+        const {
+            datasetId, globalPatients, setPatients, loading, datasetName,
+        } = this.state;
         const providerData = { globalPatients, setPatients };
         return (
             <>
@@ -69,16 +70,20 @@ class Dataset extends React.Component {
                             ? <SpinnerUtil loading={loading} />
                             : (
                                 <>
-                                    <h1> {datasetName} </h1>
+                                    <h1>
+                                        {' '}
+                                        {datasetName}
+                                        {' '}
+                                    </h1>
                                     <div className='heatmap-oncoprint-wrapper center-component'>
-                                        <PatientProvider value={providerData}>
+                                        <PatientContext.Provider value={providerData}>
                                             <HeatMapData
                                                 datasetId={datasetId}
                                             />
                                             <OncoprintData
                                                 datasetId={datasetId}
                                             />
-                                        </PatientProvider>
+                                        </PatientContext.Provider>
                                     </div>
                                     <Footer />
                                 </>

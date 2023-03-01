@@ -1,43 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import styled from 'styled-components';
 import DonutChart from '../../Plots/DonutChart';
 import OverlayArcs from './OverlayArcs';
 import mRECISTColorMapper from '../../../utils/mRECISTColorMapper';
-import SunburstPlot from '../../Plots/SunburstPlot';
+import colors from '../../../styles/colors';
+// import SunburstPlot from '../../Plots/SunburstPlot';
+
+const NoteStyle = styled.div`
+    font-size: 0.9em;
+    font-style: italic;
+    color: ${colors.red};
+    margin: 0 0 70px 0;
+
+    span {
+        font-weight: 700;
+    }
+`;
 
 // tooltip mapper to be passed as a Prop to the donut chart
 const mapper = {
-    'Response': 'id',
-    'Models': 'value',
+    Response: 'id',
+    Models: 'value',
 };
 
 // initial mRECIST object
 const mRECISTObject = {
-    'SD': { id: 'SD', value: 0 },
-    'PD': { id: 'PD', value: 0 },
-    'PR': { id: 'PR', value: 0 },
-    'CR': { id: 'CR', value: 0 },
+    SD: { id: 'SD', value: 0 },
+    PD: { id: 'PD', value: 0 },
+    PR: { id: 'PR', value: 0 },
+    CR: { id: 'CR', value: 0 },
 };
 
 /**
- * 
- * @param {Object} data 
+ *
+ * @param {Object} data
  * @returns {Array} - an array of the transformed data
  */
 const transformData = (data, mRECISTObject) => {
     // stores the final data
-    let finalData = JSON.parse(JSON.stringify(mRECISTObject));
+    const finalData = JSON.parse(JSON.stringify(mRECISTObject));
 
     // loops through data and prepare data based on the 'mRECIST' value
-    data.forEach(element => {
-        Object.values(element).forEach(patientResponse => {
+    data.forEach((element) => {
+        Object.values(element).forEach((patientResponse) => {
             if (typeof (patientResponse) === 'object') {
-                patientResponse.mRECIST.forEach(value => {
+                patientResponse.mRECIST.forEach((value) => {
                     if (value !== 'NA') {
                         finalData[value].value += 1;
                     }
-                })
+                });
             }
-        })
+        });
     });
 
     // return the values for the object
@@ -45,19 +58,19 @@ const transformData = (data, mRECISTObject) => {
 };
 
 /**
- * 
- * @param {Object} totalResponsedata 
- * @param {Object} individualDrugResponseData 
+ *
+ * @param {Object} totalResponsedata
+ * @param {Object} individualDrugResponseData
  * @returns {Array} - array of labels, parents and values
  */
 const createSunburstPlotData = (totalResponsedata, individualDrugResponseData) => {
-    let labels = [' '];
-    let parents = [''];
-    let values = [0];
-    let colors = [];
+    const labels = [' '];
+    const parents = [''];
+    const values = [0];
+    const colors = [];
 
     // get the data from total response first
-    Object.values(totalResponsedata).forEach(response => {
+    Object.values(totalResponsedata).forEach((response) => {
         labels.push(response.id);
         parents.push(labels[0]);
         values.push(response.value);
@@ -65,7 +78,7 @@ const createSunburstPlotData = (totalResponsedata, individualDrugResponseData) =
     });
 
     // get the values from individual drug response data
-    Object.values(individualDrugResponseData).forEach(response => {
+    Object.values(individualDrugResponseData).forEach((response) => {
         if (response.value > 0) {
             labels.push(`${response.id} `);
             parents.push(response.id);
@@ -76,14 +89,12 @@ const createSunburstPlotData = (totalResponsedata, individualDrugResponseData) =
     return [labels, parents, values, colors];
 };
 
-
 // main component
 const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseData }) => {
     // transformed data
     const transformedTotalResponseData = transformData(totalResponsedata, mRECISTObject);
     const transformedIndividualDrugResponseData = transformData(individualDrugResponseData, mRECISTObject);
-    const [labels, parents, values, colors] = createSunburstPlotData(transformedTotalResponseData, transformedIndividualDrugResponseData);
-
+    // const [labels, parents, values, colors] = createSunburstPlotData(transformedTotalResponseData, transformedIndividualDrugResponseData);
 
     return (
         <>
@@ -96,9 +107,11 @@ const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseDat
                         chartId='model-response-all-drugs'
                         arcRadius={{ outerRadius: 280, innerRadius: 180 }}
                         dimensions={{ width: 500, height: 250 }}
-                        margin={{ top: 320, right: 0, bottom: 100, left: 500 }}
+                        margin={{
+                            top: 320, right: 0, bottom: 50, left: 500,
+                        }}
                         shouldDisplayLegend={false}
-                        shouldDisplayTextLabels={true}
+                        shouldDisplayTextLabels
                         opacity={0.2}
                     />
                 </div>
@@ -108,9 +121,17 @@ const ResponsePieSunburstChart = ({ totalResponsedata, individualDrugResponseDat
                         individualDrugResponseData={transformedIndividualDrugResponseData}
                         dimensions={{ width: 500, height: 250 }}
                         arcRadius={{ outerRadius: 280, innerRadius: 180 }}
-                        margin={{ top: 320, right: 0, bottom: 100, left: 500 }}
+                        margin={{
+                            top: 320, right: 0, bottom: 50, left: 500,
+                        }}
                     />
                 </div>
+                <NoteStyle>
+                    <span> Note: </span>
+                    {' '}
+                    Light colored arcs represent the model responses in the complete database,
+                    while the dark arcs represent the response model for the particular drug
+                </NoteStyle>
             </div>
             {/* <div>
                 <SunburstPlot

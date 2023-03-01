@@ -5,11 +5,12 @@ import React, { useEffect, useContext } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import { mutationTypeMap, cnaMap, rnaMap } from '../../../utils/MutationViewsUtil';
-import PatientContext, { PatientConsumer } from '../../Context/PatientContext';
+import PatientContext from '../../Context/PatientContext';
 import colors from '../../../styles/colors';
 import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import createToolTip from '../../../utils/ToolTip';
 import convertToTitleCase from '../../../utils/ConvertToTitleCase';
+import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharacters';
 
 // aberration data
 const aberration = [
@@ -59,7 +60,7 @@ const getMutationMappingObject = (data) => {
  * @param {Array} data - input data array
  * @returns {Array} - mapping of CNV data
  */
-const getCopyNunberVariationMapping = (data) => {
+const getCopyNumberVariationMapping = (data) => {
     const cnvObject = {};
     Object.values(data).forEach((obj) => {
         Object.entries(obj).forEach(([key, value]) => {
@@ -100,7 +101,7 @@ const createAlterationData = (data_mut, data_rna, data_cnv) => {
     // only if the cnv data is present.
     let rect_alterations_cnv = [];
     if (Object.keys(data_cnv).length > 0) {
-        rect_alterations_cnv = getCopyNunberVariationMapping(data_cnv);
+        rect_alterations_cnv = getCopyNumberVariationMapping(data_cnv);
     }
 
     // wild type only when cnv or mut data is available
@@ -129,17 +130,39 @@ const createAlterationData = (data_mut, data_rna, data_cnv) => {
  * @param {Object} svg - svg object.
  * @param {number} rect_height - height.
  */
-const sortingCircles = (genes, svg, rect_height) => {
-    genes.forEach((val, i) => {
-        svg
-            .append('circle')
-            .attr('cx', -12)
-            .attr('cy', i)
-            .attr('r', 6)
-            .attr('id', `circle-${val.replace(/\s/g, '').replace(/\+/g, '').replace('.', '')}`)
-            .style('fill', `${colors['--link-color']}`)
-            .attr('transform', `translate(0,${i * (rect_height) + 15 - i})`)
-            .style('visibility', 'hidden');
+const createSortingLabel = (genes, svg, rect_height, tooltip) => {
+    const sortingGroup = svg.append('g')
+        .attr('id', 'sorting-label-group');
+
+    genes.forEach((gene, i) => {
+        sortingGroup
+            .append('text')
+            .text('🔺')
+            .attr('x', -45)
+            .attr('y', (i + 0.6) * rect_height)
+            .attr('font-size', '1em')
+            .attr('id', `sorting-label-for-gene-${removeSomeSpecialCharacters(gene)}`)
+            .style('visibility', 'hidden')
+            .on('mouseover', () => {
+                const tooltipDiv = tooltip
+                    .style('visibility', 'visible')
+                    .style('left', `${d3.event.pageX - 100}px`)
+                    .style('top', `${d3.event.pageY + 15}px`);
+
+                // add text to tooltip
+                tooltipDiv
+                    .append('text')
+                    .attr('id', 'tooltip-biomarker')
+                    .text('Click to sort');
+            })
+            .on('mouseout', () => {
+                // hide the tooltip
+                tooltip
+                    .style('visibility', 'hidden');
+
+                // remove the biomarker tooltip data
+                d3.select('#tooltip-biomarker').remove();
+            });
     });
 };
 
@@ -149,57 +172,55 @@ const createGeneYAxis = (
 ) => {
     // geneNames
     const geneNames = skeleton.append('g')
-        .attr('id', 'gene_names');
+        .attr('id', 'gene-axis-group');
 
-    // gene names on the y axis
+    // gene names on the y-axis
     for (let i = 0; i < genes.length; i++) {
         geneNames.append('text')
             .attr('class', genes[i])
-            .attr('dx', -45)
+            .attr('x', -20)
             .style('text-anchor', 'end')
             .style('font-size', '11px')
-            .attr('dy', i * (rect_height) + rect_width)
-            .attr('font-weight', '550')
+            .attr('y', i * (rect_height) + rect_width)
+            .attr('font-weight', '500')
             .attr('fill', `${colors['--main-font-color']}`)
             .text(genes[i])
             .on('mouseover', () => {
-                // tooltip on mousever setting the div to visible.
-                d3.select('#oncoprint')
-                    .append('div')
-                    .style('position', 'absolute')
-                    .style('border', 'solid')
-                    .style('visibility', 'visible')
-                    .style('border-width', '1px')
-                    .style('border-radius', '5px')
-                    .style('padding', '5px')
-                    .style('left', `${d3.event.pageX - 100}px`)
-                    .style('top', `${d3.event.pageY + 15}px`)
-                    .attr('id', 'tooltiptextgene')
-                    .style('color', `${colors.black}`)
-                    .style('background-color', `${colors.white}`)
-                    .text('Click to Sort');
-
                 d3.selectAll(`.oprint-hlight-${genes[i]}`)
                     .style('opacity', 0.2);
+
+                // remove the biomarker and sorting labels
+                // that are already selected (selected class!)
+                d3.selectAll('text[id*="sorting-label"][class="selected"]')
+                    .style('visibility', 'hidden')
+                    .classed('selected', false);
+
+                d3.selectAll('[id*="biomarker-label"][class="selected"]')
+                    .style('visibility', 'hidden')
+                    .classed('selected', false);
+
+                // transforms the drug label group
+                d3.select('#gene-axis-group')
+                    .attr('transform', 'translate(-30, 0)');
+
+                // change the visibility for the corresponding
+                // biomarker and sorting label to visible.
+                d3.select(`#biomarker-label-for-gene-${removeSomeSpecialCharacters(genes[i])}`)
+                    .style('visibility', 'visible')
+                    .classed('selected', true);
+
+                d3.select(`#sorting-label-for-gene-${removeSomeSpecialCharacters(genes[i])}`)
+                    .style('visibility', 'visible')
+                    .classed('selected', true);
             })
             .on('mouseout', () => {
-                // tooltip on mousever setting the div to hidden.
-                tooltip
-                    .style('visibility', 'hidden');
-                // remove all the divs with id tooltiptext.
-                d3.select('#tooltiptextgene').remove();
                 // for highlight.
                 d3.selectAll(`.oprint-hlight-${genes[i]}`)
                     .style('opacity', 0);
             })
             .on('click', () => {
-                // tooltip on mousever setting the div to hidden.
-                tooltip
-                    .style('visibility', 'hidden');
-                // remove all the divs with id tooltiptext.
-                d3.select('#tooltiptextgene').remove();
                 // ranking oncoprint.
-                rankOncoprint(genes[i], [data_mut, data_cnv, data_rna], props, context);
+                rankOncoprint(genes[i], [data_mut, data_cnv, data_rna], props, context); // TODO: Move it to the sorting label.
             });
     }
 };
@@ -212,19 +233,23 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
     biomarkerImage.selectAll('div')
         .data(genes)
         .join('a')
-        .attr('xlink:href', (d) => (drugs ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}` : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`))
+        .attr('xlink:href', (d) => (
+            drugs
+                ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}`
+                : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`
+        ))
         .append('text')
         .text('⭕️')
         .attr('font-size', '0.8em')
-        .attr('x', -40)
-        .attr('y', (d, i) => (i + 0.55) * rect_height)
-        .on('mouseover', (d) => {
+        .attr('x', -20)
+        .attr('y', (_, i) => (i + 0.55) * rect_height)
+        .style('visibility', 'hidden')
+        .attr('id', (d) => `biomarker-label-for-gene-${d}`)
+        .on('mouseover', () => {
             const tooltipDiv = tooltip
                 .style('visibility', 'visible')
                 .style('left', `${d3.event.pageX - 100}px`)
-                .style('top', `${d3.event.pageY + 15}px`)
-                .style('color', `${colors.black}`)
-                .style('background-color', `${colors.white}`);
+                .style('top', `${d3.event.pageY + 15}px`);
 
             // add text to tooltip
             tooltipDiv
@@ -233,7 +258,7 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
                 .text('Redirect to Biomarker Page');
         })
         .on('mouseout', () => {
-            // hide the tooltip
+        // hide the tooltip
             tooltip
                 .style('visibility', 'hidden');
 
@@ -280,6 +305,16 @@ const patientAlteration = (hmap_patients, genes_mut, genes_cnv) => {
     return patient_alterations;
 };
 
+// divide the expression data into 'highrna' or 'lowrna'
+const lowOrHighExpression = (value, threshold) => {
+    if (value > threshold) {
+        return 'Expression High';
+    }
+    if (value < -threshold) {
+        return 'Expression Low';
+    }
+};
+
 /* ****************************************** Make Oncoprint ****************************************** */
 /**
  * main function to create the oncoprint
@@ -302,7 +337,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
     const genes = [...new Set([...genes_mut, ...genes_rna, ...genes_cnv])];
     const patients = [...new Set([...patient_mut, ...patient_rna, ...patient_cnv])];
 
-    // abberation.
+    // data to plot the legends
     const rect_alterations = createAlterationData(data_mut, data_rna, data_cnv);
 
     // height and width for the SVG based on the number of genes_mut and patient/sample ids.
@@ -313,8 +348,6 @@ const makeOncoprint = (hmap_patients, props, context) => {
     // this height and width is used for setting the body.
     const height = genes.length * rect_height;
     const width = hmap_patients.length * rect_width;
-
-    console.log(height, width, rect_height, rect_width);
 
     // making tooltips
     const tooltip = createToolTip('oncoprint');
@@ -330,7 +363,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('id', 'skeleton');
 
     /** Appending Circle to the  Y-Axis */
-    sortingCircles(genes, svg, rect_height);
+    createSortingLabel(genes, svg, rect_height, tooltip);
 
     /* *  Gene Names on Y-Axis and Biomarker Image* */
     createGeneYAxis(skeleton, genes, rect_height, rect_width, tooltip, data_mut, data_cnv, data_rna, props, context);
@@ -350,9 +383,10 @@ const makeOncoprint = (hmap_patients, props, context) => {
 
     /** Coloring the rectangles based on mutation, cnv or rnaseq data * */
     // this will take four parameters and color the rectangle accordingly
-    const colorReactangles = (value, color, i, j, mutationType) => {
+    const colorRectangles = (value, color, i, j, mutationType) => {
         // setting a = 12 if value is mut
         const a = value === 'mut' ? 10 : 0;
+
         // setting the color based on value param.
         if (value !== 'empty' && value === 'mut') {
             gene_alterations[genes[i]][mutationType]++;
@@ -362,7 +396,6 @@ const makeOncoprint = (hmap_patients, props, context) => {
             patient_alterations[j][value]++;
         }
 
-        // value !== 'highrna' && value !== 'lowrna' && value! == 'amp'
         // this is for mutation data and rnaseq.
         const rect = alterations.append('rect')
             .attr('class', `alter-rect ${value}`)
@@ -372,13 +405,15 @@ const makeOncoprint = (hmap_patients, props, context) => {
             .attr('x', j * (rect_width))
             .attr('y', i * (rect_height) + 2 * (a / 2));
 
-        // setting the boder high-rna and low-rna.
-        if (value === 'highrna') {
+        // setting the border high-rna and low-rna.
+        if (value === 'Expression High') {
             rect.attr('stroke', 'red')
-                .style('opacity', 0.6);
-        } else if (value === 'lowrna') {
+                .attr('stroke-width', '2.5px')
+                .style('opacity', 0.75);
+        } else if (value === 'Expression Low') {
             rect.attr('stroke', 'blue')
-                .style('opacity', 0.6);
+                .attr('stroke-width', '2.5px')
+                .style('opacity', 0.75);
         }
     };
 
@@ -399,7 +434,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
     for (let i = 0; i < genes.length; i++) {
         for (let j = 0; j < hmap_patients.length; j++) {
             if (patients.includes(hmap_patients[j])) {
-                colorReactangles('empty', 'lightgrey', i, j);
+                colorRectangles('empty', 'lightgrey', i, j);
             } else {
                 colorNotSequenced(i, j);
             }
@@ -416,7 +451,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
                 if (!isAlteration) {
                     isAlteration = (cnvType !== 'empty');
                 }
-                colorReactangles(cnvType, cnvColor, i, j);
+                colorRectangles(cnvType, cnvColor, i, j);
             }
 
             /** Coloring the rectangles borders based on mutation data * */
@@ -431,7 +466,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
                 data_mut[genes[i]][hmap_patients[j]].split(',').forEach((el) => {
                     const { color } = mutationTypeMap[el.toLowerCase()];
                     const type = mutationTypeMap[el.toLowerCase()].mainType;
-                    colorReactangles('mut', color, i, j, type);
+                    colorRectangles('mut', color, i, j, type);
                 });
             }
         }
@@ -443,15 +478,12 @@ const makeOncoprint = (hmap_patients, props, context) => {
     for (let i = 0; i < genes.length; i++) {
         if (genes_rna.includes(genes[i])) {
             for (let j = 0; j < hmap_patients.length; j++) {
-                // only if the element is not included
-                // complete layer of lightgrey rectangles only if mutation data is not available.
-                if (Number(data_rna[genes[i]][hmap_patients[j]]) > threshold) {
-                    colorReactangles('highrna', 'none', i, j);
-                } else if (Number(data_rna[genes[i]][hmap_patients[j]]) < -threshold) {
-                    colorReactangles('lowrna', 'none', i, j);
-                }
+                const expressionValue = Number(data_rna[genes[i]][hmap_patients[j]]);
+                const updatedExpressionValue = lowOrHighExpression(expressionValue, threshold);
+
+                colorRectangles(updatedExpressionValue, 'none', i, j);
+                z++;
             }
-            z++;
         }
     }
 
@@ -490,8 +522,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
             .style('stroke', `${colors.black}`)
             .style('stroke-width', stroke_width);
 
-        // function to caculate alterations.
-        const geneAlterationReactangle = (iterator) => {
+        // function to calculate alterations.
+        const geneAlterationRectangle = (iterator) => {
             // variables.
             const i = iterator;
             let x_range = stroke_width / 2;
@@ -517,7 +549,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
 
         // calculate alterations for each row.
         for (let i = 0; i < genes.length; i++) {
-            geneAlterationReactangle(i);
+            geneAlterationRectangle(i);
         }
 
         // This will set the axis and scale.
@@ -547,6 +579,16 @@ const makeOncoprint = (hmap_patients, props, context) => {
             .select('text')
             .attr('fill', `${colors.black}`)
             .attr('stroke', 'none');
+
+        // append text to the top of the axis
+        svg.append('g')
+            .attr('id', 'gene-stacked-barplot-label-group')
+            .append('text')
+            .text('# of alterations')
+            .attr('x', width + 10)
+            .attr('y', -20)
+            .attr('font-size', '10.5px')
+            .style('fill', `${colors.red}`);
     }
 
     /** ******************************************* Horizontal Graph ******************************************* * */
@@ -570,12 +612,12 @@ const makeOncoprint = (hmap_patients, props, context) => {
         const patient_alter = svg.append('g')
             .attr('id', 'patient-alter');
 
-        const yrange_patient = d3.scaleLinear() // #TODO: scale.linear
+        const yrange_patient = d3.scaleLinear()
             .domain([0, max_height])
             .range([`${dimensions.height}`, 0]);
 
-        // function to caculate alterations.
-        const patientAlterationReactangle = (iterator) => {
+        // function to calculate alterations.
+        const patientAlterationRectangle = (iterator) => {
             // variables.
             const i = iterator;
             let y_range = 0;
@@ -604,7 +646,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
         };
 
         for (let i = 0; i < patient_alterations.length; i++) {
-            patientAlterationReactangle(i);
+            patientAlterationRectangle(i);
         }
 
         const yrange_axis = d3.scaleLinear()
@@ -725,8 +767,8 @@ const makeOncoprint = (hmap_patients, props, context) => {
 
     /** ******************************************** Tooltip for oncoprint ******************************************** */
 
-    const showToolTip = (x, y, gene, patient, mutation, cnv) => {
-        // tooltip on mousever setting the div to visible.
+    const showToolTip = (x, y, gene, patient, mutation, cnv, expression) => {
+        // tooltip on mouseover setting the div to visible.
         tooltip
             .style('visibility', 'visible');
 
@@ -734,17 +776,23 @@ const makeOncoprint = (hmap_patients, props, context) => {
         // and set color according to the ordinal scale.
         const tooltipDiv = tooltip
             .style('left', `${x + 10}px`)
-            .style('top', `${y + 10}px`)
-            .style('color', `${colors.black}`)
-            .style('background-color', `${colors.white}`);
+            .style('top', `${y + 10}px`);
 
         // tooltip data.
         const tooltipData = [
             `Gene: ${gene}`, `Patient: ${patient}`,
         ];
+
         // pushing data into the tooltipData if mutation or cnv is not empty or null.
-        if (mutation !== '0' && mutation) { tooltipData.push(`Mutation: ${mutation}`); }
-        if (cnv !== '0' && cnv) { tooltipData.push(`Copy Number Variation: ${cnv}`); }
+        if (mutation !== '0' && mutation) {
+            tooltipData.push(`Mutation: ${mutation}`);
+        }
+        if (cnv !== '0' && cnv) {
+            tooltipData.push(`Copy Number Variation: ${cnv}`);
+        }
+        if (expression !== '0' && expression) {
+            tooltipData.push(`Expression: ${expression}`);
+        }
 
         tooltipDiv.selectAll('textDiv')
             .data(tooltipData)
@@ -756,12 +804,13 @@ const makeOncoprint = (hmap_patients, props, context) => {
                 return `<b>${data[0]}</b>: ${data[1]}`;
             })
             .attr('x', `${x + 10}px`)
-            .attr('y', (d, i) => (`${y + 10 + i * 10}px`));
+            .attr('y', (d, i) => (`${y + 10 + i * 10}px`))
+            .style('font-size', '12px');
     };
 
     // hiding tooltip.
     const hideToolTip = () => {
-        // tooltip on mousever setting the div to hidden.
+        // tooltip on mouseover setting the div to hidden.
         tooltip
             .style('visibility', 'hidden');
         // remove all the divs with id tooltiptext.
@@ -781,9 +830,14 @@ const makeOncoprint = (hmap_patients, props, context) => {
                 .style('opacity', 0)
                 .on('mouseover', () => {
                     // calling showToolTip function passing pageX and pageY
-                    const mutationToolTip = (data_mut.length !== 0) && data_mut[i] !== undefined && data_mut[i][hmap_patients[j]];
-                    const cnvToolTip = (data_cnv.length !== 0) && data_cnv[i] !== undefined && data_cnv[i][hmap_patients[j]];
-                    showToolTip(d3.event.pageX, d3.event.pageY, genes[i], hmap_patients[j], mutationToolTip, cnvToolTip);
+                    const mutationToolTip = data_mut[genes[i]]?.[hmap_patients[j]];
+                    const cnvToolTip = data_cnv[genes[i]]?.[hmap_patients[j]];
+                    const expressionToolTip = lowOrHighExpression(data_rna[genes[i]]?.[hmap_patients[j]], threshold);
+
+                    showToolTip(
+                        d3.event.pageX, d3.event.pageY, genes[i], hmap_patients[j],
+                        mutationToolTip, cnvToolTip, expressionToolTip,
+                    );
 
                     // highlight
                     d3.selectAll(`.hmap-hlight-${hmap_patients[j].replace('.', '')}`)
@@ -927,10 +981,10 @@ const rankOncoprint = (gene, data, props, context) => {
         .style('visibility', 'visible');
 };
 
-/** ******************************** Oncoprint Main Component ******************************** */
 /**
- * main component
- * @param {Object} props - props object
+ * **************************************************************************************
+ * ****************************** Main Component (Oncoprint) ****************************
+ * **************************************************************************************
  */
 const Oncoprint = (props) => {
     // patient context.
@@ -943,7 +997,7 @@ const Oncoprint = (props) => {
         makeOncoprint(hmap_patients, props, context);
     }, []);
 
-    // ranking the oncopring based on the globalPatients passed from heatmap.
+    // ranking the oncoprint based on the globalPatients passed from heatmap.
     const rankOncoprintBasedOnHeatMapChanges = (value) => {
         const { globalPatients } = value;
         const { className } = props;
@@ -956,10 +1010,10 @@ const Oncoprint = (props) => {
     return (
         // eslint-disable-next-line no-return-assign
         <>
-            <div id="oncoprint" />
-            <PatientConsumer>
+            <div id='oncoprint' />
+            <PatientContext.Consumer>
                 {(value) => { rankOncoprintBasedOnHeatMapChanges(value); }}
-            </PatientConsumer>
+            </PatientContext.Consumer>
         </>
     );
 };
@@ -976,7 +1030,10 @@ Oncoprint.propTypes = {
         bottom: PropTypes.number,
         left: PropTypes.number,
     }).isRequired,
-    threshold: PropTypes.number.isRequired,
+    threshold: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]).isRequired,
     hmap_patients: PropTypes.arrayOf(PropTypes.string).isRequired,
     genes_mut: PropTypes.arrayOf(PropTypes.string).isRequired,
     genes_rna: PropTypes.arrayOf(PropTypes.string).isRequired,
