@@ -182,7 +182,7 @@ const createGeneYAxis = (
             .style('text-anchor', 'end')
             .style('font-size', '11px')
             .attr('y', i * (rect_height) + rect_width)
-            .attr('font-weight', '550')
+            .attr('font-weight', '500')
             .attr('fill', `${colors['--main-font-color']}`)
             .text(genes[i])
             .on('mouseover', () => {
@@ -201,7 +201,7 @@ const createGeneYAxis = (
 
                 // transforms the drug label group
                 d3.select('#gene-axis-group')
-                    .attr('transform', 'translate(-40, 0)');
+                    .attr('transform', 'translate(-30, 0)');
 
                 // change the visibility for the corresponding
                 // biomarker and sorting label to visible.
