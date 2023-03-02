@@ -48,10 +48,13 @@ const targetColor = {
 
 // create link to growth curve component/page
 const createGrowthCurveRedirection = (response, responseList, patient, drug, dataset) => {
+    let returnValue;
+
     if ((responseList.includes(response) && response !== 'NA') || Number(response)) {
-        return `/curve?patient=${patient}&drug=${drug}&dataset=${dataset}`;
+        returnValue = `/curve?patient=${patient}&drug=${drug}&dataset=${dataset}`;
     }
-    return '/';
+
+    return returnValue;
 };
 
 // calculates the min and max value of the response type.
@@ -137,10 +140,6 @@ const createHeatMapSkeleton = (
 
             // creates the main rectangles for the plot
             drugGroup
-                .append('a')
-                .attr('xlink:href', () => createGrowthCurveRedirection(
-                    response, Object.keys(targetColorObject), patient, drug, datasetId,
-                ))
                 .append('rect')
                 .attr('x', patientIndex * rectWidth)
                 .attr('y', drugIndex * rectHeight)
@@ -152,6 +151,10 @@ const createHeatMapSkeleton = (
             // creates the highlight to be displayed when the user
             // hovers over the drug (make the selection visible)
             drugHighlightGroup
+                .append('a')
+                .attr('xlink:href', () => createGrowthCurveRedirection(
+                    response, Object.keys(targetColorObject), patient, drug, datasetId,
+                ))
                 .append('rect')
                 .attr('x', patientIndex * rectWidth)
                 .attr('y', drugIndex * rectHeight)

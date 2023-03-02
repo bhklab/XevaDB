@@ -256,7 +256,7 @@ const appendDatasetName = (svg, data, height) => {
         .attr('id', 'dataset-header')
         .append('text')
         .attr('font-weight', 500)
-        .attr('x', -80)
+        .attr('x', 60)
         .attr('y', -20)
         .attr('fill', `${colors['--main-font-color']}`)
         .text('Dataset Name')
@@ -271,7 +271,7 @@ const appendDatasetName = (svg, data, height) => {
             .append('text')
             .attr('id', `dataset-${element.dataset.name}`)
             .attr('font-weight', 200)
-            .attr('x', -80)
+            .attr('x', 60)
             .attr('y', ((i + 1) * height) / (data.length + ADDITIONAL))
             .attr('fill', `${colors['--main-font-color']}`)
             .text(`${element.dataset.name}`)
@@ -477,7 +477,7 @@ const createForestPlot = (margin, heightInput, width, data) => {
     appendDatasetName(svg, data, height);
 
     // append metric names
-    appendMetricName(svg, data, height);
+    // appendMetricName(svg, data, height);
 
     // append estimate as text to the svg.
     appendFdrText(svg, data, height, width);
