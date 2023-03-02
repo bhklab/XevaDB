@@ -49,7 +49,7 @@ router.get('/v1/datasets/detail', verifytoken, datasets.getAllDatasetsDetailedIn
 router.get('/v1/datasets/detail/:dataset', utils.isValidDatasetId, verifytoken, datasets.getSingleDatasetDetailedInformationBasedOnDatasetId);
 // TODO: maybe not use this end point and use end point to get the data related to a single dataset.
 // TODO: rename the endpoint? or use /v1/datasets/detail/:dataset by adding drugs to that API.
-router.post('/v1/drugspatients/dataset', verifytoken, datasets.postDrugsandPatientsBasedOnDataset);
+router.post('/v1/drugspatients/dataset', verifytoken, datasets.postDrugsAndPatientsBasedOnDataset);
 router.get('/v1/datasets/stats', verifytoken, datasets.getAllDatasetStatistics);
 
 // APIs related to drugs table.

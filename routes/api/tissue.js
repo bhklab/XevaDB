@@ -4,16 +4,14 @@ const knex = require('../../db/knex1');
 const { getAllowedDatasetIds } = require('./util');
 const { getModelInformationDataQuery } = require('./model_information');
 
-
-// ************************************** Tissue Queries ***************************************************
+// **************************** Tissue Queries **************************************
 /**
  * @returns {Object} - returns a query to fetch all the tissues
  */
 const getAllTissuesQuery = () => knex.select()
     .from('tissues');
 
-
-// ************************************** Transform Functions *************************************************
+// *************************** Transform Functions ****************************************
 /**
  * @param {Object} data - input data.
  * @returns {Object} - transformed data.
@@ -64,8 +62,7 @@ const transformTissueDetail = (data) => {
     return transformedData;
 };
 
-
-// ************************************** API Endpoint Functions *************************************************
+// ********************* API Endpoint Functions *************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -82,7 +79,6 @@ const getAllTissues = (request, response) => {
             data: error,
         }));
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -111,7 +107,6 @@ const getSingleTissueDetailedInformationBasedOnTissueId = (request, response) =>
             data: error,
         }));
 };
-
 
 module.exports = {
     getAllTissues,

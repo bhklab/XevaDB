@@ -3,8 +3,7 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
 
-
-// ************************************** Drug Queries ***************************************************
+// ***************************** Drug Queries ******************************************
 // query to get the drug data
 const drugQuery = () => (
     knex.distinct('dg.drug_id')
@@ -15,8 +14,7 @@ const drugQuery = () => (
         .leftJoin('datasets as d', 'd.dataset_id', 'dd.dataset_id')
 );
 
-
-// ************************************** API Endpoint Functions *************************************************
+// **************************** API Endpoint Functions ****************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -40,9 +38,8 @@ const getAllDrugs = (request, response) => {
         }));
 };
 
-
 /**
- * 
+ *
  * @param {Object} request - request object
  * @param {Object} response - response object with authorization header
  * @returns {Object} - single drug information
@@ -66,7 +63,6 @@ const getSingleDrugInformation = (request, response) => {
             data: error,
         }));
 };
-
 
 module.exports = {
     getAllDrugs,

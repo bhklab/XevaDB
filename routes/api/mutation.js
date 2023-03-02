@@ -3,8 +3,7 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
-
-// ************************************** Mutation Queries ***************************************************
+// ************************* Mutation Queries *******************************************
 // mutation data.
 const mutationQuery = () => knex.select('genes.gene_name', 'patients.patient', 'mutation.value')
     .from('mutation')
@@ -37,8 +36,7 @@ const mutationQuery = () => knex.select('genes.gene_name', 'patients.patient', '
         'sequencing.sequencing_uid',
     );
 
-
-// ************************************** Transform Functions *************************************************
+// *************************** Transform Functions ****************************************
 // transforming the input data.
 const transformData = (input) => {
     // array to store mutation data .
@@ -60,8 +58,7 @@ const transformData = (input) => {
     return data;
 };
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// ************************** API Endpoints Functions ***********************************
 /**
  * @param {Object} request - request object.
  * @param {number} request.params.dataset - dataset id.
@@ -76,7 +73,9 @@ const getMutationDataBasedOnDataset = async (request, response) => {
         try {
             // patients.
             const patients = await patientsBasedOnDatasetIdQuery(datasetParam);
-            const patientRows = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
+            const patientRows = JSON.parse(
+                JSON.stringify(patients),
+            ).map((element) => element.patient);
 
             // grabbing the mutation data based on patients and limiting genes to 1-30.
             const mutationData = await mutationQuery().where('model_information.dataset_id', datasetParam)
@@ -105,7 +104,6 @@ const getMutationDataBasedOnDataset = async (request, response) => {
     }
 };
 
-
 /**
  * @param {Object} request - request object.
  * @param {string} request.query.genes - list of genes to query.
@@ -126,7 +124,9 @@ const getMutationDataBasedOnDatasetAndGenes = async (request, response) => {
             const genes = await geneIdsBasedOnGeneNames(geneParam.split(','));
 
             // patients and genes array.
-            const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
+            const patientsArray = JSON.parse(
+                JSON.stringify(patients),
+            ).map((element) => element.patient);
             const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
 
             // grabbing the mutation data for the genes.
@@ -156,7 +156,6 @@ const getMutationDataBasedOnDatasetAndGenes = async (request, response) => {
         });
     }
 };
-
 
 module.exports = {
     getMutationDataBasedOnDataset,

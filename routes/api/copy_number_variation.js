@@ -3,9 +3,7 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
-
-// ************************************** Copy Number Variation Queries ***************************************************
-// copy number variation query.
+// *********************** Copy Number Variation Queries ***********************************
 const copyNumberVariationQuery = () => knex
     .select('genes.gene_name', 'patients.patient', 'copy_number_variation.value')
     .from('copy_number_variation')
@@ -38,8 +36,7 @@ const copyNumberVariationQuery = () => knex
         'sequencing.sequencing_uid',
     );
 
-
-// ************************************** Transform Functions *************************************************
+// **************************** Transform Functions *************************************
 /**
  * @param {Array} input - an array of the input data.
  * @returns {Array} - an array of the transformed data.
@@ -64,8 +61,7 @@ const transformData = (input) => {
     return data;
 };
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// *************************** API Endpoints Functions ***************************************
 /**
  * @param {Object} request - request object.
  * @param {number} request.params.dataset - dataset id.
@@ -87,7 +83,9 @@ const getCopyNumberVariationDataBasedOnDataset = async (request, response) => {
                 .orderBy('sequencing.sequencing_uid');
 
             // transforming the data.
-            const transformedData = transformData(JSON.parse(JSON.stringify(copyNumberVariationData)));
+            const transformedData = transformData(
+                JSON.parse(JSON.stringify(copyNumberVariationData)),
+            );
 
             // sending the response.
             response.send(transformedData);
@@ -104,7 +102,6 @@ const getCopyNumberVariationDataBasedOnDataset = async (request, response) => {
         });
     }
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -125,7 +122,9 @@ const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) =
             const genes = await geneIdsBasedOnGeneNames(geneParam.split(','));
 
             // patients and genes array.
-            const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
+            const patientsArray = JSON.parse(
+                JSON.stringify(patients),
+            ).map((element) => element.patient);
             const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
 
             // grabbing the copy_number_variation data for the genes.
@@ -136,7 +135,9 @@ const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) =
                 .orderBy('sequencing.sequencing_uid');
 
             // transforming the data.
-            const transformedData = transformData(JSON.parse(JSON.stringify(copyNumberVariationData)));
+            const transformedData = transformData(JSON.parse(
+                JSON.stringify(copyNumberVariationData),
+            ));
             // array of all the patients belonging to a particular dataset.
             transformedData.push(patientsArray);
 
@@ -155,7 +156,6 @@ const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) =
         });
     }
 };
-
 
 module.exports = {
     getCopyNumberVariationDataBasedOnDataset,
