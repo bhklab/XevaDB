@@ -69,13 +69,11 @@ const createLineLinks = (svg, root) => (
 );
 
 // create nodes.
-const createNodes = (svg, nodes) => {
-    return svg.append('g')
-        .selectAll('g')
-        .data(nodes)
-        .join('g')
-        .attr('transform', (d) => `translate(0,${d.index * nodeSize})`)
-};
+const createNodes = (svg, nodes) => svg.append('g')
+    .selectAll('g')
+    .data(nodes)
+    .join('g')
+    .attr('transform', (d) => `translate(0,${d.index * nodeSize})`);
 
 // create circles.
 const appendCircles = (node) => {
@@ -87,20 +85,20 @@ const appendCircles = (node) => {
 
 // function used by the nodes to decide on the font size based on the depth in the tree
 const getNodeFontSizeAndWeight = (node, isFontWeight = false) => {
-    const depth = node.depth;
+    const { depth } = node;
     switch (depth) {
-        case 0:
-            return isFontWeight ? '700' : '19px';
-            break;
-        case 1:
-            return isFontWeight ? '600' : '17px';
-            break;
-        case 2:
-            return isFontWeight ? '500' : '15px';
-            break;
-        case 3:
-            return isFontWeight ? '500' : '13px';
-            break;
+    case 0:
+        return isFontWeight ? '700' : '19px';
+        break;
+    case 1:
+        return isFontWeight ? '600' : '17px';
+        break;
+    case 2:
+        return isFontWeight ? '500' : '15px';
+        break;
+    case 3:
+        return isFontWeight ? '500' : '13px';
+        break;
     }
 };
 
@@ -112,7 +110,7 @@ const appendText = (node) => {
         .text((d) => d.data.name)
         .attr('font-size', (d) => getNodeFontSizeAndWeight(d))
         .attr('font-weight', (d) => getNodeFontSizeAndWeight(d, true))
-        .attr('fill', (d) => d.depth === 3 ? `${colors['--bg-color']}` : `${colors['--main-font-color']}`);
+        .attr('fill', (d) => (d.depth === 3 ? `${colors['--bg-color']}` : `${colors['--main-font-color']}`));
 
     node.append('title')
         .text((d) => d.ancestors().reverse().map((d) => d.data.name).join('/'))
@@ -122,7 +120,9 @@ const appendText = (node) => {
 // appends the text which displays the count for the children at the lowest level of the tree
 const appendDataCount = (svg, root, node) => {
     columns.forEach((data) => {
-        const { label, value, format, x } = data;
+        const {
+            label, value, format, x,
+        } = data;
         svg.append('text')
             .attr('dy', '0.32em')
             .attr('y', -nodeSize)
@@ -144,7 +144,7 @@ const appendDataCount = (svg, root, node) => {
 };
 
 // main function that creates the indented tree.
-const createIndetedTree = (margin, dimensions, data) => {
+const createIndentedTree = (margin, dimensions, data) => {
     // creating the root.
     const root = createRoot(data);
     // nodes.
@@ -163,8 +163,8 @@ const createIndetedTree = (margin, dimensions, data) => {
     appendDataCount(svg, root, node);
 };
 
-// Intented Tree component.
-const IdentedTree = (props) => {
+// Indented Tree component.
+const IndentedTree = (props) => {
     // margin and dimensions.
     const margin = props.margin || defaultMargin;
     const dimensions = props.dimensions || defaultDimensions;
@@ -173,17 +173,17 @@ const IdentedTree = (props) => {
     // create the tree diagram.
     useEffect(() => {
         // creates the tree diagram.
-        createIndetedTree(margin, dimensions, data);
+        createIndentedTree(margin, dimensions, data);
     });
 
     return (
         <div className='component-wrapper center-component'>
-            <div id="indentedtree" />
+            <div id='indentedtree' />
         </div>
     );
 };
 
-IdentedTree.propTypes = {
+IndentedTree.propTypes = {
     margin: PropTypes.shape({
         top: PropTypes.number,
         right: PropTypes.number,
@@ -196,4 +196,4 @@ IdentedTree.propTypes = {
     }),
 };
 
-export default IdentedTree;
+export default IndentedTree;

@@ -3,7 +3,6 @@
 /* eslint-disable func-names */
 const jwt = require('jsonwebtoken');
 
-
 /**
  * @param {Object} request - request object with authorization header.
  * @param {Object} response - response object.

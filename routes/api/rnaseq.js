@@ -3,8 +3,7 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
-
-// ************************************** RNASeq Queries ***************************************************
+// ******************************* RNASeq Queries *****************************************
 // rna sequencing data.
 const rnaSeqQuery = () => knex.select('genes.gene_name', 'patients.patient', 'rna_sequencing.value')
     .from('rna_sequencing')
@@ -37,8 +36,7 @@ const rnaSeqQuery = () => knex.select('genes.gene_name', 'patients.patient', 'rn
         'sequencing.sequencing_uid',
     );
 
-
-// ************************************** Transform Functions *************************************************
+// ****************************** Transform Functions ****************************************
 // transforming the input data.
 const transformData = (input) => {
     // array to store mutation data .
@@ -60,8 +58,7 @@ const transformData = (input) => {
     return data;
 };
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// **************************** API Endpoints Functions ***************************************
 /**
  * @param {Object} request - request object.
  * @param {number} request.params.dataset - dataset id.
@@ -99,7 +96,6 @@ const getRnaSeqDataBasedOnDataset = async (request, response) => {
     }
 };
 
-
 /**
  * @param {Object} request - request object.
  * @param {string} request.query.genes - list of genes to query.
@@ -120,7 +116,9 @@ const getRnaSeqBasedOnDatasetAndGenes = async (request, response) => {
             const genes = await geneIdsBasedOnGeneNames(geneParam.split(','));
 
             // patients and genes array.
-            const patientsArray = JSON.parse(JSON.stringify(patients)).map((element) => element.patient);
+            const patientsArray = JSON.parse(
+                JSON.stringify(patients),
+            ).map((element) => element.patient);
             const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
 
             // grabbing the rna_sequencing data for the genes.
@@ -149,7 +147,6 @@ const getRnaSeqBasedOnDatasetAndGenes = async (request, response) => {
         });
     }
 };
-
 
 module.exports = {
     getRnaSeqDataBasedOnDataset,

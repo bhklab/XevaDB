@@ -2,7 +2,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-
 // VALIDATION
 const Joi = require('@hapi/joi');
 const knex = require('../../db/knex1');
@@ -11,7 +10,6 @@ const schema = Joi.object({
     username: Joi.string().min(6).required(),
     password: Joi.string().min(6).required(),
 });
-
 
 /**
  * To register a new user.
@@ -69,7 +67,6 @@ const registerUser = async (request, response) => {
         });
 };
 
-
 /**
  * Login
  * @param {Object} request - request object.
@@ -107,7 +104,6 @@ const createLogin = (request, response) => {
             checkValidPass();
         });
 };
-
 
 module.exports = {
     createLogin,

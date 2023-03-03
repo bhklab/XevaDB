@@ -22,10 +22,10 @@ exports.seed = async (knex) => {
             console.log(`${'='.repeat(20).trimEnd()}truncating rna_sequencing table!${'='.repeat(20).trimEnd()}`);
         })
         .on('query-response', (response) => {
-            console.log('trancating rna_sequencing table has been completed!', response);
+            console.log('truncating rna_sequencing table has been completed!', response);
         })
         .on('query-error', (error) => {
-            console.log(error, 'an error occured while creating rna_sequencing table!');
+            console.log(error, 'an error occurred while creating rna_sequencing table!');
         });
 
     // function to insert data into the copy number variation table.
@@ -39,7 +39,7 @@ exports.seed = async (knex) => {
                 }
             })
             .catch((error) => {
-                console.log('Error occured while inserting the data', error);
+                console.log('Error occurred while inserting the data', error);
             });
 
         // re-initialize the seeding data array.
@@ -67,7 +67,7 @@ exports.seed = async (knex) => {
                     console.log(`${'='.repeat(20).trimEnd()}Inserted ${response} rows into the rna_sequencing table!!${'='.repeat(20).trimEnd()}`);
                 })
                 .on('query-error', (error) => {
-                    console.log(error, 'an error occured while creating rna_sequencing table!');
+                    console.log(error, 'an error occurred while creating rna_sequencing table!');
                 });
         });
 };

@@ -3,13 +3,12 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { batchIdQuery } = require('./batch');
 
-
-// ************************************** Mutation Queries *********************************************************
+// ************************** Mutation Queries ************************************************
 const drugScreeningQuery = () => knex
     .select(
         'drug_screening.time', 'drug_screening.volume', 'drug_screening.volume_normal',
         'drugs.drug_name as drug', 'patients.patient as patient_id',
-        'batch_information.type', 'batches.batch', 'models.model as model_id'
+        'batch_information.type', 'batches.batch', 'models.model as model_id',
     )
     .from('drug_screening')
     .rightJoin(
@@ -43,8 +42,7 @@ const drugScreeningQuery = () => knex
         'batch_information.batch_id',
     );
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// ******************************* API Endpoints Functions ***********************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -67,38 +65,35 @@ const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
         .andWhere('patients.patient', patient);
     // .andWhere('batch_information.type', 'treatment')
 
-
     grabBatchId.then((batch) => {
         // grab the dataset id.
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
 
         // check if it verified and the dataset id is greater than 0
-        // or if it's not verified (unkown) then the dataset id should be less than 7.
+        // or if it's not verified (unknown) then the dataset id should be less than 7.
         if (isVerified(response, dataset)) {
             drugScreeningQuery()
                 .where(function () {
                     this.where('drugs.drug_name', drug)
-                        .orWhere('drugs.drug_name', 'water')
-                        .orWhere('drugs.drug_name', 'untreated')
-                        .orWhere('drugs.drug_name', 'control')
-                        .orWhere('drugs.drug_name', 'H2O');
+                        .orWhereIn('drugs.drug_name', ['water', 'untreated', 'control', 'H2O']);
                 })
                 .andWhere('patients.patient', patient)
                 .andWhere(function () {
-                    this.where('drug_screening.time', 0).orWhere('drug_screening.time', '>', 0);
+                    this
+                        .where('drug_screening.time', 0)
+                        .orWhere('drug_screening.time', '>', 0);
                 })
                 .andWhere('batches.batch_id', JSON.parse(JSON.stringify(batch))[0].batch_id)
                 .then((data) => {
                     response.send(data);
                 })
                 .catch((error) => response.status(500).json({
-                    status: 'an error has occured',
+                    status: 'an error has occurred',
                     data: error,
                 }));
         }
     });
 };
-
 
 module.exports = {
     getDrugScreeningDataBasedOnDrugAndPatient,

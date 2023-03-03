@@ -1,7 +1,7 @@
 const knex = require('../../db/knex1');
 
 
-// ************************************** Biomarker (gene_drug_tissue table) Queries ***************************************************
+// ******************* Biomarker (gene_drug_tissue table) Queries ********************
 const geneDrugTissueQuery = () => knex.select()
     .from('gene_drug_tissue')
     .join('genes', 'gene_drug_tissue.gene_id', 'genes.gene_id')
@@ -10,7 +10,7 @@ const geneDrugTissueQuery = () => knex.select()
     .join('tissues', 'gene_drug_tissue.tissue_id', 'tissues.tissue_id');
 
 
-// ************************************** Transform Functions *************************************************
+// ******************* Transform Functions *****************************
 const transformBiomarkerData = (data) => {
     return data.map((element) => ({
         id: element.id,
@@ -41,9 +41,9 @@ const transformBiomarkerData = (data) => {
     }));
 };
 
-// ************************************** API Endpoints Functions ***************************************************
+// ************************ API Endpoints Functions ***********************************
 /**
- * 
+ *
  * @param {Object} request - request object
  * @param {Object} response - response object
  */
@@ -55,7 +55,7 @@ const getBiomarkers = async (request, response) => {
     const dataType = request.query.dataType ?? '%%';
 
     try {
-        // check if the drug includes a single element 
+        // check if the drug includes a single element
         if (drug.split(',').length > 1) {
             throw new Error('Please pass a single drug as the query parameter');
         };

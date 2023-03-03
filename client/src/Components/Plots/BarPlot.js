@@ -3,13 +3,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import styled from 'styled-components';
 import colors from '../../styles/colors';
 import barPlotColors from '../../utils/ChartColors';
 
-
-// defaul parameters.
-const defaultMargin = { top: 50, right: 50, bottom: 200, left: 100 };
+// default parameters.
+const defaultMargin = {
+    top: 50, right: 50, bottom: 200, left: 100,
+};
 const defaultDimensions = { width: 850, height: 400 };
 const minBarWidth = 60;
 
@@ -34,7 +34,7 @@ const createXScale = (width, data, isScatter) => {
 
     if (!isScatter) {
         scale = scale.padding([0.3]);
-    };
+    }
 
     return scale;
 };
@@ -48,7 +48,7 @@ const createYScale = (height, max) => {
     return scale;
 };
 
-// if the bar plot y axis need text discription
+// if the bar plot y-axis need text description
 const createYScaleWithText = (height, yAxisTicks) => {
     const scale = d3.scalePoint()
         .domain(yAxisTicks)
@@ -69,13 +69,13 @@ const colorScale = (data, colors) => {
     return scale;
 };
 
-// create the x axis for the chart
+// create the x-axis for the chart
 const createXAxis = (svg, xScale, height, isScatter) => {
     const bottomAxis = d3.axisBottom()
         .scale(xScale)
         .ticks(7);
 
-    let xAxis = svg.append('g')
+    const xAxis = svg.append('g')
         .call(bottomAxis)
         .attr('transform', `translate(0,${height})`)
         .selectAll('text')
@@ -85,11 +85,11 @@ const createXAxis = (svg, xScale, height, isScatter) => {
     if (isScatter) {
         xAxis
             .attr('transform', 'translate(14,10) rotate(90)')
-            .style('text-anchor', 'start')
+            .style('text-anchor', 'start');
     } else {
         xAxis
             .attr('transform', 'translate(-10,0) rotate(-30)')
-            .style('text-anchor', 'end')
+            .style('text-anchor', 'end');
     }
 };
 
@@ -172,13 +172,14 @@ const appendXAxisLabel = (svg, height, width, bottom, label) => {
         .text(`${label}`);
 };
 
-
 // main component function for the bar plot
 const BarPlot = (props) => {
     // getting the prop data.
     const margin = props.margin || defaultMargin;
     let { data } = props;
-    const { left, right, top, bottom } = margin;
+    const {
+        left, right, top, bottom,
+    } = margin;
     const yAxisLabel = props.yLabel || '';
     const xAxisLabel = props.xLabel || '';
     const dimensions = props.dimensions || { ...defaultDimensions };
@@ -186,17 +187,16 @@ const BarPlot = (props) => {
     const { shouldAppendBarText, isScatter } = props;
 
     // update dimensions
-    const dataLength = [...new Set(data.map(el => el.id))].length;
+    const dataLength = [...new Set(data.map((el) => el.id))].length;
     if (minBarWidth * dataLength > dimensions.width) {
         dimensions.width = minBarWidth * dataLength;
-    };
+    }
     if (isScatter) {
         dimensions.width = minBarWidth / 4 * dataLength;
     }
     const { width, height } = dimensions;
 
-
-    // calulcates the max value in the data.
+    // calculates the max value in the data.
     let max = 0;
     data.forEach((val) => {
         if (val.value > max) {
@@ -216,7 +216,10 @@ const BarPlot = (props) => {
 
         // scales and axis.
         const xScale = createXScale(width, data, isScatter);
-        const yScale = yAxisTicks ? createYScaleWithText(height, yAxisTicks) : createYScale(height, max);
+        const yScale = yAxisTicks
+            ? createYScaleWithText(height, yAxisTicks)
+            : createYScale(height, max);
+
         const color = colorScale(data, barPlotColors);
 
         createXAxis(svg, xScale, height, isScatter);
@@ -225,14 +228,14 @@ const BarPlot = (props) => {
         // append text.
         if (shouldAppendBarText) {
             appendBarText(svg, data, xScale, yScale);
-        };
+        }
 
         // create bars.
         if (isScatter) {
             createCircles(svg, data, xScale, yScale, height, color);
         } else {
             createBars(svg, data, xScale, yScale, height, color);
-        };
+        }
 
         // append y-axis test/label.
         appendYAxisLabel(svg, height, left, yAxisLabel);
@@ -243,7 +246,7 @@ const BarPlot = (props) => {
 
     return (
         <div
-            id="barplot"
+            id='barplot'
         />
     );
 };

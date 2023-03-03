@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/require-default-props */
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import colors from '../../styles/colors';
@@ -44,9 +44,9 @@ const textMouseOverEvent = (data) => {
             .html((d) => {
                 const text = d.split(':');
                 return `<b>${text[0]}</b>: ${text[1]}`;
-            })
+            });
     } else if (data.height === 1) { // this is for the drug name
-        const tooltipData = 'Redirect to Growth Curve'
+        const tooltipData = 'Redirect to Growth Curve';
 
         toolTip.append('text').text(tooltipData).attr('id', 'tooltiptext');
     }
@@ -67,10 +67,10 @@ const textMouseOutEvent = () => {
 // click event handler for drug name
 const clickEventHandler = (d, history) => {
     const patient = d.parent.data.name;
-    const dataset = d.parent.data.dataset;
+    const { dataset } = d.parent.data;
     const drug = d.data.name;
     history.push(
-        `/curve?patient=${patient}&drug=${drug}&dataset=${dataset}`
+        `/curve?patient=${patient}&drug=${drug}&dataset=${dataset}`,
     );
 };
 
@@ -146,8 +146,8 @@ const appendText = (node, history) => {
     node.append('text')
         .attr('dy', '0.28em')
         .attr('x', (d) => setTextXAxis[d.depth])
-        .attr('y', (d) => d.depth === 1 ? -12 : 0)
-        .attr('text-anchor', (d) => d.depth === 0 ? 'end' : 'start')
+        .attr('y', (d) => (d.depth === 1 ? -12 : 0))
+        .attr('text-anchor', (d) => (d.depth === 0 ? 'end' : 'start'))
         .attr('font-size', '.85em')
         .text((d) => d.data.name)
         .on('mouseover', (d) => {
@@ -159,7 +159,7 @@ const appendText = (node, history) => {
         .on('click', (d) => {
             clickEventHandler(d, history);
         })
-        .attr('fill', d => d.depth === 1 ? `${colors['--link-color']}` : `${colors['--main-font-color']}`)
+        .attr('fill', (d) => (d.depth === 1 ? `${colors['--link-color']}` : `${colors['--main-font-color']}`))
         .clone(true)
         .lower();
 };
@@ -191,15 +191,17 @@ const TreeDiagram = (props) => {
     const { data } = props;
 
     // count the number of children
-    const childrenCount = data.children.reduce((previous, current, currentIndex) => {
-        return previous + current.children.length;
-    }, 0);
+    const childrenCount = data.children.reduce(
+        (previous, current, currentIndex) => previous + current.children.length, 0,
+    );
 
     // margin and dimensions.
     const childrenDistance = 35;
     const margin = props.margin || defaultMargin;
     const dimensions = props.dimensions || defaultDimensions;
-    dimensions.height = childrenCount * childrenDistance > dimensions.height ? childrenCount * childrenDistance : dimensions.height;
+    dimensions.height = childrenCount * childrenDistance > dimensions.height
+        ? childrenCount * childrenDistance
+        : dimensions.height;
 
     // create the tree diagram.
     useEffect(() => {
@@ -208,7 +210,7 @@ const TreeDiagram = (props) => {
     }, []);
 
     return (
-        <div id="treediagram" />
+        <div id='treediagram' />
     );
 };
 

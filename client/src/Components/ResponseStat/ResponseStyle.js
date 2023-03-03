@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import colors from '../../styles/colors';
 
-
 export const StyledLink = styled.div`
     width: ${(props) => props.width || '800px'};
     display: flex;
@@ -35,7 +34,6 @@ export const StyledLink = styled.div`
        opacity: 0.75;
     }
 `;
-
 
 export const StyleTable = styled.div`
     margin-bottom: 40px;

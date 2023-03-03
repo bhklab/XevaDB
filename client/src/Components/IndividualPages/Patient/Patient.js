@@ -7,7 +7,6 @@ import PatientTable from './PatientTable';
 import TreeDiagram from '../../Plots/TreeDiagram';
 import colors from '../../../styles/colors';
 
-
 // transforming the patient data.
 const transformData = (data) => {
     const { dataset, tissue } = data;
@@ -97,7 +96,7 @@ const Patient = (props) => {
     return (
         <>
             <GlobalStyles />
-            <div className="wrapper">
+            <div className='wrapper'>
                 {
                     loading ? <Spinner loading={loading} /> : (
                         <>

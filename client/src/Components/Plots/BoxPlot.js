@@ -70,7 +70,7 @@ const maxMinScale = (min, max) => d3.scaleLinear()
     .domain([min, max])
     .range([0, 1]);
 
-// scale for y axis. 0,1 mapped to height, 0.
+// scale for y-axis. 0,1 mapped to height, 0.
 const mapYScale = (height, min, max) => {
     const dataScale = maxMinScale(min, max);
 
@@ -309,7 +309,7 @@ const BoxPlot = (props) => {
             .attr('transform', 'translate(0, -180)');
 
         patientKeys.forEach((patient, i) => {
-            // append g element to svg for each patients.
+            // append g element to svg for each patient.
             const svg = appendGElementPatient(patientPlotGroup, margin, patientWidth, i, patient);
 
             const plotData = parsedPatientData[patient];

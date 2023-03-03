@@ -103,7 +103,7 @@ const createOverlayArcs = ({
 
 /**
  * OverlayArcs component creates arcs based on the input data
- * @returns {component} - returns an OverlayArcs component
+ * @returns {JSX.Element} - returns an OverlayArcs component
  */
 const OverlayArcs = ({
     totalResponseData,

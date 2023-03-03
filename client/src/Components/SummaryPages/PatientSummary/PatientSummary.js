@@ -38,14 +38,12 @@ const transformData = (data) => {
 };
 
 // transform data for BarPlot.
-const barPlotData = (data) => {
-    return data.map((element) => (
-        {
-            id: element.name,
-            value: element.patients.length,
-        }
-    ));
-};
+const barPlotData = (data) => data.map((element) => (
+    {
+        id: element.name,
+        value: element.patients.length,
+    }
+));
 
 // patient Summary Component
 const PatientSummary = () => {
@@ -80,7 +78,7 @@ const PatientSummary = () => {
                             : (
                                 <BarPlot
                                     data={barPlotData(datasetsDetailedInformation)}
-                                    shouldAppendBarText={true}
+                                    shouldAppendBarText
                                     yLabel='Number of patients'
                                     xLabel='Dataset'
                                     dimensions={{ width: 700, height: 400 }}

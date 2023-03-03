@@ -3,7 +3,6 @@ import ReactTable from 'react-table';
 import { Link } from 'react-router-dom';
 import TableWrapper from '../../Utils/TableStyle';
 import 'react-table/react-table.css';
-import colors from '../../../styles/colors';
 
 const TissueTable = ({ data }) => {
     const columns = [
@@ -44,7 +43,7 @@ const TissueTable = ({ data }) => {
             <ReactTable
                 data={data}
                 columns={columns}
-                className="-highlight"
+                className='-highlight'
                 showPagination={false}
                 defaultPageSize={data.length + 1}
             />

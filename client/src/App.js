@@ -12,13 +12,13 @@ import {
     Drug,
     DrugSummary,
     DrugResponse,
-    Footer,
-    HeatMapData,
+    // Footer,
+    // HeatMapData,
     Home,
     Login,
     Patient,
     PatientSummary,
-    OncoprintData,
+    // OncoprintData,
     SearchResult,
     StatTable,
     Tissue,
@@ -26,16 +26,16 @@ import {
     TopNav,
 } from './Components/index';
 
-const Merge = () => (
-    <>
-        <HeatMapData />
-        <OncoprintData />
-        <Footer />
-    </>
-);
+// const Merge = () => (
+//     <>
+//         <HeatMapData />
+//         <OncoprintData />
+//         <Footer />
+//     </>
+// );
 
 const App = () => {
-    // Google analytics setup.
+    // Google Analytics setup.
     useEffect(() => {
         ReactGA.initialize('UA-102362625-5');
         // To Report Page View
@@ -65,7 +65,7 @@ const App = () => {
                     <Route path='/response' exact component={DrugResponse} />
                     <Route path='/home' exact component={CounterNav} />
                     <Route path='/login' exact component={Login} />
-                    <Route path='/maps' exact component={Merge} />
+                    {/* <Route path='/maps' exact component={Merge} /> */}
                     <Route path='/patient/:id' exact component={Patient} />
                     <Route path='/patients' exact component={PatientSummary} />
                     <Route path='/search' exact component={SearchResult} />

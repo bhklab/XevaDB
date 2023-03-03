@@ -4,8 +4,7 @@ const { isVerified } = require('./util');
 const { patientsBasedOnDatasetIdQuery, getControl } = require('./helper');
 const { batchIdQuery } = require('./batch');
 
-
-// ************************************** Model Response Queries ***************************************************
+// **************************** Model Response Queries ****************************************
 /**
  * @returns {Object} - returns an object of mysql query builder to get the model response
  */
@@ -29,7 +28,6 @@ const modelResponseQuery = () => knex
     )
     .orderBy('drug_name')
     .orderBy('patient');
-
 
 /**
  * @returns {Object} - returns an object of mysql query to get model response stats
@@ -67,8 +65,7 @@ const modelResponseStatsQuery = () => knex.select()
         'models.model',
     );
 
-
-// ************************************** Transform Functions *************************************************
+// ***************************** Transform Functions ***************************************
 /**
  * @param {Object} input - model response data.
  * @returns {Array} - returns the transformed response data in array format.
@@ -84,41 +81,43 @@ const transformData = (input) => {
             data[row.drug_name] = {
                 Drug: row.drug_name,
             };
-        };
+        }
 
-        // if the data drug object doesn't have the 'patient property' then add one and assign it to an empty object
+        // if the data drug object doesn't have the 'patient property'
+        // then add one and assign it to an empty object
         if (!data[row.drug_name].hasOwnProperty(row.patient)) {
             data[row.drug_name][row.patient] = {};
-        };
+        }
 
         // checks for the response type and push the corresponding data
         if (data[row.drug_name][row.patient][row.response_type]) {
             data[row.drug_name][row.patient][row.response_type].push(row.value === '' ? 'NA' : row.value);
         } else {
             data[row.drug_name][row.patient][row.response_type] = [row.value === '' ? 'NA' : row.value];
-        };
+        }
     });
 
     // find index of the drug object that matches either untreated, water, control or H20
-    const controlIndex = Object.keys(data).findIndex(el => el.match(/(^untreated$|^water$|^control$|^h2o$)/i));
+    const controlIndex = Object.keys(data).findIndex((el) => el.match(/(^untreated$|^water$|^control$|^h2o$)/i));
 
     // final data; taking the values from data object
-    let finalData = Object.values(data);
+    const finalData = Object.values(data);
 
     // only if the control object is present at a location greater than 1
     if (controlIndex > 0 && controlIndex !== -1) {
         // gets the control data
         const controlData = Object.values(data)[controlIndex];
 
-        // remove the data at index returned by controlIndex and add controlObject at the start of the data
+        // remove the data at index returned by controlIndex
+        // and add controlObject at the start of the data
         finalData.splice(controlIndex, 1);
         finalData.unshift(controlData);
-    };
+    }
 
     return finalData;
 };
 
-// ************************************** API Endpoints Functions ***************************************************
+// ************************** API Endpoints Functions ***************************************
 /**
  * @param {Object} request - request object with dataset param.
  * @param {number} request.params.dataset - id of the dataset to be queried.
@@ -153,7 +152,6 @@ const getModelResponsePerDataset = (request, response) => {
     }
 };
 
-
 /**
  * @param {Object} request - request object with dataset param.
  * @param {number} request.params.dataset - id of the dataset to be queried.
@@ -167,7 +165,7 @@ const getModelResponse = (request, response) => {
     const drugQueryParam = request.query.drug;
     const datasetQueryParam = request.query.dataset;
     let isUserVerified = false;
-    const user = response.locals.user;
+    const { user } = response.locals;
 
     // get the model response query.
     let modelResponse = modelResponseQuery();
@@ -178,9 +176,9 @@ const getModelResponse = (request, response) => {
         // drug array from the input
         drugArray = drugQueryParam.split(',').map((value) => value.replace(/_/ig, ' + '));
 
-        // update modelresponse query if there is drug query parameter
+        // update model response query if there is drug query parameter
         modelResponse = modelResponse.whereIn('drugs.drug_name', drugArray);
-    };
+    }
 
     // get the patient array for the final data
     if (datasetQueryParam) {
@@ -194,12 +192,12 @@ const getModelResponse = (request, response) => {
     } else if (user.verified === 'verified') {
         isUserVerified = true;
         modelResponse = modelResponse.whereBetween('patients.dataset_id', [1, 8]);
-    };
+    }
 
     // push control to drug array.
     if (drugQueryParam && datasetQueryParam) {
         drugArray.push(getControl(datasetQueryParam));
-    };
+    }
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
     if (isUserVerified) {
@@ -222,7 +220,6 @@ const getModelResponse = (request, response) => {
     }
 };
 
-
 /**
  * @param {Object} request - request object with dataset param.
  * @param {string} request.params.drug - drug name.
@@ -242,12 +239,11 @@ const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
         .where('drugs.drug_name', drug)
         .andWhere('patients.patient', patient);
 
-
     getBatchId.then((batch) => {
         // grab the dataset id.
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
         // check if it verified and the dataset id is greater than 0
-        // or if it's not verified (unkown) then the dataset id should be less than 7.
+        // or if it's not verified (unknown) then the dataset id should be less than 7.
         if (isVerified(response, dataset)) {
             modelResponseStatsQuery()
                 .where('patients.patient', patient)
@@ -260,14 +256,12 @@ const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
                     response.send(data);
                 })
                 .catch((error) => response.status(500).json({
-                    status: 'an error has occured in stats route at getModelResponseStats',
+                    status: 'an error has occurred in stats route at getModelResponseStats',
                     data: error,
                 }));
         }
     });
 };
-
-
 
 module.exports = {
     getModelResponsePerDataset,

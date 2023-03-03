@@ -18,7 +18,7 @@ const StyleComponent = styled.div`
         opacity: 0.5;
         position: absolute;
         top: 35%;
-        left: 20%
+        left: 20%;
         :hover {
             opacity: 1.0;
             transform: scale(1.25)

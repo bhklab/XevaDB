@@ -5,7 +5,6 @@ import colors from '../../../styles/colors';
 import convertToTitleCase from '../../../utils/ConvertToTitleCase';
 import pubchemURL from '../../../utils/PubChemURL';
 
-
 // styles for annotation
 const AnnotationStyle = styled.div`
     box-sizing: border-box;
@@ -48,52 +47,59 @@ const AnnotationStyle = styled.div`
 
 /**
  * returns the value for table data
- * @param {string} key 
- * @param {string | number} value 
+ * @param {string} key
+ * @param {string | number} value
  */
 const createTableValue = (key, value) => {
     if (key === 'pubchemid') {
-        return <a href={`${pubchemURL}${value}`} target='_blank'> {value?.split(' ,').join(', ')} </a>
-    } else {
-        return value;
+        return (
+            <a href={`${pubchemURL}${value}`} target='_blank' rel='noreferrer'>
+                {' '}
+                {value?.split(' ,').join(', ')}
+                {' '}
+            </a>
+        );
     }
+    return value;
 };
 
 /**
- * 
- * @param {Object} data - input object 
+ *
+ * @param {Object} data - input object
  * @returns {Object} - creates the table with the input data
  */
-const createTable = (data) => {
-    return (
-        <table>
-            {
-                Object.entries(data).map(([key, value]) => (
-                    <tbody key={`${value}-${key}`}>
-                        <tr className='table-row'>
-                            <td className='key'> {convertToTitleCase(key, '_')} </td>
-                            <td className='value'> {createTableValue(key, value)} </td>
-                        </tr>
-                    </tbody>
-                ))
-            }
-        </table >
-    )
-};
+const createTable = (data) => (
+    <table>
+        {
+            Object.entries(data).map(([key, value]) => (
+                <tbody key={`${value}-${key}`}>
+                    <tr className='table-row'>
+                        <td className='key'>
+                            {' '}
+                            {convertToTitleCase(key, '_')}
+                            {' '}
+                        </td>
+                        <td className='value'>
+                            {' '}
+                            {createTableValue(key, value)}
+                            {' '}
+                        </td>
+                    </tr>
+                </tbody>
+            ))
+        }
+    </table>
+);
 
 // Annotation component
-const Annotation = ({ data }) => {
-    return (
-        <AnnotationStyle>
-            <h2> Annotations </h2>
-            {createTable(data)}
-        </AnnotationStyle>
-    )
-};
-
+const Annotation = ({ data }) => (
+    <AnnotationStyle>
+        <h2> Annotations </h2>
+        {createTable(data)}
+    </AnnotationStyle>
+);
 
 export default Annotation;
-
 
 // Annotation component propTypes
 Annotation.propTypes = {
@@ -106,5 +112,5 @@ Annotation.propTypes = {
         standard_name: PropTypes.string,
         targets: PropTypes.string,
         treatment_type: PropTypes.string,
-    })
+    }),
 };

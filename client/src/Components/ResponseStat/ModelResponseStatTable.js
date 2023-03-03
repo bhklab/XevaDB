@@ -20,7 +20,7 @@ class StatTable extends React.Component {
             tableHeader: [
                 'Type', 'Model', 'Drug',
                 'mRECIST', 'Best Average Response', 'Slope', 'AUC',
-                'Survival (Days)'
+                'Survival (Days)',
             ],
             loading: true,
         };
@@ -69,7 +69,9 @@ class StatTable extends React.Component {
         let modelValue = '';
 
         data.forEach((eachdata) => {
-            if (newData.length === 0 || drugValue !== eachdata.drug_name || modelValue !== eachdata.model) {
+            if (
+                newData.length === 0 || drugValue !== eachdata.drug_name || modelValue !== eachdata.model
+            ) {
                 newData.push({});
                 drugValue = eachdata.drug_name;
                 modelValue = eachdata.model;
@@ -103,17 +105,16 @@ class StatTable extends React.Component {
             } = eachdata;
 
             const dataRow = (
-                // style={{ backgroundColor: `${drug.match(/(^untreated$|^water$|^control$|^h2o$)/i) ? `${colors.white_red}` : `${colors.fade_blue}`}` }}
                 <tr key={index} className={`responsetable_${model.replace(/\./g, '_')}`}>
                     <td>{type}</td>
                     {
                         link
                             ? (
                                 <Tippy
-                                    content={<a style={{ color: `${colors.lightgray}` }} href={link} target="_blank" rel="noopener noreferrer">Link to the raw data</a>}
+                                    content={<a style={{ color: `${colors.lightgray}` }} href={link} target='_blank' rel='noopener noreferrer'>Link to the raw data</a>}
                                     interactive
                                     interactiveBorder={20}
-                                    placement="right"
+                                    placement='right'
                                 >
                                     <td>
                                         {model}
@@ -170,9 +171,9 @@ class StatTable extends React.Component {
                         <div>
                             <StyledLink>
                                 <h1>Model Response</h1>
-                                <CSVLink data={data} headers={csvHeader} filename="modelresponse.csv">
+                                <CSVLink data={data} headers={csvHeader} filename='modelresponse.csv'>
                                     Export Data
-                                    <img src={downloadIcon} alt="download icon!" />
+                                    <img src={downloadIcon} alt='download icon!' />
                                 </CSVLink>
                             </StyledLink>
                             <StyleTable>

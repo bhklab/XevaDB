@@ -2,8 +2,7 @@
 const knex = require('../../db/knex1');
 const { getAllowedDatasetIds } = require('./util');
 
-
-// ************************************** Model Queries ***************************************************
+// ***********************= Model Queries *********=***********************************
 /**
  * @returns {Object} - All models query
  */
@@ -11,7 +10,6 @@ const getAllModelsQuery = () => knex.select()
     .from('models as m')
     .leftJoin('patients as p', 'p.patient_id', 'm.patient_id')
     .leftJoin('datasets as d', 'd.dataset_id', 'p.dataset_id');
-
 
 /**
  * @returns {Object} - All models detailed query with patient, dataset and tissue information
@@ -22,7 +20,6 @@ const getAllModelsDetailedQuery = () => knex.select()
     .leftJoin('datasets as d', 'd.dataset_id', 'p.dataset_id')
     .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'd.dataset_id')
     .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id');
-
 
 /**
  * @returns {Object} - Query to select the model count grouped by tissue type
@@ -35,7 +32,6 @@ const getModelCountByTissueTypeQuery = () => knex.select('t.tissue_id', 't.tissu
     .leftJoin('datasets_tissues as dt', 'dt.dataset_id', 'd.dataset_id')
     .leftJoin('tissues as t', 't.tissue_id', 'dt.tissue_id')
     .groupBy('t.tissue_id');
-
 
 /**
 * @returns {Object} - Query to select the model count grouped by class names
@@ -56,53 +52,46 @@ const getModelCountByDrugClassQuery = () => knex.select('class_name')
     .groupBy('class_name')
     .orderBy('modelCount');
 
-
-
-// ************************************** Transform Functions *************************************************
+// *****************************= Transform Functions **=***************************************
 /**
- * 
+ *
  * @param {Array} data - array of data that has to be transformed
  * @returns {Array} - array of the transformed data
  */
-const transformAllModelsData = (data) => {
-    return (
-        data.map((value) => (
-            {
-                id: value.model_id,
-                name: value.model,
-            }
-        ))
-    )
-};
-
-/**
- * 
- * @param {Array} data - array of the data that has to be transformed
- * @returns {Array} - array of the 
- */
-const transformAllModelsDetailedData = (data) => {
-    return (
-        data.map((value) => ({
+const transformAllModelsData = (data) => (
+    data.map((value) => (
+        {
             id: value.model_id,
             name: value.model,
-            tissue: {
-                id: value.tissue_id,
-                name: value.tissue_name,
-            },
-            patient: {
-                id: value.patient_id,
-                name: value.patient,
-            },
-            dataset: {
-                id: value.dataset_id,
-                name: value.dataset_name,
-            },
-        }))
-    )
-};
+        }
+    ))
+);
 
+/**
+ *
+ * @param {Array} data - array of the data that has to be transformed
+ * @returns {Array} - array of the
+ */
+const transformAllModelsDetailedData = (data) => (
+    data.map((value) => ({
+        id: value.model_id,
+        name: value.model,
+        tissue: {
+            id: value.tissue_id,
+            name: value.tissue_name,
+        },
+        patient: {
+            id: value.patient_id,
+            name: value.patient,
+        },
+        dataset: {
+            id: value.dataset_id,
+            name: value.dataset_name,
+        },
+    }))
+);
 
-// ************************************** API Endpoint Functions *************************************************
+// *************************= API Endpoint Functions *******=**********************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -128,7 +117,6 @@ const getAllModels = (request, response) => {
         }));
 };
 
-
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -153,7 +141,6 @@ const getModelsDetailedInformation = function (request, response) {
             data: error,
         }));
 };
-
 
 /**
  * @param {Object} request - request object.
@@ -201,7 +188,6 @@ const getModelCountByDrugClass = (request, response) => {
             data: error,
         }));
 };
-
 
 module.exports = {
     getAllModels,

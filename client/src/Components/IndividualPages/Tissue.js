@@ -3,9 +3,8 @@ import axios from 'axios';
 import Spinner from '../Utils/Spinner';
 import GlobalStyles from '../../GlobalStyles';
 import Footer from '../Footer/Footer';
-import IdentedTree from '../Plots/IndentedTree';
+import IndentedTree from '../Plots/IndentedTree';
 import ErrorComponent from '../Utils/Error';
-
 
 // transform the data for indented tree.
 const transformIndentedTreeData = (data) => {
@@ -40,9 +39,8 @@ const transformIndentedTreeData = (data) => {
     return transformedData;
 };
 
-
 /**
- * 
+ *
  * @param {Object} props - props object
  * @returns {Component} - returns the tissue component for tissue individual page
  */
@@ -78,7 +76,7 @@ const Tissue = (props) => {
         try {
             return await axios.get(
                 `/api/v1/tissues/details/${tissueParam}`,
-                { headers: { Authorization: localStorage.getItem('user') } }
+                { headers: { Authorization: localStorage.getItem('user') } },
             );
         } catch (error) {
             throw new Error('An Error Occurred!!');
@@ -89,28 +87,31 @@ const Tissue = (props) => {
     const renderOutput = (loading, data, error) => {
         // if data is loading!
         if (loading) {
-            return <Spinner loading={loading} />
+            return <Spinner loading={loading} />;
         }
 
         // if there is an error!
         if (error) {
-            return <ErrorComponent message={error} />
+            return <ErrorComponent message={error} />;
         }
 
         // returns the data to be rendered in case it's not loading and no errors!
         return (
             <div className='component-wrapper center-component'>
-                <h1> {data.name} </h1>
-                <IdentedTree data={data} />
+                <h1>
+                    {' '}
+                    {data.name}
+                    {' '}
+                </h1>
+                <IndentedTree data={data} />
             </div>
-        )
+        );
     };
-
 
     return (
         <>
             <GlobalStyles />
-            <div className="wrapper">
+            <div className='wrapper'>
                 {
                     renderOutput(loading, tissueData, error)
                 }
@@ -119,6 +120,5 @@ const Tissue = (props) => {
         </>
     );
 };
-
 
 export default Tissue;

@@ -15,7 +15,7 @@ const SpinnerUtil = (props) => {
         <div>
             <ClipLoader
                 css={override}
-                sizeUnit="px"
+                sizeUnit='px'
                 size={70}
                 color={colors['--bg-color']}
             />

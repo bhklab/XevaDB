@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import Select from 'react-select';
 import styled from 'styled-components';
 import BarPlot from '../../Plots/BarPlot';
@@ -113,7 +112,7 @@ const ResponseScatterPlot = ({ data }) => {
     // use effect react hook
     useEffect(() => {
         // fetch data function
-        const modelResponse = fetchData();
+        fetchData();
     }, [data]);
 
     return (

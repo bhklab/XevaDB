@@ -63,7 +63,6 @@ const LogoBack = styled.div`
     }
 `;
 
-
 export {
     Form,
     SubmitStyle,

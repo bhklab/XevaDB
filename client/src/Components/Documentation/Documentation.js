@@ -2,11 +2,10 @@ import React from 'react';
 import GlobalStyles from '../../GlobalStyles';
 import Footer from '../Footer/Footer';
 
-
 const Documentation = () => (
     <div>
         <GlobalStyles />
-        <div className="wrapper">
+        <div className='wrapper'>
             <div>
                 <h1> Documentation will be added Later. </h1>
             </div>
@@ -14,6 +13,5 @@ const Documentation = () => (
         <Footer />
     </div>
 );
-
 
 export default Documentation;

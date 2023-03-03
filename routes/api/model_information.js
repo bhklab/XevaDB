@@ -3,8 +3,7 @@ const knex = require('../../db/knex1');
 const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
 
-
-// ************************************** Model Information Queries ***************************************************
+// ***************************** Model Information Queries ***********************************
 /**
  * @returns {Object} - knex query to fetch the data from model information table.
  */
@@ -16,8 +15,7 @@ const getModelInformationDataQuery = () => knex.select()
     .leftJoin('drugs as dg', 'dg.drug_id', 'mi.drug_id')
     .leftJoin('tissues as t', 't.tissue_id', 'mi.tissue_id');
 
-
-// ************************************** API Endpoints Functions ***************************************************
+// ************************* API Endpoints Functions ****************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -47,7 +45,6 @@ const getAllModelInformation = async (request, response) => {
     }
 };
 
-
 /**
  * @param {Object} request - request object.
  * @param {string} request.params.patient - patient id.
@@ -74,7 +71,6 @@ const getSingleModelInformationBasedOnModelId = (request, response) => {
             data: error,
         }));
 };
-
 
 module.exports = {
     getModelInformationDataQuery,

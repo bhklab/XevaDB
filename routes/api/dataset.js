@@ -3,7 +3,7 @@ const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
 const { drugsBasedOnDatasetIdQuery, patientsBasedOnDatasetIdQuery } = require('./helper');
 
-// ************************************** Dataset Queries ***************************************************
+// ************************ Dataset Queries ******************************************
 /**
  * @returns {Object} - knex query to get data for all datasets
  */
@@ -37,7 +37,7 @@ const datasetStatisticsQuery = () => knex
     .join('datasets as d', 'mi.dataset_id', 'd.dataset_id')
     .groupBy('mi.dataset_id');
 
-// ************************************** Transform Functions *************************************************
+// *********************** Transform Functions ***********************************************
 /**
  *
  * @param {Array} data - an array of input data
@@ -82,7 +82,7 @@ const transformDatasetDetail = (data) => {
     return transformedData;
 };
 
-// ************************************** API Endpoint Functions *************************************************
+// *************************** API Endpoint Functions **************************************
 /**
  * @param {Object} request - request object.
  * @param {Object} response - response object with authorization header.
@@ -165,7 +165,7 @@ const getSingleDatasetDetailedInformationBasedOnDatasetId = (request, response) 
  * @param {number} request.body.label - dataset id.
  * @returns {Object} - returns a list of drugs and patients based on the dataset.
  */
-const postDrugsandPatientsBasedOnDataset = (request, response) => {
+const postDrugsAndPatientsBasedOnDataset = (request, response) => {
     const { datasetId } = request.body;
 
     // allows only if the dataset value is less than 6 and user is unknown or token is verified.
@@ -180,12 +180,12 @@ const postDrugsandPatientsBasedOnDataset = (request, response) => {
                 data,
             }))
             .catch((error) => response.status(500).json({
-                status: 'Could not find data, postDrugandPatientBasedOnDataset',
+                status: 'Could not find data, postDrugAndPatientBasedOnDataset',
                 data: error,
             }));
     } else {
         response.status(500).json({
-            status: 'Could not find data, postDrugandPatientBasedOnDataset',
+            status: 'Could not find data, postDrugAndPatientBasedOnDataset',
             data: 'Bad Request',
         });
     }
@@ -218,6 +218,6 @@ module.exports = {
     getAllDatasets,
     getAllDatasetsDetailedInformation,
     getSingleDatasetDetailedInformationBasedOnDatasetId,
-    postDrugsandPatientsBasedOnDataset,
+    postDrugsAndPatientsBasedOnDataset,
     getAllDatasetStatistics,
 };
