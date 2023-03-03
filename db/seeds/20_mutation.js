@@ -22,10 +22,10 @@ exports.seed = async (knex) => {
             console.log(`${'='.repeat(20).trimEnd()}truncating mutation table!${'='.repeat(20).trimEnd()}`);
         })
         .on('query-response', (response) => {
-            console.log('trancating mutation table has been completed!', response);
+            console.log('truncating mutation table has been completed!', response);
         })
         .on('query-error', (error) => {
-            console.log(error, 'an error occured while creating mutation table!');
+            console.log(error, 'an error occurred while creating mutation table!');
         });
 
     // function to insert data into the copy number variation table.
@@ -39,7 +39,7 @@ exports.seed = async (knex) => {
                 }
             })
             .catch((error) => {
-                console.log('Error occured while inserting the data', error);
+                console.log('Error occurred while inserting the data', error);
             });
 
         // re-initialize the seeding data array.
@@ -67,7 +67,7 @@ exports.seed = async (knex) => {
                     console.log(`${'='.repeat(20).trimEnd()}Inserted ${response} rows into the mutation table!!${'='.repeat(20).trimEnd()}`);
                 })
                 .on('query-error', (error) => {
-                    console.log(error, 'an error occured while creating mutation table!');
+                    console.log(error, 'an error occurred while creating mutation table!');
                 });
         });
 };
