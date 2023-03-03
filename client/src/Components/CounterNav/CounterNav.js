@@ -31,7 +31,6 @@ class CounterNav extends React.Component {
             });
     }
 
-
     render() {
         const { types } = this.state;
 
@@ -56,7 +55,7 @@ class CounterNav extends React.Component {
                         ))
                     }
                 </CounterStyle>
-            </div >
+            </div>
         );
     }
 }

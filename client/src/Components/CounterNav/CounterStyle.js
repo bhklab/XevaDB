@@ -36,5 +36,4 @@ const CounterStyle = styled.div`
     }
 `;
 
-
 export default CounterStyle;

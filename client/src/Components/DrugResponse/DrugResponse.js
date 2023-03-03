@@ -34,16 +34,15 @@ const transformDrugsForSelection = (data) => (
 /**
  * @param {Object} datasetId - id of the dataset
  */
-const getDrugListOnDatasetId = (datasetId) => axios
-    .post(
-        '/api/v1/drugspatients/dataset',
-        { datasetId },
-        { headers: { Authorization: localStorage.getItem('user') } },
-        {
-            'Content-Type': 'application/json;charset=UTF-8',
-            Accept: 'application/json',
-        },
-    );
+const getDrugListOnDatasetId = (datasetId) => axios.post(
+    '/api/v1/drugspatients/dataset',
+    { datasetId },
+    { headers: { Authorization: localStorage.getItem('user') } },
+    {
+        'Content-Type': 'application/json;charset=UTF-8',
+        Accept: 'application/json',
+    },
+);
 
 /**
  * **************************************************************************************

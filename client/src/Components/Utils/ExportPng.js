@@ -36,9 +36,9 @@ const ExportPng = (props) => {
     const { componentRef, fileName } = props;
     return (
         <StyledButton>
-            <button onClick={() => exportComponentAsPNG(componentRef, { fileName })} type="button">
+            <button onClick={() => exportComponentAsPNG(componentRef, { fileName })} type='button'>
                 Export Graph
-                <img src={downloadIcon} alt="download icon" />
+                <img src={downloadIcon} alt='download icon' />
             </button>
         </StyledButton>
     );

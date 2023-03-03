@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import ReactTable from 'react-table';
 import TableWrapper from '../../Utils/TableStyle';
 import 'react-table/react-table.css';
-import colors from '../../../styles/colors';
 
 const DatasetTable = (props) => {
     const { data, dataLength } = props;
@@ -39,7 +38,7 @@ const DatasetTable = (props) => {
             <ReactTable
                 data={data}
                 columns={columns}
-                className="-highlight"
+                className='-highlight'
                 showPagination={false}
                 pageSize={dataLength > 0 ? dataLength + 1 : 7}
             />

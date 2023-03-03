@@ -116,20 +116,20 @@ const TissueSummary = () => {
     return (
         <div>
             <GlobalStyles />
-            <div className="wrapper">
-                <div className="component-wrapper">
+            <div className='wrapper'>
+                <div className='component-wrapper'>
                     <StyleComponent>
                         <h1 className='center-component'> Tissue Information </h1>
                         <img
                             src={HumanBody}
-                            alt="Human Body"
+                            alt='Human Body'
                             style={{ marginTop: '20px', paddingBottom: '20px' }}
                         />
                         <div>
                             <div>
                                 <img
                                     src={Breast}
-                                    alt="Breast"
+                                    alt='Breast'
                                     onMouseOver={(event) => imageMouseOverEvent(event, tissueData[0])}
                                     onFocus={(event) => imageMouseOverEvent(event, tissueData[0])}
                                     onMouseOut={() => imageMouseOutEvent()}
@@ -139,7 +139,7 @@ const TissueSummary = () => {
                             <div>
                                 <img
                                     src={Skin}
-                                    alt="Skin"
+                                    alt='Skin'
                                     onMouseOver={(event) => imageMouseOverEvent(event, tissueData[2])}
                                     onFocus={(event) => imageMouseOverEvent(event, tissueData[2])}
                                     onMouseOut={() => imageMouseOutEvent()}
@@ -149,7 +149,7 @@ const TissueSummary = () => {
                             <div>
                                 <img
                                     src={Lung}
-                                    alt="Lung"
+                                    alt='Lung'
                                     onMouseOver={(event) => imageMouseOverEvent(event, tissueData[4])}
                                     onFocus={(event) => imageMouseOverEvent(event, tissueData[4])}
                                     onMouseOut={() => imageMouseOutEvent()}
@@ -159,7 +159,7 @@ const TissueSummary = () => {
                             <div>
                                 <img
                                     src={Liver}
-                                    alt="Liver"
+                                    alt='Liver'
                                     onMouseOver={(event) => imageMouseOverEvent(event, tissueData)}
                                     onFocus={(event) => imageMouseOverEvent(event, tissueData)}
                                     onMouseOut={() => imageMouseOutEvent()}
@@ -169,7 +169,7 @@ const TissueSummary = () => {
                             <div>
                                 <img
                                     src={Pancreas}
-                                    alt="Pancreas"
+                                    alt='Pancreas'
                                     onMouseOver={(event) => imageMouseOverEvent(event, tissueData[5])}
                                     onFocus={(event) => imageMouseOverEvent(event, tissueData[5])}
                                     onMouseOut={() => imageMouseOutEvent()}
@@ -179,7 +179,7 @@ const TissueSummary = () => {
                             <div>
                                 <img
                                     src={LargeIntestine}
-                                    alt="LargeIntenstine"
+                                    alt='LargeIntenstine'
                                     onMouseOver={(event) => imageMouseOverEvent(event, tissueData[1])}
                                     onFocus={(event) => imageMouseOverEvent(event, tissueData[1])}
                                     onMouseOut={() => imageMouseOutEvent()}
@@ -187,10 +187,9 @@ const TissueSummary = () => {
                                 />
                             </div>
                         </div>
-                        {/* <h4 className='center-component'> Figure A.) Detailed Tissue Information </h4> */}
                     </StyleComponent>
                 </div>
-                <div className="component-wrapper">
+                <div className='component-wrapper'>
                     <h1> List of Tissues </h1>
                     {
                         loading
@@ -203,7 +202,7 @@ const TissueSummary = () => {
                     }
                 </div>
             </div>
-            <div id="tissue-summary-tooltip" />
+            <div id='tissue-summary-tooltip' />
             <Footer />
         </div>
     );

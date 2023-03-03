@@ -58,7 +58,7 @@ class BatchStatTable extends React.Component {
         // create the header for the table.
         const { tableHeader } = this.state;
         const header = tableHeader.map((key, index) => (
-            <Tippy content="description">
+            <Tippy content='description'>
                 <th key={index}>{key}</th>
             </Tippy>
         ));
@@ -74,9 +74,9 @@ class BatchStatTable extends React.Component {
             <div style={{ paddingTop: '100px' }}>
                 <StyledLink>
                     <h1>Batch Response</h1>
-                    <CSVLink data={data} filename="batchresponse.csv">
+                    <CSVLink data={data} filename='batchresponse.csv'>
                         Export Data
-                        <img src={downloadIcon} alt="download icon!" />
+                        <img src={downloadIcon} alt='download icon!' />
                     </CSVLink>
                 </StyledLink>
                 <StyleTable>

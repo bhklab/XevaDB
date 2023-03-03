@@ -86,7 +86,6 @@ class DensityPlot extends React.Component {
         const width = 20 - margin.left - margin.right;
         const height = 20 - margin.top - margin.bottom;
 
-
         // append the svg object to the body of the page
         const svg = d3.select('#densityplot')
             .append('svg')
@@ -136,7 +135,7 @@ class DensityPlot extends React.Component {
 
     render() {
         return (
-            <div id="densityplot" />
+            <div id='densityplot' />
         );
     }
 }

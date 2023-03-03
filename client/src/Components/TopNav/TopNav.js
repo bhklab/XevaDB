@@ -37,42 +37,42 @@ function TopNav() {
         <MainConatiner>
             <TopNavContainer>
                 <LogoNavLinksContainer>
-                    <div className="logo">
-                        <Link to="/">
-                            <img src={logo} alt="logo" />
+                    <div className='logo'>
+                        <Link to='/'>
+                            <img src={logo} alt='logo' />
                         </Link>
                     </div>
-                    <div className="nav-links-container">
-                        <div className="nav-link">
-                            <Link to="/"> Home </Link>
+                    <div className='nav-links-container'>
+                        <div className='nav-link'>
+                            <Link to='/'> Home </Link>
                         </div>
-                        <div className="nav-link">
-                            <Link to="/biomarker"> Biomarker </Link>
+                        <div className='nav-link'>
+                            <Link to='/biomarker'> Biomarker </Link>
                         </div>
-                        <div className="nav-link">
-                            <Link to="/datasets"> Datasets </Link>
+                        <div className='nav-link'>
+                            <Link to='/datasets'> Datasets </Link>
                         </div>
-                        <div className="nav-link">
-                            <Link to="/drugs"> Drugs </Link>
+                        <div className='nav-link'>
+                            <Link to='/drugs'> Drugs </Link>
                         </div>
-                        <div className="nav-link">
-                            <Link to="/response"> Response </Link>
+                        <div className='nav-link'>
+                            <Link to='/response'> Response </Link>
                         </div>
-                        <div className="nav-link">
-                            <Link to="/patients"> Patients </Link>
+                        <div className='nav-link'>
+                            <Link to='/patients'> Patients </Link>
                         </div>
-                        <div className="nav-link">
-                            <Link to="/tissues"> Tissues </Link>
+                        <div className='nav-link'>
+                            <Link to='/tissues'> Tissues </Link>
                         </div>
-                        <div className="nav-link">
-                            <Link to="/doc"> Documentation </Link>
+                        <div className='nav-link'>
+                            <Link to='/doc'> Documentation </Link>
                         </div>
                     </div>
                 </LogoNavLinksContainer>
                 <ButtonStyle>
                     <Link to={`${isLink}`}>
                         <button
-                            type="button"
+                            type='button'
                             onClick={isUserLoggedIn}
                         >
                             {isLoggedIn}

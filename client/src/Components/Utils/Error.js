@@ -15,7 +15,7 @@ const ErrorComponent = ({ message }) => {
     if (!message) {
         data = 'Page not found!!';
     }
-    // returing the data.
+    // returning the data.
     return (
         <ErrorStyle>
             {message || data}
