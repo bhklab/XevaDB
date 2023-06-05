@@ -30,9 +30,9 @@ const port = process.env.PORT || 5000;
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('/*', (req, res) => {
-    res.sendFile('index.html', { root: './client/build' });
+  res.sendFile('index.html', { root: './client/build' });
 });
 
 app.listen(port, () => {
-    console.log('Server Started');
+  console.log('Server Started');
 });
