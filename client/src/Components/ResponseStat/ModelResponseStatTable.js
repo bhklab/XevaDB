@@ -6,7 +6,7 @@ import 'tippy.js/dist/tippy.css';
 import { CSVLink } from 'react-csv';
 import { StyleTable, StyledLink } from './ResponseStyle';
 import BatchStatTable from './BatchResponseStatTable';
-import downloadIcon from '../../images/download.svg';
+import downloadIcon from '../../images/download.png';
 import colors from '../../styles/colors';
 import Spinner from '../Utils/Spinner';
 
@@ -170,10 +170,12 @@ class StatTable extends React.Component {
                         <BatchStatTable data={batchData} />
                         <div>
                             <StyledLink>
-                                <h1>Model Response</h1>
+                                <h1> Model Response </h1>
                                 <CSVLink data={data} headers={csvHeader} filename='modelresponse.csv'>
-                                    Export Data
-                                    <img src={downloadIcon} alt='download icon!' />
+                                    <div class='export-button'>
+                                        <span> Export Data </span>
+                                        <img src={downloadIcon} alt='download icon!' />
+                                    </div>
                                 </CSVLink>
                             </StyledLink>
                             <StyleTable>

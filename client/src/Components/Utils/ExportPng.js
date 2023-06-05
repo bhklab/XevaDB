@@ -2,44 +2,48 @@ import React from 'react';
 import styled from 'styled-components';
 import { exportComponentAsPNG } from 'react-component-export-image';
 import colors from '../../styles/colors';
-import downloadIcon from '../../images/download.svg';
+import downloadIcon from '../../images/download.png';
 
 const StyledButton = styled.div`
     display: inline !important;
-    // align-self: flex-end;
-    margin-top: 40px;
+    margin-top: 30px;
     
-    button {
-        font-weight: 300;
-        background-color: ${colors['--bg-color']} !important;
-        color: ${colors.white} !important;
-        padding: 10px 2px !important;
-        margin-right: 5px;
-        border-radius: 6px;
-        border: none;
-        font-size: 1em;
-        width: 150px;
+
+    .export-png {
+        font-weight: 500;
+        border: 1px solid ${colors['--bg-color']};
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        padding: 5px;
+
         :hover {
             opacity: 0.75;
             cursor: pointer;
         }
     }
-
+    
     img {
         display: inline-block;
-        height: 15px;
+        height: 25px;
         width: 30px;
     }
 `;
 
 const ExportPng = (props) => {
     const { componentRef, fileName } = props;
+    
     return (
         <StyledButton>
-            <button onClick={() => exportComponentAsPNG(componentRef, { fileName })} type='button'>
-                Export Graph
+            <div 
+                className='export-png' 
+                onClick={
+                    () => exportComponentAsPNG(componentRef, {fileName})
+                }
+            >
+                <span> Export Graph </span>
                 <img src={downloadIcon} alt='download icon' />
-            </button>
+            </div>
         </StyledButton>
     );
 };
