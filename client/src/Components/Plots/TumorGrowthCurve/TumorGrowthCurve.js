@@ -889,7 +889,10 @@ const TumorGrowthCurve = (props) => {
 
     return (
         <>
-            <ExportPng componentRef={componentRef} fileName={`DrugId = ${updateDrug(drugParam)}, PatientId = ${patientParam}`} />
+            <ExportPng 
+                componentRef={componentRef} 
+                fileName={`DrugId=${updateDrug(drugParam)}, PatientId=${patientParam}.png`} 
+            />
             <div id='svg-curve' ref={componentRef} />
             {
                 Number(datasetParam) === 7

@@ -8,6 +8,14 @@ export const StyledLink = styled.div`
     align-items: center;
     font-weight: 300;
     margin-bottom: 8px;
+
+    .export-button {
+        border: 1px solid ${colors['--bg-color']};
+        border-radius: 5px;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+    }
      
     h1 {
         font-size: 1.2em !important;
@@ -17,14 +25,14 @@ export const StyledLink = styled.div`
     }
 
     img {
-        height: 13px;
+        height: inherit;
         width: 25px;
         margin-left: 5px;
     }
 
     a:link {
-        background-color: ${colors['--bg-color']} !important;
-        color: ${colors.white} !important;
+        /* background-color: ${colors['--bg-color']} !important; */
+        color: ${colors['--bg-color']} !important;
         border-radius: 6px;
         text-decoration: none;
         font-size: 1em;

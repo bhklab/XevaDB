@@ -6,7 +6,7 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { CSVLink } from 'react-csv';
 import { StyleTable, StyledLink } from './ResponseStyle';
-import downloadIcon from '../../images/download.svg';
+import downloadIcon from '../../images/download.png';
 
 class BatchStatTable extends React.Component {
     constructor(props) {
@@ -75,8 +75,10 @@ class BatchStatTable extends React.Component {
                 <StyledLink>
                     <h1>Batch Response</h1>
                     <CSVLink data={data} filename='batchresponse.csv'>
-                        Export Data
-                        <img src={downloadIcon} alt='download icon!' />
+                        <div className='export-button'>
+                            <span> Export Data </span>
+                            <img src={downloadIcon} alt='download icon!' />
+                        </div>
                     </CSVLink>
                 </StyledLink>
                 <StyleTable>
