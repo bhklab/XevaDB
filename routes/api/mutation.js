@@ -5,27 +5,36 @@ const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./he
 
 // ************************* Mutation Queries *******************************************
 // mutation data.
-// Refactored mutationQuery to accept datasetId and geneIds parameters
-const mutationQuery = (datasetId, geneIds) => knex.select('genes.gene_name', 'patients.patient', 'mutation.value')
+const mutationQuery = () => knex.select('genes.gene_name', 'patients.patient', 'mutation.value')
     .from('mutation')
-    .rightJoin('genes', 'mutation.gene_id', 'genes.gene_id')
-    .leftJoin('modelid_moleculardata_mapping', 'mutation.sequencing_uid', 'modelid_moleculardata_mapping.sequencing_uid')
+    .rightJoin(
+        'genes',
+        'mutation.gene_id',
+        'genes.gene_id',
+    )
     .leftJoin(
-        knex.select('patient_id', knex.raw('MAX(model_id) as model_id'), 'dataset_id')
+        'modelid_moleculardata_mapping',
+        'mutation.sequencing_uid',
+        'modelid_moleculardata_mapping.sequencing_uid',
+    )
+    .leftJoin(
+        knex.select()
             .from('model_information')
-            .where('dataset_id', datasetId) // Include dataset_id in the subquery if logic permits
-            .groupBy('patient_id')
+            .groupBy('model_information.patient_id')
             .as('model_information'),
         'modelid_moleculardata_mapping.model_id',
-        'model_information.model_id'
+        'model_information.model_id',
     )
-    .leftJoin('patients', 'model_information.patient_id', 'patients.patient_id')
-    .leftJoin('sequencing', 'modelid_moleculardata_mapping.sequencing_uid', 'sequencing.sequencing_uid')
-    .where('model_information.dataset_id', datasetId)
-    .whereIn('mutation.gene_id', geneIds)
-    .orderBy('genes.gene_id')
-    .orderBy('sequencing.sequencing_uid');
-
+    .leftJoin(
+        'patients',
+        'model_information.patient_id',
+        'patients.patient_id',
+    )
+    .leftJoin(
+        'sequencing',
+        'modelid_moleculardata_mapping.sequencing_uid',
+        'sequencing.sequencing_uid',
+    );
 
 // *************************** Transform Functions ****************************************
 // transforming the input data.
@@ -114,14 +123,25 @@ const getMutationDataBasedOnDatasetAndGenes = async (request, response) => {
             const patients = await patientsBasedOnDatasetIdQuery(datasetParam);
             const genes = await geneIdsBasedOnGeneNames(geneParam.split(','));
 
-            const patientsArray = patients.map((element) => element.patient);
-            const genesArray = genes.map((val) => val.gene_id);
+            // patients and genes array.
+            const patientsArray = JSON.parse(
+                JSON.stringify(patients),
+            ).map((element) => element.patient);
+            const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
 
-            // Use dynamic parameters in mutationQuery
-            const mutationData = await mutationQuery(datasetParam, genesArray);
-            const transformedData = transformData(mutationData);
+            // grabbing the mutation data for the genes.
+            const mutationData = await mutationQuery()
+                .where('model_information.dataset_id', datasetParam)
+                .whereIn('mutation.gene_id', genesArray)
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid');
+
+            // transforming the data.
+            const transformedData = transformData(JSON.parse(JSON.stringify(mutationData)));
+            // array of all the patients belonging to a particular dataset.
             transformedData.push(patientsArray);
 
+            // sending the response.
             response.send(transformedData);
         } catch (error) {
             response.status(500).json({

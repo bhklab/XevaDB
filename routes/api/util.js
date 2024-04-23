@@ -4,7 +4,7 @@
  * @returns {boolean} - return true if verified else false.
  */
 const isVerified = (response, datasetId) => (
-    (response.locals.user === 'unknown' && datasetId < 7 && datasetId > 0)
+    (response.locals.user === 'unknown' && datasetId < 8 && datasetId > 0)
     || (response.locals.user.verified === 'verified' && datasetId > 0
         && ((response.locals.user.exp - response.locals.user.iat) === 7200))
 );
@@ -96,7 +96,7 @@ const isValidModelId = (request, response, next) => {
  * @param {string} user
  * @returns {Array} returns an array of values based the user argument.
  */
-const getAllowedDatasetIds = (user) => (user === 'unknown' ? [1, 6] : [1, 8]);
+const getAllowedDatasetIds = (user) => (user === 'unknown' ? [1, 7] : [1, 8]);
 
 module.exports = {
     isVerified,

@@ -11,6 +11,7 @@ const jwt = require('jsonwebtoken');
 module.exports = function (request, response, next) {
     // authorization token.
     const token = request.headers.authorization;
+    console.log(token)
 
     // if token is not sent the authorization fails.
     if (!token) {

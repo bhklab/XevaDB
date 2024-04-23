@@ -4,7 +4,7 @@ const { isVerified } = require('./util');
 const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
 // *********************** Copy Number Variation Queries ***********************************
-const copyNumberVariationQuery = (datasetId, geneIds) => knex
+const copyNumberVariationQuery = () => knex
     .select('genes.gene_name', 'patients.patient', 'copy_number_variation.value')
     .from('copy_number_variation')
     .rightJoin(
@@ -18,10 +18,9 @@ const copyNumberVariationQuery = (datasetId, geneIds) => knex
         'modelid_moleculardata_mapping.sequencing_uid',
     )
     .leftJoin(
-        knex.select('patient_id', knex.raw('MAX(model_id) as model_id'), 'dataset_id')
+        knex.select()
             .from('model_information')
-            .where('dataset_id', datasetId)
-            .groupBy('patient_id')
+            .groupBy('model_information.patient_id')
             .as('model_information'),
         'modelid_moleculardata_mapping.model_id',
         'model_information.model_id',
@@ -35,12 +34,7 @@ const copyNumberVariationQuery = (datasetId, geneIds) => knex
         'sequencing',
         'copy_number_variation.sequencing_uid',
         'sequencing.sequencing_uid',
-    )
-    .where('model_information.dataset_id', datasetId)
-    .whereIn('copy_number_variation.gene_id', geneIds)
-    .orderBy('genes.gene_id')
-    .orderBy('sequencing.sequencing_uid');
-
+    );
 
 // **************************** Transform Functions *************************************
 /**
@@ -75,14 +69,25 @@ const transformData = (input) => {
  * @returns {Object} - copy number variation data based on the dataset id.
  */
 const getCopyNumberVariationDataBasedOnDataset = async (request, response) => {
-    const datasetParam = request.params.dataset;
+    // dataset parameter.
+    const { params: { dataset: datasetParam } } = request;
 
+    // if verification passes.
     if (isVerified(response, datasetParam)) {
         try {
-            const geneIds = Array.from({length: 30}, (_, i) => i + 1);
+            // grabbing the copy_number_variation data based on patients and limiting genes to 1-30.
+            const copyNumberVariationData = await copyNumberVariationQuery()
+                .where('model_information.dataset_id', datasetParam)
+                .andWhereBetween('copy_number_variation.gene_id', [1, 30])
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid');
 
-            const copyNumberVariationData = await copyNumberVariationQuery(datasetParam, geneIds);
-            const transformedData = transformData(copyNumberVariationData);
+            // transforming the data.
+            const transformedData = transformData(
+                JSON.parse(JSON.stringify(copyNumberVariationData)),
+            );
+
+            // sending the response.
             response.send(transformedData);
         } catch (error) {
             response.status(500).json({
@@ -112,11 +117,31 @@ const getCopyNumberVariationBasedOnDatasetAndGenes = async (request, response) =
 
     if (isVerified(response, datasetParam)) {
         try {
+            // getting the unique list of patients and genes.
+            const patients = await patientsBasedOnDatasetIdQuery(datasetParam);
             const genes = await geneIdsBasedOnGeneNames(geneParam.split(','));
-            const genesArray = genes.map((val) => val.gene_id);
 
-            const copyNumberVariationData = await copyNumberVariationQuery(datasetParam, genesArray);
-            const transformedData = transformData(copyNumberVariationData);
+            // patients and genes array.
+            const patientsArray = JSON.parse(
+                JSON.stringify(patients),
+            ).map((element) => element.patient);
+            const genesArray = JSON.parse(JSON.stringify(genes)).map((val) => val.gene_id);
+
+            // grabbing the copy_number_variation data for the genes.
+            const copyNumberVariationData = await copyNumberVariationQuery()
+                .where('model_information.dataset_id', datasetParam)
+                .whereIn('copy_number_variation.gene_id', genesArray)
+                .orderBy('genes.gene_id')
+                .orderBy('sequencing.sequencing_uid');
+
+            // transforming the data.
+            const transformedData = transformData(JSON.parse(
+                JSON.stringify(copyNumberVariationData),
+            ));
+            // array of all the patients belonging to a particular dataset.
+            transformedData.push(patientsArray);
+
+            // sending the response.
             response.send(transformedData);
         } catch (error) {
             response.status(500).json({
