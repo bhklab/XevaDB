@@ -4,7 +4,7 @@ import GlobalStyles from '../../GlobalStyles';
 import Footer from '../Footer/Footer';
 import ForestPlot from '../Plots/ForestPlot';
 import BiomarkerSelect from './BiomarkerSelect';
-import { StyledBiomarker } from './BiomarkerStyle';
+import { StyledBiomarker, Description } from './BiomarkerStyle';
 import Spinner from '../Utils/Spinner';
 
 /**
@@ -103,6 +103,9 @@ const Biomarker = (props) => {
     function renderComponent() {
         return (
             <>
+				<Description className='description'>
+					Visualize the association of drug response metrics on selected omics data
+				</Description>
                 <BiomarkerSelect
                     geneList={geneList}
                     selectedGene={selectedGene}
