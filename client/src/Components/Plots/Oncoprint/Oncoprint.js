@@ -692,9 +692,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
     const lines = svg.append('g')
         .attr('id', 'lines')
         .attr('transform', () => 'translate(2,-200)');
-    console.log(hmap_patients);
     const temp = hmap_patients.slice(0);
-    console.log(temp);
     temp.push('');
 
     lines.selectAll('line.dashed-line')

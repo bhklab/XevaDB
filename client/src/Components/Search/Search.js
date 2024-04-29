@@ -376,7 +376,7 @@ class Search extends React.Component {
                         </div>
 
                         <div className='sample'>
-                            <a href={`${feelingLuckyRequest}`}>Test Query (PDXE Breast Cancer)</a>
+                            <a href={`${feelingLuckyRequest}`}>Try test query (PDXE Breast Cancer)</a>
                         </div>
 
                         <div className='search-button'>

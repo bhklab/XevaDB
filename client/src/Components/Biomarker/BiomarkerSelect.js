@@ -29,6 +29,22 @@ const DEFAULT_METRIC = 'AUC';
 
 // function to get the drug data
 function createSelectionArray(data) {
+	console.log(data);
+	data.sort((a, b) => {
+		// Check if strings start with integers
+		const isDigitA = /^\d/.test(a);
+		const isDigitB = /^\d/.test(b);
+	
+		// Move numbers to the bottom
+		if (isDigitA && !isDigitB) {
+			return 1;
+		} else if (!isDigitA && isDigitB) {
+			return -1;
+		} else {
+			return a.localeCompare(b); // If both are numbers or both are letters, sort alphabetically
+		}
+	});
+	console.log(data);
     return data.map((el) => ({
         value: el,
         label: el,

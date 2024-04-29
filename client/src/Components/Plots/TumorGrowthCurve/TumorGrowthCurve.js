@@ -117,7 +117,6 @@ const volumeObject = (i, oldVolume, oldTime, volume, timeUnionData) => {
     let z = i;
 	
 	if (timeUnionData){
-		console.log(timeUnionData);
 		timeUnionData.forEach((time) => {
 			if ((time === oldTime[z]) && !newVolume[time]) {
 				newVolume[time] = {};
@@ -382,9 +381,6 @@ const plotMeans = (data, svg, xrange, yrange, isNormal, isErrorBar, isPlotMean) 
 
     // calling getUnionOfTimepoints to get all the timepoints.
     const timeUnion = getUnionOfTimepoints(data);
-	console.log("=======")
-	console.log(timeUnion)
-	console.log("=======")
     let expTypes = [];
     const { batch } = data[0]; // there are no batches.
 
