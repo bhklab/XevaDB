@@ -20,7 +20,8 @@ const Description = styled.p`
 	width: 100%
 	text-align: left;
 	padding-left: 15px;
-	font-weight: 600;
+	font-weight: 400;
+	font-size: 12px;
 
 `;
 

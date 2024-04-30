@@ -103,7 +103,7 @@ const Biomarker = (props) => {
     function renderComponent() {
         return (
             <>
-				<Description className='description'>
+				<Description>
 					Visualize the association of drug response metrics on selected omics data
 				</Description>
                 <BiomarkerSelect
