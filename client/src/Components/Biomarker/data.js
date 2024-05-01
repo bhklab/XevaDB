@@ -197,7 +197,7 @@ const data = {
             },
             dataset: {
                 id: 5,
-                name: 'McGill TNBC',
+                name: 'McGill (Breast Cancer)',
             },
         },
         {
@@ -237,7 +237,7 @@ const data = {
             },
             dataset: {
                 id: 5,
-                name: 'McGill TNBC',
+                name: 'McGill (Breast Cancer)',
             },
         },
         {

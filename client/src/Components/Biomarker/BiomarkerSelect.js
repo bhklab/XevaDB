@@ -25,11 +25,10 @@ const METRICS = [
     'angle',
 ];
 
-const DEFAULT_METRIC = 'AUC';
+const DEFAULT_METRIC = 'abc';
 
 // function to get the drug data
 function createSelectionArray(data) {
-	console.log(data);
 	data.sort((a, b) => {
 		// Check if strings start with integers
 		const isDigitA = /^\d/.test(a);
@@ -44,7 +43,6 @@ function createSelectionArray(data) {
 			return a.localeCompare(b); // If both are numbers or both are letters, sort alphabetically
 		}
 	});
-	console.log(data);
     return data.map((el) => ({
         value: el,
         label: el,
@@ -122,17 +120,22 @@ const BiomarkerSelect = (props) => {
         const drug = selectedDrug.label;
         const gene = selectedGene.label;
         const dataType = selectedDataType.label;
-        const metric = selectedMetric.label;
-
+    
+        // If selectedMetric is an array, map to get all labels
+        const metricLabels = Array.isArray(selectedMetric)
+            ? selectedMetric.map((metric) => metric.label)
+            : [selectedMetric?.label || '']; // Fallback for single selection
+    
         if (drug && gene && dataType && isButtonClicked) {
             setBiomarkerDataLoadingState(true);
             getBiomarkerData(drug, gene, dataType)
                 .then((biomarkers) => {
                     if (biomarkers.data?.length > 0) {
-                        const data = metric
-                            ? getBiomarkerDataBasedOnMetric(biomarkers.data, metric)
+                        // Example logic to filter data based on multiple metrics
+                        const data = metricLabels.length
+                            ? biomarkers.data.filter((biomarker) => metricLabels.includes(biomarker.metric))
                             : biomarkers.data;
-
+    
                         setBiomarkerData(biomarkers.data);
                         setBiomarkerDataForForestPlot(data);
                         setDisplayMessage('');
@@ -144,7 +147,8 @@ const BiomarkerSelect = (props) => {
                 })
                 .catch((err) => console.log('An error occurred', err));
         }
-    }, [selectedDrug, selectedGene, selectedDataType, isButtonClicked]);
+    }, [selectedDrug, selectedGene, selectedDataType, isButtonClicked, selectedMetric]);
+    
 
     useEffect(() => {
         const metric = selectedMetric.label;
@@ -240,8 +244,10 @@ const BiomarkerSelect = (props) => {
                     styles={customStyles}
                     options={metrics}
                     value={selectedMetric}
+                    isMulti
                     onChange={(event) => {
-                        updateSelectedMetric(event);
+                        console.log(event);
+                        event ? updateSelectedMetric(event) : updateSelectedMetric({ value: DEFAULT_METRIC, label: DEFAULT_METRIC })
                         updateIsSelected({
                             ...isSelected,
                             metric: true,
