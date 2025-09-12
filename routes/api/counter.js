@@ -34,11 +34,11 @@ const getCounter = (request, response) => {
 
     // grabbing the data for the counter.
     Promise.all([
-        tissues([1, 8]),
-        drugs([1, 8]),
-        patients([1, 8]),
-        models([1, 8]),
-        datasets([1, 8]),
+        tissues([1, 9]),
+        drugs([1, 9]),
+        patients([1, 9]),
+        models([1, 9]),
+        datasets([1, 9]),
     ])
         .then((data) => response.status(200).json({
             status: 'success',

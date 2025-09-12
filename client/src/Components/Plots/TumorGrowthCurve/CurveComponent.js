@@ -55,8 +55,8 @@ class CurveComponent extends React.Component {
         for (let i = 0; i < data.length; i++) {
             batches.push(data[i].batch);
             if (data[i].batch === batchSelect) {
-                if (data[i].time === 0) {
-                    const newDatapt = {
+				if (Number(data[i].time) === 0 || Number(data[i].time) === 1 && dataFormatted.length === 0  || Number(data[i].time) === 2 && dataFormatted.length === 0) {                    
+					const newDatapt = {
                         exp_type: data[i].type,
                         batch: data[i].patient_id,
                         model: data[i].model_id,
@@ -77,7 +77,7 @@ class CurveComponent extends React.Component {
 
                     };
                     dataFormatted.push(newDatapt);
-                } else if (data[i].time <= 200) {
+                } else if (Number(data[i].time) <= 200 && dataFormatted.length > 0) {
                     dataFormatted[dataFormatted.length - 1].pdx_points[0]
                         .times.push(parseInt(data[i].time));
                     dataFormatted[dataFormatted.length - 1].pdx_points[0]

@@ -27,7 +27,7 @@ const getAllDrugs = (request, response) => {
 
     // selecting drug list based on dataset list.
     drugQuery()
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('d.dataset_id', getAllowedDatasetIds(user))
         .orderBy('dg.drug_name', 'asc')
         .then((drugs) => {
             response.send(drugs);
@@ -53,7 +53,7 @@ const getSingleDrugInformation = (request, response) => {
 
     // selecting drug list based on dataset list.
     drugQuery()
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('d.dataset_id', getAllowedDatasetIds(user))
         .where('dg.drug_id', drugParam)
         .then((drugInformation) => {
             response.send(drugInformation);

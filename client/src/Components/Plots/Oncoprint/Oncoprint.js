@@ -28,32 +28,34 @@ const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
  * @param {Array} data - data input array
  * @returns {Array} - array of objects {value: '', color: ''}
  */
-const getMutationMappingObject = (data) => {
-    // mutation array.
-    let mutations = [];
-    Object.values(data).forEach((el) => {
-        Object.entries(el).forEach(([key, value]) => {
-            if (key !== 'gene_id' && value !== '0' && value !== '') {
-                mutations.push(...value.split(','));
-            }
-        });
-    });
-    // set of the unique mutations.
-    mutations = [...new Set(mutations)];
+const normalizeMutationKey = (v) => String(v ?? '').trim().toLowerCase();
 
-    // mapping mutations to the mutationTypeMap object
-    const mutationObject = {};
-    mutations.forEach((mutation) => {
-        const mutationStyle = mutationTypeMap[mutation.toLowerCase()].style;
-        const mutationColor = mutationTypeMap[mutation.toLowerCase()].color;
-        if (!mutationObject[mutationStyle]) {
-            mutationObject[mutationStyle] = {
-                value: convertToTitleCase(mutationStyle, '_'),
-                color: mutationColor,
-            };
-        }
-    });
-    return Object.values(mutationObject);
+const getMutationMappingObject = (data) => {
+	let mutations = [];
+	Object.values(data).forEach((row) => {
+		Object.entries(row).forEach(([key, value]) => {
+		if (key !== 'gene_id' && value !== '0' && value !== '' && value != null) {
+			mutations.push(
+			...String(value).split(',').map(s => s.trim()).filter(Boolean)
+			);
+		}
+		});
+	});
+	mutations = [...new Set(mutations)];
+
+	const mutationObject = {};
+	mutations.forEach((raw) => {
+		const meta = mutationTypeMap[normalizeMutationKey(raw)] || mutationTypeMap.other; // fallback
+		const style = meta.style;
+		if (!mutationObject[style]) {
+		mutationObject[style] = {
+			value: convertToTitleCase(style, '_'),
+			color: meta.color,
+		};
+		}
+	});
+
+	return Object.values(mutationObject);
 };
 
 /**
@@ -468,10 +470,10 @@ const makeOncoprint = (hmap_patients, props, context) => {
                 isAlteration = !isAlteration ? true : isAlteration;
                 // based on the data gives different colors to the rectangle.
                 data_mut[genes[i]][hmap_patients[j]].split(',').forEach((el) => {
-                    const { color } = mutationTypeMap[el.toLowerCase()];
-                    const type = mutationTypeMap[el.toLowerCase()].mainType;
-                    colorRectangles('mut', color, i, j, type);
-                });
+					const key = String(el).trim().toLowerCase();
+					const meta = mutationTypeMap[key] || mutationTypeMap.other; // fallback
+					colorRectangles('mut', meta.color, i, j, meta.mainType);
+				});
             }
         }
     }

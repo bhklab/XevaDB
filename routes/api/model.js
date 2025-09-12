@@ -104,7 +104,7 @@ const getAllModels = (request, response) => {
 
     // select the models.
     getAllModelsQuery()
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('d.dataset_id', getAllowedDatasetIds(user))
         .orderBy('m.model_id')
         .then((data) => transformAllModelsData(data))
         .then((models) => response.status(200).json({
@@ -129,7 +129,7 @@ const getModelsDetailedInformation = function (request, response) {
 
     // query.
     getAllModelsDetailedQuery()
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('d.dataset_id', getAllowedDatasetIds(user))
         .orderBy('m.model_id')
         .then((data) => transformAllModelsDetailedData(data))
         .then((models) => response.status(200).json({
@@ -154,7 +154,7 @@ const getModelCountByTissueType = (request, response) => {
 
     // select models grouped by tissues.
     getModelCountByTissueTypeQuery()
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('d.dataset_id', getAllowedDatasetIds(user))
         .orderBy('t.tissue_id', 'asc')
         .then((tissue) => response.status(200).json({
             status: 'success',
@@ -178,7 +178,7 @@ const getModelCountByDrugClass = (request, response) => {
 
     // select the number of patients and models grouped by drug class name.
     getModelCountByDrugClassQuery()
-        .whereBetween('model_information.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('model_information.dataset_id', getAllowedDatasetIds(user))
         .then((className) => response.status(200).json({
             status: 'success',
             data: className,
