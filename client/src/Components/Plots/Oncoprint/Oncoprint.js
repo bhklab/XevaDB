@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable camelcase */
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import * as d3 from 'd3';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { mutationTypeMap, cnaMap, rnaMap } from '../../../utils/MutationViewsUtil';
 import PatientContext from '../../Context/PatientContext';
@@ -11,6 +12,8 @@ import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import createToolTip from '../../../utils/ToolTip';
 import convertToTitleCase from '../../../utils/ConvertToTitleCase';
 import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharacters';
+import { saveAs } from 'file-saver';
+import * as htmlToImage from 'html-to-image';
 
 // aberration data
 const aberration = [
@@ -21,6 +24,28 @@ const aberration = [
     { value: 'del', color: `${colors.blue}` },
     { value: 'amp', color: `${colors.red}` },
 ];
+
+const OncoprintWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const ExportWrapper = styled.div`
+
+	display: flex;
+	justify-content: center;
+	padding: 15px 0px;
+	
+	button {
+		color: ${colors.white}
+		background-color: ${colors['--bg-color']};
+		border-radius: 5px;
+		font-size: 0.8em;
+		border: 0;
+		padding: 15px 20px;
+	}
+
+`
 
 const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
 
@@ -999,6 +1024,9 @@ const Oncoprint = (props) => {
     // patients
     const { hmap_patients } = props;
 
+	// Ref for chart downloads
+	const oncoprintWrapRef = useRef(null);
+
     useEffect(() => {
         makeOncoprint(hmap_patients, props, context);
     }, []);
@@ -1013,10 +1041,36 @@ const Oncoprint = (props) => {
         }
     };
 
+	async function capture(node, filename) {
+		const dataUrl = await htmlToImage.toPng(node, {
+			cacheBust: true,
+			pixelRatio: Math.max(2, window.devicePixelRatio || 1),
+			backgroundColor: 'white',
+			skipFonts: true
+		});
+		saveAs(dataUrl, filename);
+	}
+
+	async function downloadCharts(){
+		const onco = oncoprintWrapRef.current;
+		if (onco) {
+			await capture(onco, `oncoprint-chart.png`);
+		}
+	}
+
+
+
     return (
         // eslint-disable-next-line no-return-assign
-        <>
-            <div id='oncoprint' />
+        <>  
+			<ExportWrapper>
+				<button onClick={() => downloadCharts()}>
+                    Download Oncograph
+                </button>
+            </ExportWrapper>
+			<OncoprintWrapper ref={oncoprintWrapRef}>
+            	<div id='oncoprint' />
+			</OncoprintWrapper>
             <PatientContext.Consumer>
                 {(value) => { rankOncoprintBasedOnHeatMapChanges(value); }}
             </PatientContext.Consumer>

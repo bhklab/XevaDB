@@ -5,6 +5,8 @@ import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import styled from 'styled-components';
+import * as htmlToImage from 'html-to-image';
+import { saveAs } from 'file-saver';
 import PatientContext from '../../Context/PatientContext';
 import BoxPlot from '../BoxPlot';
 import colors from '../../../styles/colors';
@@ -22,6 +24,22 @@ const HeatMapWrapper = styled.div`
         width: 150px;
         align-self: flex-end;
     }
+
+	.selector-container{
+		display: flex;
+		flex-direction: row;
+		gap: 20px;
+		justify-content: center;
+	}
+
+	button {
+		color: ${colors.white}
+		background-color: ${colors['--bg-color']};
+		border-radius: 5px;
+		font-size: 0.8em;
+		border: 0;
+		padding: 1px 15px;
+	}
 `;
 
 // wrapper id for the div that contains the heatmap
@@ -778,10 +796,36 @@ const HeatMap = (props) => {
     const patientContext = useContext(PatientContext);
     const heatmapSvgGroupRef = useRef(null);
 
+	// Ref for chart downloads
+	const heatmapWrapRef = useRef(null);
+
     // also removes boxplot if it's present
     if (!d3.select(`#boxplot`).empty()) {
         d3.select(`#boxplot`).remove();
     }
+
+	async function capture(node, filename) {
+		const dataUrl = await htmlToImage.toPng(node, {
+			cacheBust: true,
+			pixelRatio: Math.max(2, window.devicePixelRatio || 1),
+			backgroundColor: 'white',
+			skipFonts: true
+		});
+		saveAs(dataUrl, filename);
+	}
+
+	async function downloadCharts(){
+		const heat = heatmapWrapRef.current;
+		if (heat) {
+			await capture(heat, `heatmap.png`);
+		}
+
+		if (responseType !== 'mRECIST') {
+			await new Promise(r => requestAnimationFrame(r));
+			const boxSvg = document.getElementById('boxplot-svg');
+			if (boxSvg) await capture(boxSvg, `boxplot.png`);
+		}
+	}
 
     useEffect(() => {
         createHeatMap(props, responseType);
@@ -789,14 +833,20 @@ const HeatMap = (props) => {
 
     return (
         <HeatMapWrapper>
-            <Select
-                options={options}
-                styles={customStyles}
-                onChange={(d) => setResponseType(d.value)}
-                className='selection-div'
-                defaultValue={{ value: 'mRECIST', label: 'mRECIST' }}
-            />
-            <div id={WRAPPER_ID}>
+            <div className='selector-container'>
+				<button onClick={() => downloadCharts()}>
+                    Download Heatmap
+                </button>
+                <Select
+                    options={options}
+                    styles={customStyles}
+                    onChange={(d) => setResponseType(d.value)}
+                    className='selection-div'
+                    defaultValue={{ value: 'mRECIST', label: 'mRECIST' }}
+                />
+
+            </div>
+            <div id={WRAPPER_ID} ref={heatmapWrapRef}>
                 <svg id='heatmap-svg'>
                     <g id='heatmap-svg-group' ref={heatmapSvgGroupRef}> </g>
                 </svg>
