@@ -55,9 +55,9 @@ function TopNav() {
                         <div className='nav-link'>
                             <Link to='/drugs'> Drugs </Link>
                         </div>
-                        <div className='nav-link'>
+                        {/* <div className='nav-link'>
                             <Link to='/response'> Response </Link>
-                        </div>
+                        </div> */}
                         <div className='nav-link'>
                             <Link to='/patients'> Patients </Link>
                         </div>

@@ -13,7 +13,7 @@ const parserParams = {
 
 exports.seed = async (knex) => {
     let seedingData = []; // variable to store the streaming data.
-    const chunkSize = 100000;
+    const chunkSize = 300000;
     const readStream = fs.createReadStream(csvFilePath); // read stream.
 
     // truncating the copy number variation data.
@@ -33,7 +33,7 @@ exports.seed = async (knex) => {
         await knex('mutation').insert(seedingData)
             .then(() => {
                 if (i) {
-                    console.log(`Inserting next 100k rows, currently at index ${i}`);
+                    console.log(`Inserting next 300k rows, currently at index ${i}`);
                 } else {
                     console.log('Inserting last set of rows!!');
                 }
@@ -46,14 +46,14 @@ exports.seed = async (knex) => {
         seedingData = [];
     };
 
-    // this will streamline the data and seeds the table on every 100k rows
+    // this will streamline the data and seeds the table on every 300k rows
     // and remaining rows will be seeded on the end of the stream line process.
     await csv(parserParams)
         .fromStream(readStream)
         .subscribe(async (data, i) => {
             // updating the seeding data array.
             seedingData.push(data);
-            // insert data for every 100k rows from the input.
+            // insert data for every 300k rows from the input.
             if (i % chunkSize === 0 && i > 0) {
                 await insertData(i);
             }

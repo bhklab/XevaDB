@@ -95,7 +95,7 @@ const getAllDatasets = (request, response) => {
 
     // select the datasets.
     getAllDatasetsQuery()
-        .whereBetween('datasets.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('datasets.dataset_id', getAllowedDatasetIds(user))
         .then((data) => transformAllDatasetsData(data))
         .then((datasets) => response.status(200).json({
             status: 'success',
@@ -120,7 +120,7 @@ const getAllDatasetsDetailedInformation = (request, response) => {
 
     // select the number of patients and models grouped by dataset.
     getAllDatasetsDetailQuery()
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => Object.values(transformDatasetDetail(data)))
         .then((datasets) => response.status(200).json({
             status: 'success',
@@ -203,7 +203,7 @@ const getAllDatasetStatistics = (request, response) => {
     const { user } = response.locals;
 
     datasetStatisticsQuery()
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => response.status(200).json({
             status: 'success',
             data,

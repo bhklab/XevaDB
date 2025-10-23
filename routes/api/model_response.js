@@ -186,12 +186,9 @@ const getModelResponse = (request, response) => {
         modelResponse = modelResponse.where('patients.dataset_id', datasetQueryParam);
         // if the dataset query param is passed use isVerified function
         isUserVerified = isVerified(response, datasetQueryParam);
-    } else if (user === 'unknown') {
+    } else {
         isUserVerified = true;
-        modelResponse = modelResponse.whereBetween('patients.dataset_id', [1, 6]);
-    } else if (user.verified === 'verified') {
-        isUserVerified = true;
-        modelResponse = modelResponse.whereBetween('patients.dataset_id', [1, 8]);
+        modelResponse = modelResponse.whereIn('patients.dataset_id', getAllowedDatasetIds(user));
     }
 
     // push control to drug array.

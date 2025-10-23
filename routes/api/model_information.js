@@ -30,7 +30,7 @@ const getAllModelInformation = async (request, response) => {
     try {
         // model information data.
         const modelInformationData = await getModelInformationDataQuery()
-            .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+            .whereIn('d.dataset_id', getAllowedDatasetIds(user))
             .orderBy('d.dataset_id');
         // sending the response back.
         response.status(200).json({
@@ -61,7 +61,7 @@ const getSingleModelInformationBasedOnModelId = (request, response) => {
     // query to grab the data based on the patient id.
     getModelInformationDataQuery()
         .where('m.model_id', modelParam)
-        .andWhereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .andWhereIn('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => response.status(200).json({
             status: 'success',
             data,

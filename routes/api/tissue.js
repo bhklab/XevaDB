@@ -96,7 +96,7 @@ const getSingleTissueDetailedInformationBasedOnTissueId = (request, response) =>
     // query to grab the data based on the tissue id.
     getModelInformationDataQuery()
         .where('t.tissue_id', tissueParam)
-        .andWhereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .andWhereIn('d.dataset_id', getAllowedDatasetIds(user))
         .then((data) => transformTissueDetail(data))
         .then((data) => response.status(200).json({
             status: 'success',

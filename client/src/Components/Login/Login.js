@@ -49,7 +49,6 @@ const Login = () => {
                 updateAuthenticationValue(isUserAuthenticated());
             })
             .catch((error) => {
-                // console.log(error, 'authentication failed');
                 alert('Authentication Failed, Please Enter a valid Password and Username');
             });
     };

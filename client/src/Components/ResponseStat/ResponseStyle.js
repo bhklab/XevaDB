@@ -53,7 +53,7 @@ export const StyleTable = styled.div`
     table {
         text-align: left;
         border-collapse: collapse;
-        width: 800px;
+        width: 1000px;
     }
 
     th {

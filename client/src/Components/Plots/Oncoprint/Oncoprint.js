@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable camelcase */
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import * as d3 from 'd3';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { mutationTypeMap, cnaMap, rnaMap } from '../../../utils/MutationViewsUtil';
 import PatientContext from '../../Context/PatientContext';
@@ -11,6 +12,8 @@ import createSvgCanvas from '../../../utils/CreateSvgCanvas';
 import createToolTip from '../../../utils/ToolTip';
 import convertToTitleCase from '../../../utils/ConvertToTitleCase';
 import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharacters';
+import { saveAs } from 'file-saver';
+import * as htmlToImage from 'html-to-image';
 
 // aberration data
 const aberration = [
@@ -22,38 +25,62 @@ const aberration = [
     { value: 'amp', color: `${colors.red}` },
 ];
 
+const OncoprintWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const ExportWrapper = styled.div`
+
+	display: flex;
+	justify-content: center;
+	padding: 15px 0px;
+	
+	button {
+		color: ${colors.white}
+		background-color: ${colors['--bg-color']};
+		border-radius: 5px;
+		font-size: 0.8em;
+		border: 0;
+		padding: 15px 20px;
+	}
+
+`
+
 const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
 
 /**
  * @param {Array} data - data input array
  * @returns {Array} - array of objects {value: '', color: ''}
  */
-const getMutationMappingObject = (data) => {
-    // mutation array.
-    let mutations = [];
-    Object.values(data).forEach((el) => {
-        Object.entries(el).forEach(([key, value]) => {
-            if (key !== 'gene_id' && value !== '0' && value !== '') {
-                mutations.push(...value.split(','));
-            }
-        });
-    });
-    // set of the unique mutations.
-    mutations = [...new Set(mutations)];
+const normalizeMutationKey = (v) => String(v ?? '').trim().toLowerCase();
 
-    // mapping mutations to the mutationTypeMap object
-    const mutationObject = {};
-    mutations.forEach((mutation) => {
-        const mutationStyle = mutationTypeMap[mutation.toLowerCase()].style;
-        const mutationColor = mutationTypeMap[mutation.toLowerCase()].color;
-        if (!mutationObject[mutationStyle]) {
-            mutationObject[mutationStyle] = {
-                value: convertToTitleCase(mutationStyle, '_'),
-                color: mutationColor,
-            };
-        }
-    });
-    return Object.values(mutationObject);
+const getMutationMappingObject = (data) => {
+	let mutations = [];
+	Object.values(data).forEach((row) => {
+		Object.entries(row).forEach(([key, value]) => {
+		if (key !== 'gene_id' && value !== '0' && value !== '' && value != null) {
+			mutations.push(
+			...String(value).split(',').map(s => s.trim()).filter(Boolean)
+			);
+		}
+		});
+	});
+	mutations = [...new Set(mutations)];
+
+	const mutationObject = {};
+	mutations.forEach((raw) => {
+		const meta = mutationTypeMap[normalizeMutationKey(raw)] || mutationTypeMap.other; // fallback
+		const style = meta.style;
+		if (!mutationObject[style]) {
+		mutationObject[style] = {
+			value: convertToTitleCase(style, '_'),
+			color: meta.color,
+		};
+		}
+	});
+
+	return Object.values(mutationObject);
 };
 
 /**
@@ -468,10 +495,10 @@ const makeOncoprint = (hmap_patients, props, context) => {
                 isAlteration = !isAlteration ? true : isAlteration;
                 // based on the data gives different colors to the rectangle.
                 data_mut[genes[i]][hmap_patients[j]].split(',').forEach((el) => {
-                    const { color } = mutationTypeMap[el.toLowerCase()];
-                    const type = mutationTypeMap[el.toLowerCase()].mainType;
-                    colorRectangles('mut', color, i, j, type);
-                });
+					const key = String(el).trim().toLowerCase();
+					const meta = mutationTypeMap[key] || mutationTypeMap.other; // fallback
+					colorRectangles('mut', meta.color, i, j, meta.mainType);
+				});
             }
         }
     }
@@ -997,6 +1024,9 @@ const Oncoprint = (props) => {
     // patients
     const { hmap_patients } = props;
 
+	// Ref for chart downloads
+	const oncoprintWrapRef = useRef(null);
+
     useEffect(() => {
         makeOncoprint(hmap_patients, props, context);
     }, []);
@@ -1011,10 +1041,36 @@ const Oncoprint = (props) => {
         }
     };
 
+	async function capture(node, filename) {
+		const dataUrl = await htmlToImage.toPng(node, {
+			cacheBust: true,
+			pixelRatio: Math.max(2, window.devicePixelRatio || 1),
+			backgroundColor: 'white',
+			skipFonts: true
+		});
+		saveAs(dataUrl, filename);
+	}
+
+	async function downloadCharts(){
+		const onco = oncoprintWrapRef.current;
+		if (onco) {
+			await capture(onco, `oncoprint-chart.png`);
+		}
+	}
+
+
+
     return (
         // eslint-disable-next-line no-return-assign
-        <>
-            <div id='oncoprint' />
+        <>  
+			<ExportWrapper>
+				<button onClick={() => downloadCharts()}>
+                    Download Oncograph
+                </button>
+            </ExportWrapper>
+			<OncoprintWrapper ref={oncoprintWrapRef}>
+            	<div id='oncoprint' />
+			</OncoprintWrapper>
             <PatientContext.Consumer>
                 {(value) => { rankOncoprintBasedOnHeatMapChanges(value); }}
             </PatientContext.Consumer>

@@ -33,25 +33,42 @@ class CounterNav extends React.Component {
 
     render() {
         const { types } = this.state;
+        console.log(types)
 
         return (
             <div>
                 <CounterStyle>
                     {
                         types.map((type, i) => (
-                            <Link to={type} key={i}>
-                                <div className='count'>
-                                    <CountUp
-                                        start={0}
-                                        end={this.state[type]}
-                                        duration={3}
-                                        useEasing
-                                    />
-                                </div>
-                                <div>
-                                    {type.toUpperCase()}
-                                </div>
-                            </Link>
+                            type === 'models' ? (
+                                <Link disable to={type} key={i}   onClick={(e) => { e.preventDefault(); }}>
+                                    <div className='count'>
+                                        <CountUp
+                                            start={0}
+                                            end={this.state[type]}
+                                            duration={3}
+                                            useEasing
+                                        />
+                                    </div>
+                                    <div>
+                                        {type.toUpperCase()}
+                                    </div>
+                                </Link>
+                             ) : (
+                                <Link to={type} key={i}>
+                                    <div className='count'>
+                                        <CountUp
+                                            start={0}
+                                            end={this.state[type]}
+                                            duration={3}
+                                            useEasing
+                                        />
+                                    </div>
+                                    <div>
+                                        {type.toUpperCase()}
+                                    </div>
+                                </Link>
+                             )
                         ))
                     }
                 </CounterStyle>

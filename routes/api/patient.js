@@ -86,7 +86,7 @@ const getAllPatients = (request, response) => {
 
     // query.
     getAllPatientsQuery()
-        .whereBetween('dataset_id', getAllowedDatasetIds(user))
+        .whereIn('dataset_id', getAllowedDatasetIds(user))
         .then((patients) => response.status(200).json({
             status: 'success',
             data: patients,
@@ -109,7 +109,7 @@ const getAllPatientsDetailedInformation = (request, response) => {
 
     // model information data.
     getModelInformationDataQuery()
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('d.dataset_id', getAllowedDatasetIds(user))
         .orderBy('p.patient_id')
         .then((modelInformationData) => transformData(modelInformationData))
         .then((data) => response.status(200).json({
@@ -139,7 +139,7 @@ const getSinglePatientInformationBasedOnPatientId = (request, response) => {
     // model information data.
     getModelInformationDataQuery()
         .where('p.patient_id', patientParam)
-        .whereBetween('d.dataset_id', getAllowedDatasetIds(user))
+        .whereIn('d.dataset_id', getAllowedDatasetIds(user))
         .orderBy('p.patient_id')
         .then((modelInformationData) => transformData(modelInformationData))
         .then((data) => response.status(200).json({

@@ -14,6 +14,10 @@ const StyleBar = styled.div`
         text-align: center;
     }
 
+	.search-button {
+		margin-top: 30px;
+	}
+
     h1 {
         color: ${colors['--bg-color']};
         text-align: center;

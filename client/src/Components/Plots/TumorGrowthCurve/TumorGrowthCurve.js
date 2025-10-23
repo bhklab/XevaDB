@@ -115,39 +115,42 @@ const getUnionOfTimepoints = (data) => {
 const volumeObject = (i, oldVolume, oldTime, volume, timeUnionData) => {
     const newVolume = volume;
     let z = i;
-    timeUnionData.forEach((time) => {
-        if ((time === oldTime[z]) && !newVolume[time]) {
-            newVolume[time] = {};
-            newVolume[time].totalVolume = oldVolume[z];
-            newVolume[time].number = 1;
-            newVolume[time].minVol = oldVolume[z];
-            newVolume[time].maxVol = oldVolume[z];
-            newVolume[time].volume = [];
-            newVolume[time].volume.push(oldVolume[z]);
-            z++;
-        } else if ((time === oldTime[z]) && newVolume[time]) {
-            newVolume[time].totalVolume += oldVolume[z];
-            newVolume[time].number += 1;
-            newVolume[time].minVol = newVolume[time].minVol > oldVolume[z] ? oldVolume[z] : newVolume[time].minVol;
-            newVolume[time].maxVol = newVolume[time].maxVol < oldVolume[z] ? oldVolume[z] : newVolume[time].maxVol;
-            newVolume[time].volume.push(oldVolume[z]);
-            z++;
-        } else if (oldTime[z]) {
-            const current = oldVolume[z - 1] + ((oldVolume[z] - oldVolume[z - 1]) / (oldTime[z] - oldTime[z - 1])) * (time - oldTime[z - 1]);
-            if (!newVolume[time]) {
-                newVolume[time] = {};
-                newVolume[time].totalVolume = 0;
-                newVolume[time].minVol = 10000;
-                newVolume[time].maxVol = 0;
-                newVolume[time].volume = [];
-            }
-            newVolume[time].totalVolume += current;
-            newVolume[time].number = newVolume[time].number ? newVolume[time].number + 1 : 1;
-            newVolume[time].minVol = newVolume[time].minVol > current ? current : newVolume[time].minVol;
-            newVolume[time].maxVol = newVolume[time].maxVol < current ? current : newVolume[time].maxVol;
-            newVolume[time].volume.push(current);
-        }
-    });
+	
+	if (timeUnionData){
+		timeUnionData.forEach((time) => {
+			if ((time === oldTime[z]) && !newVolume[time]) {
+				newVolume[time] = {};
+				newVolume[time].totalVolume = oldVolume[z];
+				newVolume[time].number = 1;
+				newVolume[time].minVol = oldVolume[z];
+				newVolume[time].maxVol = oldVolume[z];
+				newVolume[time].volume = [];
+				newVolume[time].volume.push(oldVolume[z]);
+				z++;
+			} else if ((time === oldTime[z]) && newVolume[time]) {
+				newVolume[time].totalVolume += oldVolume[z];
+				newVolume[time].number += 1;
+				newVolume[time].minVol = newVolume[time].minVol > oldVolume[z] ? oldVolume[z] : newVolume[time].minVol;
+				newVolume[time].maxVol = newVolume[time].maxVol < oldVolume[z] ? oldVolume[z] : newVolume[time].maxVol;
+				newVolume[time].volume.push(oldVolume[z]);
+				z++;
+			} else if (oldTime[z]) {
+				const current = oldVolume[z - 1] + ((oldVolume[z] - oldVolume[z - 1]) / (oldTime[z] - oldTime[z - 1])) * (time - oldTime[z - 1]);
+				if (!newVolume[time]) {
+					newVolume[time] = {};
+					newVolume[time].totalVolume = 0;
+					newVolume[time].minVol = 10000;
+					newVolume[time].maxVol = 0;
+					newVolume[time].volume = [];
+				}
+				newVolume[time].totalVolume += current;
+				newVolume[time].number = newVolume[time].number ? newVolume[time].number + 1 : 1;
+				newVolume[time].minVol = newVolume[time].minVol > current ? current : newVolume[time].minVol;
+				newVolume[time].maxVol = newVolume[time].maxVol < current ? current : newVolume[time].maxVol;
+				newVolume[time].volume.push(current);
+			}
+		});
+	}
 };
 
 // to calculate mean volume, standard error.

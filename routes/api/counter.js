@@ -30,15 +30,15 @@ const datasets = (datasetArray) => knex('datasets')
  */
 const getCounter = (request, response) => {
     // user variable.
-    const { user } = response.locals;
+    // const { user } = response.locals;
 
     // grabbing the data for the counter.
     Promise.all([
-        tissues(getAllowedDatasetIds(user)),
-        drugs(getAllowedDatasetIds(user)),
-        patients(getAllowedDatasetIds(user)),
-        models(getAllowedDatasetIds(user)),
-        datasets(getAllowedDatasetIds(user)),
+        tissues([1, 9]),
+        drugs([1, 9]),
+        patients([1, 9]),
+        models([1, 9]),
+        datasets([1, 9]),
     ])
         .then((data) => response.status(200).json({
             status: 'success',

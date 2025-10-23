@@ -14,7 +14,7 @@ exports.up = (knex) => (
                         .index();
                     table.string('response_type')
                         .notNullable();
-                    table.string('value').notNullable();
+                    table.string('value').notNullable().defaultTo('');
                 });
             }
             return query;
