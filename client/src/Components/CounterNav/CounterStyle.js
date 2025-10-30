@@ -34,6 +34,10 @@ const CounterStyle = styled.div`
     @media only screen and (min-width: 1800px) {
         font-size: 0.85em;
     }
+
+	@media (max-width: 900px) {
+        font-size: 0.60em;
+    }
 `;
 
 export default CounterStyle;
