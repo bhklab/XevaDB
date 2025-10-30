@@ -6,12 +6,14 @@ const StyleBar = styled.div`
     // wrapper class in the global styles
     margin-top: 8vh !important;
     height: 100%;
-
     
     .search-container {
         height: 550px;
-        width: 750px;
+        min-width: 750px;
         text-align: center;
+		@media (max-width: 600px) {
+			min-width: 0px;
+		}
     }
 
 	.search-button {
@@ -37,24 +39,15 @@ const StyleBar = styled.div`
         
         .dataset-drug-container {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-around;
             align-items: center;
             width: 100%
+			gap: 4px;
         }
 
         .div-dataset, .div-drug {
-            min-width: 49%;
-            max-width: 49%
+			width: 100%;
             margin-bottom: 15px;
-        }
-
-        .div-dataset {
-            margin-right: 1%
-        }
-
-        .div-drug {
-            margin-left: 1%
         }
 
         .div-genomics, .div-gene {
@@ -122,7 +115,7 @@ const StyleBar = styled.div`
         }
     }  
 
-   @media screen and (max-width: 1700px) {
+   @media (max-width: 1700px) {
         h1 {
             font-size: 1.47em;
         }
@@ -154,10 +147,25 @@ const StyleBar = styled.div`
 
    }
 
-   @media screen and (max-width: 650px) {
-       h1 {
-           font-size: 18px;
-       }
+   @media (max-width: 650px) {
+		h1 {
+			font-size: 18px;
+		}
+		.dataset-drug-container{
+			flex-direction: column;
+			width: 100%;
+		}
+		.select-component {
+			flex-direction: column;
+		}
+
+		.div-dataset, .div-drug {
+			min-width: 100%;
+            max-width: 100%;
+			width: 100%;
+			font-size: 50px;
+		}
+
    }
 `;
 
