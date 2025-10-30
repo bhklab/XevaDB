@@ -7,7 +7,6 @@ const MainConatiner = styled.div`
     background-color: ${colors['--bg-color']};
     position: absolute;
     top: 0;
-    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,6 +50,17 @@ const LogoNavLinksContainer = styled.div`
         height: 100%;
     }
 
+	.hamburger {
+        background-color: transparent;
+        border: 0;
+        border-radius: 5px;
+        font-size: 0.9em;
+		img{
+			max-width: 35px;
+			max-height: 35px;
+		}
+    }
+
     div.nav-link > a {
         height: 100%;
         margin-right: 20px;
@@ -82,6 +92,10 @@ const LogoNavLinksContainer = styled.div`
         a {
             font-size: 1.1em;
         }
+    }
+
+	@media (max-width: 900px) {
+		justify-content: flex-start !important;
     }
 
     a.selected {

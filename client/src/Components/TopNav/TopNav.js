@@ -8,9 +8,21 @@ import {
     ButtonStyle,
 } from './NavStyle';
 import logo from '../../images/logo-latest.png';
+import Drawer from '@material-ui/core/Drawer';
+import burger from '../../images/burger.png';
+
 
 // all the top nav links
-// const LINKS = ['', 'biomarker', 'datasets', 'drugs', 'patients', 'tissues', 'doc'];
+ const LINKS = [
+	{name: 'Home', to: '/'},
+	{name: 'Biomarker', to: '/biomarker'},
+	{name: 'Datasets', to: '/datasets'},
+	{name: 'Drugs', to: '/drugs'},
+	{name: 'Patients', to: '/patients'},
+	{name: 'Tissues', to: '/tissues'},
+	{name: 'Documentation', to: '/doc'}
+	// {name: 'Response', to: 'response'}
+];
 
 /**
  * @returns {component} - TopNav component
@@ -18,6 +30,15 @@ import logo from '../../images/logo-latest.png';
 function TopNav() {
     const [isLoggedIn, updateLoggedInState] = useState('Login');
     const [isLink, updateIsLink] = useState('/login');
+	const [drawerOpen, setDrawerOpen] = useState(false)
+
+	const [isMobile, setIsMobile] = useState(window.innerWidth <= 900);
+
+	useEffect(() => {
+		const handler = () => setIsMobile(window.innerWidth <= 900);
+		window.addEventListener("resize", handler);
+		return () => window.removeEventListener("resize", handler);
+	}, []);
 
     useEffect(() => {
         localStorage.getItem('user')
@@ -33,44 +54,45 @@ function TopNav() {
         }
     }
 
+	const links = () => {
+		return (
+			LINKS.map((link, index) => (
+				<div className='nav-link' key={index}>
+					<Link to={link.to}> {link.name} </Link>
+				</div>
+			))
+		)
+	}
+
     return (
         <MainConatiner>
             <TopNavContainer>
                 <LogoNavLinksContainer>
-                    <div className='logo'>
-                        <Link to='/'>
-                            <img src={logo} alt='logo' />
-                        </Link>
-                    </div>
-                    <div className='nav-links-container'>
-                        <div className='nav-link'>
-                            <Link to='/'> Home </Link>
-                        </div>
-                        <div className='nav-link'>
-                            <Link to='/biomarker'> Biomarker </Link>
-                        </div>
-                        <div className='nav-link'>
-                            <Link to='/datasets'> Datasets </Link>
-                        </div>
-                        <div className='nav-link'>
-                            <Link to='/drugs'> Drugs </Link>
-                        </div>
-                        {/* <div className='nav-link'>
-                            <Link to='/response'> Response </Link>
-                        </div> */}
-                        <div className='nav-link'>
-                            <Link to='/patients'> Patients </Link>
-                        </div>
-                        <div className='nav-link'>
-                            <Link to='/tissues'> Tissues </Link>
-                        </div>
-                        <div className='nav-link'>
-                            <Link to='/doc'> Documentation </Link>
-                        </div>
-                    </div>
+
+                    {isMobile ? (
+						<button className='hamburger' onClick={() => setDrawerOpen(true)}>
+							<img src={burger} />
+						</button>
+					) : (
+						<>
+							<div className='logo'>
+								<Link to='/'>
+									<img src={logo} alt='logo' />
+								</Link>
+							</div>
+							<div className='nav-links-container'>
+								{links()}
+							</div>
+						</>
+					)}
+					<Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+						<div className='mobile-nav-links-container'>
+							{links()}
+						</div>
+					</Drawer>
                 </LogoNavLinksContainer>
                 <ButtonStyle>
-                    <Link to={`${isLink}`}>
+                    <Link to={isLink}>
                         <button
                             type='button'
                             onClick={isUserLoggedIn}
