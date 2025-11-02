@@ -6,6 +6,7 @@ import {
     TopNavContainer,
     LogoNavLinksContainer,
     ButtonStyle,
+	MobileNavLinksContainer
 } from './NavStyle';
 import logo from '../../images/logo-latest.png';
 import Drawer from '@material-ui/core/Drawer';
@@ -63,6 +64,15 @@ function TopNav() {
 			))
 		)
 	}
+	const mobileLinks = () => {
+		return (
+			LINKS.map((link, index) => (
+				<div className='mobile-nav-link' key={index}>
+					<Link to={link.to}> {link.name} </Link>
+				</div>
+			))
+		)
+	}
 
     return (
         <MainConatiner>
@@ -86,8 +96,11 @@ function TopNav() {
 						</>
 					)}
 					<Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-						<div className='mobile-nav-links-container'>
-							{links()}
+						<div className='mobile-nav-links-container' style={{color: "green"}}>
+							<MobileNavLinksContainer>
+							{mobileLinks()}
+
+							</MobileNavLinksContainer>
 						</div>
 					</Drawer>
                 </LogoNavLinksContainer>

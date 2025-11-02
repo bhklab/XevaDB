@@ -31,6 +31,22 @@ const TopNavContainer = styled.div`
     }
 `;
 
+const MobileNavLinksContainer = styled.div`
+	div.mobile-nav-links-container {
+        height: 100%;
+        display: flex;
+		flex-direction: column;
+    }
+
+
+	div.mobile-nav-link > a {
+		height: 30px;
+		color: black;
+		text-decoration: none
+	}
+
+`
+
 const LogoNavLinksContainer = styled.div`
     height: inherit;
     display: flex;
@@ -142,4 +158,5 @@ export {
     TopNavContainer,
     LogoNavLinksContainer,
     ButtonStyle,
+	MobileNavLinksContainer
 };
