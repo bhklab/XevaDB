@@ -15,7 +15,7 @@ import burger from '../../images/burger.png';
 // all the top nav links
  const LINKS = [
 	{name: 'Home', to: '/'},
-	{name: 'Biomarker', to: '/biomarker'},
+	// {name: 'Biomarker', to: '/biomarker'},
 	{name: 'Datasets', to: '/datasets'},
 	{name: 'Drugs', to: '/drugs'},
 	{name: 'Patients', to: '/patients'},
