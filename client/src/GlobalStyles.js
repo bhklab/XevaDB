@@ -100,29 +100,8 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .heatmap-oncoprint-wrapper {
-    margin: 2vh;
-    min-width: 95vw;
-    max-width: 95vw;
-
-    @media only screen and (min-width: 1600px) {
-      min-width: 85vw;
-      max-width: 85vw;
-    }
-
-    @media only screen and (min-width: 1800px) {
-      min-width: 80vw;
-      max-width: 80vw;
-    }
-
-    @media only screen and (min-width: 2000px) {
-      min-width: 70vw;
-      max-width: 70vw;
-    }
-
-    @media only screen and (min-width: 2200px) {
-      min-width: 65vw;
-      max-width: 65vw;
-    }
+	min-width: 100%;
+	overflow: hidden
   }
 
   .growth-curve-wrapper {

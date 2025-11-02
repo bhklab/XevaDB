@@ -25,13 +25,20 @@ class OncoprintData extends React.Component {
             data_mut: {},
             data_rna: {},
             data_cnv: {},
-            dimensions: {},
-            margin: {},
+            dimensions: { height: 30, width: 14 }, // NEW: initialize with a sensible default
+            margin: {
+                top: 50, right: 250, bottom: 200, left: 250,
+            },
             drugs: [],
             loading: true,
             error: false,
         };
         this.defaultGenomics = ['mutation', 'rnaseq', 'cnv'];
+
+        // NEW: container + resize observer
+        this.containerRef = React.createRef();
+        this.ro = null;
+        this.resizeTimer = null;
     }
 
     componentDidMount() {
@@ -91,7 +98,63 @@ class OncoprintData extends React.Component {
                     });
                 });
         }
+
+        // NEW: observe container width changes (debounced)
+        const node = this.containerRef.current;
+        if (node) {
+            this.ro = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    const cw = Math.max(0, entry.contentRect?.width || 0);
+                    if (cw > 0) {
+                        if (this.resizeTimer) clearTimeout(this.resizeTimer);
+                        this.resizeTimer = setTimeout(this.computeDimensions, 120);
+                    }
+                }
+            });
+            this.ro.observe(node);
+        }
     }
+
+    componentWillUnmount() {
+        // NEW: cleanup
+        if (this.resizeTimer) clearTimeout(this.resizeTimer);
+        if (this.ro) this.ro.disconnect();
+    }
+
+    // NEW: compute dimensions from container width and patient count
+    computeDimensions = () => {
+        const el = this.containerRef.current;
+        if (!el) return;
+
+        const containerWidth = Math.max(0, el.clientWidth || 0);
+        const { margin, hmap_patients } = this.state;
+        const patientCount = Math.max(1, (hmap_patients?.length || 1));
+
+        // usable width after margins
+        const available = Math.max(200, containerWidth - (margin.left + margin.right));
+
+        // base width per cell
+        const base = Math.max(6, Math.floor(available / patientCount));
+
+        // gentle breakpoints to avoid abrupt jumps
+        let rectWidth;
+        if (containerWidth < 480) rectWidth = Math.min(base, 8);
+        else if (containerWidth < 640) rectWidth = Math.min(base, 9);
+        else if (containerWidth < 768) rectWidth = Math.min(base, 11);
+        else if (containerWidth < 1024) rectWidth = Math.min(base, 13);
+        else if (containerWidth < 1400) rectWidth = Math.min(base, 17);
+        else if (containerWidth < 1680) rectWidth = Math.min(base, 20);
+        else rectWidth = base;
+
+        // keep a proportional but bounded height
+        const rectHeight = Math.max(18, Math.min(44, Math.round(rectWidth * 2)));
+
+        // only setState if changed
+        this.setState((prev) => {
+            const same = prev.dimensions.width === rectWidth && prev.dimensions.height === rectHeight;
+            return same ? null : { dimensions: { width: rectWidth, height: rectHeight } };
+        });
+    };
 
     // creates the updated data and sets the new state
     updateResults = (onco) => {
@@ -171,11 +234,11 @@ class OncoprintData extends React.Component {
             data_rna: data.data_rna || {},
             data_cnv: data.data_cnv || {},
             drugs,
-            dimensions: { height: 30, width: 14 },
-            margin: {
-                top: 50, right: 250, bottom: 200, left: 250,
-            },
+            // keep existing dimensions/margins; recompute cell sizes after state set
             loading: false,
+        }, () => {
+            // NEW: recompute dimensions now that patients are known
+            this.computeDimensions();
         });
     }
 
@@ -232,7 +295,7 @@ class OncoprintData extends React.Component {
         }
 
         return (
-            <div>
+            <div ref={this.containerRef} style={{ width: '100%' }}>
                 {
                     loading ? <Spinner loading={loading} /> : renderingData()
                 }

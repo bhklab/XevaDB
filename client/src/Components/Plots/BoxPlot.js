@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import colors from '../../styles/colors';
@@ -42,14 +42,19 @@ const parseData = (data, response, drugs) => {
 };
 
 // initialize the dimensions and margins.
-const initialize = () => {
+const initialize = (containerWidth) => {
     const margin = {
         top: 1, right: 1, bottom: 1, left: 1,
     };
-    const patientWidth = 14 - margin.left - margin.right;
-    const patientHeight = 100 - margin.top - margin.bottom;
-    const drugWidth = 70 - margin.left - margin.right;
-    const drugHeight = 30 - margin.top - margin.bottom;
+
+    // Responsive scaling based on the heatmap SVG width (not viewport).
+    // Tuned around a 1200px container; clamped for sanity.
+    const k = Math.max(0.6, Math.min(1.8, (containerWidth || 1200) / 1200));
+
+    const patientWidth = Math.round(14 * k) - margin.left - margin.right;
+    const patientHeight = Math.round(100 * k) - margin.top - margin.bottom;
+    const drugWidth = Math.round(70 * k) - margin.left - margin.right;
+    const drugHeight = Math.round(30 * k) - margin.top - margin.bottom;
 
     return {
         margin,
@@ -111,7 +116,7 @@ const xAxis = (groupElement, xscale, patientSvgWidth) => {
 
     groupElement
         .append('g')
-        .attr('transform', `translate(${patientSvgWidth + 20}, 0)`)
+        .attr('transform', `translate(${patientSvgWidth + 60}, 0)`)
         .attr('id', 'x-axis-group')
         .call(axis);
 };
@@ -266,10 +271,33 @@ const BoxPlot = (props) => {
     // get number of patients.
     const totalPatients = Object.keys(parsedPatientData).length;
 
+    // Observe the heatmap SVG width for responsiveness
+    const [containerWidth, setContainerWidth] = useState(1200);
+    useEffect(() => {
+        if (!heatmapSvgGroupRef?.current) return;
+
+        // Prefer the owner SVG element of the group
+        const svgEl = heatmapSvgGroupRef.current.ownerSVGElement || heatmapSvgGroupRef.current.closest('svg');
+        if (!svgEl) return;
+
+        const measure = () => {
+            const { width } = svgEl.getBoundingClientRect();
+            if (width > 0) setContainerWidth(width);
+        };
+
+        measure();
+
+        // ResizeObserver to react to container size changes
+        const ro = new ResizeObserver(() => measure());
+        ro.observe(svgEl);
+
+        return () => ro.disconnect();
+    }, [heatmapSvgGroupRef]);
+
     // initialize dimensions.
     const {
         patientWidth, patientHeight, margin, drugHeight, drugWidth,
-    } = initialize();
+    } = useMemo(() => initialize(containerWidth), [containerWidth]);
 
     // svg width.
     const patientSvgWidth = (patientWidth + margin.left + margin.right) * totalPatients;
@@ -279,6 +307,9 @@ const BoxPlot = (props) => {
 
     // use effect function once the component is mounted/updated.
     useEffect(() => {
+        // bail if ref not ready
+        if (!heatmapSvgGroupRef?.current) return;
+
         // to remove the elements.
         removeElements(PLOT_ID);
 
@@ -298,7 +329,7 @@ const BoxPlot = (props) => {
 
         // creating reactangle around the svgs.
         createRectangle(groupElement, patientSvgWidth, patientSvgHeight).attr('transform', 'translate(0, -180)');
-        createRectangle(groupElement, drugSvgWidth, drugSvgHeight).attr('transform', `translate(${patientSvgWidth + 20}, 0)`);
+        createRectangle(groupElement, drugSvgWidth, drugSvgHeight).attr('transform', `translate(${patientSvgWidth + 60}, 0)`);
 
         // create a box plot for each of the patient.
         const patientKeys = patients.length === 0 ? Object.keys(parsedPatientData) : patients;
@@ -331,7 +362,7 @@ const BoxPlot = (props) => {
         const drugPlotGroup = groupElement
             .append('g')
             .attr('id', 'patient-plot-group')
-            .attr('transform', `translate(${patientSvgWidth + 20}, 0)`);
+            .attr('transform', `translate(${patientSvgWidth + 60}, 0)`);
 
         // create a box plot for each of the drugs.
         drugs.forEach((drug, i) => {
@@ -353,7 +384,14 @@ const BoxPlot = (props) => {
             // create rest of the elements.
             createDrugRest(svg, min, median, max, drugHeight, xScale, dataScale);
         });
-    });
+    // redraw when container width or inputs change
+    }, [
+        containerWidth,
+        data, response, patients, drugs, heatmapSvgGroupRef,
+        patientWidth, patientHeight, drugWidth, drugHeight,
+        minTotal, maxTotal, parsedPatientData, parsedDrugData,
+        patientSvgWidth, patientSvgHeight, drugSvgWidth, drugSvgHeight
+    ]);
 
     // return statement.
     return (
@@ -366,6 +404,7 @@ BoxPlot.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     patients: PropTypes.arrayOf(PropTypes.string).isRequired,
     drugs: PropTypes.arrayOf(PropTypes.string).isRequired,
+    heatmapSvgGroupRef: PropTypes.object.isRequired,
 };
 
 export default BoxPlot;

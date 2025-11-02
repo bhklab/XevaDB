@@ -28,6 +28,7 @@ const aberration = [
 const OncoprintWrapper = styled.div`
     display: flex;
     flex-direction: column;
+	justify-content: flex-end;
 `;
 
 const ExportWrapper = styled.div`
@@ -48,6 +49,13 @@ const ExportWrapper = styled.div`
 `
 
 const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
+
+// NEW: extra right padding so legends/sidebars never get clipped
+const computeRightExtrasOncoprint = (rect_width) => {
+    const sidebarGeneAlter = rect_width * 5 + 30; // right stacked bars width + padding
+    const legendBlock = rect_width * 10 + 160;    // legend + labels conservative
+    return Math.max(sidebarGeneAlter, legendBlock) + 20;
+};
 
 /**
  * @param {Array} data - data input array
@@ -388,6 +396,19 @@ const makeOncoprint = (hmap_patients, props, context) => {
     const svg = createSvgCanvas({
         height, width, margin, id: 'oncoprint', canvasId: `oncoprint-${plotId}`,
     });
+
+    // NEW: responsive SVG + safe right-side room so nothing is clipped
+    const extraRight = computeRightExtrasOncoprint(rect_width);
+    const totalW = width + margin.left + margin.right + extraRight;
+    const totalH = height + margin.top + margin.bottom;
+
+    d3.select(`#oncoprint-${plotId}`)
+        .attr('viewBox', `0 0 ${totalW} ${totalH}`)
+        .attr('preserveAspectRatio', 'xMidYMin meet')
+        .attr('width', '100%')
+        .attr('height', 'auto')
+        .style('display', 'block')
+        .style('margin', '0 0 0 50px');
 
     // skeleton of the oncoprint
     const skeleton = svg.append('g')
@@ -1062,19 +1083,21 @@ const Oncoprint = (props) => {
 
     return (
         // eslint-disable-next-line no-return-assign
-        <>  
+        <div>  
 			<ExportWrapper>
 				<button onClick={() => downloadCharts()}>
                     Download Oncograph
                 </button>
             </ExportWrapper>
-			<OncoprintWrapper ref={oncoprintWrapRef}>
-            	<div id='oncoprint' />
-			</OncoprintWrapper>
-            <PatientContext.Consumer>
-                {(value) => { rankOncoprintBasedOnHeatMapChanges(value); }}
-            </PatientContext.Consumer>
-        </>
+			<div style={{width: "100%"}}>
+				<OncoprintWrapper ref={oncoprintWrapRef}>
+					<div id='oncoprint' />
+				</OncoprintWrapper>
+				<PatientContext.Consumer>
+					{(value) => { rankOncoprintBasedOnHeatMapChanges(value); }}
+				</PatientContext.Consumer>
+			</div>
+        </div>
     );
 };
 
