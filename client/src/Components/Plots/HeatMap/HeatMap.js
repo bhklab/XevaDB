@@ -19,6 +19,8 @@ import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharact
 const HeatMapWrapper = styled.div`
     display: flex;
     flex-direction: column;
+	overflow: hidden;
+	max-width: 100%;
 
     .selection-div {
         width: 150px;
@@ -667,6 +669,15 @@ const createDottedLinesPerPatient = (
     }
 };
 
+// compute extra right-side space needed for legends/sidebars so they don't get cut off
+const computeRightExtras = (responseType, rectWidth, rectHeight) => {
+    const sidebarWidth = 72;
+    const numericLegend = rectWidth * 10 + rectHeight + 60;
+    const mrecistLegend = rectWidth * 8 + 120;
+    const legendBlock = responseType === 'mRECIST' ? mrecistLegend : numericLegend;
+    return Math.max(sidebarWidth, legendBlock) + 10;
+};
+
 /**
  * the function creates the heatmap structure, labels, axes etc.
  * @param {Object} props - props object
@@ -701,9 +712,16 @@ const createHeatMap = (props, responseType) => {
         d3.select(`#${plotId}`).remove();
     }
 
+    // ensure the viewBox accounts for legends + right sidebar so nothing is cut off
+    const extraRight = computeRightExtras(responseType, rectWidth, rectHeight);
+    const totalW = plotWidth + margin.left + margin.right + extraRight;
+    const totalH = plotHeight + margin.top + margin.bottom;
+
     d3.select(`#heatmap-svg`)
-        .attr('width', plotWidth + margin.left + margin.right)
-        .attr('height', plotHeight + margin.top + margin.bottom);
+        .attr('viewBox', `0 0 ${totalW} ${totalH}`)
+        .attr('preserveAspectRatio', 'xMinYMin meet')
+        .attr('width', '100%')
+        .attr('height', 'auto');
 
     const svgGroupElement = d3.select('#heatmap-svg-group')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
@@ -846,7 +864,7 @@ const HeatMap = (props) => {
                 />
 
             </div>
-            <div id={WRAPPER_ID} ref={heatmapWrapRef}>
+            <div id={WRAPPER_ID} ref={heatmapWrapRef} style={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
                 <svg id='heatmap-svg'>
                     <g id='heatmap-svg-group' ref={heatmapSvgGroupRef}> </g>
                 </svg>

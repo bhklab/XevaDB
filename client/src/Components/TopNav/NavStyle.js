@@ -7,7 +7,6 @@ const MainConatiner = styled.div`
     background-color: ${colors['--bg-color']};
     position: absolute;
     top: 0;
-    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,6 +31,22 @@ const TopNavContainer = styled.div`
     }
 `;
 
+const MobileNavLinksContainer = styled.div`
+	div.mobile-nav-links-container {
+        height: 100%;
+        display: flex;
+		flex-direction: column;
+    }
+
+
+	div.mobile-nav-link > a {
+		height: 30px;
+		color: black;
+		text-decoration: none
+	}
+
+`
+
 const LogoNavLinksContainer = styled.div`
     height: inherit;
     display: flex;
@@ -49,6 +64,17 @@ const LogoNavLinksContainer = styled.div`
 
     div.nav-links-container > div {
         height: 100%;
+    }
+
+	.hamburger {
+        background-color: transparent;
+        border: 0;
+        border-radius: 5px;
+        font-size: 0.9em;
+		img{
+			max-width: 35px;
+			max-height: 35px;
+		}
     }
 
     div.nav-link > a {
@@ -84,6 +110,10 @@ const LogoNavLinksContainer = styled.div`
         }
     }
 
+	@media (max-width: 900px) {
+		justify-content: flex-start !important;
+    }
+
     a.selected {
         background: ${colors['--table-bg-color']}
         color: ${colors['--bg-color']} !important;
@@ -114,6 +144,13 @@ const ButtonStyle = styled.div`
             height: 40px;
         }
     }
+
+	@media (max-width: 768px){
+		button{
+			font-size: 0.8em;
+			width: 50px;
+		}
+	}
 `;
 
 export {
@@ -121,4 +158,5 @@ export {
     TopNavContainer,
     LogoNavLinksContainer,
     ButtonStyle,
+	MobileNavLinksContainer
 };

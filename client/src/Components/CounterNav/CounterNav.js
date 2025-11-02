@@ -33,7 +33,7 @@ class CounterNav extends React.Component {
 
     render() {
         const { types } = this.state;
-        console.log(types)
+        // console.log(types)
 
         return (
             <div>

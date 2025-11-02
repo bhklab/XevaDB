@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import Spinner from '../../Utils/Spinner';
@@ -6,9 +6,8 @@ import HeatMap from './HeatMap';
 import { OncoprintGenes } from '../../../utils/OncoprintGenes';
 
 // dimension and margin variables
-const dimensions = { height: 30, width: 14 };
 const margin = {
-    top: 200, right: 250, bottom: 50, left: 250,
+    top: 200, right: 200, bottom: 50, left: 400,
 };
 
 // fetch the patient list and model response data
@@ -135,6 +134,11 @@ const HeatMapData = (props) => {
     });
     const [isLoading, setLoadingState] = useState(true);
 
+    // responsive container + derived dimensions
+    const containerRef = useRef(null);
+    const [containerWidth, setContainerWidth] = useState(1200);
+    const [dimensions, setDimensions] = useState({ height: 30, width: 14 });
+
     useEffect(() => {
         if (datasetId > 0) {
             fetchData(drugProp, datasetId)
@@ -153,8 +157,51 @@ const HeatMapData = (props) => {
         }
     }, [props]);
 
+    // Observe the container width (debounced for smoother changes)
+    useEffect(() => {
+        if (!containerRef.current) return;
+        let t = null;
+        const ro = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const cw = Math.max(0, entry.contentRect.width || 0);
+                if (cw > 0) {
+                    if (t) clearTimeout(t);
+                    t = setTimeout(() => setContainerWidth(cw), 120);
+                }
+            }
+        });
+        ro.observe(containerRef.current);
+        return () => {
+            if (t) clearTimeout(t);
+            ro.disconnect();
+        };
+    }, []);
+
+    // Recompute rect size whenever width or patient count changes
+    useEffect(() => {
+        const patientCount = Math.max(1, dataObject.patientList.length || 1);
+
+        // usable width after margins
+        const available = Math.max(200, containerWidth - (margin.left + margin.right));
+
+        const base = Math.max(6, Math.floor(available / patientCount));
+
+        let rectWidth;
+        if (containerWidth < 480) rectWidth = 10;
+        else if (containerWidth < 640) rectWidth = 9;
+        else if (containerWidth < 768) rectWidth = 11;
+        else if (containerWidth < 1024) rectWidth = 13;
+        else if (containerWidth < 1400) rectWidth = 17;
+        else if (containerWidth < 1680) rectWidth = 20;
+        else rectWidth = base;
+
+        const rectHeight = Math.max(18, Math.min(44, Math.round(rectWidth * 2)));
+		
+        setDimensions({ height: rectHeight, width: rectWidth });
+    }, [containerWidth, dataObject.patientList.length]);
+
     return (
-        <div>
+        <div ref={containerRef} style={{ width: '100%' }}>
             {
                 isLoading
                     ? <Spinner loading={isLoading} />
