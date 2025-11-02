@@ -128,6 +128,13 @@ const ButtonStyle = styled.div`
             height: 40px;
         }
     }
+
+	@media (max-width: 768px){
+		button{
+			font-size: 0.8em;
+			width: 50px;
+		}
+	}
 `;
 
 export {

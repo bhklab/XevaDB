@@ -112,6 +112,9 @@ const StyleBar = styled.div`
                 cursor: pointer;
             }
             margin: 0px 0px -10px 10px !important;
+			@media (max-width: 768px) {
+				font-size: 0.7em !important;
+			}
         }
     }  
 
@@ -194,6 +197,10 @@ const StyleButton = styled.button`
     @media screen and (max-width: 1700px) {
         font-size: 1.4em;
         padding: 8px 10px 8px 10px;
+    }
+
+	@media (max-width: 768px) {
+        font-size: 0.9em;
     }
 `;
 
