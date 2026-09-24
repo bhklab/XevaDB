@@ -359,7 +359,7 @@ const createSortingLabel = (svg, drugNameList, rectHeight, tooltip) => {
 };
 
 // creating legend for the response type except for mRECIST.
-function createLegend(svg, height, width, rectHeight, rectWidth, min, max, drug) {
+function createLegend(svg, height, width, rectHeight, rectWidth, min, max, drug, margin) {
     const defs = svg.append('defs');
 
     const linearGradient = defs.append('linearGradient')
@@ -389,13 +389,19 @@ function createLegend(svg, height, width, rectHeight, rectWidth, min, max, drug)
             .attr('stop-color', `${colors.green_gradient}`);
     }
 
-    // Draw the rectangle and fill with gradient
+    const legendX = width + 8.5 * rectWidth;
+    const textX = width + 10 * rectWidth;
+    const startY = 10;
+    const legendWidth = rectWidth;
     const heightConstant = drug.length > 4 ? 3 : 2.5;
+    const legendHeight = rectHeight * heightConstant;
+
+    // Draw the rectangle and fill with gradient
     svg.append('rect')
-        .attr('x', width + (rectWidth * 8))
-        .attr('y', height / 3)
-        .attr('width', rectHeight)
-        .attr('height', rectHeight * heightConstant)
+        .attr('x', legendX)
+        .attr('y', startY)
+        .attr('width', legendWidth)
+        .attr('height', legendHeight)
         .style('fill', 'url(#linear-gradient)');
 
     // legend value.
@@ -407,9 +413,10 @@ function createLegend(svg, height, width, rectHeight, rectWidth, min, max, drug)
         .data(legendValue)
         .enter()
         .append('text')
-        .attr('x', width + (rectWidth * 8))
-        .attr('y', (d, i) => [height / 3 - 5, height / 3 + (rectHeight * heightConstant) + 12][i])
+        .attr('x', textX)
+        .attr('y', (d, i) => (i === 0 ? startY + 10 : startY + legendHeight))
         .text((d) => d)
+        .attr('fill', `${colors['--main-font-color']}`)
         .attr('font-size', '12px')
         .style('text-anchor', 'start');
 }
@@ -423,16 +430,16 @@ const createmRECISTLegend = (
     const targetRect = svg.append('g')
         .attr('id', 'mrecist-legend-group');
 
+    const legendX = canvasWidth + 8.5 * rectWidth;
+    const textX = canvasWidth + 10 * rectWidth;
+    const startY = 10;
+
     targetRect
         .selectAll('rect')
         .data(mRECISTArray)
         .join('rect')
-        .attr('x', canvasWidth + margin.right / 2)
-        .attr('y', (d, i) => (
-            canvasHeight > rectHeight * 5
-                ? (canvasHeight / 3 + i * rectHeight * 0.75)
-                : (i * rectHeight * 0.75)
-        ))
+        .attr('x', legendX)
+        .attr('y', (d, i) => startY + (rectWidth + 10) * i)
         .attr('height', rectWidth)
         .attr('width', rectWidth)
         .attr('fill', (d) => targetColorObject[d]);
@@ -441,12 +448,8 @@ const createmRECISTLegend = (
         .selectAll('text')
         .data(mRECISTArray)
         .join('text')
-        .attr('x', canvasWidth + margin.right / 2 + 20)
-        .attr('y', (d, i) => (
-            canvasHeight > rectHeight * 5
-                ? (canvasHeight / 3 + i * rectHeight * 0.75 + 12)
-                : (i * rectHeight * 0.75 + 12)
-        ))
+        .attr('x', textX)
+        .attr('y', (d, i) => startY + (rectWidth + 10) * i + rectWidth * 0.75)
         .text((d) => d)
         .attr('fill', `${colors['--main-font-color']}`)
         .attr('font-size', '12px');
@@ -507,54 +510,71 @@ const calculateMaximumTotalValue = (data) => data.reduce((max, current) => (
 ), 0);
 
 // creates the axes for the drug bar plot
-const createDrugBarPlotAxes = (heatmapGroupingElement, mainPlotWidth, scale) => {
+const createDrugBarPlotAxes = (heatmapGroupingElement, mainPlotWidth, rectWidth, scale) => {
     const canvas = heatmapGroupingElement
         .append('g')
-        .attr('transform', `translate(${mainPlotWidth + 10}, 0)`);
+        .attr('class', 'x_axis')
+        .attr('fill', 'none')
+        .attr('stroke', `${colors.black}`)
+        .attr('stroke-width', 1)
+        .attr('transform', `translate(${mainPlotWidth + rectWidth}, 0)`);
 
     const axis = d3
         .axisTop(scale)
-        .ticks(4);
+        .ticks(4)
+        .tickSize(3)
+        .tickFormat(d3.format('.0f'));
 
-    canvas.call(axis);
+    canvas.call(axis)
+        .selectAll('text')
+        .attr('fill', `${colors.black}`)
+        .style('font-size', 8)
+        .attr('stroke', 'none');
+
+    canvas.selectAll('.tick')
+        .select('text')
+        .attr('fill', `${colors.black}`)
+        .attr('stroke', 'none');
 };
 
 // functions to create sidebar plots for drug and patient evaluations
 const drugStackedBarplots = (
     heatmapGroupingElement, drugBarChartData, responseEnteries,
-    mainPlotWidth, mainPlotHeight, rectHeight,
+    mainPlotWidth, mainPlotHeight, rectHeight, rectWidth,
 ) => {
     const maxTotalValueInDataObject = calculateMaximumTotalValue(
         Object.values(drugBarChartData),
     );
 
-    const barplotWidth = 60;
+    const barplotWidth = rectWidth * 5;
 
     const scale = d3.scaleLinear()
         .domain([0, maxTotalValueInDataObject])
         .range([0, barplotWidth]);
 
     const plotGroupElement = heatmapGroupingElement.append('g')
-        .attr('id', 'drug-barplot-group');
+        .attr('id', 'drug-barplot-group')
+        .attr('transform', `translate(${mainPlotWidth + rectWidth}, 0)`);
 
-    // creates the outer box for the plot
-    heatmapGroupingElement
-        .append('g')
-        .attr('id', 'drug-barplots-outliner')
+    const strokeWidth = 1;
+
+    // creates the outer box for the plot matching Oncoprint styling
+    plotGroupElement
         .append('rect')
-        .attr('x', mainPlotWidth + 10)
+        .attr('class', 'patient_eval_rect')
+        .attr('x', 0)
         .attr('y', 0)
-        .attr('width', barplotWidth + 1)
-        .attr('height', mainPlotHeight)
-        .style('stroke', 'black')
-        .style('stroke-width', 1)
-        .style('fill', 'none');
+        .attr('width', barplotWidth)
+        .attr('height', mainPlotHeight - 4)
+        .attr('fill', `${colors.white}`)
+        .style('stroke', `${colors.black}`)
+        .style('stroke-width', strokeWidth);
 
     // creates the individual stacked bar plot for each drug
     Object
         .values(drugBarChartData)
         .forEach((drugResponseObject, drugObjectIndex) => {
-            let currentX = mainPlotWidth + 10;
+            let currentX = strokeWidth / 2;
             responseEnteries.forEach((response) => {
                 plotGroupElement
                     .append('rect')
@@ -569,7 +589,7 @@ const drugStackedBarplots = (
         });
 
     // creates an axis for the plot
-    createDrugBarPlotAxes(heatmapGroupingElement, mainPlotWidth, scale);
+    createDrugBarPlotAxes(heatmapGroupingElement, mainPlotWidth, rectWidth, scale);
 };
 
 // creates the axes for the drug bar plot
@@ -582,7 +602,7 @@ const createPatientBarPlotAxes = (
 
     const canvas = heatmapGroupingElement
         .append('g')
-        .attr('transform', `translate(-2, -160)`);
+        .attr('transform', `translate(-2, -195)`);
 
     const axis = d3
         .axisLeft(scale)
@@ -619,7 +639,7 @@ const patientStackedBarplots = (
         .style('fill', 'none')
         .style('stroke', 'black')
         .style('stroke-width', 1)
-        .attr('transform', 'translate(-2, -160)');
+        .attr('transform', 'translate(-2, -195)');
 
     // creates the individual stacked bar plot for each patient
     Object
@@ -637,7 +657,7 @@ const patientStackedBarplots = (
                     .attr('width', rectWidth - 2)
                     .attr('height', scale(responseValue))
                     .attr('fill', targetColor[response])
-                    .attr('transform', 'translate(0, -80)');
+                    .attr('transform', 'translate(0, -115)');
 
                 currentY -= scale(responseValue);
             });
@@ -671,11 +691,9 @@ const createDottedLinesPerPatient = (
 
 // compute extra right-side space needed for legends/sidebars so they don't get cut off
 const computeRightExtras = (responseType, rectWidth, rectHeight) => {
-    const sidebarWidth = 72;
-    const numericLegend = rectWidth * 10 + rectHeight + 60;
-    const mrecistLegend = rectWidth * 8 + 120;
-    const legendBlock = responseType === 'mRECIST' ? mrecistLegend : numericLegend;
-    return Math.max(sidebarWidth, legendBlock) + 10;
+    const sidebarWidth = rectWidth * 5 + 30;
+    const legendBlock = rectWidth * 10 + 160;
+    return Math.max(sidebarWidth, legendBlock) + 20;
 };
 
 /**
@@ -774,7 +792,7 @@ const createHeatMap = (props, responseType) => {
     } else {
         createLegend(
             heatmapGroupingElement, plotHeight, plotWidth,
-            rectHeight, rectWidth, min, max, drugNameList,
+            rectHeight, rectWidth, min, max, drugNameList, margin,
         );
     }
 
@@ -792,7 +810,7 @@ const createHeatMap = (props, responseType) => {
         );
         drugStackedBarplots(
             heatmapGroupingElement, drugBarChartData, responseEnteries,
-            plotWidth, plotHeight, rectHeight,
+            plotWidth, plotHeight, rectHeight, rectWidth,
         );
     }
 
@@ -810,7 +828,9 @@ const createHeatMap = (props, responseType) => {
  */
 const HeatMap = (props) => {
     const [responseType, setResponseType] = useState('mRECIST');
-    const { drugId: drugNameList, data, patientId: patientNameList } = props;
+    const {
+        drugId: drugNameList, data, patientId: patientNameList, dimensions,
+    } = props;
     const patientContext = useContext(PatientContext);
     const heatmapSvgGroupRef = useRef(null);
 
@@ -878,6 +898,7 @@ const HeatMap = (props) => {
                             patients={patientNameList}
                             drugs={drugNameList}
                             heatmapSvgGroupRef={heatmapSvgGroupRef}
+                            dimensions={dimensions}
                         />
                     )
                     : <div />

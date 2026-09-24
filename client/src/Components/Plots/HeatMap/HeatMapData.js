@@ -7,7 +7,7 @@ import { OncoprintGenes } from '../../../utils/OncoprintGenes';
 
 // dimension and margin variables
 const margin = {
-    top: 200, right: 200, bottom: 50, left: 400,
+    top: 250, right: 200, bottom: 50, left: 400,
 };
 
 // fetch the patient list and model response data
