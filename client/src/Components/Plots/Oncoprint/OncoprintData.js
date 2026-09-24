@@ -27,7 +27,7 @@ class OncoprintData extends React.Component {
             data_cnv: {},
             dimensions: { height: 30, width: 14 }, // NEW: initialize with a sensible default
             margin: {
-                top: 50, right: 250, bottom: 200, left: 250,
+                top: 250, right: 200, bottom: 50, left: 400,
             },
             drugs: [],
             loading: true,
@@ -289,6 +289,7 @@ class OncoprintData extends React.Component {
                         data_rna={data_rna}
                         data_cnv={data_cnv}
                         drugs={drugs}
+                        datasetId={datasetIdProp}
                     />
                 );
             }

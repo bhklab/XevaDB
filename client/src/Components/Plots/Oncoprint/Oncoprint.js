@@ -28,11 +28,11 @@ const aberration = [
 const OncoprintWrapper = styled.div`
     display: flex;
     flex-direction: column;
-	justify-content: flex-end;
+	width: 100%;
+	overflow-x: auto;
 `;
 
 const ExportWrapper = styled.div`
-
 	display: flex;
 	justify-content: center;
 	padding: 15px 0px;
@@ -45,8 +45,7 @@ const ExportWrapper = styled.div`
 		border: 0;
 		padding: 15px 20px;
 	}
-
-`
+`;
 
 const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
 
@@ -174,7 +173,7 @@ const createSortingLabel = (genes, svg, rect_height, tooltip) => {
             .append('text')
             .text('🔺')
             .attr('x', -45)
-            .attr('y', (i + 0.6) * rect_height)
+            .attr('y', (i + 0.7) * rect_height)
             .attr('font-size', '1em')
             .attr('id', `sorting-label-for-gene-${removeSomeSpecialCharacters(gene)}`)
             .style('visibility', 'hidden')
@@ -214,14 +213,15 @@ const createGeneYAxis = (
         geneNames.append('text')
             .attr('class', genes[i])
             .attr('x', -10)
+            .attr('y', (i + 0.5) * rect_height)
+            .attr('dy', '0.35em')
             .style('text-anchor', 'end')
             .style('font-size', '11px')
-            .attr('y', i * (rect_height) + rect_width)
             .attr('font-weight', '500')
             .attr('fill', `${colors['--main-font-color']}`)
             .text(genes[i])
             .on('mouseover', () => {
-                d3.selectAll(`.oprint-hlight-${genes[i]}`)
+                d3.selectAll(`.oprint-hlight-${removeSomeSpecialCharacters(genes[i])}`)
                     .style('opacity', 0.2);
 
                 // remove the biomarker and sorting labels
@@ -250,7 +250,7 @@ const createGeneYAxis = (
             })
             .on('mouseout', () => {
                 // for highlight.
-                d3.selectAll(`.oprint-hlight-${genes[i]}`)
+                d3.selectAll(`.oprint-hlight-${removeSomeSpecialCharacters(genes[i])}`)
                     .style('opacity', 0);
             })
             .on('click', () => {
@@ -258,6 +258,113 @@ const createGeneYAxis = (
                 // rankOncoprint(genes[i], [data_mut, data_cnv, data_rna], props, context);
             });
     }
+};
+
+// scales for patient label/axis on the top of the oncoprint
+const createPatientLabelScale = (patientList, canvasWidth) => (
+    d3.scaleBand()
+        .domain(patientList)
+        .range([0, canvasWidth])
+);
+
+const createPatientXAxis = (svg, patientScale, datasetId) => {
+    const axis = d3.axisTop(patientScale);
+
+    svg.append('g')
+        .attr('id', 'patient-axis-group')
+        .attr('stroke-width', '0')
+        .style('text-anchor', (Number(datasetId) === 7 ? 'start' : 'middle'))
+        .call(axis)
+        .selectAll('text')
+        .style('font-size', '11px')
+        .attr('transform', 'rotate(-90)')
+        .attr('font-weight', '550')
+        .attr('fill', `${colors['--main-font-color']}`)
+        .attr('x', (Number(datasetId) === 7 ? '10px' : '40px'))
+        .attr('y', '.15em');
+};
+
+// creates the axes for the patient alteration bar plot
+const createPatientBarPlotAxes = (
+    svg, maxTotalValueInDataObject, barplotHeight,
+) => {
+    const scale = d3.scaleLinear()
+        .domain([0, maxTotalValueInDataObject])
+        .range([barplotHeight, 0]);
+
+    const canvas = svg
+        .append('g')
+        .attr('id', 'patient-barplot-axis')
+        .attr('transform', 'translate(-2, -195)');
+
+    const axis = d3
+        .axisLeft(scale)
+        .ticks(3);
+
+    canvas.call(axis);
+};
+
+// creates the stacked barplot for patient alterations matching HeatMap styling
+const patientStackedBarplots = (
+    svg, patient_alterations, aberrationList, rectWidth, mainPlotWidth,
+) => {
+    const max_height_arr = [];
+    for (let i = 0; i < patient_alterations.length; i++) {
+        let max = 0;
+        for (let j = 0; j < aberrationList.length; j++) {
+            max += patient_alterations[i][aberrationList[j].value];
+        }
+        max_height_arr.push(max);
+    }
+    const maxTotalValueInDataObject = d3.max(max_height_arr) || 1;
+
+    const barplotHeight = 80;
+
+    const scale = d3.scaleLinear()
+        .domain([0, maxTotalValueInDataObject])
+        .range([0, barplotHeight]);
+
+    const plotGroupElement = svg.append('g')
+        .attr('id', 'patient-barplot-group');
+
+    // creates the outer box for the plot
+    svg
+        .append('g')
+        .attr('id', 'patient-barplots-outliner')
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', mainPlotWidth)
+        .attr('height', barplotHeight)
+        .style('fill', 'none')
+        .style('stroke', 'black')
+        .style('stroke-width', 1)
+        .attr('transform', 'translate(-2, -195)');
+
+    // creates the individual stacked bar plot for each patient
+    patient_alterations.forEach((patientAlterObj, patientObjectIndex) => {
+        let currentY = 0;
+
+        aberrationList.forEach((type) => {
+            const responseValue = patientAlterObj[type.value];
+            if (responseValue > 0) {
+                plotGroupElement
+                    .append('rect')
+                    .attr('class', `patient-rect-${type.value}`)
+                    .attr('x', (patientObjectIndex * rectWidth) - 2)
+                    .attr('y', currentY - scale(responseValue))
+                    .attr('width', rectWidth - 2)
+                    .attr('height', scale(responseValue))
+                    .attr('fill', type.color)
+                    .attr('transform', 'translate(0, -115)');
+
+                currentY -= scale(responseValue);
+            }
+        });
+    });
+
+    // creates an axes for the plot
+    createPatientBarPlotAxes(svg, maxTotalValueInDataObject, barplotHeight);
 };
 
 const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, tooltip) => {
@@ -277,7 +384,7 @@ const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, t
         .text('⭕️')
         .attr('font-size', '0.8em')
         .attr('x', -20)
-        .attr('y', (_, i) => (i + 0.55) * rect_height)
+        .attr('y', (_, i) => (i + 0.7) * rect_height)
         .style('visibility', 'hidden')
         .attr('id', (d) => `biomarker-label-for-gene-${d}`)
         .on('mouseover', () => {
@@ -366,7 +473,9 @@ const makeOncoprint = (hmap_patients, props, context) => {
 
     // data from props.
     const { className: plotId } = props;
-    const { dimensions, margin, threshold } = props;
+    const {
+        dimensions, margin, threshold, datasetId,
+    } = props;
     const { data_mut, data_rna, data_cnv } = props;
     const { genes_mut, genes_rna, genes_cnv } = props;
     const { patient_mut, patient_rna, patient_cnv } = props;
@@ -388,14 +497,18 @@ const makeOncoprint = (hmap_patients, props, context) => {
     const height = genes.length * rect_height;
     const width = hmap_patients.length * rect_width;
 
-    // making tooltips
-    const tooltip = createToolTip('oncoprint');
-
     /** SETTING SVG ATTRIBUTES and Oncoprint SKELETON * */
+    d3.select('#oncoprint').selectAll('*').remove();
+
     // make the svg element
     const svg = createSvgCanvas({
         height, width, margin, id: 'oncoprint', canvasId: `oncoprint-${plotId}`,
     });
+
+    // making tooltips (appended after SVG so it naturally stacks on top and is not wiped by cleanup)
+    const tooltip = createToolTip('oncoprint')
+        .style('z-index', '1000')
+        .style('pointer-events', 'none');
 
     // NEW: responsive SVG + safe right-side room so nothing is clipped
     const extraRight = computeRightExtrasOncoprint(rect_width);
@@ -404,11 +517,9 @@ const makeOncoprint = (hmap_patients, props, context) => {
 
     d3.select(`#oncoprint-${plotId}`)
         .attr('viewBox', `0 0 ${totalW} ${totalH}`)
-        .attr('preserveAspectRatio', 'xMidYMin meet')
+        .attr('preserveAspectRatio', 'xMinYMin meet')
         .attr('width', '100%')
-        .attr('height', 'auto')
-        .style('display', 'block')
-        .style('margin', '0 0 0 50px');
+        .attr('height', 'auto');
 
     // skeleton of the oncoprint
     const skeleton = svg.append('g')
@@ -420,6 +531,10 @@ const makeOncoprint = (hmap_patients, props, context) => {
     /* *  Gene Names on Y-Axis and Biomarker Image* */
     createGeneYAxis(skeleton, genes, rect_height, rect_width, tooltip, data_mut, data_cnv, data_rna, props, context);
     createBiomarkerImage(skeleton, genes, drugs, rect_height, rect_width, tooltip);
+
+    // patient scale and axis
+    const patientLabelScale = createPatientLabelScale(hmap_patients, width);
+    createPatientXAxis(skeleton, patientLabelScale, datasetId);
 
     /* ****************************************** Setting Alterations ****************************************** */
     // alterations: mutations are #1a9850 and a third, AMP/del are #e41a1c/#0033CC and full respectively
@@ -436,9 +551,6 @@ const makeOncoprint = (hmap_patients, props, context) => {
     /** Coloring the rectangles based on mutation, cnv or rnaseq data * */
     // this will take four parameters and color the rectangle accordingly
     const colorRectangles = (value, color, i, j, mutationType) => {
-        // setting a = 12 if value is mut
-        const a = value === 'mut' ? 10 : 0;
-
         // setting the color based on value param.
         if (value !== 'empty' && value === 'mut') {
             gene_alterations[genes[i]][mutationType]++;
@@ -448,14 +560,31 @@ const makeOncoprint = (hmap_patients, props, context) => {
             patient_alterations[j][value]++;
         }
 
-        // this is for mutation data and rnaseq.
-        const rect = alterations.append('rect')
-            .attr('class', `alter-rect ${value}`)
-            .attr('width', rect_width - rect_width / 2.5)
-            .attr('height', rect_height - rect_width / 2.5 - (2 * a))
-            .attr('fill', color)
-            .attr('x', j * (rect_width))
-            .attr('y', i * (rect_height) + 2 * (a / 2));
+        const cellW = rect_width - 2;
+        const cellH = rect_height - 2;
+        const cellX = j * rect_width;
+        const cellY = i * rect_height;
+
+        let rect;
+        if (value === 'mut') {
+            const mutHeight = Math.max(4, Math.round(cellH / 3));
+            const mutY = cellY + Math.round((cellH - mutHeight) / 2);
+            rect = alterations.append('rect')
+                .attr('class', `alter-rect ${value}`)
+                .attr('width', cellW)
+                .attr('height', mutHeight)
+                .attr('fill', color)
+                .attr('x', cellX)
+                .attr('y', mutY);
+        } else {
+            rect = alterations.append('rect')
+                .attr('class', `alter-rect ${value}`)
+                .attr('width', cellW)
+                .attr('height', cellH)
+                .attr('fill', color)
+                .attr('x', cellX)
+                .attr('y', cellY);
+        }
 
         // setting the border high-rna and low-rna.
         if (value === 'Expression High') {
@@ -473,13 +602,13 @@ const makeOncoprint = (hmap_patients, props, context) => {
     const colorNotSequenced = (i, j) => {
         alterations.append('rect')
             .attr('class', 'alter-rect nseq')
-            .attr('width', rect_width - rect_width / 2.5)
-            .attr('height', rect_height - rect_width / 2.5)
+            .attr('width', rect_width - 2)
+            .attr('height', rect_height - 2)
             .attr('fill', `${colors.white}`)
             .attr('stroke', 'lightgray')
             .attr('stroke-width', '1px')
-            .attr('x', j * (rect_width) + 1)
-            .attr('y', i * (rect_height) + 1);
+            .attr('x', j * (rect_width))
+            .attr('y', i * (rect_height));
     };
 
     // creates a layer of oncoprint.
@@ -644,129 +773,28 @@ const makeOncoprint = (hmap_patients, props, context) => {
     }
 
     /** ******************************************* Horizontal Graph ******************************************* * */
-
-    // calculating max height
     if ((genes_mut.length > 0 || genes_cnv.length > 0) && isAlteration) {
-        // calculating the max height.
-        const max_height_arr = [];
-
-        for (let i = 0; i < patient_alterations.length; i++) {
-            let max = 0;
-            for (let j = 0; j < aberration.length; j++) {
-                max += patient_alterations[i][aberration[j].value];
-                // max_height_arr.push(patient_alterations[i][aberration[j].value]);
-            }
-            max_height_arr.push(max);
-        }
-
-        const max_height = d3.max(max_height_arr);
-
-        const patient_alter = svg.append('g')
-            .attr('id', 'patient-alter');
-
-        const yrange_patient = d3.scaleLinear()
-            .domain([0, max_height])
-            .range([`${dimensions.height}`, 0]);
-
-        // function to calculate alterations.
-        const patientAlterationRectangle = (iterator) => {
-            // variables.
-            const i = iterator;
-            let y_range = 0;
-
-            // loops through each type for each of the genes_mut.
-            aberration.forEach((type, index) => {
-                // set value to 1 if j is greater than 1.
-                const j = index > 1 ? index / index : index;
-
-                // setting y range.
-                y_range = (yrange_patient(patient_alterations[i][type.value])) - ((`${dimensions.height}` * j) - y_range);
-
-                // color setting.
-                const { color } = type;
-
-                // rectangle coloring.
-                patient_alter.append('rect')
-                    .attr('class', `patient-rect${type}`)
-                    .attr('height', `${dimensions.height}` - yrange_patient(patient_alterations[i][type.value]))
-                    .attr('width', rect_width - 5)
-                    .attr('fill', color)
-                    .attr('y', y_range)
-                    .attr('x', i * `${dimensions.width}` + 1)
-                    .attr('transform', 'translate(0,-40)');
-            });
-        };
-
-        for (let i = 0; i < patient_alterations.length; i++) {
-            patientAlterationRectangle(i);
-        }
-
-        const yrange_axis = d3.scaleLinear()
-            .domain([0, max_height])
-            .range([35 - yrange_patient(max_height), 0]).nice();
-
-        const y_axis = d3.axisLeft()
-            .scale(yrange_axis)
-            .ticks(4); // change to dynamic ticks.
-        // .tickSize(2)
-        // .tickFormat(d3.format('.0f'));
-
-        svg.append('g')
-            .attr('class', 'y_axis')
-            .attr('fill', 'none')
-            .attr('stroke', `${colors.black}`)
-            .attr('stroke-width', 1)
-            .attr('transform', `translate(-10,${-40 - yrange_patient(max_height)})`)
-            .call(y_axis)
-            .selectAll('text')
-            .attr('fill', `${colors.black}`)
-            .style('font-size', 8)
-            .attr('stroke', 'none');
-
-        svg.selectAll('.tick')
-            .select('text')
-            .attr('fill', `${colors.black}`)
-            .attr('stroke', 'none');
-
-        // removing the 0 tick
-        svg.selectAll('.y_axis .tick')
-            .each(function tick(d) {
-                if (d === 0) {
-                    this.remove();
-                }
-            });
+        patientStackedBarplots(svg, patient_alterations, aberration, rect_width, width);
     }
-    // dotted lines.
+
+    // dotted lines space.
     const lines = svg.append('g')
         .attr('id', 'lines')
-        .attr('transform', () => 'translate(2,-200)');
+        .attr('transform', () => 'translate(2,-250)');
     const temp = hmap_patients.slice(0);
     temp.push('');
-
-    lines.selectAll('line.dashed-line')
-        .data(temp)
-        .enter()
-        .append('line')
-        .attr('class', 'dashed-line')
-        .attr('x1', (d, i) => i * (rect_width) - 3)
-        .attr('x2', (d, i) => i * (rect_width) - 3)
-        .attr('y1', 0)
-        .attr('y2', 200)
-        .attr('stroke', `${colors.black}`)
-        .attr('stroke-width', 1)
-        .style('stroke-dasharray', '3 2')
-        .style('opacity', 0.2);
 
     lines.selectAll('rect.hlight-space')
         .data(hmap_patients)
         .enter()
         .append('rect')
-        .attr('class', (d) => `hlight-space-${d}`)
+        .attr('class', (d) => `hlight-space-${removeSomeSpecialCharacters(d)}`)
         .attr('width', rect_width - 2)
-        .attr('height', 200)
+        .attr('height', 250)
         .attr('x', (d, i) => i * rect_width - 2)
         .attr('fill', 'rgb(0,0,0)')
         .attr('y', 0)
+        .style('pointer-events', 'none')
         .style('opacity', 0);
 
     /** ******************************** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint ******************************** */
@@ -820,13 +848,13 @@ const makeOncoprint = (hmap_patients, props, context) => {
     /** ******************************************** Tooltip for oncoprint ******************************************** */
 
     const showToolTip = (x, y, gene, patient, mutation, cnv, expression) => {
+        d3.selectAll('#tooltiptextonco').remove();
+
         // tooltip on mouseover setting the div to visible.
         tooltip
-            .style('visibility', 'visible');
-
-        // tooltip grabbing event.pageX and event.pageY
-        // and set color according to the ordinal scale.
-        const tooltipDiv = tooltip
+            .style('visibility', 'visible')
+            .style('z-index', '1000')
+            .style('pointer-events', 'none')
             .style('left', `${x + 10}px`)
             .style('top', `${y + 10}px`);
 
@@ -846,17 +874,16 @@ const makeOncoprint = (hmap_patients, props, context) => {
             tooltipData.push(`Expression: ${expression}`);
         }
 
-        tooltipDiv.selectAll('textDiv')
+        tooltip.selectAll('div.tooltip-row')
             .data(tooltipData)
             .enter()
             .append('div')
+            .attr('class', 'tooltip-row')
             .attr('id', 'tooltiptextonco')
             .html((d) => {
                 const data = d.split(':');
-                return `<b>${data[0]}</b>: ${data[1]}`;
+                return `<b>${data[0]}</b>: ${data.slice(1).join(':')}`;
             })
-            .attr('x', `${x + 10}px`)
-            .attr('y', (d, i) => (`${y + 10 + i * 10}px`))
             .style('font-size', '12px');
     };
 
@@ -869,11 +896,15 @@ const makeOncoprint = (hmap_patients, props, context) => {
         d3.selectAll('#tooltiptextonco').remove();
     };
 
-    // highlight
+    // highlight layer raised to the top of the canvas so it receives all pointer events
+    highlight.raise();
     for (let i = 0; i < genes.length; i++) {
         for (let j = 0; j < hmap_patients.length; j++) {
+            const safePatient = removeSomeSpecialCharacters(hmap_patients[j]);
+            const safeGene = removeSomeSpecialCharacters(genes[i]);
+
             highlight.append('rect')
-                .attr('class', `oprint-hlight-${hmap_patients[j]} oprint-hlight-${genes[i]}`)
+                .attr('class', `oprint-hlight-${safePatient} oprint-hlight-${safeGene}`)
                 .attr('width', rect_width - 2)
                 .attr('height', rect_height - 2)
                 .attr('fill', `${colors.black}`)
@@ -892,24 +923,24 @@ const makeOncoprint = (hmap_patients, props, context) => {
                     );
 
                     // highlight
-                    d3.selectAll(`.hmap-hlight-${hmap_patients[j].replace('.', '')}`)
+                    d3.selectAll(`.oprint-hlight-${safePatient}`)
                         .style('opacity', 0.2);
-                    d3.selectAll(`.oprint-hlight-${hmap_patients[j].replace('.', '')}`)
+                    d3.selectAll(`.hlight-space-${safePatient}`)
                         .style('opacity', 0.2);
-                    d3.selectAll(`.hlight-space-${hmap_patients[j].replace('.', '')}`)
-                        .style('opacity', 0.2);
+                    d3.selectAll(`rect[id^='rectangle-highlight'][id$='${hmap_patients[j]}']`)
+                        .attr('opacity', '0.5');
                 })
                 .on('mouseout', () => {
                     // hide tooltip
                     hideToolTip();
 
                     // highlight
-                    d3.selectAll(`.hmap-hlight-${hmap_patients[j].replace('.', '')}`)
+                    d3.selectAll(`.oprint-hlight-${safePatient}`)
                         .style('opacity', 0);
-                    d3.selectAll(`.oprint-hlight-${hmap_patients[j].replace('.', '')}`)
+                    d3.selectAll(`.hlight-space-${safePatient}`)
                         .style('opacity', 0);
-                    d3.selectAll(`.hlight-space-${hmap_patients[j].replace('.', '')}`)
-                        .style('opacity', 0);
+                    d3.selectAll(`rect[id^='rectangle-highlight'][id$='${hmap_patients[j]}']`)
+                        .attr('opacity', '0.0');
                 });
         }
     }
@@ -1049,8 +1080,11 @@ const Oncoprint = (props) => {
 	const oncoprintWrapRef = useRef(null);
 
     useEffect(() => {
-        makeOncoprint(hmap_patients, props, context);
-    }, []);
+        const patientsToUse = (context.globalPatients && context.globalPatients.length > 0)
+            ? context.globalPatients
+            : hmap_patients;
+        makeOncoprint(patientsToUse, props, context);
+    }, [props, hmap_patients, context.globalPatients]);
 
     // ranking the oncoprint based on the globalPatients passed from heatmap.
     const rankOncoprintBasedOnHeatMapChanges = (value) => {
@@ -1083,20 +1117,18 @@ const Oncoprint = (props) => {
 
     return (
         // eslint-disable-next-line no-return-assign
-        <div>  
+        <div>
 			<ExportWrapper>
 				<button onClick={() => downloadCharts()}>
                     Download Oncograph
                 </button>
             </ExportWrapper>
-			<div style={{width: "100%"}}>
-				<OncoprintWrapper ref={oncoprintWrapRef}>
-					<div id='oncoprint' />
-				</OncoprintWrapper>
+			<OncoprintWrapper ref={oncoprintWrapRef}>
+				<div id='oncoprint' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
 				<PatientContext.Consumer>
 					{(value) => { rankOncoprintBasedOnHeatMapChanges(value); }}
 				</PatientContext.Consumer>
-			</div>
+			</OncoprintWrapper>
         </div>
     );
 };
@@ -1128,6 +1160,10 @@ Oncoprint.propTypes = {
     data_rna: PropTypes.object.isRequired,
     data_cnv: PropTypes.object.isRequired,
     drugs: PropTypes.arrayOf(PropTypes.string),
+    datasetId: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+    ]),
 };
 
 export default Oncoprint;
