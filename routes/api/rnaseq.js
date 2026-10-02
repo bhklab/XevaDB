@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
-const { isVerified } = require('./util');
+const { canAccessDataset } = require('./util');
 const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
 // ******************************* RNASeq Queries *****************************************
@@ -69,7 +69,7 @@ const getRnaSeqDataBasedOnDataset = async (request, response) => {
     // dataset param.
     const { params: { dataset: datasetParam } } = request;
 
-    if (isVerified(response, datasetParam)) {
+    if (await canAccessDataset(response, datasetParam)) {
         try {
             // grabbing the rna_sequencing data based on patients and limiting genes to 1-30.
             const rnaSeqData = await rnaSeqQuery().where('model_information.dataset_id', datasetParam)
@@ -109,7 +109,7 @@ const getRnaSeqBasedOnDatasetAndGenes = async (request, response) => {
     const geneParam = request.query.genes;
     const datasetParam = request.query.dataset;
 
-    if (isVerified(response, datasetParam)) {
+    if (await canAccessDataset(response, datasetParam)) {
         try {
             // getting the unique list of patients and genes.
             const patients = await patientsBasedOnDatasetIdQuery(datasetParam);

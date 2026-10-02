@@ -8,6 +8,9 @@ exports.up = (knex) => (
                         .primary();
                     table.string('dataset_name')
                         .notNullable();
+                    table.boolean('private')
+                        .notNullable()
+                        .defaultTo(false);
                 });
             }
             return query;

@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
-const { isVerified } = require('./util');
+const { canAccessDataset } = require('./util');
 const { batchIdQuery } = require('./batch');
 
 // ************************** Mutation Queries ************************************************
@@ -65,13 +65,12 @@ const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
         .andWhere('patients.patient', patient);
     // .andWhere('batch_information.type', 'treatment')
 
-    grabBatchId.then((batch) => {
+    grabBatchId.then(async (batch) => {
         // grab the dataset id.
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
 
-        // check if it verified and the dataset id is greater than 0
-        // or if it's not verified (unknown) then the dataset id should be less than 7.
-        if (isVerified(response, dataset)) {
+        // allows only if the dataset is public or the user is logged in.
+        if (await canAccessDataset(response, dataset)) {
             drugScreeningQuery()
                 .where(function () {
                     this.where('drugs.drug_name', drug)

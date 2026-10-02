@@ -11,7 +11,6 @@ const jwt = require('jsonwebtoken');
 module.exports = function (request, response, next) {
     // authorization token.
     const token = request.headers.authorization;
-    console.log(token)
 
     // if token is not sent the authorization fails.
     if (!token) {
@@ -19,14 +18,17 @@ module.exports = function (request, response, next) {
     }
 
     // check if the token is valid or not.
+    // jwt.verify checks the signature against the secret in the .env file (JWT_SECRET)
+    // and rejects tokens that have expired.
     try {
         let verified = {};
-        verified = jwt.verify(token, 'secretkey');
+        verified = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
         verified.verified = 'verified';
-        console.log('Token is verified', verified);
+        console.log('Token is verified for user', verified.username);
         response.locals.user = verified;
         next();
     } catch (err) {
+        // treat the request as a logged-out user.
         console.log('Token invalid!!!');
         response.locals.user = 'unknown';
         next();

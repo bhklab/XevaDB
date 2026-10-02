@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 const knex = require('../../db/knex1');
-const { isVerified } = require('./util');
+const { canAccessDataset } = require('./util');
 const { geneIdsBasedOnGeneNames, patientsBasedOnDatasetIdQuery } = require('./helper');
 
 // ************************* Mutation Queries *******************************************
@@ -69,7 +69,7 @@ const getMutationDataBasedOnDataset = async (request, response) => {
     // dataset param.
     const { params: { dataset: datasetParam } } = request;
 
-    if (isVerified(response, datasetParam)) {
+    if (await canAccessDataset(response, datasetParam)) {
         try {
             // patients.
             const patients = await patientsBasedOnDatasetIdQuery(datasetParam);
@@ -117,7 +117,7 @@ const getMutationDataBasedOnDatasetAndGenes = async (request, response) => {
     const geneParam = request.query.genes;
     const datasetParam = request.query.dataset;
 
-    if (isVerified(response, datasetParam)) {
+    if (await canAccessDataset(response, datasetParam)) {
         try {
             // getting the unique list of patients and genes.
             const patients = await patientsBasedOnDatasetIdQuery(datasetParam);
