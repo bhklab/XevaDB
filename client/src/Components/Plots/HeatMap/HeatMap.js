@@ -263,29 +263,29 @@ const createDrugYAxis = (svg, drugScale) => {
             return `${colors['--main-font-color']}`;
         })
         .on('mouseover', (drug) => {
-            // remove the biomarker and sorting labels
-            // that are already selected (selected class!)
-            d3.selectAll('text[id*="sorting-label"][class="selected"]')
-                .style('visibility', 'hidden')
-                .classed('selected', false);
+            // // remove the biomarker and sorting labels
+            // // that are already selected (selected class!)
+            // d3.selectAll('text[id*="sorting-label"][class="selected"]')
+            //     .style('visibility', 'hidden')
+            //     .classed('selected', false);
 
-            d3.selectAll('[id*="biomarker-label"][class="selected"]')
-                .style('visibility', 'hidden')
-                .classed('selected', false);
+            // d3.selectAll('[id*="biomarker-label"][class="selected"]')
+            //     .style('visibility', 'hidden')
+            //     .classed('selected', false);
 
-            // transforms the drug label group
-            d3.select('#drug-axis-group')
-                .attr('transform', 'translate(-40, 0)');
+            // // transforms the drug label group
+            // d3.select('#drug-axis-group')
+            //     .attr('transform', 'translate(-40, 0)');
 
-            // change the visibility for the corresponding
-            // biomarker and sorting label to visible.
-            d3.select(`#biomarker-label-for-${removeSomeSpecialCharacters(drug)}`)
-                .style('visibility', 'visible')
-                .classed('selected', true);
+            // // change the visibility for the corresponding
+            // // biomarker and sorting label to visible.
+            // d3.select(`#biomarker-label-for-${removeSomeSpecialCharacters(drug)}`)
+            //     .style('visibility', 'visible')
+            //     .classed('selected', true);
 
-            d3.select(`#sorting-label-for-${removeSomeSpecialCharacters(drug)}`)
-                .style('visibility', 'visible')
-                .classed('selected', true);
+            // d3.select(`#sorting-label-for-${removeSomeSpecialCharacters(drug)}`)
+            //     .style('visibility', 'visible')
+            //     .classed('selected', true);
 
             // select the rectangles with highlight as hidden for the
             // corresponding drug highlight group
@@ -303,59 +303,59 @@ const createDrugYAxis = (svg, drugScale) => {
 
 // biomarker label to redirect to the biomarker page.
 const createBiomarkerLabel = (svg, drugNameList, geneList, rectHeight, tooltip) => {
-    svg.append('g')
-        .attr('id', 'biomarker-label-group')
-        .selectAll('a')
-        .data(drugNameList)
-        .join('a')
-        .attr('xlink:href', (d) => (
-            geneList.length > 0
-                ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drugNameList}&selectedDrug=${d}`
-                : `/biomarker?selectedDrug=${d}`
-        ))
-        .append('text')
-        .text('⭕️')
-        .attr('font-size', '0.8em')
-        .attr('x', -20)
-        .attr('y', (_, i) => (i + 0.70) * rectHeight)
-        .attr('id', (d) => `biomarker-label-for-${removeSomeSpecialCharacters(d)}`)
-        .style('visibility', 'hidden')
-        .on('mouseover', () => {
-            // add a tooltip on mouseover
-            const tooltipData = ['Redirect to biomarker page'];
-            const biomarkerToolTip = makeToolTipVisible(tooltip);
-            addDataToTooltip(biomarkerToolTip, tooltipData);
-        })
-        .on('mouseout', () => {
-            tooltip
-                .style('visibility', 'hidden');
-        });
+    // svg.append('g')
+    //     .attr('id', 'biomarker-label-group')
+    //     .selectAll('a')
+    //     .data(drugNameList)
+    //     .join('a')
+    //     .attr('xlink:href', (d) => (
+    //         geneList.length > 0
+    //             ? `/biomarker?geneList=${geneList.join(',')}&drugList=${drugNameList}&selectedDrug=${d}`
+    //             : `/biomarker?selectedDrug=${d}`
+    //     ))
+    //     .append('text')
+    //     .text('⭕️')
+    //     .attr('font-size', '0.8em')
+    //     .attr('x', -20)
+    //     .attr('y', (_, i) => (i + 0.70) * rectHeight)
+    //     .attr('id', (d) => `biomarker-label-for-${removeSomeSpecialCharacters(d)}`)
+    //     .style('visibility', 'hidden')
+    //     .on('mouseover', () => {
+    //         // add a tooltip on mouseover
+    //         const tooltipData = ['Redirect to biomarker page'];
+    //         const biomarkerToolTip = makeToolTipVisible(tooltip);
+    //         addDataToTooltip(biomarkerToolTip, tooltipData);
+    //     })
+    //     .on('mouseout', () => {
+    //         tooltip
+    //             .style('visibility', 'hidden');
+    //     });
 };
 
 // creates the label/triangle to sort the row based on the recist value
 const createSortingLabel = (svg, drugNameList, rectHeight, tooltip) => {
-    svg
-        .append('g')
-        .attr('id', 'sorting-label-group')
-        .selectAll('text')
-        .data(drugNameList)
-        .join('text')
-        .text('🔺')
-        .attr('font-size', '1em')
-        .attr('x', -45)
-        .attr('y', (_, i) => (i + 0.70) * rectHeight)
-        .attr('id', (d) => `sorting-label-for-${removeSomeSpecialCharacters(d)}`)
-        .style('visibility', 'hidden')
-        .on('mouseover', () => {
-            // add a tooltip on mouseover
-            const tooltipData = ['Click to sort'];
-            const sortingToolTip = makeToolTipVisible(tooltip);
-            addDataToTooltip(sortingToolTip, tooltipData);
-        })
-        .on('mouseout', () => {
-            tooltip
-                .style('visibility', 'hidden');
-        }); // TODO: add event listener to sort
+    // svg
+    //     .append('g')
+    //     .attr('id', 'sorting-label-group')
+    //     .selectAll('text')
+    //     .data(drugNameList)
+    //     .join('text')
+    //     .text('🔺')
+    //     .attr('font-size', '1em')
+    //     .attr('x', -45)
+    //     .attr('y', (_, i) => (i + 0.70) * rectHeight)
+    //     .attr('id', (d) => `sorting-label-for-${removeSomeSpecialCharacters(d)}`)
+    //     .style('visibility', 'hidden')
+    //     .on('mouseover', () => {
+    //         // add a tooltip on mouseover
+    //         const tooltipData = ['Click to sort'];
+    //         const sortingToolTip = makeToolTipVisible(tooltip);
+    //         addDataToTooltip(sortingToolTip, tooltipData);
+    //     })
+    //     .on('mouseout', () => {
+    //         tooltip
+    //             .style('visibility', 'hidden');
+    //     }); // TODO: add event listener to sort
 };
 
 // creating legend for the response type except for mRECIST.
@@ -778,10 +778,10 @@ const createHeatMap = (props, responseType) => {
     createDrugYAxis(heatmapGroupingElement, drugLabelScale);
 
     // create biomarker label/circle to redirect to the biomarker page.
-    createBiomarkerLabel(heatmapGroupingElement, drugNameList, geneList, rectHeight, tooltip);
+    // createBiomarkerLabel(heatmapGroupingElement, drugNameList, geneList, rectHeight, tooltip);
 
     // create sorting label/triangle to sort the respective row for the drug.
-    createSortingLabel(heatmapGroupingElement, drugNameList, rectHeight, tooltip);
+    // createSortingLabel(heatmapGroupingElement, drugNameList, rectHeight, tooltip);
 
     // creates the legend
     if (responseType === 'mRECIST') {

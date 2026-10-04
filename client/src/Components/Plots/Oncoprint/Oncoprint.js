@@ -49,10 +49,9 @@ const ExportWrapper = styled.div`
 
 const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
 
-// NEW: extra right padding so legends/sidebars never get clipped
 const computeRightExtrasOncoprint = (rect_width) => {
     const sidebarGeneAlter = rect_width * 5 + 30; // right stacked bars width + padding
-    const legendBlock = rect_width * 10 + 160;    // legend + labels conservative
+    const legendBlock = rect_width * 10 + 280;    // legend + labels + descriptions conservative
     return Math.max(sidebarGeneAlter, legendBlock) + 20;
 };
 
@@ -81,7 +80,7 @@ const getMutationMappingObject = (data) => {
 		const style = meta.style;
 		if (!mutationObject[style]) {
 		mutationObject[style] = {
-			value: convertToTitleCase(style, '_'),
+			label: convertToTitleCase(style, '_'),
 			color: meta.color,
 		};
 		}
@@ -95,21 +94,27 @@ const getMutationMappingObject = (data) => {
  * @returns {Array} - mapping of CNV data
  */
 const getCopyNumberVariationMapping = (data) => {
-    const cnvObject = {};
+    const seenStyles = new Set();
     Object.values(data).forEach((obj) => {
         Object.entries(obj).forEach(([key, value]) => {
-            if (key !== 'gene_id' && value !== '0' && !cnvObject[cnaMap[value.toLowerCase()].xevalabel]) {
-                const xevaLabel = cnaMap[value.toLowerCase()].xevalabel;
-                const { color } = cnaMap[value.toLowerCase()];
-                // adding to cnv object
-                cnvObject[xevaLabel] = {
-                    value: cnvMapping[xevaLabel],
-                    color,
-                };
+            if (key !== 'gene_id' && value != null && String(value) !== '0') {
+                const entry = cnaMap[String(value).toLowerCase()];
+                if (entry && entry.xevalabel !== 'empty') {
+                    seenStyles.add(entry.style);
+                }
             }
         });
     });
-    return Object.values(cnvObject);
+
+    // Ordered CNV legend definitions (most amplified → most deleted)
+    const cnvLegendDefinitions = [
+        { style: 'cna-amp', label: 'Amplification', color: `${colors.red}` },
+        { style: 'cna-gain', label: 'Gain', color: '#FFAAAA' },
+        { style: 'cna-hetloss', label: 'Shallow Deletion', color: '#82B0FF' },
+        { style: 'cna-homdel', label: 'Deletion', color: `${colors.blue}` },
+    ];
+
+    return cnvLegendDefinitions.filter((d) => seenStyles.has(d.style));
 };
 
 /**
@@ -118,44 +123,37 @@ const getCopyNumberVariationMapping = (data) => {
  * @param {Array} data_cnv - array of cnv data
  */
 const createAlterationData = (data_mut, data_rna, data_cnv) => {
-    // adding this for rectangles on right side of oncoprint.
-    // only if the mutation data is present.
-    let rect_alterations_mut = [];
+    const groups = {};
+
+    // Mutation legend entries (only if mutation data is present)
     if (Object.keys(data_mut).length > 0) {
-        rect_alterations_mut = getMutationMappingObject(data_mut);
-    }
-    // only if rnaseq data is available.
-    let rect_alterations_rna = [];
-    if (Object.keys(data_rna).length > 0) {
-        rect_alterations_rna = [
-            { value: 'Expression High', color: 'none' },
-            { value: 'Expression Low', color: 'none' },
-        ];
-    }
-    // only if the cnv data is present.
-    let rect_alterations_cnv = [];
-    if (Object.keys(data_cnv).length > 0) {
-        rect_alterations_cnv = getCopyNumberVariationMapping(data_cnv);
+        groups.mutations = getMutationMappingObject(data_mut);
     }
 
-    // wild type only when cnv or mut data is available
-    const remainingTypes = (Object.keys(data_cnv).length > 0 || Object.keys(data_mut).length > 0)
+    // CNV legend entries (only if CNV data is present)
+    if (Object.keys(data_cnv).length > 0) {
+        groups.cnv = getCopyNumberVariationMapping(data_cnv);
+    }
+
+    // Gene Expression legend entries (only if RNA-seq data is present)
+    if (Object.keys(data_rna).length > 0) {
+        groups.expression = [
+            { label: 'Expression High', strokeColor: 'red' },
+            { label: 'Expression Low', strokeColor: 'blue' },
+        ];
+    }
+
+    // General entries
+    groups.general = (Object.keys(data_cnv).length > 0 || Object.keys(data_mut).length > 0)
         ? [
-            { value: 'Wild Type', color: 'lightgray' },
-            { value: 'Not Available', color: 'none' },
+            { label: 'Wild Type', color: 'lightgray' },
+            { label: 'Not Available', color: 'none' },
         ]
         : [
-            { value: 'Not Available', color: 'none' },
+            { label: 'Not Available', color: 'none' },
         ];
 
-    const rect_alterations = [
-        ...rect_alterations_mut,
-        ...rect_alterations_rna,
-        ...rect_alterations_cnv,
-        ...remainingTypes,
-    ];
-
-    return rect_alterations;
+    return groups;
 };
 
 /**
@@ -165,39 +163,39 @@ const createAlterationData = (data_mut, data_rna, data_cnv) => {
  * @param {number} rect_height - height.
  */
 const createSortingLabel = (genes, svg, rect_height, tooltip) => {
-    const sortingGroup = svg.append('g')
-        .attr('id', 'sorting-label-group');
+    // const sortingGroup = svg.append('g')
+    //     .attr('id', 'sorting-label-group');
 
-    genes.forEach((gene, i) => {
-        sortingGroup
-            .append('text')
-            .text('🔺')
-            .attr('x', -45)
-            .attr('y', (i + 0.7) * rect_height)
-            .attr('font-size', '1em')
-            .attr('id', `sorting-label-for-gene-${removeSomeSpecialCharacters(gene)}`)
-            .style('visibility', 'hidden')
-            .on('mouseover', () => { // TODO: ADD SORTING LOGIC
-                const tooltipDiv = tooltip
-                    .style('visibility', 'visible')
-                    .style('left', `${d3.event.pageX - 100}px`)
-                    .style('top', `${d3.event.pageY + 15}px`);
+    // genes.forEach((gene, i) => {
+    //     sortingGroup
+    //         .append('text')
+    //         .text('🔺')
+    //         .attr('x', -45)
+    //         .attr('y', (i + 0.7) * rect_height)
+    //         .attr('font-size', '1em')
+    //         .attr('id', `sorting-label-for-gene-${removeSomeSpecialCharacters(gene)}`)
+    //         .style('visibility', 'hidden')
+    //         .on('mouseover', () => { // TODO: ADD SORTING LOGIC
+    //             const tooltipDiv = tooltip
+    //                 .style('visibility', 'visible')
+    //                 .style('left', `${d3.event.pageX - 100}px`)
+    //                 .style('top', `${d3.event.pageY + 15}px`);
 
-                // add text to tooltip
-                tooltipDiv
-                    .append('text')
-                    .attr('id', 'tooltip-biomarker')
-                    .text('Click to sort');
-            })
-            .on('mouseout', () => {
-                // hide the tooltip
-                tooltip
-                    .style('visibility', 'hidden');
+    //             // add text to tooltip
+    //             tooltipDiv
+    //                 .append('text')
+    //                 .attr('id', 'tooltip-biomarker')
+    //                 .text('Click to sort');
+    //         })
+    //         .on('mouseout', () => {
+    //             // hide the tooltip
+    //             tooltip
+    //                 .style('visibility', 'hidden');
 
-                // remove the biomarker tooltip data
-                d3.select('#tooltip-biomarker').remove();
-            });
-    });
+    //             // remove the biomarker tooltip data
+    //             d3.select('#tooltip-biomarker').remove();
+    //         });
+    // });
 };
 
 const createGeneYAxis = (
@@ -224,29 +222,29 @@ const createGeneYAxis = (
                 d3.selectAll(`.oprint-hlight-${removeSomeSpecialCharacters(genes[i])}`)
                     .style('opacity', 0.2);
 
-                // remove the biomarker and sorting labels
-                // that are already selected (selected class!)
-                d3.selectAll('text[id*="sorting-label"][class="selected"]')
-                    .style('visibility', 'hidden')
-                    .classed('selected', false);
+                // // remove the biomarker and sorting labels
+                // // that are already selected (selected class!)
+                // d3.selectAll('text[id*="sorting-label"][class="selected"]')
+                //     .style('visibility', 'hidden')
+                //     .classed('selected', false);
 
-                d3.selectAll('[id*="biomarker-label"][class="selected"]')
-                    .style('visibility', 'hidden')
-                    .classed('selected', false);
+                // d3.selectAll('[id*="biomarker-label"][class="selected"]')
+                //     .style('visibility', 'hidden')
+                //     .classed('selected', false);
 
-                // transforms the drug label group
-                d3.select('#gene-axis-group')
-                    .attr('transform', 'translate(-40, 0)');
+                // // transforms the drug label group
+                // d3.select('#gene-axis-group')
+                //     .attr('transform', 'translate(-40, 0)');
 
-                // change the visibility for the corresponding
-                // biomarker and sorting label to visible.
-                d3.select(`#biomarker-label-for-gene-${removeSomeSpecialCharacters(genes[i])}`)
-                    .style('visibility', 'visible')
-                    .classed('selected', true);
+                // // change the visibility for the corresponding
+                // // biomarker and sorting label to visible.
+                // d3.select(`#biomarker-label-for-gene-${removeSomeSpecialCharacters(genes[i])}`)
+                //     .style('visibility', 'visible')
+                //     .classed('selected', true);
 
-                d3.select(`#sorting-label-for-gene-${removeSomeSpecialCharacters(genes[i])}`)
-                    .style('visibility', 'visible')
-                    .classed('selected', true);
+                // d3.select(`#sorting-label-for-gene-${removeSomeSpecialCharacters(genes[i])}`)
+                //     .style('visibility', 'visible')
+                //     .classed('selected', true);
             })
             .on('mouseout', () => {
                 // for highlight.
@@ -368,45 +366,45 @@ const patientStackedBarplots = (
 };
 
 const createBiomarkerImage = (skeleton, genes, drugs, rect_height, rect_width, tooltip) => {
-    const biomarkerImage = skeleton
-        .append('g')
-        .attr('id', 'biomarker-image');
+    // const biomarkerImage = skeleton
+    //     .append('g')
+    //     .attr('id', 'biomarker-image');
 
-    biomarkerImage.selectAll('div')
-        .data(genes)
-        .join('a')
-        .attr('xlink:href', (d) => (
-            drugs
-                ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}`
-                : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`
-        ))
-        .append('text')
-        .text('⭕️')
-        .attr('font-size', '0.8em')
-        .attr('x', -20)
-        .attr('y', (_, i) => (i + 0.7) * rect_height)
-        .style('visibility', 'hidden')
-        .attr('id', (d) => `biomarker-label-for-gene-${d}`)
-        .on('mouseover', () => {
-            const tooltipDiv = tooltip
-                .style('visibility', 'visible')
-                .style('left', `${d3.event.pageX - 100}px`)
-                .style('top', `${d3.event.pageY + 15}px`);
+    // biomarkerImage.selectAll('div')
+    //     .data(genes)
+    //     .join('a')
+    //     .attr('xlink:href', (d) => (
+    //         drugs
+    //             ? `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}&drugList=${drugs.join(',')}`
+    //             : `/biomarker?selectedGene=${d}&geneList=${genes.join(',')}`
+    //     ))
+    //     .append('text')
+    //     .text('⭕️')
+    //     .attr('font-size', '0.8em')
+    //     .attr('x', -20)
+    //     .attr('y', (_, i) => (i + 0.7) * rect_height)
+    //     .style('visibility', 'hidden')
+    //     .attr('id', (d) => `biomarker-label-for-gene-${d}`)
+    //     .on('mouseover', () => {
+    //         const tooltipDiv = tooltip
+    //             .style('visibility', 'visible')
+    //             .style('left', `${d3.event.pageX - 100}px`)
+    //             .style('top', `${d3.event.pageY + 15}px`);
 
-            // add text to tooltip
-            tooltipDiv
-                .append('text')
-                .attr('id', 'tooltip-biomarker')
-                .text('Redirect to Biomarker Page');
-        })
-        .on('mouseout', () => {
-        // hide the tooltip
-            tooltip
-                .style('visibility', 'hidden');
+    //         // add text to tooltip
+    //         tooltipDiv
+    //             .append('text')
+    //             .attr('id', 'tooltip-biomarker')
+    //             .text('Redirect to Biomarker Page');
+    //     })
+    //     .on('mouseout', () => {
+    //     // hide the tooltip
+    //         tooltip
+    //             .style('visibility', 'hidden');
 
-            // remove the biomarker tooltip data
-            d3.select('#tooltip-biomarker').remove();
-        });
+    //         // remove the biomarker tooltip data
+    //         d3.select('#tooltip-biomarker').remove();
+    //     });
 };
 
 /**
@@ -510,7 +508,6 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .style('z-index', '1000')
         .style('pointer-events', 'none');
 
-    // NEW: responsive SVG + safe right-side room so nothing is clipped
     const extraRight = computeRightExtrasOncoprint(rect_width);
     const totalW = width + margin.left + margin.right + extraRight;
     const totalH = height + margin.top + margin.bottom;
@@ -526,11 +523,11 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .attr('id', 'skeleton');
 
     /** Appending Circle to the  Y-Axis */
-    createSortingLabel(genes, svg, rect_height, tooltip);
+    // createSortingLabel(genes, svg, rect_height, tooltip);
 
     /* *  Gene Names on Y-Axis and Biomarker Image* */
     createGeneYAxis(skeleton, genes, rect_height, rect_width, tooltip, data_mut, data_cnv, data_rna, props, context);
-    createBiomarkerImage(skeleton, genes, drugs, rect_height, rect_width, tooltip);
+    // createBiomarkerImage(skeleton, genes, drugs, rect_height, rect_width, tooltip);
 
     // patient scale and axis
     const patientLabelScale = createPatientLabelScale(hmap_patients, width);
@@ -797,54 +794,136 @@ const makeOncoprint = (hmap_patients, props, context) => {
         .style('pointer-events', 'none')
         .style('opacity', 0);
 
-    /** ******************************** SMALL RECTANGLES ON RIGHT SIDE OF Oncoprint ******************************** */
-    // This will create rectangles on right side for alterations.
-    // legends
-    const target_rect = skeleton.append('g')
-        .attr('id', 'small_rectangle');
+    /** ******************************** GROUPED LEGEND ******************************** */
+    const legendData = rect_alterations; // grouped object { mutations, cnv, expression, general }
 
-    target_rect.selectAll('rect')
-        .data(rect_alterations)
-        .enter()
-        .append('rect')
-        .attr('x', ((hmap_patients.length + 8.5) * rect_width))
-        .attr('y', (d, i) => (genes.length * 5 + (rect_width + 10) * i))
-        .attr('height', rect_width)
-        .attr('width', rect_width)
-        .attr('fill', function fill(d) {
-            if (d.color === 'none') {
-                d3.select(this).attr('stroke', 'lightgray')
-                    .attr('width', rect_width)
-                    .attr('height', rect_width);
-                return `${colors.white}`;
-            }
-            return d.color;
-        })
-        .attr('stroke', (d) => {
-            let val = '';
-            if (d.value === 'Expression High') {
-                val = 'red';
-            } if (d.value === 'Expression Low') {
-                val = 'blue';
-            } if (d.value === 'Not Available') {
-                val = 'lightgray';
-            }
-            return val;
-        })
-        .attr('stroke-width', '.5px');
+    const legendContainer = skeleton.append('g')
+        .attr('id', 'oncoprint-legend');
 
-    target_rect.selectAll('text')
-        .data(rect_alterations)
-        .enter()
-        .append('text')
-        .attr('x', ((hmap_patients.length + 10) * rect_width))
-        .attr('y', (d, i) => (genes.length * 5 + (rect_width + 10) * i + rect_width * 0.75))
-        .attr('height', rect_width)
-        .attr('width', rect_width)
-        .text((d) => d.value)
-        .attr('font-size', '12px')
-        .attr('fill', `${colors['--main-font-color']}`);
+    const legendX = (hmap_patients.length + 8.5) * rect_width;
+    let cursorY = 0;
 
+    const swatchW = Math.max(rect_width, 14);
+    const swatchH = Math.max(rect_width, 14);
+    const rowH = swatchH + 8;
+    const sectionGap = 18;
+    const textXOffset = swatchW + 8;
+
+    // Helper: render section header with subtle underline
+    const addSectionHeader = (text) => {
+        cursorY += sectionGap;
+        legendContainer.append('text')
+            .text(text)
+            .attr('x', legendX)
+            .attr('y', cursorY)
+            .attr('font-size', '11px')
+            .attr('font-weight', '700')
+            .attr('fill', `${colors['--bg-color']}`)
+            .attr('letter-spacing', '0.5px');
+        legendContainer.append('line')
+            .attr('x1', legendX)
+            .attr('x2', legendX + 160)
+            .attr('y1', cursorY + 4)
+            .attr('y2', cursorY + 4)
+            .attr('stroke', `${colors['--bg-color']}`)
+            .attr('stroke-width', 0.5)
+            .attr('opacity', 0.3);
+        cursorY += 8;
+    };
+
+    // Helper: render label text with optional description
+    const addLabelText = (label, description) => {
+        const hasDesc = !!description;
+        legendContainer.append('text')
+            .text(label)
+            .attr('x', legendX + textXOffset)
+            .attr('y', cursorY - swatchH / 2 - (hasDesc ? 5 : 0))
+            .attr('dominant-baseline', 'middle')
+            .attr('font-size', '11px')
+            .attr('font-weight', '500')
+            .attr('fill', `${colors['--main-font-color']}`);
+        if (hasDesc) {
+            legendContainer.append('text')
+                .text(description)
+                .attr('x', legendX + textXOffset)
+                .attr('y', cursorY - swatchH / 2 + 9)
+                .attr('dominant-baseline', 'middle')
+                .attr('font-size', '9px')
+                .attr('font-weight', '400')
+                .attr('fill', `${colors['--secondary-font-color']}`)
+                .attr('font-style', 'italic');
+            cursorY += 6;
+        }
+    };
+
+    // === MUTATIONS SECTION ===
+    if (legendData.mutations && legendData.mutations.length > 0) {
+        addSectionHeader('MUTATIONS');
+        legendData.mutations.forEach((item) => {
+            cursorY += rowH;
+            // Gray background (represents wild type / unaltered cell)
+            legendContainer.append('rect')
+                .attr('x', legendX).attr('y', cursorY - swatchH)
+                .attr('width', swatchW).attr('height', swatchH)
+                .attr('fill', 'lightgray').attr('rx', 1);
+            // Colored center bar (1/3 height, matching oncoprint mutation style)
+            const barH = Math.max(4, Math.round(swatchH / 3));
+            legendContainer.append('rect')
+                .attr('x', legendX)
+                .attr('y', cursorY - swatchH + (swatchH - barH) / 2)
+                .attr('width', swatchW).attr('height', barH)
+                .attr('fill', item.color).attr('rx', 1);
+            addLabelText(item.label);
+        });
+    }
+
+    // === COPY NUMBER SECTION ===
+    if (legendData.cnv && legendData.cnv.length > 0) {
+        addSectionHeader('COPY NUMBER');
+        legendData.cnv.forEach((item) => {
+            cursorY += rowH;
+            // Full-height rectangle (matching oncoprint CNV style)
+            legendContainer.append('rect')
+                .attr('x', legendX).attr('y', cursorY - swatchH)
+                .attr('width', swatchW).attr('height', swatchH)
+                .attr('fill', item.color).attr('rx', 1);
+            addLabelText(item.label, item.description);
+        });
+    }
+
+    // === GENE EXPRESSION SECTION ===
+    if (legendData.expression && legendData.expression.length > 0) {
+        addSectionHeader('GENE EXPRESSION');
+        legendData.expression.forEach((item) => {
+            cursorY += rowH;
+            // White rectangle with colored border (matching oncoprint expression style)
+            legendContainer.append('rect')
+                .attr('x', legendX).attr('y', cursorY - swatchH)
+                .attr('width', swatchW).attr('height', swatchH)
+                .attr('fill', `${colors.white}`)
+                .attr('stroke', item.strokeColor)
+                .attr('stroke-width', '2.5px')
+                .attr('rx', 1);
+            addLabelText(item.label, item.description);
+        });
+    }
+
+    // === GENERAL SECTION (Wild Type, Not Available) ===
+    if (legendData.general && legendData.general.length > 0) {
+        cursorY += sectionGap / 2;
+        legendData.general.forEach((item) => {
+            cursorY += rowH;
+            const noColor = item.color === 'none';
+            legendContainer.append('rect')
+                .attr('x', legendX).attr('y', cursorY - swatchH)
+                .attr('width', swatchW).attr('height', swatchH)
+                .attr('fill', noColor ? `${colors.white}` : item.color)
+                .attr('stroke', noColor ? 'lightgray' : 'none')
+                .attr('stroke-width', noColor ? '1px' : '0')
+                .attr('rx', 1);
+            addLabelText(item.label);
+        });
+    }
     /** ******************************************** Tooltip for oncoprint ******************************************** */
 
     const showToolTip = (x, y, gene, patient, mutation, cnv, expression) => {
