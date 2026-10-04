@@ -1,6 +1,5 @@
 /* eslint-disable func-names */
 const knex = require('../../db/knex1');
-const { isVerified } = require('./util');
 const { getAllowedDatasetIds } = require('./util');
 
 // ***************************** Model Information Queries ***********************************

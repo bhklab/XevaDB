@@ -1,5 +1,5 @@
 const knex = require('../../db/knex1');
-const { isVerified } = require('./util');
+const { canAccessDataset } = require('./util');
 const { batchIdQuery } = require('./batch');
 
 // ************************ API Endpoints Functions ***********************************
@@ -25,12 +25,11 @@ const getBatchResponseStatsBasedOnDrugAndPatient = (request, response) => {
         .where('patients.patient', patientParam)
         .andWhere('drugs.drug_name', drugParam);
 
-    batchId.then((batch) => {
+    batchId.then(async (batch) => {
         // grab the dataset id.
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
-        // check if it verified and the dataset id is greater than 0
-        // or if it's not verified (unknown) then the dataset id should be less than 7.
-        if (isVerified(response, dataset)) {
+        // allows only if the dataset is public or the user is logged in.
+        if (await canAccessDataset(response, dataset)) {
             knex.select()
                 .from('batch_response')
                 .leftJoin(

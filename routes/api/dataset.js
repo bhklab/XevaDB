@@ -1,6 +1,5 @@
 const knex = require('../../db/knex1');
-const { isVerified } = require('./util');
-const { getAllowedDatasetIds } = require('./util');
+const { canAccessDataset, getAllowedDatasetIds } = require('./util');
 const { drugsBasedOnDatasetIdQuery, patientsBasedOnDatasetIdQuery } = require('./helper');
 
 // ************************ Dataset Queries ******************************************
@@ -139,11 +138,11 @@ const getAllDatasetsDetailedInformation = (request, response) => {
  * @returns {Object} - list of the datasets with detailed information including
  * patient information, tissue information, model information.
  */
-const getSingleDatasetDetailedInformationBasedOnDatasetId = (request, response) => {
+const getSingleDatasetDetailedInformationBasedOnDatasetId = async (request, response) => {
     // dataset param.
     const { params: { dataset: datasetParam } } = request;
 
-    if (isVerified(response, datasetParam)) {
+    if (await canAccessDataset(response, datasetParam)) {
         // select the number of patients and models grouped by dataset.
         getAllDatasetsDetailQuery()
             .where('d.dataset_id', datasetParam)
@@ -165,11 +164,11 @@ const getSingleDatasetDetailedInformationBasedOnDatasetId = (request, response) 
  * @param {number} request.body.label - dataset id.
  * @returns {Object} - returns a list of drugs and patients based on the dataset.
  */
-const postDrugsAndPatientsBasedOnDataset = (request, response) => {
+const postDrugsAndPatientsBasedOnDataset = async (request, response) => {
     const { datasetId } = request.body;
 
-    // allows only if the dataset value is less than 6 and user is unknown or token is verified.
-    if (isVerified(response, request.body.datasetId)) {
+    // allows only if the dataset is public or the user is logged in.
+    if (await canAccessDataset(response, datasetId)) {
         // drugs and patients query
         const drugs = drugsBasedOnDatasetIdQuery(datasetId);
         const patients = patientsBasedOnDatasetIdQuery(datasetId);

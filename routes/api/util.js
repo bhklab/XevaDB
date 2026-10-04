@@ -1,13 +1,36 @@
+const knex = require('../../db/knex1');
+
 /**
- * @param {string} datasetId
- * @param {Object} response
- * @returns {boolean} - return true if verified else false.
+ * @param {Object|string} user - response.locals.user, set by verify_token.js.
+ * @returns {boolean} - true if the user sent a token with a valid signature, else false.
  */
-const isVerified = (response, datasetId) => (
-    (response.locals.user === 'unknown' && datasetId < 8 && datasetId > 0 || datasetId == 9)
-    || (response.locals.user.verified === 'verified' && datasetId > 0
-        && ((response.locals.user.exp - response.locals.user.iat) === 7200))
-);
+const isLoggedIn = (user) => user !== 'unknown' && user.verified === 'verified';
+
+/**
+ * @param {Object} response - response object with the user set by verify_token.js.
+ * @param {string} datasetId - id of the dataset being requested.
+ * @returns {Promise<boolean>} - true if the dataset exists and is public,
+ * or if it is private and the user is logged in.
+ */
+const canAccessDataset = async (response, datasetId) => {
+    const dataset = await knex('datasets')
+        .select('private')
+        .where('dataset_id', datasetId)
+        .first();
+
+    // the dataset does not exist.
+    if (!dataset) {
+        return false;
+    }
+
+    // public datasets are open to everyone.
+    if (!dataset.private) {
+        return true;
+    }
+
+    // private datasets need a valid login token.
+    return isLoggedIn(response.locals.user);
+};
 
 /**
  * @param {Object} request - request object.
@@ -93,13 +116,22 @@ const isValidModelId = (request, response, next) => {
 };
 
 /**
- * @param {string} user
- * @returns {Array} returns an array of values based the user argument.
+ * @param {Object|string} user - response.locals.user, set by verify_token.js.
+ * @returns {Object} - a query for the ids of the datasets the user can see:
+ * every dataset for logged-in users, only public datasets otherwise.
+ * It can be passed straight into whereIn, e.g. .whereIn('dataset_id', getAllowedDatasetIds(user)).
  */
-const getAllowedDatasetIds = (user) => (user === 'unknown' ? [1,2,3,4,5,6,7,9] : [1, 9]);
+const getAllowedDatasetIds = (user) => {
+    const query = knex('datasets').select('dataset_id');
+    if (!isLoggedIn(user)) {
+        query.where('private', false);
+    }
+    return query;
+};
 
 module.exports = {
-    isVerified,
+    isLoggedIn,
+    canAccessDataset,
     isValidId,
     isValidDatasetId,
     isValidTissueId,

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 const knex = require('../../db/knex1');
-const { isVerified } = require('./util');
+const { canAccessDataset, getAllowedDatasetIds } = require('./util');
 const { patientsBasedOnDatasetIdQuery, getControl } = require('./helper');
 const { batchIdQuery } = require('./batch');
 
@@ -124,15 +124,15 @@ const transformData = (input) => {
  * @param {Object} response - response object
  * @returns {Object} - sends the model response data based on the dataset.
  */
-const getModelResponsePerDataset = (request, response) => {
+const getModelResponsePerDataset = async (request, response) => {
     // dataset parameter.
     const { params: { dataset: datasetParam } } = request;
 
     // model response.
     const modelResponse = modelResponseQuery().where('patients.dataset_id', datasetParam);
 
-    // allows only if the dataset value is less than 6 and user is unknown or token is verified.
-    if (isVerified(response, datasetParam)) {
+    // allows only if the dataset is public or the user is logged in.
+    if (await canAccessDataset(response, datasetParam)) {
         modelResponse
             .then((row) => {
                 // transform the data fetched from the database.
@@ -160,7 +160,7 @@ const getModelResponsePerDataset = (request, response) => {
  * @returns {Object} - function returns the model response
  * based on dataset and drug query parameters.
 */
-const getModelResponse = (request, response) => {
+const getModelResponse = async (request, response) => {
     // drug and dataset query parameters.
     const drugQueryParam = request.query.drug;
     const datasetQueryParam = request.query.dataset;
@@ -184,8 +184,8 @@ const getModelResponse = (request, response) => {
     if (datasetQueryParam) {
         // update model response query if the dataset query param is available
         modelResponse = modelResponse.where('patients.dataset_id', datasetQueryParam);
-        // if the dataset query param is passed use isVerified function
-        isUserVerified = isVerified(response, datasetQueryParam);
+        // if the dataset query param is passed check the user can access that dataset
+        isUserVerified = await canAccessDataset(response, datasetQueryParam);
     } else {
         isUserVerified = true;
         modelResponse = modelResponse.whereIn('patients.dataset_id', getAllowedDatasetIds(user));
@@ -196,7 +196,7 @@ const getModelResponse = (request, response) => {
         drugArray.push(getControl(datasetQueryParam));
     }
 
-    // allows only if the dataset value is less than 6 and user is unknown or token is verified.
+    // allows only if the dataset is public or the user is logged in.
     if (isUserVerified) {
         modelResponse
             .then((row) => {
@@ -236,12 +236,11 @@ const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
         .where('drugs.drug_name', drug)
         .andWhere('patients.patient', patient);
 
-    getBatchId.then((batch) => {
+    getBatchId.then(async (batch) => {
         // grab the dataset id.
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
-        // check if it verified and the dataset id is greater than 0
-        // or if it's not verified (unknown) then the dataset id should be less than 7.
-        if (isVerified(response, dataset)) {
+        // allows only if the dataset is public or the user is logged in.
+        if (await canAccessDataset(response, dataset)) {
             modelResponseStatsQuery()
                 .where('patients.patient', patient)
                 .andWhere(function () {

@@ -232,13 +232,13 @@ export const cnaMap = {
         label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
     },
     '-1': {
-        label: 'ShallowDel', style: 'cna-hetloss', tooltip: 'Shallow deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
+        label: 'ShallowDel', style: 'cna-hetloss', tooltip: 'Shallow deletion', color: '#82B0FF', xevalabel: 'del', priority: 3,
     },
     0: {
         label: 'Diploid', style: 'cna-diploid', tooltip: 'Diploid / normal', color: 'lightgray', xevalabel: 'empty', priority: 16,
     },
     1: {
-        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: `${colors.red}`, xevalabel: 'amp', priority: 1,
+        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#FFAAAA', xevalabel: 'amp', priority: 4,
     },
     2: {
         label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: `${colors.red}`, xevalabel: 'amp', priority: 1,
@@ -250,13 +250,13 @@ export const cnaMap = {
         label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
     },
     'shallow deletion': {
-        label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
+        label: 'ShallowDel', style: 'cna-hetloss', tooltip: 'Shallow deletion', color: '#82B0FF', xevalabel: 'del', priority: 3,
     },
     'deep deletion': {
         label: 'DeepDel', style: 'cna-homdel', tooltip: 'Deep deletion', color: `${colors.blue}`, xevalabel: 'del', priority: 2,
     },
     gain: {
-        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: `${colors.red}`, xevalabel: 'amp', priority: 1,
+        label: 'Gain', style: 'cna-gain', tooltip: 'Low-level gain', color: '#FFAAAA', xevalabel: 'amp', priority: 4,
     },
     amp: {
         label: 'AMP', style: 'cna-amp', tooltip: 'High-level amplification', color: `${colors.red}`, xevalabel: 'amp', priority: 1,

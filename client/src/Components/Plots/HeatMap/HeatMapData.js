@@ -7,7 +7,7 @@ import { OncoprintGenes } from '../../../utils/OncoprintGenes';
 
 // dimension and margin variables
 const margin = {
-    top: 200, right: 200, bottom: 50, left: 400,
+    top: 250, right: 100, bottom: 50, left: 120,
 };
 
 // fetch the patient list and model response data
@@ -186,14 +186,8 @@ const HeatMapData = (props) => {
 
         const base = Math.max(6, Math.floor(available / patientCount));
 
-        let rectWidth;
-        if (containerWidth < 480) rectWidth = 10;
-        else if (containerWidth < 640) rectWidth = 9;
-        else if (containerWidth < 768) rectWidth = 11;
-        else if (containerWidth < 1024) rectWidth = 13;
-        else if (containerWidth < 1400) rectWidth = 17;
-        else if (containerWidth < 1680) rectWidth = 20;
-        else rectWidth = base;
+        // use base width directly, capped to prevent excessively large cells
+        const rectWidth = Math.min(base, 28);
 
         const rectHeight = Math.max(18, Math.min(44, Math.round(rectWidth * 2)));
 		

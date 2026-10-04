@@ -25,17 +25,17 @@ class OncoprintData extends React.Component {
             data_mut: {},
             data_rna: {},
             data_cnv: {},
-            dimensions: { height: 30, width: 14 }, // NEW: initialize with a sensible default
+            dimensions: { height: 30, width: 14 },
             margin: {
-                top: 50, right: 250, bottom: 200, left: 250,
+                top: 250, right: 100, bottom: 50, left: 120,
             },
             drugs: [],
             loading: true,
             error: false,
+            noData: false,
         };
         this.defaultGenomics = ['mutation', 'rnaseq', 'cnv'];
 
-        // NEW: container + resize observer
         this.containerRef = React.createRef();
         this.ro = null;
         this.resizeTimer = null;
@@ -55,12 +55,7 @@ class OncoprintData extends React.Component {
         // gene list prop
         const geneListProp = this.props.geneList || OncoprintGenes;
 
-        // if the dataset id is equals to 4.
-        if (datasetIdProp === '4' || datasetIdProp === 4) {
-            this.setState({
-                loading: false,
-            });
-        } else if (Number(datasetIdProp) > 0) {
+        if (Number(datasetIdProp) > 0) {
             const queries = genomicsListProp.map((genomics) =>
                 // return the API call
                 axios.get(
@@ -95,11 +90,11 @@ class OncoprintData extends React.Component {
                 .catch((err) => {
                     this.setState({
                         error: true,
+                        loading: false,
                     });
                 });
         }
 
-        // NEW: observe container width changes (debounced)
         const node = this.containerRef.current;
         if (node) {
             this.ro = new ResizeObserver((entries) => {
@@ -116,12 +111,10 @@ class OncoprintData extends React.Component {
     }
 
     componentWillUnmount() {
-        // NEW: cleanup
         if (this.resizeTimer) clearTimeout(this.resizeTimer);
         if (this.ro) this.ro.disconnect();
     }
 
-    // NEW: compute dimensions from container width and patient count
     computeDimensions = () => {
         const el = this.containerRef.current;
         if (!el) return;
@@ -136,15 +129,8 @@ class OncoprintData extends React.Component {
         // base width per cell
         const base = Math.max(6, Math.floor(available / patientCount));
 
-        // gentle breakpoints to avoid abrupt jumps
-        let rectWidth;
-        if (containerWidth < 480) rectWidth = Math.min(base, 8);
-        else if (containerWidth < 640) rectWidth = Math.min(base, 9);
-        else if (containerWidth < 768) rectWidth = Math.min(base, 11);
-        else if (containerWidth < 1024) rectWidth = Math.min(base, 13);
-        else if (containerWidth < 1400) rectWidth = Math.min(base, 17);
-        else if (containerWidth < 1680) rectWidth = Math.min(base, 20);
-        else rectWidth = base;
+        // use base width directly, capped to prevent excessively large cells
+        const rectWidth = Math.min(base, 28);
 
         // keep a proportional but bounded height
         const rectHeight = Math.max(18, Math.min(44, Math.round(rectWidth * 2)));
@@ -196,13 +182,25 @@ class OncoprintData extends React.Component {
         //     hmapPatients = Object.keys(dataObject);
         // });
 
+        // genomics types (mutation, cnv, rnaseq) that returned data for this dataset.
+        const genomicsWithData = Object.keys(inputData).filter((value) => inputData[value].data.length > 0);
+
+        // if none of them returned data, the dataset has no molecular data to show.
+        if (genomicsWithData.length === 0) {
+            this.setState({
+                noData: true,
+                loading: false,
+            });
+            return;
+        }
+
         // setting patients genes and data for
         // each of mutation, cnv and rna (given they are present)
         const patient = {};
         const genes = {};
         const data = {};
 
-        Object.keys(inputData).forEach((value) => {
+        genomicsWithData.forEach((value) => {
             const val = value.substring(0, 3).toLowerCase();
 
             // setting patients
@@ -237,7 +235,7 @@ class OncoprintData extends React.Component {
             // keep existing dimensions/margins; recompute cell sizes after state set
             loading: false,
         }, () => {
-            // NEW: recompute dimensions now that patients are known
+            // recompute dimensions now that patients are known
             this.computeDimensions();
         });
     }
@@ -248,7 +246,7 @@ class OncoprintData extends React.Component {
             patient_mut, patient_rna, patient_cnv,
             data_mut, data_rna, data_cnv, drugs,
             dimensions, margin, threshold,
-            hmap_patients, loading, error,
+            hmap_patients, loading, error, noData,
         } = this.state;
 
         const { datasetId: datasetIdProp } = this.props;
@@ -260,10 +258,10 @@ class OncoprintData extends React.Component {
                 return <ErrorComponent message="Page not found!!" />;
             }
 
-            // if the dataset id is 4 then there is no data available!
-            if (datasetIdProp === '4' || datasetIdProp === 4) {
+            // if the dataset has no mutation, cnv or rna sequencing data.
+            if (noData) {
                 return (
-                    <ErrorComponent message="Data unavailable for PDXE (Gastric Cancer)" />
+                    <ErrorComponent message={`Molecular data unavailable for this dataset`} />
                 );
             }
 
@@ -289,6 +287,7 @@ class OncoprintData extends React.Component {
                         data_rna={data_rna}
                         data_cnv={data_cnv}
                         drugs={drugs}
+                        datasetId={datasetIdProp}
                     />
                 );
             }

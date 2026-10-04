@@ -98,7 +98,8 @@ const createLogin = (request, response) => {
                 if (!validPass) return response.status(400).send('Invalid password');
 
                 // Create and assign token.
-                const token = jwt.sign({ username: data[0].user_id }, 'secretkey', { expiresIn: '2h' });
+                // the token is signed with the secret from the .env file (JWT_SECRET).
+                const token = jwt.sign({ username: data[0].user_id }, process.env.JWT_SECRET, { expiresIn: '2h' });
                 response.header('auth-token', token).send(token);
             }
             checkValidPass();

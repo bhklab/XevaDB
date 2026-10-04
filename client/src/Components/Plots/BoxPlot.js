@@ -42,7 +42,7 @@ const parseData = (data, response, drugs) => {
 };
 
 // initialize the dimensions and margins.
-const initialize = (containerWidth) => {
+const initialize = (containerWidth, dimensions) => {
     const margin = {
         top: 1, right: 1, bottom: 1, left: 1,
     };
@@ -51,10 +51,14 @@ const initialize = (containerWidth) => {
     // Tuned around a 1200px container; clamped for sanity.
     const k = Math.max(0.6, Math.min(1.8, (containerWidth || 1200) / 1200));
 
-    const patientWidth = Math.round(14 * k) - margin.left - margin.right;
-    const patientHeight = Math.round(100 * k) - margin.top - margin.bottom;
-    const drugWidth = Math.round(70 * k) - margin.left - margin.right;
-    const drugHeight = Math.round(30 * k) - margin.top - margin.bottom;
+    const patientWidth = dimensions?.width
+        ? dimensions.width - margin.left - margin.right
+        : Math.round(14 * k) - margin.left - margin.right;
+    const patientHeight = 80 - margin.top - margin.bottom;
+    const drugWidth = 60 - margin.left - margin.right;
+    const drugHeight = dimensions?.height
+        ? dimensions.height - margin.top - margin.bottom
+        : Math.round(30 * k) - margin.top - margin.bottom;
 
     return {
         margin,
@@ -102,7 +106,7 @@ const yAxis = (groupElement, linearscale) => {
 
     groupElement
         .append('g')
-        .attr('transform', 'translate(0, -180)')
+        .attr('transform', 'translate(0, -195)')
         .attr('id', 'y-axis-group')
         .call(axis);
 };
@@ -116,7 +120,7 @@ const xAxis = (groupElement, xscale, patientSvgWidth) => {
 
     groupElement
         .append('g')
-        .attr('transform', `translate(${patientSvgWidth + 60}, 0)`)
+        .attr('transform', `translate(${patientSvgWidth + 10}, 0)`)
         .attr('id', 'x-axis-group')
         .call(axis);
 };
@@ -131,7 +135,7 @@ const createRectangle = (groupElement, width, height) => {
         .attr('height', height)
         .attr('stroke', `${colors.black}`)
         .attr('stroke-width', 1.0)
-        .style('fill', `${colors.white}`);
+        .style('fill', 'none');
 
     return rect;
 };
@@ -260,7 +264,7 @@ const BoxPlot = (props) => {
 
     // destructuring the props.
     const {
-        data, response, patients, drugs, heatmapSvgGroupRef,
+        data, response, patients, drugs, heatmapSvgGroupRef, dimensions,
     } = props;
 
     // parsing the data.
@@ -297,7 +301,7 @@ const BoxPlot = (props) => {
     // initialize dimensions.
     const {
         patientWidth, patientHeight, margin, drugHeight, drugWidth,
-    } = useMemo(() => initialize(containerWidth), [containerWidth]);
+    } = useMemo(() => initialize(containerWidth, dimensions), [containerWidth, dimensions]);
 
     // svg width.
     const patientSvgWidth = (patientWidth + margin.left + margin.right) * totalPatients;
@@ -328,8 +332,8 @@ const BoxPlot = (props) => {
         xAxis(groupElement, xScale, patientSvgWidth);
 
         // creating reactangle around the svgs.
-        createRectangle(groupElement, patientSvgWidth, patientSvgHeight).attr('transform', 'translate(0, -180)');
-        createRectangle(groupElement, drugSvgWidth, drugSvgHeight).attr('transform', `translate(${patientSvgWidth + 60}, 0)`);
+        createRectangle(groupElement, patientSvgWidth, patientSvgHeight).attr('transform', 'translate(0, -195)');
+        createRectangle(groupElement, drugSvgWidth, drugSvgHeight).attr('transform', `translate(${patientSvgWidth + 10}, 0)`);
 
         // create a box plot for each of the patient.
         const patientKeys = patients.length === 0 ? Object.keys(parsedPatientData) : patients;
@@ -337,7 +341,7 @@ const BoxPlot = (props) => {
         const patientPlotGroup = groupElement
             .append('g')
             .attr('id', 'patient-plot-group')
-            .attr('transform', 'translate(0, -180)');
+            .attr('transform', 'translate(0, -195)');
 
         patientKeys.forEach((patient, i) => {
             // append g element to svg for each patient.
@@ -361,8 +365,8 @@ const BoxPlot = (props) => {
 
         const drugPlotGroup = groupElement
             .append('g')
-            .attr('id', 'patient-plot-group')
-            .attr('transform', `translate(${patientSvgWidth + 60}, 0)`);
+            .attr('id', 'drug-plot-group')
+            .attr('transform', `translate(${patientSvgWidth + 10}, 0)`);
 
         // create a box plot for each of the drugs.
         drugs.forEach((drug, i) => {
@@ -386,7 +390,7 @@ const BoxPlot = (props) => {
         });
     // redraw when container width or inputs change
     }, [
-        containerWidth,
+        containerWidth, dimensions,
         data, response, patients, drugs, heatmapSvgGroupRef,
         patientWidth, patientHeight, drugWidth, drugHeight,
         minTotal, maxTotal, parsedPatientData, parsedDrugData,
@@ -405,6 +409,10 @@ BoxPlot.propTypes = {
     patients: PropTypes.arrayOf(PropTypes.string).isRequired,
     drugs: PropTypes.arrayOf(PropTypes.string).isRequired,
     heatmapSvgGroupRef: PropTypes.object.isRequired,
+    dimensions: PropTypes.shape({
+        height: PropTypes.number,
+        width: PropTypes.number,
+    }),
 };
 
 export default BoxPlot;
