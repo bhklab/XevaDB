@@ -7,9 +7,12 @@ import PropTypes from 'prop-types';
 import Oncoprint from './Oncoprint';
 import Spinner from '../../Utils/Spinner';
 import ErrorComponent from '../../Utils/Error';
+import PatientContext from '../../Context/PatientContext';
 import { OncoprintGenes } from '../../../utils/OncoprintGenes';
+import { computePlotMargins } from '../../../utils/PlotMargins';
 
 class OncoprintData extends React.Component {
+    static contextType = PatientContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -26,9 +29,7 @@ class OncoprintData extends React.Component {
             data_rna: {},
             data_cnv: {},
             dimensions: { height: 30, width: 14 },
-            margin: {
-                top: 250, right: 100, bottom: 50, left: 120,
-            },
+            margin: computePlotMargins(props.drugList),
             drugs: [],
             loading: true,
             error: false,
@@ -110,24 +111,40 @@ class OncoprintData extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.drugList !== this.props.drugList) {
+            const margin = computePlotMargins(this.state.drugs || this.props.drugList);
+            this.setState({ margin }, () => this.computeDimensions());
+        }
+    }
+
     componentWillUnmount() {
         if (this.resizeTimer) clearTimeout(this.resizeTimer);
         if (this.ro) this.ro.disconnect();
     }
 
     computeDimensions = () => {
-        const el = this.containerRef.current;
-        if (!el) return;
+        if (this.context?.plotDimensions) {
+            const { width, height } = this.context.plotDimensions;
+            this.setState((prev) => {
+                const same = prev.dimensions.width === width && prev.dimensions.height === height;
+                return same ? null : { dimensions: { width, height } };
+            });
+            return;
+        }
 
-        const containerWidth = Math.max(0, el.clientWidth || 0);
-        const { margin, hmap_patients } = this.state;
+        const el = this.containerRef.current;
+        const containerWidth = Math.max(1200, el ? el.clientWidth : 1200);
+        const margin = this.context?.plotMargin || this.state.margin;
+        const { hmap_patients } = this.state;
         const patientCount = Math.max(1, (hmap_patients?.length || 1));
 
-        // usable width after margins
-        const available = Math.max(200, containerWidth - (margin.left + margin.right));
+        // Fixed right-side extras: legend (160px) + margins
+        const fixedExtras = margin.left + margin.right + 160;
+        const availableForCells = Math.max(100, containerWidth - fixedExtras);
 
-        // base width per cell
-        const base = Math.max(6, Math.floor(available / patientCount));
+        // base width per cell accounting for patient cells + right sidebar/legend offset (8.5 cells)
+        const base = Math.max(6, Math.floor(availableForCells / (patientCount + 8.5)));
 
         // use base width directly, capped to prevent excessively large cells
         const rectWidth = Math.min(base, 28);
@@ -232,7 +249,7 @@ class OncoprintData extends React.Component {
             data_rna: data.data_rna || {},
             data_cnv: data.data_cnv || {},
             drugs,
-            // keep existing dimensions/margins; recompute cell sizes after state set
+            margin: computePlotMargins(drugs || this.props.drugList),
             loading: false,
         }, () => {
             // recompute dimensions now that patients are known
@@ -245,9 +262,12 @@ class OncoprintData extends React.Component {
             genes_mut, genes_rna, genes_cnv,
             patient_mut, patient_rna, patient_cnv,
             data_mut, data_rna, data_cnv, drugs,
-            dimensions, margin, threshold,
+            dimensions: stateDimensions, margin: stateMargin, threshold,
             hmap_patients, loading, error, noData,
         } = this.state;
+
+        const dimensions = this.context?.plotDimensions || stateDimensions;
+        const margin = this.context?.plotMargin || stateMargin;
 
         const { datasetId: datasetIdProp } = this.props;
         const thresholdProp = this.props.threshold || threshold;

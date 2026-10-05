@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+    useState, useEffect, useRef, useMemo, useContext,
+} from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import Spinner from '../../Utils/Spinner';
 import HeatMap from './HeatMap';
+import PatientContext from '../../Context/PatientContext';
 import { OncoprintGenes } from '../../../utils/OncoprintGenes';
-
-// dimension and margin variables
-const margin = {
-    top: 250, right: 100, bottom: 50, left: 120,
-};
+import { computePlotMargins } from '../../../utils/PlotMargins';
 
 // fetch the patient list and model response data
 const fetchData = async (drugList, datasetId) => {
@@ -138,6 +137,18 @@ const HeatMapData = (props) => {
     const containerRef = useRef(null);
     const [containerWidth, setContainerWidth] = useState(1200);
     const [dimensions, setDimensions] = useState({ height: 30, width: 14 });
+    const { setPlotDimensions, setPlotMargin } = useContext(PatientContext);
+
+    const activeDrugList = (dataObject.drugList && dataObject.drugList.length > 0)
+        ? dataObject.drugList
+        : drugProp;
+    const margin = useMemo(() => computePlotMargins(activeDrugList), [activeDrugList]);
+
+    useEffect(() => {
+        if (setPlotMargin) {
+            setPlotMargin(margin);
+        }
+    }, [margin, setPlotMargin]);
 
     useEffect(() => {
         if (datasetId > 0) {
@@ -155,18 +166,22 @@ const HeatMapData = (props) => {
                     setLoadingState(false);
                 });
         }
-    }, [props]);
+    }, [drugProp, datasetId]);
 
     // Observe the container width (debounced for smoother changes)
     useEffect(() => {
         if (!containerRef.current) return;
+        const initialWidth = containerRef.current.clientWidth;
+        if (initialWidth > 0) {
+            setContainerWidth(initialWidth);
+        }
         let t = null;
         const ro = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 const cw = Math.max(0, entry.contentRect.width || 0);
                 if (cw > 0) {
                     if (t) clearTimeout(t);
-                    t = setTimeout(() => setContainerWidth(cw), 120);
+                    t = setTimeout(() => setContainerWidth(cw), 100);
                 }
             }
         });
@@ -181,18 +196,24 @@ const HeatMapData = (props) => {
     useEffect(() => {
         const patientCount = Math.max(1, dataObject.patientList.length || 1);
 
-        // usable width after margins
-        const available = Math.max(200, containerWidth - (margin.left + margin.right));
+        // Fixed right-side extras: legend (160px) + margins
+        const fixedExtras = margin.left + margin.right + 160;
+        const availableForCells = Math.max(100, containerWidth - fixedExtras);
 
-        const base = Math.max(6, Math.floor(available / patientCount));
+        // Base width per cell accounting for patient cells + right sidebar/legend offset (8.5 cells)
+        const base = Math.max(6, Math.floor(availableForCells / (patientCount + 8.5)));
 
-        // use base width directly, capped to prevent excessively large cells
+        // Use base width directly, capped to prevent excessively large cells
         const rectWidth = Math.min(base, 28);
 
         const rectHeight = Math.max(18, Math.min(44, Math.round(rectWidth * 2)));
-		
-        setDimensions({ height: rectHeight, width: rectWidth });
-    }, [containerWidth, dataObject.patientList.length]);
+
+        const nextDimensions = { height: rectHeight, width: rectWidth };
+        setDimensions(nextDimensions);
+        if (setPlotDimensions) {
+            setPlotDimensions(nextDimensions);
+        }
+    }, [containerWidth, dataObject.patientList.length, margin.left, margin.right, setPlotDimensions]);
 
     return (
         <div ref={containerRef} style={{ width: '100%' }}>

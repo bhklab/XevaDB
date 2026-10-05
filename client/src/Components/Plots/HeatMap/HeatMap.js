@@ -20,6 +20,7 @@ const HeatMapWrapper = styled.div`
     display: flex;
     flex-direction: column;
 	overflow: hidden;
+	width: 100%;
 	max-width: 100%;
 
     .selection-div {
@@ -262,6 +263,11 @@ const createDrugYAxis = (svg, drugScale) => {
             }
             return `${colors['--main-font-color']}`;
         })
+        .append('title')
+        .text((drug) => drug);
+
+    svg.select('#drug-axis-group')
+        .selectAll('text')
         .on('mouseover', (drug) => {
             // // remove the biomarker and sorting labels
             // // that are already selected (selected class!)
@@ -690,10 +696,10 @@ const createDottedLinesPerPatient = (
 };
 
 // compute extra right-side space needed for legends/sidebars so they don't get cut off
-const computeRightExtras = (responseType, rectWidth, rectHeight) => {
-    const sidebarWidth = rectWidth * 5 + 30;
-    const legendBlock = rectWidth * 10 + 160;
-    return Math.max(sidebarWidth, legendBlock) + 20;
+// matches Oncoprint right extras for perfect horizontal alignment
+const computeRightExtras = (responseType, rectWidth) => {
+    // Right sidebar ends at 6 * rectWidth. Legend starts at 8.5 * rectWidth and is ~160px wide.
+    return Math.round(rectWidth * 8.5 + 160);
 };
 
 /**
