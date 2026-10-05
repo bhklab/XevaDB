@@ -50,9 +50,8 @@ const ExportWrapper = styled.div`
 const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
 
 const computeRightExtrasOncoprint = (rect_width) => {
-    const sidebarGeneAlter = rect_width * 5 + 30; // right stacked bars width + padding
-    const legendBlock = rect_width * 10 + 280;    // legend + labels + descriptions conservative
-    return Math.max(sidebarGeneAlter, legendBlock) + 20;
+    // Right sidebar ends at 6 * rect_width. Legend starts at 8.5 * rect_width and is ~160px wide.
+    return Math.round(rect_width * 8.5 + 160);
 };
 
 /**

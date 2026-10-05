@@ -15,6 +15,25 @@ class SearchResult extends React.Component {
             });
         };
 
+        this.setPlotDimensions = (dimensions) => {
+            this.setState((prev) => {
+                const p = prev.plotDimensions;
+                return p && p.width === dimensions.width && p.height === dimensions.height
+                    ? null
+                    : { plotDimensions: dimensions };
+            });
+        };
+
+        this.setPlotMargin = (margin) => {
+            this.setState((prev) => {
+                const p = prev.plotMargin;
+                return p && p.top === margin.top && p.right === margin.right
+                    && p.bottom === margin.bottom && p.left === margin.left
+                    ? null
+                    : { plotMargin: margin };
+            });
+        };
+
         this.state = {
             drugParam: '',
             datasetParam: '',
@@ -23,6 +42,10 @@ class SearchResult extends React.Component {
             threshold: 0,
             globalPatients: [],
             setPatients: this.setPatients,
+            plotDimensions: null,
+            setPlotDimensions: this.setPlotDimensions,
+            plotMargin: null,
+            setPlotMargin: this.setPlotMargin,
         };
     }
 
@@ -49,10 +72,16 @@ class SearchResult extends React.Component {
         const {
             drugParam, datasetParam, geneParam, genomicsParam,
             threshold, globalPatients, setPatients,
+            plotDimensions, setPlotDimensions,
+            plotMargin, setPlotMargin,
         } = this.state;
         const providerData = {
             globalPatients,
             setPatients,
+            plotDimensions,
+            setPlotDimensions,
+            plotMargin,
+            setPlotMargin,
         };
         return (
             <>

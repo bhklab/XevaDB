@@ -45,6 +45,7 @@ const GlobalStyles = createGlobalStyle`
     align-items: center;
     margin-top: 12vh;
     margin-bottom: 12vh;
+    width: 100%;
 
     h1 {
       text-align: left;
@@ -100,8 +101,9 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .heatmap-oncoprint-wrapper {
+	width: 100%;
 	min-width: 100%;
-	overflow: hidden
+	overflow: hidden;
   }
 
   .growth-curve-wrapper {

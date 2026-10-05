@@ -85,11 +85,9 @@ class DatasetSummary extends React.Component {
                     <div className='component-wrapper'>
                         <h1> XevaDB Dataset List </h1>
                         <h4>
-                            last update 04/23/2024
+                            last update 10/05/2026
                             <br />
-                            There are 8 public and 1 private dataset(s)
-                            in XevaDB currently. Private dataset(s) are only
-                            accessible by certain users.
+                            Private dataset(s) are only accessible by approved users.
                         </h4>
                         {
                             loading
