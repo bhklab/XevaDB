@@ -19,9 +19,9 @@ import removeSomeSpecialCharacters from '../../../utils/RemoveSomeSpecialCharact
 const HeatMapWrapper = styled.div`
     display: flex;
     flex-direction: column;
-	overflow: hidden;
-	width: 100%;
-	max-width: 100%;
+	overflow: visible;
+	width: max-content;
+	min-width: 100%;
 
     .selection-div {
         width: 150px;
@@ -552,7 +552,7 @@ const drugStackedBarplots = (
         Object.values(drugBarChartData),
     );
 
-    const barplotWidth = rectWidth * 5;
+    const barplotWidth = Math.max(120, rectWidth * 5);
 
     const scale = d3.scaleLinear()
         .domain([0, maxTotalValueInDataObject])
@@ -699,7 +699,7 @@ const createDottedLinesPerPatient = (
 // matches Oncoprint right extras for perfect horizontal alignment
 const computeRightExtras = (responseType, rectWidth) => {
     // Right sidebar ends at 6 * rectWidth. Legend starts at 8.5 * rectWidth and is ~160px wide.
-    return Math.round(rectWidth * 8.5 + 160);
+    return Math.round(rectWidth * 8.5 + 160 + Math.max(0, 120 - rectWidth * 5));
 };
 
 /**

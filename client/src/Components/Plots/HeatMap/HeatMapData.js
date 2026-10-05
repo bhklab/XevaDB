@@ -201,10 +201,10 @@ const HeatMapData = (props) => {
         const availableForCells = Math.max(100, containerWidth - fixedExtras);
 
         // Base width per cell accounting for patient cells + right sidebar/legend offset (8.5 cells)
-        const base = Math.max(6, Math.floor(availableForCells / (patientCount + 8.5)));
+        const base = Math.floor(availableForCells / (patientCount + 8.5));
 
-        // Use base width directly, capped to prevent excessively large cells
-        const rectWidth = Math.min(base, 28);
+        // Clamp: min keeps rotated labels legible (page scrolls horizontally instead)
+        const rectWidth = Math.max(18, Math.min(base, 28));
 
         const rectHeight = Math.max(18, Math.min(44, Math.round(rectWidth * 2)));
 
