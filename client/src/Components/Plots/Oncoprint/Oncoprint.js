@@ -28,8 +28,9 @@ const aberration = [
 const OncoprintWrapper = styled.div`
     display: flex;
     flex-direction: column;
-	width: 100%;
-	overflow-x: auto;
+	width: max-content;
+	min-width: 100%;
+	overflow: visible;
 `;
 
 const ExportWrapper = styled.div`
@@ -51,7 +52,7 @@ const cnvMapping = { del: 'Deletion', amp: 'Amplification' };
 
 const computeRightExtrasOncoprint = (rect_width) => {
     // Right sidebar ends at 6 * rect_width. Legend starts at 8.5 * rect_width and is ~160px wide.
-    return Math.round(rect_width * 8.5 + 160);
+    return Math.round(rect_width * 8.5 + 160 + Math.max(0, 120 - rect_width * 5));
 };
 
 /**
@@ -680,7 +681,7 @@ const makeOncoprint = (hmap_patients, props, context) => {
 
         const xrange_gene = d3.scaleLinear()
             .domain([0, max_width])
-            .range([0, rect_width * 5]);
+            .range([0, Math.max(120, rect_width * 5)]);
 
         const gene_alter = svg.append('g')
             .attr('id', 'gene-alter')

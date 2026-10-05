@@ -102,8 +102,14 @@ const GlobalStyles = createGlobalStyle`
 
   .heatmap-oncoprint-wrapper {
 	width: 100%;
-	min-width: 100%;
-	overflow: hidden;
+	max-width: 100%;
+	overflow-x: auto;
+	overflow-y: hidden;
+	align-items: flex-start;
+  }
+
+  .heatmap-oncoprint-wrapper > * {
+	flex-shrink: 0;
   }
 
   .growth-curve-wrapper {
