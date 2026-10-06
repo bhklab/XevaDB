@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 const knex = require('../../db/knex1');
 const { canAccessDataset, getAllowedDatasetIds } = require('./util');
-const { patientsBasedOnDatasetIdQuery, getControl } = require('./helper');
+const { patientsBasedOnDatasetIdQuery, getControl, resolveDrugName } = require('./helper');
 const { batchIdQuery } = require('./batch');
 
 // **************************** Model Response Queries ****************************************
@@ -224,11 +224,8 @@ const getModelResponse = async (request, response) => {
  * @param {Object} response - response object
  * @returns {Object} - returns the stats like AUC, Slope etc based on drug and patient (model_id).
  */
-const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
-    // drug and dataset parameter.
-    // this will remove the spaces in the drug name and replace
-    // it with ' + ' ,example BKM120   LDE225 => BKM120 + LDE225
-    const drug = request.query.drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
+const getModelResponseStatsBasedOnDrugAndPatient = async (request, response) => {
+    const drug = await resolveDrugName(request.query.drug);
     const { patient } = request.query;
 
     // grabs the batch ids based on the patient id and drug param passed.
@@ -237,6 +234,9 @@ const getModelResponseStatsBasedOnDrugAndPatient = (request, response) => {
         .andWhere('patients.patient', patient);
 
     getBatchId.then(async (batch) => {
+        if (!batch || batch.length === 0) {
+            return response.status(404).json({ status: 'no batch found', data: [] });
+        }
         // grab the dataset id.
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
         // allows only if the dataset is public or the user is logged in.

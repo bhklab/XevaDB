@@ -2,6 +2,7 @@
 const knex = require('../../db/knex1');
 const { canAccessDataset } = require('./util');
 const { batchIdQuery } = require('./batch');
+const { resolveDrugName } = require('./helper');
 
 // ************************** Mutation Queries ************************************************
 const drugScreeningQuery = () => knex
@@ -51,13 +52,9 @@ const drugScreeningQuery = () => knex
  * @returns {Object} - list of the datasets.
  */
 // this will get the drug screening data based on drug and patient id.
-const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
-    let { drug } = request.query;
+const getDrugScreeningDataBasedOnDrugAndPatient = async (request, response) => {
     const { patient } = request.query;
-
-    // this will remove the spaces in the drug name and replace
-    // it with ' + '. example BKM120   LDE225 => BKM120 + LDE225
-    drug = drug.replace(/\s\s\s/g, ' + ').replace(/\s\s/g, ' + ');
+    const drug = await resolveDrugName(request.query.drug);
 
     // grabs the batch_id based on the drug and patient query param passed on.
     const grabBatchId = batchIdQuery()
@@ -66,6 +63,10 @@ const getDrugScreeningDataBasedOnDrugAndPatient = (request, response) => {
     // .andWhere('batch_information.type', 'treatment')
 
     grabBatchId.then(async (batch) => {
+        if (!batch || batch.length === 0) {
+            return response.status(404).json({ status: 'no batch found', data: [] });
+        }
+
         // grab the dataset id.
         const dataset = JSON.parse(JSON.stringify(batch))[0].dataset_id;
 

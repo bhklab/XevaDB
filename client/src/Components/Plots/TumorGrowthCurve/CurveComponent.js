@@ -35,6 +35,7 @@ class CurveComponent extends React.Component {
 
     componentDidMount() {
         const { patientParam, drugParam } = this.state;
+		console.log(drugParam);
         axios.get(`/api/v1/treatment?drug=${drugParam}&patient=${patientParam}`, { headers: { Authorization: localStorage.getItem('user') } })
             .then((response) => {
                 const batches = [];

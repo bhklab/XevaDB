@@ -46,7 +46,28 @@ const patientsBasedOnDatasetIdQuery = (dataset) => knex
     .from('patients')
     .where({ dataset_id: dataset });
 
+/**
+ * @param {string} name - drug name.
+ * @returns {string} - drug name with '+', '_' and whitespace collapsed to a single space, lowercased.
+ */
+const normalizeDrugName = (name) => String(name).replace(/[+_\s]+/g, ' ').trim().toLowerCase();
+
+/**
+ * Resolves incoming drug query strings (which may have '+' decoded as space, multiple spaces,
+ * underscores, etc.) to the exact canonical drug_name in the drugs table.
+ * @param {string} rawDrug - drug name from the request.
+ * @returns {Promise<string>} - canonical drug name from DB or original if not found.
+ */
+const resolveDrugName = async (rawDrug) => {
+    if (!rawDrug) return rawDrug;
+    const target = normalizeDrugName(rawDrug);
+    const drugs = await knex('drugs').select('drug_name');
+    const match = drugs.find((d) => normalizeDrugName(d.drug_name) === target);
+    return match ? match.drug_name : rawDrug;
+};
+
 module.exports = {
+    resolveDrugName,
     getControl,
     geneIdsBasedOnGeneNames,
     drugsBasedOnDatasetIdQuery,
