@@ -22,3 +22,6 @@ data_conversion/FinalCsvFiles/rnasequencing_final.csv
 # ignore the vscode and webstorm files
 .vscode
 .idea
+
+# ignore build
+build/
